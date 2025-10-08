@@ -1,6 +1,6 @@
 # QUBO++ Download Page
 
-This page provides packages of QUBO++
+This page provides packages of QUBO++.
 
 ## Latest Release
 
