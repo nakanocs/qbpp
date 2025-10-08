@@ -1,7 +1,6 @@
-# README Version: 2025.10.04
+# README Version: 2025.10.08
 * **Maintainer:** Koji Nakano
 * [**Downloads**](https://github.com/nakanocs/qbpp/blob/main/DOWNLOAD.md)
-
 
 # QUBO++
 * A C++ library for constructing polynomials of binary variables to solve combinatorial optimization problems  
@@ -13,6 +12,37 @@
 * Includes APIs for calling the Gurobi Optimizer to solve Quadratic Unconstrained Binary Optimization (QUBO) problems  
 * Author: Koji Nakano  
 * Copyright: © 2025 Koji Nakano. All rights reserved.
+
+# QUBO++ Solvers: Easy Solver, Exhaustive Solver, ABS3 Solver
+## Easy Solver
+* Searches for solutions to QUBO/HUBO formulations on x86_64 multicore processors.
+* Multithreaded acceleration: utilizes Intel oneTBB for parallel search.
+* Integer coefficients: supports coefficients of arbitrary magnitude.
+
+## Exhaustive Solver
+* Enumerates all solutions to QUBO/HUBO formulations on x86_64 multicore processors.
+* Optimality guaranteed: the global optimum is found and certifiable.
+* Multithreaded acceleration: utilizes Intel oneTBB for parallel enumeration.
+* Integer coefficients: supports coefficients of arbitrary magnitude.
+
+## ABS3 Solver
+* Searches for solutions to QUBO/HUBO formulations on CUDA-enabled GPUs in x86_64 hosts.
+
+### **ABS3 Supported GPU architectures**
+  - **sm_80** : NVIDIA A100  (Ampere) 
+  - **sm_86** : NVIDIA RTX A6000, GeForce RTX 3090/3080/3070 (Ampere) 
+  - **sm_89** : NVIDIA RTX 6000 Ada, GeForce RTX 4090/4080/4070 (Ada) 
+  - **sm_90** : NVIDIA H100 / H200 / GH200 (Hopper) 
+  - **sm_100** : NVIDIA B200 / GB200 (Blackwell, data center) 
+  - **sm_120** : GeForce RTX 5090/5080/5070(Ti)/5060(Ti)/5050、RTX PRO 6000/5000/4500/4000/2000 Blackwell (workstation)  
+  - **Note on verification** : Only a subset of the architectures above has been verified on real hardware.  
+###  **Numeric types**
+  - 32-bit and 64-bit term coefficients
+  - 64-bit energy values
+
+### **Performance note**
+  - Arithmetic overflow checks are omitted to maximize performance.
+
 
 ## Build Environment
 The following environment was used to build QUBO++.  
@@ -50,7 +80,7 @@ library itself does not require linking against TBB for the default use cases.
   - `factorization.cpp`: Integer factorization
   - `graph_color.cpp`: Graph coloring
   - `tsp.cpp`: Solving Traveling Salesman Problem using Easy Solver
-  - `qbpp_tsp.hpp: Creating QUBO model for the TSP
+  - `qbpp_tsp.hpp`: Creating QUBO model for the TSP
   - `integer_poly.cpp`: Integer polynomial optimization  
   - `labs.cpp`: Low Autocorrelation Binary Sequences problem  
   - `nqueen_easy.cpp`: Solving N-Queens problem using Easy Solver 
@@ -59,22 +89,6 @@ library itself does not require linking against TBB for the default use cases.
   - `factorization_abs3.cpp`: Integer factorization using ABS3
   - `labs_abs3.cpp`: Low Autocorrelation Binary Sequences problem using ABS3 GPU solver
   - `ilp_grb`: Integer Linear Programming example using Gurobi Optimizer
-
-- **Supported GPU architectures**
-  - **sm_80** : NVIDIA A100  (Ampere) 
-  - **sm_86** : NVIDIA RTX A6000, GeForce RTX 3090/3080/3070 (Ampere) 
-  - **sm_89** : NVIDIA RTX 6000 Ada, GeForce RTX 4090/4080/4070 (Ada) 
-  - **sm_90** : NVIDIA H100 / H200 / GH200 (Hopper) 
-  - **sm_100** : NVIDIA B200 / GB200 (Blackwell, data center) 
-  - **sm_120** : GeForce RTX 5090/5080/5070(Ti)/5060(Ti)/5050、RTX PRO 6000/5000/4500/4000/2000 Blackwell (workstation)  
-  - **Note on verification** : Only a subset of the architectures above has been verified on real hardware.  
-
-- **Numeric types**
-  - 32-bit and 64-bit term coefficients
-  - 64-bit energy values
-
-- **Performance note**
-  - Arithmetic overflow checks are omitted to maximize performance.
 
 # QUBO++ Licensing
 
@@ -168,8 +182,6 @@ By using QUBO++, you agree to the following terms and conditions:
   - Licensed under the BSD 2-Clause License.  
   - Copyright © Yann Collet.  
   - See <https://opensource.org/license/bsd-2-clause/> for details.
-
-
 
 
 If you have any questions regarding licensing or wish to obtain a license key, please contact the distributor or the developer.
