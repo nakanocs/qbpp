@@ -1,4 +1,4 @@
-# README Version: 2025.10.08
+# README Version: 2025.10.10
 * **Maintainer:** Koji Nakano
 * [**Downloads**](https://github.com/nakanocs/qbpp/blob/main/DOWNLOAD.md)
 
@@ -88,11 +88,13 @@ library itself does not require linking against TBB for the default use cases.
   - `shift_scheduling`: Shift scheduling problem
   - `factorization_abs3.cpp`: Integer factorization using ABS3
   - `labs_abs3.cpp`: Low Autocorrelation Binary Sequences problem using ABS3 GPU solver
-  - `ilp_grb`: Integer Linear Programming example using Gurobi Optimizer
+  - `ilp_grb.cpp`: Integer Linear Programming example using Gurobi Optimizer
 
 # QUBO++ Licensing
 
 ## License Types
+QUBO++ uses Cryptlex for license management.
+When activating a node-locked license, some information about the execution environment (e.g., hardware identifiers) is securely stored on Cryptlex servers to verify the license.
 
 - **Anonymous Trial**  
   - No license key required  
