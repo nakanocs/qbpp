@@ -723,7 +723,7 @@ int main() {
 
 The output of this code is as follows:
 
-```cpp
+{% raw %}
 f = 6 -4*a -6*b -6*c -4*d +6*{0} +4*a*b +6*a*c +8*a*d -2*a*{0} +12*b*c +16*b*d -4*b*{0} +24*c*d -6*c*{0} -8*d*{0}
 *f = a +2*b +3*c +4*d
 0:{{a,0},{b,0},{c,0},{d,1},{{0},1}} *f = 4
@@ -733,7 +733,7 @@ f = 6 -4*a -6*b -6*c -4*d +6*{0} +4*a*b +6*a*c +8*a*d -2*a*{0} +12*b*c +16*b*d -
 0:{{a,1},{b,0},{c,1},{d,0},{{0},1}} *f = 4
 0:{{a,1},{b,1},{c,0},{d,0},{{0},0}} *f = 3
 0:{{a,1},{b,1},{c,0},{d,0},{{0},1}} *f = 3
-```
+{% endraw %}
 
 Here, `{0}` is an auxiliary variable required to implement the range comparison.
 We can confirm that the output includes all solutions that satisfy the range comparison.
@@ -769,14 +769,14 @@ int main() {
 In this code, `qbpp::inf` is used to indicate that the range comparison has no upper bound.
 The output of this code is as follows:
 
-```cpp
+{% raw %}
 f = 72 -16*a -30*b -42*c -52*d +18*{0} +4*a*b +6*a*c +8*a*d -2*a*{0} +12*b*c +16*b*d -4*b*{0} +24*c*d -6*c*{0} -8*d*{0}
 *f = a +2*b +3*c +4*d
 0:{{a,0},{b,1},{c,1},{d,1},{{0},0}} *f = 9
 0:{{a,0},{b,1},{c,1},{d,1},{{0},1}} *f = 9
 0:{{a,1},{b,0},{c,1},{d,1},{{0},0}} *f = 8
 0:{{a,1},{b,1},{c,1},{d,1},{{0},1}} *f = 10
-```
+{% endraw %}
 
 We can confirm that the output includes all solutions that satisfy the range comparison.
 
@@ -807,11 +807,11 @@ In this code, the energy value of `f` is evaluated using a qbpp::MapList object,
 The energy is also evaluated for a set of values provided using an initializer list.
 The expected output of the code is as follows:
 
-```cpp
+{% raw %}
 f = 3 -2*a -3*b -3*c +2*a*b +3*a*c +6*b*c
 f(0, 0, 0) = 3
 f(0, 1, 0) = 0
-```
+{% endraw %}
 
 Since the operator() for a qbpp::Expr object simply calls the qbpp::eval function, the values can be evaluated in a more intuitive way as follows:
 ```cpp
@@ -846,10 +846,10 @@ In this code, the energy value of `f` is evaluated using a qbpp::MapList object,
 The energy is also evaluated for a set of values provided using an initializer list.
 The expected output of the code is as follows:
 
-```cpp
+{% raw %}
 f = 3 -2*a -3*b -3*c +2*a*b +3*a*c +6*b*c
 f(0, c-1, c) = 6 -6*c
-```
+{% endraw %}
 
 The eval() and replace() functions can be used with qbpp::MapList objects and qbpp::VarInt objects, as demonstrated in the following example:
 
