@@ -1,19 +1,22 @@
 # QUBO++ Library Documantaion Version 2025.10.13
 
-QUBO++ is a C++ library designed to create and manipulate polynomials of binary variables, specifically to simplify the formulation of HUBO (High-order Unconstrained Binary Optimization), which polynomial expressions of binary variables in the form of @f$0/1@f$.
-The objective of HUBO problems is to find an optimal binary assignment that minimizes these expressions.
+Quadratic Unconstrained Binary Optimization (QUBO) models use quadratic functions over binary variables {0,1}.
+High-order Unconstrained Binary Optimization (HUBO) generalizes QUBO to polynomial functions of arbitrary order.
+The goal in QUBO/HUBO is to find a binary assignment that minimizes the objective.
+QUBO++ is a C++ library for constructing and transforming these objectives and efficiently searching for optimal or high-quality solutions.
 
-Key features include:
+
+
+## Key features
 
 * **Simplified C++17-based implementation**: The library requires understanding only three essential C++ classes—variables (qbpp::Var), expressions (qbpp::Expr), and solutions (qbpp::Sol).
 * **Unlimited integer coefficient support**: Expressions can involve terms with integer coefficients of any magnitude.
 * **Support for integer variables**: Integer variables are represented using multiple binary variables.
 * **Rich operator and function support**: Provides a wide range of operators and functions for designing and manipulating expressions, including robust vector manipulation capabilities.
-* **Built-in solvers**: Includes HUBO solvers, **EasySolver** and **ExhaustiveSolver**.
+* **Built-in solvers**: Includes QUBO/HUBO solvers, **Easy Solver**, **Exhaustive Solver**, and **ABS3 GPU Solver**.
 * **Performance acceleration**: Multithreading is leveraged wherever possible. The library incorporates components from Intel® Threading Building Blocks (TBB), licensed under the Apache License 2.0.
 * **Advanced solver integration**: Offers API integrations for powerful solvers like the ABS2 GPU Solver and the Gurobi Optimizer for solving QUBO problems.
-* **Partial support for Ising expressions**: Supports spin variables (@f$-1/+1@f$) and provides functions for equivalent conversions between QUBO and Ising expressions.
-* **HUBO to QUBO conversion**: Includes functionality to convert HUBO (High-Order Unconstrained Binary Optimization) expressions into equivalent QUBO forms.
+
 
 This document primarily explains how to use the QUBO++ library to design QUBO expressions.
 Since all source code files of the QUBO++ library and related programs are documented using Doxygen, users can refer to the documentation for detailed usage information.
@@ -71,7 +74,7 @@ ExhaustiveSolver evaluates the values of @f$g@f$ for all @f$2^3@f$ possible solu
 
 The output of this program follows.
 
-```
+```text
 f = 6 -2*a -2*b -2*c -3*a -3*b -3*c +a*a +a*b +a*c +b*a +b*b +b*c +c*a +c*b +c*c
 g = 6 -4*a -4*b -4*c +2*a*b +2*a*c +2*b*c
 0:0:{{a,0},{b,1},{c,1}}
