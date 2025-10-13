@@ -224,11 +224,11 @@ This program assigns expressions to `g[0]` and `g[1]` and then prints:
 {[0],2 +x[0] +x[1] +x[2]},{[1],2*x[2] +2*x[1]*x[2]}
 ```
 
-# qbpp::Sol class
+## qbpp::Sol class
 A qbpp::Sol object stores a solution to a HUBO problem—that is, an assignment of binary values to variables.
 Below we illustrate it with the partition problem.
 
-## Partitioning problem and the QUBO formutation.
+### Partitioning problem and the QUBO formutation.
 Let $N_0, N_1, \ldots, N_{n-1}$ be $n$ integers.
 The goal is to split them into two subsets $L$ and $\overline{L}$ so that the two subset sums are as equal as possible.
 Equivalently, we minimize
