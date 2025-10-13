@@ -75,7 +75,7 @@ ExhaustiveSolver evaluates the values of @f$g@f$ for all @f$2^3@f$ possible solu
 
 The output of this program follows.
 
-```cpp
+```text
 f = 6 -2*a -2*b -2*c -3*a -3*b -3*c +a*a +a*b +a*c +b*a +b*b +b*c +c*a +c*b +c*c
 g = 6 -4*a -4*b -4*c +2*a*b +2*a*c +2*b*c
 0:0:{{a,0},{b,1},{c,1}}
