@@ -1,8 +1,4 @@
----
-title: QUBO++ Docs
-render_with_liquid: false
----
-
+{% raw %}
 # QUBO++ Library Documantaion Version 2025.10.13
 
 Quadratic Unconstrained Binary Optimization (QUBO) models use quadratic functions over binary variables {0,1}.
@@ -79,7 +75,7 @@ ExhaustiveSolver evaluates the values of @f$g@f$ for all @f$2^3@f$ possible solu
 
 The output of this program follows.
 
-{% raw %}
+```cpp
 f = 6 -2*a -2*b -2*c -3*a -3*b -3*c +a*a +a*b +a*c +b*a +b*b +b*c +c*a +c*b +c*c
 g = 6 -4*a -4*b -4*c +2*a*b +2*a*c +2*b*c
 0:0:{{a,0},{b,1},{c,1}}
@@ -90,7 +86,7 @@ g = 6 -4*a -4*b -4*c +2*a*b +2*a*c +2*b*c
 5:2:{{a,0},{b,1},{c,0}}
 6:2:{{a,1},{b,0},{c,0}}
 7:6:{{a,0},{b,0},{c,0}}
-{% endraw %}
+```
 
 The resulting value of a QUBO expression for a given assignment of binary values to variables is referred to as the **energy**. The goal of the QUBO problem is to find the optimal assignment that minimizes this energy. For instance, in the case of @f$g@f$, the minimum value of 0 is achieved when the sum of the three variables equals 2 or 3. When the sum of the three variables is 2 or less, the energy value is 2 or greater. QUBO solvers are designed to find one of the optimal solutions that minimizes the energy.
 
@@ -164,7 +160,7 @@ This program performs the following steps:
 Upon executing this program, the following results are obtained:
 An optimal solution with an objective value of 0 is achieved.
 
-```text
+```cpp
 f : 7744 -4380*x[0] -3120*x[1] -6144*x[2] -348*x[3] -4144*x[4] -3120*x[5] -2560*x[6] -1968*x[7] +1200*x[0]*x[1] +2880*x[0]*x[2] +120*x[0]*x[3] +1680*x[0]*x[4] +1200*x[0]*x[5] +960*x[0]*x[6] +720*x[0]*x[7] +1920*x[1]*x[2] +80*x[1]*x[3] +1120*x[1]*x[4] +800*x[1]*x[5] +640*x[1]*x[6] +480*x[1]*x[7] +192*x[2]*x[3] +2688*x[2]*x[4] +1920*x[2]*x[5] +1536*x[2]*x[6] +1152*x[2]*x[7] +112*x[3]*x[4] +80*x[3]*x[5] +64*x[3]*x[6] +48*x[3]*x[7] +1120*x[4]*x[5] +896*x[4]*x[6] +672*x[4]*x[7] +640*x[5]*x[6] +480*x[5]*x[7] +384*x[6]*x[7]
 Solution: 0:{{x[0],1},{x[1],1},{x[2],0},{x[3],1},{x[4],0},{x[5],1},{x[6],1},{x[7],0}}
 ```
@@ -728,7 +724,7 @@ int main() {
 
 The output of this code is as follows:
 
-{% raw %}
+```cpp
 f = 6 -4*a -6*b -6*c -4*d +6*{0} +4*a*b +6*a*c +8*a*d -2*a*{0} +12*b*c +16*b*d -4*b*{0} +24*c*d -6*c*{0} -8*d*{0}
 *f = a +2*b +3*c +4*d
 0:{{a,0},{b,0},{c,0},{d,1},{{0},1}} *f = 4
@@ -738,7 +734,7 @@ f = 6 -4*a -6*b -6*c -4*d +6*{0} +4*a*b +6*a*c +8*a*d -2*a*{0} +12*b*c +16*b*d -
 0:{{a,1},{b,0},{c,1},{d,0},{{0},1}} *f = 4
 0:{{a,1},{b,1},{c,0},{d,0},{{0},0}} *f = 3
 0:{{a,1},{b,1},{c,0},{d,0},{{0},1}} *f = 3
-{% endraw %}
+```
 
 Here, `{0}` is an auxiliary variable required to implement the range comparison.
 We can confirm that the output includes all solutions that satisfy the range comparison.
@@ -774,14 +770,14 @@ int main() {
 In this code, `qbpp::inf` is used to indicate that the range comparison has no upper bound.
 The output of this code is as follows:
 
-{% raw %}
+```cpp
 f = 72 -16*a -30*b -42*c -52*d +18*{0} +4*a*b +6*a*c +8*a*d -2*a*{0} +12*b*c +16*b*d -4*b*{0} +24*c*d -6*c*{0} -8*d*{0}
 *f = a +2*b +3*c +4*d
 0:{{a,0},{b,1},{c,1},{d,1},{{0},0}} *f = 9
 0:{{a,0},{b,1},{c,1},{d,1},{{0},1}} *f = 9
 0:{{a,1},{b,0},{c,1},{d,1},{{0},0}} *f = 8
 0:{{a,1},{b,1},{c,1},{d,1},{{0},1}} *f = 10
-{% endraw %}
+```
 
 We can confirm that the output includes all solutions that satisfy the range comparison.
 
@@ -812,11 +808,11 @@ In this code, the energy value of `f` is evaluated using a qbpp::MapList object,
 The energy is also evaluated for a set of values provided using an initializer list.
 The expected output of the code is as follows:
 
-{% raw %}
+```cpp
 f = 3 -2*a -3*b -3*c +2*a*b +3*a*c +6*b*c
 f(0, 0, 0) = 3
 f(0, 1, 0) = 0
-{% endraw %}
+```
 
 Since the operator() for a qbpp::Expr object simply calls the qbpp::eval function, the values can be evaluated in a more intuitive way as follows:
 ```cpp
@@ -851,10 +847,10 @@ In this code, the energy value of `f` is evaluated using a qbpp::MapList object,
 The energy is also evaluated for a set of values provided using an initializer list.
 The expected output of the code is as follows:
 
-{% raw %}
+```cpp
 f = 3 -2*a -3*b -3*c +2*a*b +3*a*c +6*b*c
 f(0, c-1, c) = 6 -6*c
-{% endraw %}
+```
 
 The eval() and replace() functions can be used with qbpp::MapList objects and qbpp::VarInt objects, as demonstrated in the following example:
 
@@ -1663,3 +1659,4 @@ constant = 316796724347183046560485185991381254433444 min_coeff = -1710449201277
 ```
 From this output, you can estimate the required bit count for `energy_t` and `coeff_t`.
 
+{% endraw %}
