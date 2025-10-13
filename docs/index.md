@@ -74,7 +74,7 @@ ExhaustiveSolver evaluates the values of @f$g@f$ for all @f$2^3@f$ possible solu
 
 The output of this program follows.
 
-```text
+{% raw %}
 f = 6 -2*a -2*b -2*c -3*a -3*b -3*c +a*a +a*b +a*c +b*a +b*b +b*c +c*a +c*b +c*c
 g = 6 -4*a -4*b -4*c +2*a*b +2*a*c +2*b*c
 0:0:{{a,0},{b,1},{c,1}}
@@ -85,7 +85,7 @@ g = 6 -4*a -4*b -4*c +2*a*b +2*a*c +2*b*c
 5:2:{{a,0},{b,1},{c,0}}
 6:2:{{a,1},{b,0},{c,0}}
 7:6:{{a,0},{b,0},{c,0}}
-```
+{% endraw %}
 
 The resulting value of a QUBO expression for a given assignment of binary values to variables is referred to as the **energy**. The goal of the QUBO problem is to find the optimal assignment that minimizes this energy. For instance, in the case of @f$g@f$, the minimum value of 0 is achieved when the sum of the three variables equals 2 or 3. When the sum of the three variables is 2 or less, the energy value is 2 or greater. QUBO solvers are designed to find one of the optimal solutions that minimizes the energy.
 
