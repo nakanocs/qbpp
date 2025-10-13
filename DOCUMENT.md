@@ -7,7 +7,7 @@ QUBO++ is a C++ library for constructing and transforming these objectives and e
 This document explains how to use the QUBO++ library to design QUBO and HUBO expressions.
 
 
-## HUBO Expressions and QUBO++ Library
+# Getting Started: HUBO Expressions and the QUBO++ Library
 
 **A HUBO (High-order Unconstrained Binary Optimization) expression** is a polynomial in binary variables.
 For example, consider three binary variables $a$, $b$ and $c$, and define
@@ -16,9 +16,9 @@ For example, consider three binary variables $a$, $b$ and $c$, and define
 $$
 \begin{aligned}
 f(a,b,c)
-&=(a+b+c-2)(a+b+c-3)^2\\
-&= 4a +4b +4c -4a^2 -4b^2 -4c^2 -8ab -8ac -8bc +a^3 +b^3 +c^3 +3a^2b +3a^2c +3ab^2 +3b^2c+3ac^2+3bc^2 +6abc \\
-&= a +b +c -2ab -2ac -2bc +6abc
+&=(a+b+c-2)(a+2b+3c-3)^2\\
+&= f 9a +9b +9c -6a^2  -12b^2 -18c^2 -18ab -24ac -30bc  +a^3 +4b^3 +9c^3 +5a^2b +7a^2c +8ab^2 +15ac^2  +16b^2c +21bc^2 +22abc  \\
+&= 4a +b -5ab -2ac +7bc +22abc
 \end{aligned}
 $$
 
@@ -27,16 +27,16 @@ Expanding $(a+b+c-2)(a+b+c-3)^2$, we obtain an equivalent polynomial expression 
 Furthermore, using the fact that $x^2=x$ holds for all binary variables $x\in{0,1}$, we can merge equivalent terms to derive a simplified expression.
 The resulting HUBO expression has:
 * constant term: none 
-* linear terms: $a$, $b$, $c$
-* quadratic terms: $-2ab$, $-2ac$, $-2bc$
-* cubic term : $6abc$
+* linear terms:  $4a$, $b$ 
+* quadratic terms: $-5ab$, $-2ac$, $7bc$ 
+* cubic term : $22acbc$
 
-In this document, we refer to $(a+b+c-2)(a+b+c-3)$ as **a (HUBO) formula** and
-to the expanded, simplified polynomial $a +b +c -2ab -2ac -2bc +6abc$ as **a (HUBO) expression**.
+In this document, we refer to $(a+b+c)(a+2b+3c-3)$ as **a (HUBO) formula** and
+to the expanded, simplified polynomial $4a +b -5ab -2ac +7bc +22abc$ as **a (HUBO) expression**.
 The resulting value of a HUBO polynomial, borrowing the terminology of quantum mechanics, is called **the energy**.
 A HUBO problem aims to find a binary assignment of variables that minimizes this energy.
-It should be clear that $f(a,b,c)$ achieves optimal energy 0 when $a+b+c=0$ and $2$.
-Hence, it has four optimal solutions: $(a,b,c)=(0,0,0),(1,1,0),(1,0,1),(0,1,1)$.
+It should be clear that $f(a,b,c)$ achieves optimal energy 0 when $a+b+c=0$ or $a+2b+3c=3$.
+Hence, it has three optimal solutions: $(a,b,c)=(0,0,0),(1,1,0),(0,0,1)$.
 
 **QUBO++** is a C++ library for constructing HUBO formulas and deriving the corresponding HUBO expressions.
 It also includes solvers to search for optimal or near-optimal solutions to a given HUBO expression.
@@ -49,7 +49,7 @@ int main() {
   auto a = qbpp::var("a");
   auto b = qbpp::var("b");
   auto c = qbpp::var("c");
-  auto f = (a + b + c) * qbpp::sqr(a + b + c - 2);
+  auto f = (a + b + c) * qbpp::sqr(a + 2* b + 3* c - 3);
   f.simplify_as_binary();
   std::cout << "f = " << f << std::endl;
   qbpp::exhaustive_solver::ExhaustiveSolver solver(f);
@@ -66,12 +66,162 @@ The Ehaustive Solver then evaluates the energy of $f$ for all $2^3$ possible ass
 The output below confirms the HUBO expression and the four optimal solutions:
 
 
-````text
-f = a +b +c -2*a*b -2*a*c -2*b*c +6*a*b*c
+```text
+f = 4*a +b -5*a*b -2*a*c +7*b*c +22*a*b*c
 (0) 0:{{a,0},{b,0},{c,0}}
-(1) 0:{{a,0},{b,1},{c,1}}
-(2) 0:{{a,1},{b,0},{c,1}}
-(3) 0:{{a,1},{b,1},{c,0}}
-````
+(1) 0:{{a,0},{b,0},{c,1}}
+(2) 0:{{a,1},{b,1},{c,0}}
+```
 
+As shown in this QUBO++ program, most QUBO++ objects can be displayed using std::cout, which makes debugging easier.
+
+
+# QUBO++ Core Classes
+The QUBO++ library provides the following core classes for designing polynomial expressions involving variables:
+
+* qbpp::Var: Stores a symbolic variable in polynomial expressions.
+* qbpp::Expr: Stores a polynomial expression of qbpp::Var objects.
+* qbpp::Sol: Stores a solution for a qbpp::Expr object, mapping qbpp::Var objects to binary values.
+
+## qbpp::Var class
+
+qbpp::Var objects can be created using `auto` type deduction and the qbpp::var() function.
+A qbpp::Var object represents a single variable.
+Unlike conventional programming languages, it does not store a variable's value;
+instead, it symbolically represents a variable within qbpp::Expr objects.
+
+We can use the qbpp::var function to create a qbpp::Var object `a` that stores a variable with the label string  `a` as follows:
+
+```cpp
+auto a = qbpp::var("a");
+```
+
+Note that the function qbpp::var() uses all lowercase letters, while the class qbpp::Var begins with a capital letter.
+The argument `"a"` specifies the label string for the qbpp::Var object, which is used to represent the object as a string.
+This example uses qbpp::Var object `a` with the label same string `a`.
+However, it is not necessary to be the same.
+
+A vector of qbpp::Var objects can be defined with a specified size as follows:
+
+```cpp
+auto x = qbpp::var("x", 3);
+```
+
+This creates a vector `x` with three qbpp::Var objects labeled `X`.
+Each object can be accessed using `x[0]`, `x[1]`, and `x[2]`, and their label strings, `x[0]`, `x[1]`, and `x[2]`, combine the base label with the corresponding indices for display purposes.
+
+Multi-dimensional qbpp::Var objects can be defined similarly.
+For example, the following code creates a @f$3\times 2@f$ matrix `x` of qbpp::Var objects.
+
+```cpp
+auto y = qbpp::var("y", 3, 2);
+```
+
+Each object can be accessed as `x[0][0]`, `x[0][1]`, `x[1][0]`, `x[1][1]`, `x[2][0]`, and `x[2][1]` and
+they are displayed as `x[0][0]`, `x[0][1]`, `x[1][0]`, `x[1][1]`, `x[2][0]`, and `x[2][1]`.
+
+Higher-dimensional qbpp::Var objects can be defined similarly, with no limitation on the number of dimensions.
+Additionally, a variable can be created without specifying a label string:
+
+```cpp
+auto s = qbpp:var();
+```
+
+For such variables, default numbered label string such as `"{0}"`, `"{1}"`, and so on are assigned.
+
+The qbpp::var() functions shown above call the constructor of the qbpp::Var class.
+However, the constructor should not be called directly, as a set of all qbpp::Var objects is maintained internally.
+
+## qbpp::Expr class
+
+A qbpp::Expr object stores a polynomial over qbpp::Var objects.
+Expressions are built via overloaded arithmetic and compound-assignment operators with integers, including
+`*` (multiplication), `+` (addition), `-` (subtraction / unary negation), `*=` (compound multiplication), `+=` (compound addition), and `-=` (compound subtraction).
+You can also rely on type deduction with auto when assigning expressions:
+```cpp
+#include "qbpp.hpp"
+
+int main() {
+  auto x = qbpp::var("x", 3);
+  auto f = (x[0] - 1) * (x[1] + 1);
+  auto g = f * x[2];
+  std::cout << "f = " << f.simplify_as_binary() << std::endl;
+  std::cout << "g = " << g.simplify_as_binary() << std::endl;
+  f -= x[0] - x[1];
+  g *= f + 1;
+  std::cout << "f = " << f.simplify_as_binary() << std::endl;
+  std::cout << "g = " << g.simplify_as_binary() << std::endl;
+}
+```
+This program prints:
+```text
+f = -1 +x[0] -x[1] +x[0]*x[1]
+g = -x[2] +x[0]*x[2] -x[1]*x[2] +x[0]*x[1]*x[2]
+f = -1 +x[0]*x[1]
+g = 0
+```
+It is straightforward to verify that the `qbpp::Expr` objects `f` and `g` correctly represent the intended HUBO expressions.
+
+Please note that type deduction with `auto` does not work as intended when the right-hand side is an integer, a variable, or a product term.
+For example, the following lines do not create `qbpp::Expr` objects.
+They create an `int`, a `qbpp::Var`, and a `qbpp::Term` respectively—none of which store a HUBO expression.
+```cpp
+  auto f = 0;
+  auto g = x[0];
+  auto h = 2 * x[0] * x[1] * x[2];
+```
+Thus, the assignment below causes a compilation error because `g` is **not** a `qbpp::Expr`:
+```
+  g += 1;
+```
+
+To construct a `qbpp::Expr` from non-Expr values, use `qbpp::toExpr()`, which converts supported types to `qbpp::Expr`:
+```cpp
+#include "qbpp.hpp"
+
+int main() {
+  auto x = qbpp::var("x", 3);
+  auto f = qbpp::toExpr(0);
+  auto g = qbpp::toExpr(x[0]);
+  auto h = qbpp::toExpr(2 * x[0] * x[1] * x[2]);
+  f = g - h;
+  g += h;
+  std::cout << "f = " << f.simplify_as_binary() << std::endl;
+  std::cout << "g = " << g.simplify_as_binary() << std::endl;
+}
+```
+This QUBO++ program prints:
+```text
+f = x[0] -2*x[0]*x[1]*x[2]
+g = x[0] +2*x[0]*x[1]*x[2]
+```
+Alternatively, declare the type explicitly:
+```cpp
+  qbpp::Expr f = 0;
+  qbpp::Expr g = x[0];
+  qbpp::Expr h = 2 * x[0] * x[1] * x[2];
+```
+
+Arrays of `qbpp::Expr` can be defined in the same way as arrays of `qbpp::Var`.
+The following QUBO++ program creates arrays `f` and `g`, each holding `qbpp::Expr` objects:
+```cpp
+#include "qbpp.hpp"
+
+int main() {
+  auto x = qbpp::var("x", 3);
+  auto f = x + 1;
+  std::cout << f.simplify_as_binary() << std::endl;
+  auto g = qbpp::expr(2);
+  g[0] = f[0] + f[1] + x[2];
+  g[1] = 2 * f[1] * x[2];
+  std::cout << g.simplify_as_binary() << std::endl;
+}
+```
+Since `x` is an array of three `qbpp::Var` objects, `x + 1` performs an element-wise addition and returns an array of three `qbpp::Expr` objects assigned to `f`.
+`qbpp::expr(2)` creates an array `g` with two zero-initialized `qbpp::Expr` objects, each capable of storing a HUBO expression.
+This program assigns expressions to g[0] and g[1] and then prints:
+```text
+{[0],1 +x[0]},{[1],1 +x[1]},{[2],1 +x[2]}
+{[0],2 +x[0] +x[1] +x[2]},{[1],2*x[2] +2*x[1]*x[2]}
+```
 
