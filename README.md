@@ -1,4 +1,4 @@
-# README Version: 2025.10.10
+# README Version: 2025.10.13
 * **Maintainer:** Koji Nakano
 * [**Downloads**](https://github.com/nakanocs/qbpp/blob/main/DOWNLOAD.md)
 * [**Documents**](https://github.com/nakanocs/qbpp/blob/main/DOCUMENT.md)
