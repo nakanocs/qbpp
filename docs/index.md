@@ -1,4 +1,3 @@
-{% raw %}
 # QUBO++ Library Documantaion Version 2025.10.13
 
 QUBO (Quadratic Unconstrained Binary Optimization) models use quadratic functions over binary variables {0,1}.
@@ -62,6 +61,7 @@ applies the binary identity $x^2=x$ and merges equivalent terms to yield the sim
 The Ehaustive Solver then evaluates the energy of $f$ for all $2^3$ possible assignments, and outputs the optimal ones.
 The output below confirms the HUBO expression and the four optimal solutions:
 
+{% raw %}
 ````text
 f = a +b +c -2*a*b -2*a*c -2*b*c +6*a*b*c
 (0) 0:{{a,0},{b,0},{c,0}}
