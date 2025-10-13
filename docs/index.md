@@ -1,3 +1,4 @@
+{% raw %}
 # QUBO++ Library Documantaion Version 2025.10.13
 
 QUBO (Quadratic Unconstrained Binary Optimization) models use quadratic functions over binary variables {0,1}.
@@ -68,5 +69,5 @@ f = a +b +c -2*a*b -2*a*c -2*b*c +6*a*b*c
 (2) 0:{{a,1},{b,0},{c,1}}
 (3) 0:{{a,1},{b,1},{c,0}}
 ````
-
+{% endraw %}
 
