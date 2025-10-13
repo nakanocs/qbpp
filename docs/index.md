@@ -11,6 +11,8 @@ This document explains how to use the QUBO++ library to design QUBO and HUBO exp
 
 **A HUBO (High-order Unconstrained Binary Optimization) expression** is a polynomial in binary variables.
 For example, consider three binary variables $a$, $b$ and $c$, and define
+
+
 $$
 \begin{aligned}
 f(a,b,c)
@@ -19,6 +21,8 @@ f(a,b,c)
 &= a +b +c -2ab -2ac -2bc +6abc
 \end{aligned}
 $$
+
+
 Expanding $(a+b+c-2)(a+b+c-3)^2$, we obtain an equivalent polynomial expression in the form of a sum of product terms.
 Furthermore, using the fact that $x^2=x$ holds for all binary variables $x\in{0,1}$, we can merge equivalent terms to derive a simplified expression.
 The resulting HUBO expression has:
