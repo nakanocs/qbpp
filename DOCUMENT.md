@@ -232,6 +232,7 @@ Below we illustrate it with the partition problem.
 Let $N_0, N_1, \ldots, N_{n-1}$ be $n$ integers.
 The goal is to split them into two subsets $L$ and $\overline{L}$ so that the two subset sums are as equal as possible.
 Equivalently, we minimize
+
 $$
 \begin{aligned}
    f(L) & = (\sum_{i\in L} N_i - \sum_{i\in\overline{L}}N_i)^2
