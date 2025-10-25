@@ -181,7 +181,7 @@ They create an `int`, a `qbpp::Var`, and a `qbpp::Term` respectively—none of w
   auto h = 2 * x[0] * x[1] * x[2];
 ```
 Thus, the assignment below causes a compilation error because `g` is **not** a `qbpp::Expr`:
-```
+```cpp
   g += 1;
 ```
 
@@ -607,7 +607,7 @@ Additionally, the derived class contains another `qbpp::Expr` object representin
 This additional `qbpp::Expr` object can be accessed using the `operator*`, meaning that `*f` and `*g` return the QUBO expression on the left-hand side.
 
 The output below confirms that the correct solution to the linear equations is obtained:
-```cpp
+```text
 sol = 0:{{x[0],1},{x[1],0},{x[2],1},{x[3],1},{y[0],0},{y[1],1},{y[2],0},{y[3],0}}
 x = 8
 y = 2
@@ -649,7 +649,7 @@ int main() {
 
 The output of this code is as follows:
 
-```cpp
+```text
 f = 6 -4*a -6*b -6*c -4*d +6*{0} +4*a*b +6*a*c +8*a*d -2*a*{0} +12*b*c +16*b*d -4*b*{0} +24*c*d -6*c*{0} -8*d*{0}
 *f = a +2*b +3*c +4*d
 0:{{a,0},{b,0},{c,0},{d,1},{{0},1}} *f = 4
@@ -695,7 +695,7 @@ int main() {
 In this code, `qbpp::inf` is used to indicate that the range comparison has no upper bound.
 The output of this code is as follows:
 
-```cpp
+```text
 f = 72 -16*a -30*b -42*c -52*d +18*{0} +4*a*b +6*a*c +8*a*d -2*a*{0} +12*b*c +16*b*d -4*b*{0} +24*c*d -6*c*{0} -8*d*{0}
 *f = a +2*b +3*c +4*d
 0:{{a,0},{b,1},{c,1},{d,1},{{0},0}} *f = 9
@@ -732,7 +732,7 @@ In this code, the energy value of `f` is evaluated using a qbpp::MapList object,
 The energy is also evaluated for a set of values provided using an initializer list.
 The expected output of the code is as follows:
 
-```cpp
+```text
 f = 3 -2*a -3*b -3*c +2*a*b +3*a*c +6*b*c
 f(0, 0, 0) = 3
 f(0, 1, 0) = 0
@@ -765,7 +765,7 @@ In this code, the energy value of `f` is evaluated using a qbpp::MapList object,
 The energy is also evaluated for a set of values provided using an initializer list.
 The expected output of the code is as follows:
 
-```cpp
+```text
 f = 3 -2*a -3*b -3*c +2*a*b +3*a*c +6*b*c
 f(0, c-1, c) = 6 -6*c
 ```
@@ -788,7 +788,7 @@ int main() {
 
 Based on the following output, we can confirm that the functions are working correctly:
 
-```cpp
+```text
 f = a[0] +4*a[1] +4*a[2] -b[0] -4*b[1] -4*b[2] +4*a[0]*a[1] +4*a[0]*a[2] +8*a[1]*a[2] -4*b[0]*b[1] -4*b[0]*b[2] -8*b[1]*b[2]
 f(2, b) = 4 -b[0] -4*b[1] -4*b[2] -4*b[0]*b[1] -4*b[0]*b[2] -8*b[1]*b[2]
 f(2, 1) = 3
@@ -826,7 +826,7 @@ int main() {
 
 This code uses the ExhaustiveSolver to evaluate all possible solutions, producing the following output:
 
-```
+```text
 f = a*b*c
 g = {0} +a*b +a*c -a*{0} +b*c -b*{0} -c*{0}
 0:0:{{a,0},{b,0},{c,0},{{0},0}}
