@@ -1,4 +1,4 @@
-# QUBO++ Library Documantaion Version 2025.10.16
+# QUBO++ Library Documantaion Version 2025.10.25
 
 **QUBO (Quadratic Unconstrained Binary Optimization) models** use quadratic functions over binary variables {0,1}.
 **HUBO** (High-order Unconstrained Binary Optimization) generalizes QUBO to polynomial functions of arbitrary order.
@@ -448,7 +448,7 @@ A single qbpp::VarInt object `x`, representing an integer value in the range $[1
   std::cout << "x = " << x << std::endl;
 ```
 
-From the output of the code below, we can see that `x` is a qbpp::Expr object, composed of four qbpp::Var objects: `x[0]`, `x[1]`, `x[2]`, and `x[3]`, representing an integer value in the range @f$[1,10]@f$.
+From the output of the code below, we can see that `x` is a qbpp::Expr object, composed of four qbpp::Var objects: `x[0]`, `x[1]`, `x[2]`, and `x[3]`, representing an integer value in the range $[1,10]$.
 
 ```cpp
 x = 1 +x[0] +2*x[1] +4*x[2] +2*x[3]
@@ -804,7 +804,7 @@ However, this repeated execution of the replacement function is computationally 
 The reduction function reduces the degree of all terms in qbpp::Expr objects to two, in order to obtain QUBO expressions.
 The reduction is performed using auxiliary variables, ensuring that the optimal solutions remain unchanged.
 
-The following code demonstrates the reduction of the degree-3 expression @f$+abc@f$:
+The following code demonstrates the reduction of the degree-3 expression $+abc$:
 
 ```cpp
 #include "qbpp.hpp"
@@ -848,46 +848,6 @@ g = {0} +a*b +a*c -a*{0} +b*c -b*{0} -c*{0}
 ```
 
 The auxiliary variable, shown as `{0}` is introduced to ensure the equivalent QUBO expression.
-From the result of the ExhaustiveSolver, we can confirm that @f$g=1@f$ when
-@f$a=b=c=1@f$, and that @f$g@f$ can take minimum value of 0 otherwise.
-Thus, @f$g@f$ and @f$f=abc@f$ are equivalent.
-
-## Conversion Functions between QUBO and Ising Expressions
-
-QUBO and Ising models are quadratic expressions involving binary (@f$0/1@f$) and spin (@f$-1/+1@f$) variables, respectively.
-The binary variable @f$x@f$ and the spin variable @f$s@f$ are related by the equation @f$2x - 1 = s@f$.
-Based on this relationship, the following functions allow for equivalent conversions between QUBO and Ising expressions:
-
-* binary_to_spin(): Converts an qbpp::Expr object representing a QUBO expression into an equivalent Ising expression by replacing all variables @f$x@f$ with @f$(x + 1) / 2@f$.
-After that all terms are multiplied by 4 to ensure that all coefficients are integers.
-* spin_to_binary(): Converts an qbpp::Expr object representing an Ising expression into an equivalent QUBO expression by replacing all variables @f$x@f$ with @f$2x - 1@f$.
-
-The following example demonstrates how to use these conversion functions:
-
-```cpp
-#include "qbpp.hpp"
-
-int main() {
-  auto a = qbpp::var("a");
-  auto b = qbpp::var("b");
-  auto f = (a - 1) * (a + b) + 1;
-  f.simplify();
-  std::cout << "f = " << f << std::endl;
-  auto qubo = qbpp::simplify_as_binary(f);
-  auto qubo_ising = qbpp::binary_to_spin(qubo).simplify_as_spin();
-  auto qubo_ising_qubo = qbpp::spin_to_binary(qubo_ising).simplify_as_binary();
-  auto ising = qbpp::simplify_as_spin(f);
-  auto ising_qubo = qbpp::spin_to_binary(ising).simplify_as_binary();
-  auto ising_qubo_ising = qbpp::binary_to_spin(ising_qubo).simplify_as_spin();
-  std::cout << "qubo = " << qubo << " / qubo_ising = " << qubo_ising << " / qubo_ising_qubo = " << qubo_ising_qubo << std::endl;
-  std::cout << "ising = " << ising << " / ising_qubo = " << ising_qubo << " / ising_qubo_ising = " << ising_qubo_ising << std::endl;
-}
-```
-
-The output of this code is:
-
-```cpp
-f = 1 -a -b +a*a +a*b
-qubo = 1 -b +a*b / qubo_ising = 3 +a -b +a*b / qubo_ising_qubo = 4 -4*b +4*a*b
-ising = 2 -a -b +a*b / ising_qubo = 5 -4*a -4*b +4*a*b / ising_qubo_ising = 8 -4*a -4*b +4*a*b
-```
+From the result of the ExhaustiveSolver, we can confirm that $g=1$ when
+$a=b=c=1$, and that $g$ can take minimum value of 0 otherwise.
+Thus, $g$ and $f=abc$ are equivalent.
