@@ -3,7 +3,7 @@
 * [**Documents**](DOCUMENT.md)
 
 # Download
-* Latest Version: (qbpp2025.10.25.tar.gz)
+* [Latest Version](qbpp2025.10.25.tar.gz)
  
 # QUBO++
 * A C++ library for constructing polynomials of binary variables to solve combinatorial optimization problems  
