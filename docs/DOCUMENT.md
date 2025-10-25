@@ -1,3 +1,9 @@
+---
+title: DOCUMENT
+permalink: /
+---
+
+
 # QUBO++ Library Documantaion Version 2025.10.13
 
 QUBO (Quadratic Unconstrained Binary Optimization) models use quadratic functions over binary variables {0,1}.
