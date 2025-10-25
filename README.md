@@ -3,7 +3,8 @@
 * [**Documents**](DOCUMENT.md)
 
 # Download
-* [**Latest Version**](https://github.com/OWNER/REPO/releases/latest/download/qbpp2025.tar.gz)
+* [**Latest Version**](https://github.com/OWNER/REPO/releases/download/2025.10.25/qbpp2025.10.25.tar.gz)
+
 
  
 # QUBO++
