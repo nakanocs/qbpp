@@ -1,3 +1,3 @@
 # Download
 
-* Latest Version:
+* [Releases](https://github.com/nakanocs/qbpp/releases)
