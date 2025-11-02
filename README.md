@@ -1,10 +1,7 @@
-# README Version: 2025.10.13
+# README Version: 2025.11.02
 * **Maintainer:** Koji Nakano
-* [**Documents**](DOCUMENT.md)
-
-# Download
-* **Latest Version**: [qbpp2025.10.25.tar.gz](https://github.com/nakanocs/qbpp/releases/download/2025.10.25/qbpp2025.10.25.tar.gz)
- 
+* [**Downloads**](https://github.com/nakanocs/qbpp/blob/main/DOWNLOAD.md)
+* [**Documents**](https://github.com/nakanocs/qbpp/blob/main/DOCUMENT.md)
 # QUBO++
 * A C++ library for constructing polynomials of binary variables to solve combinatorial optimization problems  
 * Currently built for **x86_64 Linux systems**  
@@ -63,6 +60,8 @@ library itself does not require linking against TBB for the default use cases.
 - **Build & run verified on**: Ubuntu 20.04 (classic TBB 2020.1), 22.04 / 24.04 (oneTBB 2021+).
 
 ## Directory Structure and Key Files
+- `bin/` - Executable
+  - `qbpp-license`: QUBO++ License manager
 
 - `include/` — Header files  
   - `qbpp.hpp`: Main QUBO++ BQ Edition toolkit 
@@ -79,7 +78,6 @@ library itself does not require linking against TBB for the default use cases.
   - `libqbpp_abs3c64.so`: Shared library for the ABS3 GPU solver with 64-bit term coefficients
 
 - `samples/` — Sample programs
-  - `license_check.cpp`: QUBO++ license check program 
   - `factorization.cpp`: Integer factorization
   - `graph_color.cpp`: Graph coloring
   - `tsp.cpp`: Solving Traveling Salesman Problem using Easy Solver
@@ -125,19 +123,57 @@ When activating a node-locked license, some information about the execution envi
   - Maximum variable count: **100 (CPU) / 100 (GPU)**
 
 
-## How to Set the License
+## Display/Activate/Deactivate QUBO++ License
+- The `qbpp-license` utility (in the `/bin` directory of the QUBO++ installation) displays, activates, and deactivates the license on the current machine.
+- A QUBO++ license must be activated on the machine before QUBO++ programs can run.
+- Each license key has limits on how many times it can be activated and deactivated. These limits are tracked per license.
 
-For **Registered Trial**, **Standard License**, and **Professional License**, set the license key using either of the following methods:
+### Display License
+If the license has already been activated on this machine, running `qbpp-license` will show the license information (expiration date/time, total activations, total deactivations, and so on).
+- **Registered Trial**/**Standard License**/**Professional License**
+You can specify the license key either by environment variable or by command-line option.
+  - Using environment variable:
+  ```bash
+  $ export QBPP_LICENSE_KEY=XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX
+  $ qbpp-license
+  ```
+  - Using command-line option:
+  ```bash
+  $ qbpp-license -k XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX
+  ```
+- **Anonymous Trial**  
+  Just run the command without specifying a license key:
+  ```bash
+  $ qbpp-license
+  ```
 
-- **Via Code**:
+### Activate License
+- To activate the license on the current machine, add the `-a` (or `--activate`) option to the above command:
+  ```bash
+  $ qbpp-license -a
+  ```
+- This consumes one activation from the license.
+
+### Deactivate License
+- To deactivate the license on the current machine, use the `-d` (or `--deactivate`) option:
+  ```bash
+  $ qbpp-license -d
+  ```
+- Anonymous Trial cannot be deactivated.
+- Deactivation will increase the deactivation count and free up an activation slot so that the license can be activated again on this or another machine.
+
+## Executing QUBO++ with license key.
+- For **Anonymous Trial**, there is no license key to set.
+- For **Registered Trial**, **Standard**, and **Professional** licenses, specify the key in one of the following ways before running your program:
+  - **Via Code**:
   ```cpp
   qbpp::license_key("XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX");
   ```
-- **Via Environment Variable**:
+  - **Via Environment Variable**:
   ```bash
   export QBPP_LICENSE_KEY=XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX
   ```
-  
+
 # Terms and Conditions
 
 By using QUBO++, you agree to the following terms and conditions:
