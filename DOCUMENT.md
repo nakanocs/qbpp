@@ -447,6 +447,7 @@ $$
    k & = \lfloor \log_2(u-l+1)\rfloor
 \end{aligned}
 $$
+
 binary variables, and express $x$ as
 
 $$
@@ -454,12 +455,15 @@ $$
    x & = l+2^0x_0+2^1x_1+\cdots 2^{k-2}x_{k-2}+cx_{k-1}
 \end{aligned}
 $$
+
 where $c\in [1,2^{k-1}]$ s chosen so that
+
 $$
 \begin{aligned}
    u = l+2^0+2^1+\cdots 2^{k-2}+c
 \end{aligned}
 $$
+
 holds.
 The integers specifying the range can be negative. 
 
