@@ -1,13 +1,10 @@
-# QUBO++ Library Documantaion Version 2025.10.25
+# QUBO++ Library Documantaion Version 2025.11.15
 
 **QUBO (Quadratic Unconstrained Binary Optimization) models** use quadratic functions over binary variables {0,1}.
 **HUBO** (High-order Unconstrained Binary Optimization) generalizes QUBO to polynomial functions of arbitrary order.
 The goal in QUBO/HUBO is to find a binary assignment that minimizes the objective.
-**QUBO++** is a C++ library for constructing and transforming these objectives and efficiently searching for optimal or high-quality solutions.
-This document explains how to use the QUBO++ library to design QUBO and HUBO expressions.
-
-It should be clear that the class of **HUBO** includes **QUBO**.
-Therefore, in this document, we use the term **QUBO** when an expression is guaranteed to be quadratic; otherwise, we refer to it as **HUBO**.
+**QUBO++** is a C++ model-and-solve library for modeling and solving QUBO/HUBO problems.
+This document explains how to use QUBO++ to model QUBO and HUBO expressions and solve them.
 
 # Getting Started: HUBO Expressions and the QUBO++ Library
 
@@ -18,31 +15,32 @@ For example, consider three binary variables $a$, $b$ and $c$, and define
 $$
 \begin{aligned}
 f(a,b,c)
-&=(a+b+c-2)(a+2b+3c-3)^2\\
-&= f 9a +9b +9c -6a^2  -12b^2 -18c^2 -18ab -24ac -30bc  +a^3 +4b^3 +9c^3 +5a^2b +7a^2c +8ab^2 +15ac^2  +16b^2c +21bc^2 +22abc  \\
+&=(a+b+c)(a+2b+3c-3)^2\\
+&= 9a +9b +9c -6a^2  -12b^2 -18c^2 -18ab -24ac -30bc  +a^3 +4b^3 +9c^3 +5a^2b +7a^2c +8ab^2 +15ac^2  +16b^2c +21bc^2 +22abc  \\
 &= 4a +b -5ab -2ac +7bc +22abc
 \end{aligned}
 $$
 
 
-Expanding $(a+b+c-2)(a+b+c-3)^2$, we obtain an equivalent polynomial expression in the form of a sum of product terms.
-Furthermore, using the fact that $x^2=x$ holds for all binary variables $x\in{0,1}$, we can merge equivalent terms to derive a simplified expression.
+Expanding $(a+b+c)(a+2b+3c-3)^2$, we obtain an equivalent polynomial expression in the form of a sum of product terms.
+Furthermore, using the fact that $x^2=x$ holds for all binary variables $x\in\{0,1\}$, we can merge equivalent terms to derive a simplified expression.
 The resulting HUBO expression has:
 * constant term: none 
 * linear terms:  $4a$, $b$ 
 * quadratic terms: $-5ab$, $-2ac$, $7bc$ 
 * cubic term : $22acbc$
 
-In this document, we refer to $(a+b+c)(a+2b+3c-3)$ as **a (HUBO) formula** and
-to the expanded, simplified polynomial $4a +b -5ab -2ac +7bc +22abc$ as **a (HUBO) expression**.
-The resulting value of a HUBO polynomial, borrowing the terminology of quantum mechanics, is called **the energy**.
+In this document, we refer to $(a+b+c)(a+2b+3c-3)^2$ as **a formula**  (or HUBO formula) and
+to the expanded, simplified polynomial $4a +b -5ab -2ac +7bc +22abc$ as **an expression** (or HUBO expression).
+The resulting value of an expressoin, borrowing the terminology of quantum mechanics, is called **the energy**.
 A HUBO problem aims to find a binary assignment of variables that minimizes this energy.
 It should be clear that $f(a,b,c)$ achieves optimal energy 0 when $a+b+c=0$ or $a+2b+3c=3$.
 Hence, it has three optimal solutions: $(a,b,c)=(0,0,0),(1,1,0),(0,0,1)$.
 
-**QUBO++** is a C++ library for constructing HUBO formulas and deriving the corresponding HUBO expressions.
-It also includes solvers to search for optimal or near-optimal solutions to a given HUBO expression.
-The following QUBO++ program generates the polynomial expression for $f$ and lists all optimal solutions:
+**QUBO++** provides the following two main functionalities:
+**Model**: symbolically derives expressions using C++ constructs.
+**Solve**: finds solutions that minimize the energy of a given expression.
+The following QUBO++ program models the polynomial expression for $f$ and enumerates all optimal solutions:
 ```cpp
 #include "qbpp.hpp"
 #include "qbpp_exhaustive_solver.hpp"
@@ -64,7 +62,7 @@ The header `qbpp.hpp` enables use of the QUBO++ library, and `qbpp_exhaustive_so
 In this program, three variables, $a$, $b$, and $c$, are defined, along with the formula $f$.
 The formula $f$ is automatically expanded, and the member function `simplify_as_binary()` 
 applies the binary identity $x^2=x$ and merges equivalent terms to yield the simplified HUBO expression.
-The Ehaustive Solver then evaluates the energy of $f$ for all $2^3$ possible assignments, and outputs the optimal ones.
+**Ehaustive Solver** then evaluates the energy of $f$ for all $2^3$ possible assignments, and outputs the optimal ones.
 The output below confirms the HUBO expression and the four optimal solutions:
 
 
@@ -94,12 +92,12 @@ The QUBO++ library provides the following core classes for designing polynomial 
 # qbpp::Var class: Variable object
 
 ## Creating qbpp::Var objects
-`qbpp::Var` objects can be created using `auto` type deduction and the qbpp::var() function.
+`qbpp::Var` objects can be created using `auto` type deduction and the `qbpp::var()` function.
 A `qbpp::Var` object represents a single variable.
 Unlike conventional programming languages, it does not store a variable's value;
-instead, it symbolically represents a variable within `qbpp::Expr` objects.
+instead, it symbolically represents a variable within `qbpp::Term` and `qbpp::Expr` objects.
 
-We can use the `qbpp::var()` function to create a `qbpp::Var` object `a` that stores a variable with the label string  `a` as follows:
+We can use the `qbpp::var()` function to create a `qbpp::Var` object `a` that stores a variable with the name string  `a` as follows:
 
 ```cpp
 auto a = qbpp::var("a");
@@ -107,7 +105,9 @@ auto a = qbpp::var("a");
 
 The argument `"a"` specifies the name string for the `qbpp::Var` object, which is used to represent the object as a string.
 In this example, the variable is `qbpp::Var` `a` and its name is also `a`.
-The name does not have to match the C++ variable identifier, but using the same string is recommended.
+This name is mainly used when displaying expressions that contain the variable.
+The name does not have to match the C++ variable identifier, although using the same string is recommended for clarity.
+QUBO++ does not check that names are unique, so no error occurs even if the same name is used multiple times.
 
 A vector of `qbpp::Var` objects can be defined with a specified size as follows:
 
@@ -115,8 +115,8 @@ A vector of `qbpp::Var` objects can be defined with a specified size as follows:
 auto x = qbpp::var("x", 3);
 ```
 
-This creates a vector `x` with three qbpp::Var objects labeled `X`.
-Each object can be accessed using `x[0]`, `x[1]`, and `x[2]`, and their label strings, `x[0]`, `x[1]`, and `x[2]`, combine the base label with the corresponding indices for display purposes.
+This creates a vector `x` with three qbpp::Var objects with name `x`.
+Each object can be accessed using `x[0]`, `x[1]`, and `x[2]`, and their name strings, `x[0]`, `x[1]`, and `x[2]`, combine the base name with the corresponding indices for display purposes.
 
 Multi-dimensional `qbpp::Var` objects can be defined similarly.
 For example, the following code creates a $3\times 2$ matrix `x` of `qbpp::Var` objects.
@@ -129,25 +129,21 @@ Each object can be accessed as `x[0][0]`, `x[0][1]`, `x[1][0]`, `x[1][1]`, `x[2]
 they are displayed as `x[0][0]`, `x[0][1]`, `x[1][0]`, `x[1][1]`, `x[2][0]`, and `x[2][1]`.
 
 Higher-dimensional `qbpp::Var` objects can be defined similarly, with no limitation on the number of dimensions.
-Additionally, a variable can be created without specifying a label string:
+Additionally, a variable can be created without specifying a name string:
 
 ```cpp
 auto s = qbpp:var();
 ```
 
-### Summary
-* `qbpp::var(const std::string& name)` returns a `qbpp::Var` object representing a symbolic variable with the given `name`, which is used when displaying it with `std::cout`.
-* `qbpp::var(const std::string& label, size_t n0, size_t n1, ...)` returns an array of `qbpp::Var` objects of shape `n0 × n1 × ...`, with `name`. Each `qbpp::Var` object can be accessed using the array notation `x[i0][i1]...`, just like a regular C++ array or multi-dimensional variable. QUBO++ has no limitation of the dsimension depth.
-* If `name` is omitted, default numbered names such as `{0}`, `{1}`, and so on are assigned.
-
+If `name` is omitted, default numbered names such as `{0}`, `{1}`, and so on are assigned.
 
 # qbpp::Expr class: Expression object
 
 ## Creating qbpp::Expr objects
-A qbpp::Expr object stores a polynomial over qbpp::Var objects.
+A `qbpp::Expr` object stores a polynomial over `qbpp::Var` objects.
 Expressions are built via overloaded arithmetic and compound-assignment operators with integers, including
 `*` (multiplication), `+` (addition), `-` (subtraction / unary negation), `*=` (compound multiplication), `+=` (compound addition), and `-=` (compound subtraction).
-You can also rely on type deduction with auto when assigning expressions:
+You can also rely on type deduction with `auto` when assigning expressions:
 ```cpp
 #include "qbpp.hpp"
 
@@ -170,11 +166,11 @@ g = -x[2] +x[0]*x[2] -x[1]*x[2] +x[0]*x[1]*x[2]
 f = -1 +x[0]*x[1]
 g = 0
 ```
-It is straightforward to verify that the `qbpp::Expr` objects `f` and `g` correctly represent the intended HUBO expressions.
+It is straightforward to verify that the `qbpp::Expr` objects `f` and `g` correctly represent the intended expressions.
 
 Please note that type deduction with `auto` does not work as intended when the right-hand side is an integer, a variable, or a product term.
 For example, the following lines do not create `qbpp::Expr` objects.
-They create an `int`, a `qbpp::Var`, and a `qbpp::Term` respectively—none of which store a HUBO expression.
+They create an `int`, a `qbpp::Var`, and a `qbpp::Term` respectively—none of which store an expression.
 ```cpp
   auto f = 0;
   auto g = x[0];
@@ -183,9 +179,10 @@ They create an `int`, a `qbpp::Var`, and a `qbpp::Term` respectively—none of w
 Thus, the assignment below causes a compilation error because `g` is **not** a `qbpp::Expr`:
 ```cpp
   g += 1;
+  h += 1;
 ```
 
-To construct a `qbpp::Expr` from non-Expr values, use `qbpp::toExpr()`, which converts supported types to `qbpp::Expr`:
+To construct a `qbpp::Expr` from non-expression values, use `qbpp::toExpr()`, which converts supported types to `qbpp::Expr`:
 ```cpp
 #include "qbpp.hpp"
 
@@ -235,13 +232,6 @@ This program assigns expressions to `g[0]` and `g[1]` and then prints:
 {[0],2 +x[0] +x[1] +x[2]},{[1],2*x[2] +2*x[1]*x[2]}
 ```
 
-## Summary
-* `qbpp::expr()` returns a single qbpp::Expr object that can store a polynomial over `qbpp::Var` objects.
-* Unlike `qbpp::Var` objects, `qbpp::Expr` objects have no name.
-* `qbpp::expr(size_t n0, size_t n1, ...)` creates an array of `qbpp::Expr` objects with dimensions `n0 × n1 × ...`, each capable of storing a polynomial over `qbpp::Var` objects.
-* Each `qbpp::Expr` in the array can be accessed using the notation `f[i0][i1]...`.
-* Arithmetic and compound assignment operators for `qbpp::Expr` are supported. In addition, various arithmetic operators and functions for qbpp::Expr objects are available and will be explained later.
-
 # qbpp::Sol class: Solution object
 A qbpp::Sol object stores a solution to a HUBO problem—that is, an assignment of binary values to variables.
 Below we illustrate it with the partition problem.
@@ -253,7 +243,7 @@ Equivalently, we minimize
 
 $$
 \begin{aligned}
-   f(L) & = (\sum_{i\in L} N_i - \sum_{i\in\overline{L}}N_i)^2
+   f(L) & = \left(\sum_{i\in L} N_i - \sum_{i\in\overline{L}}N_i\right)^2
 \end{aligned}
 $$
 Introduce binary variable $x_0, x_1,\ldots, x_{n-1}$ where $x_i=1$ iff $i\in L$.
@@ -267,13 +257,13 @@ $$
 so
 $$
 \begin{aligned}
-   f(L) & = (\sum_{i=0}^{n-1} N_ix_i - \sum_{i=0}^{n-1}N_i(1-x_i))^2
-        = (\sum_{i=0}^{n-1}N_i(1-2x_i))^2
+   f(L) & = \left(\sum_{i=0}^{n-1} N_ix_i - \sum_{i=0}^{n-1}N_i(1-x_i)\right)^2
+        = \left(\sum_{i=0}^{n-1}N_i(1-2x_i)\right)^2
 \end{aligned}
 $$
 
 Thus, minimizing this quadratic function over binary variables yields an optimal partition, i.e., a QUBO instance.
-The following QUBO++ program builds the QUBO for $f(L)$ and finds a solution using the Easy Solver.
+The following QUBO++ program builds the expression for $f(L)$ and finds a solution using the Easy Solver.
 ```cpp
 #include "qbpp.hpp"
 #include "qbpp_easy_solver.hpp"
@@ -322,10 +312,11 @@ Since the energy of `sol` is 0, the instance is partitioned into two subsets wit
 
 ## Creating qbpp::Sol objects and updating assigned binary values
 A `qbpp::Sol` object is created associated with a fixed `qbpp::Expr` object, which cannot be changed.
-It stores a solution: a mapping from qbpp::Var objects in the `qbpp::Expr` object to binary values (0/1).
+It stores a solution: a mapping from `qbpp::Var` objects in the `qbpp::Expr` object to binary values (0/1).
+Note that it is not necessary that a solution is not an optimal one.
 The stored solution can be updated.
 
-The following QUBO++ program creates a HUBO expression $f(a,b,c) = (a+b+c)^3$ and an associated solution using the `qbpp::Sol` constructor, which creates a zero-initialized `qbpp::Sol` object.
+The following QUBO++ program creates an expression $f(a,b,c) = (a+2b+3c)^3$ and an associated solution using the `qbpp::Sol` constructor, which creates a zero-initialized `qbpp::Sol` object.
 After that, the binary value assignment to qbpp::Var objects is updated by the `set()` member function.
 The `set()` function accepts a `qbpp::Var` object with the binary value to be updated.
 It also accepts a list of pairs of a `qbpp::Var` object and a binary value for batch updating.
@@ -362,7 +353,7 @@ f = a +8*b +27*c +18*a*b +36*a*c +90*b*c +36*a*b*c
 ```
 
 Solvers bundled with QUBO++ provide member functions that search for a solution and return a `qbpp::Sol` object containing the result. 
-n typical usage, a `qbpp::Sol` object is obtained this way.
+In typical usage, a `qbpp::Sol` object is obtained this way.
 
 ## Reading the value of binary variables and the energy
 The binary value assigned to a `qbpp::Var` in a `qbpp::Sol` can be obtained with the call `operator()`:
@@ -428,20 +419,14 @@ f(a,b,c) = 1
 g(a,b,c) = 1
 ```
 
-## Summary
-* Solvers return `qbpp::Sol` objects that store the obtained solution.
-* `qbpp::Sol(f)` constructs a zero-initialized `qbpp::Sol` for the expression `f` (qbpp::Expr).
-* `set(x, 0)` / `set(x, 1)` set the value of variable `x` to `0` / `1`, respectively.
-* `energy()` returns the cached energy. If any variable value has been modified via `set()`, the cache is invalidated and calling `energy()` raises an error.
-* `comp_energy()` recomputes the energy, stores it in the cache, and returns the value.
 
 # qbpp::VarInt class: Integer class
 
-A qbpp::VarInt object is used to represent an integer value within a specified range.
-It corresponds to a qbpp::Expr object composed of multiple qbpp::Var objects.
-qbpp::VarInt objects can be created using the qbpp::var_int() global function.
+A `qbpp::VarInt` object is used to represent an integer value within a specified range.
+It corresponds to a qbpp::Expr object composed of multiple `qbpp::Var` objects.
+`qbpp::VarInt` objects can be created using the `qbpp::var_int()` global function.
 
-A single qbpp::VarInt object `x`, representing an integer value in the range $[1,10]$, can be created and displayed with the following code:
+A single `qbpp::VarInt object` `x`, representing an integer value in the range $[1,10]$, can be created and displayed with the following code:
 
 ```cpp
   auto x = 1 <= qbpp::var_int("x") <= 10;
@@ -454,9 +439,31 @@ From the output of the code below, we can see that `x` is a qbpp::Expr object, c
 x = 1 +x[0] +2*x[1] +4*x[2] +2*x[3]
 ```
 
+The coefficients of the binary variables are determined based on the binary encoding of integers.
+More specifically, to represent an integers $x$ in the range $[l,u]$ ($l<u$), we use
+
+$$
+\begin{aligned}
+   k & = \lfloor \log_2(u-l+1)\rfloor
+\end{aligned}
+$$
+binary variables, and express $x$ as
+
+$$
+\begin{aligned}
+   x & = l+2^0x_0+2^1x_1+\cdots 2^{k-2}x_{k-2}+cx_{k-1}
+\end{aligned}
+$$
+where $c\in [1,2^{k-1}]$ s chosen so that
+$$
+\begin{aligned}
+   u = l+2^0+2^1+\cdots 2^{k-2}+c
+\end{aligned}
+$$
+holds.
 The integers specifying the range can be negative. 
 
-Similarly to the creation of qbpp::Var objects, a multi-dimensional array of qbpp::VarInt objects with the same specified range can be created as follows:
+Similarly to the creation of `qbpp::Var` objects, a multi-dimensional array of qbpp::VarInt objects with the same specified range can be created as follows:
 
 ```cpp
   auto x = 1 <= qbpp::var_int("x", 3, 4) <= 10;
