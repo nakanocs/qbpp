@@ -519,7 +519,7 @@ The following table summarizes the available operators and functions:
 | Binary/Spin Conversion        | binary_to_spin(), spin_to_binary()                   | Global        | qbpp::Expr     | ExprType               |
 | Binary/Spin Conversion        | binary_to_spin(), spin_to_binary()                   | Member        | qbpp::Expr     | -                      |
 
-In this table, **Int** denotes an integer, while **IntInf** represents either an integer, -qbpp::inf, or +qbpp::inf, which signify infinite values.
+In this table, **Int** denotes an integer, while **IntInf** represents either an integer, `-qbpp::inf`, or `+qbpp::inf`, which signify infinite values.
 Additionally, `qbpp::ExprExpr` is a derived class of `qbpp::Expr` that encapsulates another `qbpp::Expr` object.
 
 ## Simplification Functions for qbpp::Expr
