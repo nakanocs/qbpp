@@ -1,7 +1,7 @@
-# README Version: 2025.11.15
+# README Version: 2025.11.23
 * [**Releases**](https://github.com/nakanocs/qbpp/releases)
 * [**Documents**](https://github.com/nakanocs/qbpp/blob/main/docs/DOCUMENT.md)
-* [**Hands-on**](https://github.com/nakanocs/qbpp/blob/main/docs/handson/HANDSON.md)
+* [**Hands-on**](https://github.com/nakanocs/qbpp/blob/main/docs/tutorial/TUTORIAL.md)
 # QUBO++
 * A C++ library for constructing polynomials of binary variables to solve combinatorial optimization problems  
 * Currently built for **x86_64 Linux systems**  
