@@ -4,7 +4,7 @@
 * [**Tutorial**](https://github.com/nakanocs/qbpp/blob/main/docs/tutorial/TUTORIAL.md)
 # QUBO++
 * A C++ library for constructing polynomials of binary variables to solve combinatorial optimization problems  
-* Currently built for **x86_64 Linux systems**  
+* Currently built for **amd64** (**x86_64**) and **arm64** Linux systems**  
 * Bundled with two CPU solvers: Easy Solver (heuristic) and Exhaustive Solver (complete search)  
 * Bundled with a GPU solver: ABS3  
 * Supports High-order Unconstrained Binary Optimization (HUBO) up to degree 8  
