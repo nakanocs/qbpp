@@ -38,11 +38,21 @@ $ qbpp-license -a
 This increments the activation count.
 Each license has a limited number of allowed activations.
 If `QBPP_LICENSE_KEY` is not set, the command attempts to activate an anonymous trial license.
-Since the license is node-locked, the activation information is stored on the machine, and it is not necessary to run this command again
-as long as the license has not expired.
+
+To check the current status of your QUBO++ license, simply run:
+```bash
+$ qbpp-license
+```
 
 If you want to move the license to another machine, you can deactivate it on this machine as follows:
 ```bash
 $ qbpp-license -d
 ```
 This decreases the activation count, and you can then activate the license on the other machine.
+
+> [!WARNING]
+> Since the license is node-locked, the activation information is stored on the machine, and it is not necessary to run this command again as long as the license has not expired.
+
+> [!WARNING]
+> Each license key has a limited number of allowed activations and deactivations.
+> Once the total number of activations and deactivations reaches this limit, you will no longer be able to activate or deactivate that license.
