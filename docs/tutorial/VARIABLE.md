@@ -33,6 +33,11 @@ $ ./test
 f = 1 +a*b +b*b +a*c +b*c -a -b -b -c
 ```
 
+> [!WARNING]
+> Most QUBO++ class instances, such as `qbpp::Expr`, can be printed as text using `std::cout`.
+> However, this textual output is not guaranteed to be stable and should not be used as input for subsequent computations, since its format may change in future releases.
+> In addition, the output shown in this tutorial may have been generated with an older version of QUBO++, so the output produced by the latest version may differ.
+
 ## Simplifying expression
 The expression stored in a `qbpp::Expr` object can be simplified by calling the `simplify()` member function:
 ```cpp
