@@ -51,7 +51,7 @@ $ qbpp-license -d
 This decreases the activation count, and you can then activate the license on the other machine.
 
 > [!WARNING]
-> Since the license is node-locked, the activation information is stored on the machine, and it is not necessary to re-activate as long as the license has not expired.
+> Since the license is node-locked, the activation information is stored on the machine, and re-activate is not necessary as long as the license has not expired.
 
 > [!WARNING]
 > Each license key has a limited number of allowed activations and deactivations.
