@@ -4,6 +4,7 @@
 Let $w=(w_0, w_1, \ldots, w_{n-1})$ be $n$ positive numbers.
 The partitioning problem is to partition these numbers into two sets $P$ and $Q$ ($Q=\overline{P}$) such that the sums of the elements in the two sets are as close as possible.
 More specifically, the problem is to find a subset $L \subseteq \{0,1,\ldots, n-1\}$ that minimizes:
+
 $$
 \begin{aligned}
 P(L) &= \sum_{i\in L}w_i \\
@@ -16,6 +17,7 @@ This problem can be formulated as a QUBO problem.
 Let $x=(x_0, x_1, \ldots, x_{n-1})$ be binary variables representing the set $L$,
 that is, $i\in L$ if and only if $x_i=1$.
 We can rewrite $P(L)$, $Q(L)$ and $f(L)$ using $x$ as follows:
+
 $$
 \begin{aligned}
 P(x) &= \sum_{i=0}^{n-1} w_ix_i \\
