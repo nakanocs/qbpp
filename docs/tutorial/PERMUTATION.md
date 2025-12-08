@@ -195,9 +195,9 @@ $$
 \begin{aligned}
  h(X) &= P\cdot f(x)+g(x) \\
      &=P\left(\sum_{i=0}^{n-1}\left(1-\sum_{j=0}^{n-1}x_{i,j}\right)^2+\sum_{j=0}^{n-1}\left(1-\sum_{i=0}^{n-1}x_{i,j}\right)^2\right)+\sum_{i=0}^{n-1}\sum_{j=0}^{n-1}c_{i,j}x_{i,j}
-
 \end{aligned}
 $$
+
 Here, $P$ is a sufficiently large positive constant that prioritizes the permutation constraints encoded in $f(X)$.
 
 ## QUBO++ program for the assignment problem
