@@ -1,3 +1,8 @@
+---
+layout: default
+title: "QUBO++ Documentation"
+---
+
 # QUBO++ Tutorial
 This tutorial provides a step-by-step introduction to QUBO++, starting from installation and basic setup.
 

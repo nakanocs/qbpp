@@ -1,3 +1,8 @@
+---
+layout: default
+title: "QUBO++ Documentation"
+---
+
 # QUBO++
 * A C++ library for constructing polynomials of binary variables to solve combinatorial optimization problems  
 * Currently built for **amd64** (**x86_64**) and **arm64** Linux systems**  
