@@ -5,6 +5,7 @@
   <meta charset="utf-8">
   <title>{{ page.title }} - {{ site.title }}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{{ '/assets/main.css' | relative_url }}">
   {{ site.head }}
   <!-- ここに MathJax 関連をまとめて入れる -->
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
@@ -21,7 +22,6 @@
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
   </script>
 
-  <link rel="stylesheet" href="{{ " /assets/main.css" | relative_url }}">
 </head>
 
 <body>
