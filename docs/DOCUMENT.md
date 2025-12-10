@@ -252,15 +252,19 @@ $$
    f(L) & = \left(\sum_{i\in L} N_i - \sum_{i\in\overline{L}}N_i\right)^2
 \end{aligned}
 $$
+
 Introduce binary variable $x_0, x_1,\ldots, x_{n-1}$ where $x_i=1$ iff $i\in L$.
 Then,
+
 $$
 \begin{aligned}
    \sum_{i\in L} N_i & = \sum_{i=0}^{n-1} N_ix_i\\
    \sum_{i\in\overline{L}}N_i     &= \sum_{i=0}^{n-1}N_i(1-x_i)
 \end{aligned}
 $$
+
 so
+
 $$
 \begin{aligned}
    f(L) & = \left(\sum_{i=0}^{n-1} N_ix_i - \sum_{i=0}^{n-1}N_i(1-x_i)\right)^2
