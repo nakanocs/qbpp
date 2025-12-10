@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>QUBO++ Documentation - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/assets/main.css">
+  
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+</head>
+
+<body>
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ（全ページ共通） -->
+    <nav style="min-width:220px; position:sticky; top:1rem; padding-right:1rem; border-right:1px solid #ddd;">
+      <h2>QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0;">
+        <li><a href="https://github.com/nakanocs/qbpp/releases"><strong>Releases</strong></a></li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/tutorial/TUTORIAL"><strong>Tutorial</strong></a></li>
+      </ul>
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="qubo-installationlicense-activation">QUBO++ Installation/License Activation</h1>
+
+<h2 id="installation">Installation</h2>
+<p>Simply extract the <code class="language-plaintext highlighter-rouge">.tar.gz</code> file as follows:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">tar </span>xf qbpp_amd64_2025.11.23.tar.gz
+</code></pre></div></div>
+<p>The file name may differ depending on the version you downloaded.
+QUBO++ runs on Linux-based systems with the following CPUs:</p>
+<ul>
+  <li>amd64: 64-bit Intel and AMD processors</li>
+  <li>arm64: 64-bit ARM processors</li>
+</ul>
+
+<h2 id="setting-environment-variables">Setting Environment Variables</h2>
+<p>It is recommended to set the following environment variables:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">CPLUS_INCLUDE_PATH</code>: Specifies the include path that contains the QUBO++ header files.</li>
+  <li><code class="language-plaintext highlighter-rouge">LIBRARY_PATH</code>: Specifies the library path that contains the QUBO++ shared libraries for compiling and linking QUBO++ programs.</li>
+  <li><code class="language-plaintext highlighter-rouge">LD_LIBRARY_PATH</code>: Specifies the library path that contains the QUBO++ shared libraries for executing QUBO++ programs.</li>
+  <li><code class="language-plaintext highlighter-rouge">QBPP_LICENSE_KEY</code>: Specifies your license key. If omitted, an anonymous trial license is assumed.</li>
+  <li><code class="language-plaintext highlighter-rouge">PATH</code>: Specifies the directory containing QUBO++ executable binaries.</li>
+</ul>
+
+<p>To set these paths automatically when a shell starts, add the following lines to the end of your <code class="language-plaintext highlighter-rouge">~/.bashrc</code>:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">QBPP_PATH</span><span class="o">=[</span>QUBO++ <span class="nb">install </span>directory]
+
+<span class="nb">export </span><span class="nv">CPLUS_INCLUDE_PATH</span><span class="o">=</span><span class="nv">$QBPP_PATH</span>/include:<span class="nv">$CPLUS_INCLUDE_PATH</span>
+<span class="nb">export </span><span class="nv">LIBRARY_PATH</span><span class="o">=</span><span class="nv">$QBPP_PATH</span>/lib:<span class="nv">$LIBRARY_PATH</span>
+<span class="nb">export </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="nv">$QBPP_PATH</span>/lib:<span class="nv">$LD_LIBRARY_PATH</span>
+<span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$QBPP_PATH</span>/bin:<span class="nv">$PATH</span>
+
+<span class="nb">export </span><span class="nv">QBPP_LICENSE_KEY</span><span class="o">=[</span>Your QUBO++ license key]
+</code></pre></div></div>
+
+<h2 id="lincense-activation">Lincense Activation</h2>
+<p>The license is activated using the <code class="language-plaintext highlighter-rouge">qbpp-license</code> command as follows:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>qbpp-license <span class="nt">-a</span>
+</code></pre></div></div>
+<p>This increments the activation count.
+Each license has a limited number of allowed activations.
+If <code class="language-plaintext highlighter-rouge">QBPP_LICENSE_KEY</code> is not set, the command attempts to activate an anonymous trial license.</p>
+
+<p>To check the current status of your QUBO++ license, simply run:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>qbpp-license
+</code></pre></div></div>
+<p>The current status can only be displayed for activated licenses.</p>
+
+<p>If you want to move the license to another machine, you can deactivate it on this machine as follows:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>qbpp-license <span class="nt">-d</span>
+</code></pre></div></div>
+<p>This decreases the activation count, and you can then activate the license on the other machine.</p>
+
+<p>Since the license is node-locked, the activation information is stored on the machine, and re-activation is not necessary as long as the license has not expired.</p>
+
+<blockquote>
+  <p><strong>WARNING</strong>
+Each license key has a limited number of allowed activations and deactivations.
+Once the total number of activations and deactivations reaches this limit, you will no longer be able to activate or deactivate that license.</p>
+</blockquote>
+
+
+    </main>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>QUBO++ Documentation - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/assets/main.css">
+  
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+</head>
+
+<body>
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ（全ページ共通） -->
+    <nav style="min-width:220px; position:sticky; top:1rem; padding-right:1rem; border-right:1px solid #ddd;">
+      <h2>QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0;">
+        <li><a href="https://github.com/nakanocs/qbpp/releases"><strong>Releases</strong></a></li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/tutorial/TUTORIAL"><strong>Tutorial</strong></a></li>
+      </ul>
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="qubo">QUBO++</h1>
+<ul>
+  <li>A C++ library for constructing polynomials of binary variables to solve combinatorial optimization problems</li>
+  <li>Currently built for <strong>amd64</strong> (<strong>x86_64</strong>) and <strong>arm64</strong> Linux systems**</li>
+  <li>Bundled with two CPU solvers: Easy Solver (heuristic) and Exhaustive Solver (complete search)</li>
+  <li>Bundled with a GPU solver: ABS3</li>
+  <li>Supports High-order Unconstrained Binary Optimization (HUBO) up to degree 8</li>
+  <li>Multithreading acceleration is applied using oneTBB wherever possible</li>
+  <li>Includes APIs for calling the Gurobi Optimizer to solve Quadratic Unconstrained Binary Optimization (QUBO) problems</li>
+  <li>Author: Koji Nakano</li>
+  <li>Copyright: © 2025 Koji Nakano. All rights reserved.</li>
+</ul>
+
+<h1 id="qubo-solvers-easy-solver-exhaustive-solver-abs3-solver">QUBO++ Solvers: Easy Solver, Exhaustive Solver, ABS3 Solver</h1>
+<h2 id="easy-solver">Easy Solver</h2>
+<ul>
+  <li>Searches for solutions to QUBO/HUBO formulations on x86_64 multicore processors.</li>
+  <li>Multithreaded acceleration: utilizes Intel oneTBB for parallel search.</li>
+  <li>Integer coefficients: supports coefficients of arbitrary magnitude.</li>
+</ul>
+
+<h2 id="exhaustive-solver">Exhaustive Solver</h2>
+<ul>
+  <li>Enumerates all solutions to QUBO/HUBO formulations on x86_64 multicore processors.</li>
+  <li>Optimality guaranteed: the global optimum is found and certifiable.</li>
+  <li>Multithreaded acceleration: utilizes Intel oneTBB for parallel enumeration.</li>
+  <li>Integer coefficients: supports coefficients of arbitrary magnitude.</li>
+</ul>
+
+<h2 id="abs3-solver">ABS3 Solver</h2>
+<ul>
+  <li>Searches for solutions to QUBO/HUBO formulations on CUDA-enabled GPUs in x86_64 hosts.</li>
+</ul>
+
+<h3 id="abs3-supported-gpu-architectures"><strong>ABS3 Supported GPU architectures</strong></h3>
+<ul>
+  <li><strong>sm_80</strong> : NVIDIA A100  (Ampere)</li>
+  <li><strong>sm_86</strong> : NVIDIA RTX A6000, GeForce RTX 3090/3080/3070 (Ampere)</li>
+  <li><strong>sm_89</strong> : NVIDIA RTX 6000 Ada, GeForce RTX 4090/4080/4070 (Ada)</li>
+  <li><strong>sm_90</strong> : NVIDIA H100 / H200 / GH200 (Hopper)</li>
+  <li><strong>sm_100</strong> : NVIDIA B200 / GB200 (Blackwell, data center)</li>
+  <li><strong>sm_120</strong> : GeForce RTX 5090/5080/5070(Ti)/5060(Ti)/5050、RTX PRO 6000/5000/4500/4000/2000 Blackwell (workstation)</li>
+  <li><strong>Note on verification</strong> : Only a subset of the architectures above has been verified on real hardware.
+    <h3 id="numeric-types"><strong>Numeric types</strong></h3>
+  </li>
+  <li>32-bit and 64-bit term coefficients</li>
+  <li>64-bit energy values</li>
+</ul>
+
+<h3 id="performance-note"><strong>Performance note</strong></h3>
+<ul>
+  <li>Arithmetic overflow checks are omitted to maximize performance.</li>
+</ul>
+
+<h2 id="build-environment">Build Environment</h2>
+<p>The following environment was used to build QUBO++.<br />
+To ensure compatibility, please use the same or newer versions of the listed components.</p>
+<ul>
+  <li><strong>Operating System</strong>: Ubuntu 20.04.6 LTS</li>
+  <li><strong>glibc</strong>: 2.31</li>
+  <li><strong>C++ Standard</strong>: C++17</li>
+  <li><strong>Compiler</strong>: g++ 9.4.0</li>
+  <li><strong>Boost</strong>: 1.81.0</li>
+  <li><strong>CUDA</strong>: 12.8</li>
+</ul>
+
+<h2 id="onetbb--tbb-dependency">oneTBB / TBB dependency</h2>
+<p>QUBO++ does not bundle TBB. We include TBB headers in public APIs, but the
+library itself does not require linking against TBB for the default use cases.</p>
+<ul>
+  <li><strong>Build &amp; run verified on</strong>: Ubuntu 20.04 (classic TBB 2020.1), 22.04 / 24.04 (oneTBB 2021+).</li>
+</ul>
+
+<h2 id="directory-structure-and-key-files">Directory Structure and Key Files</h2>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">bin/</code> - Executable
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">qbpp-license</code>: QUBO++ License manager</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">include/</code> — Header files
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">qbpp.hpp</code>: Main QUBO++ BQ Edition toolkit</li>
+      <li><code class="language-plaintext highlighter-rouge">qbpp_abs3_solver.hpp</code>: ABS3 GPU Solver</li>
+      <li><code class="language-plaintext highlighter-rouge">qbpp_defs.hpp</code>: Common definitions and macros</li>
+      <li><code class="language-plaintext highlighter-rouge">qbpp_easy_solver.hpp</code>: Easy Solver implementation</li>
+      <li><code class="language-plaintext highlighter-rouge">qbpp_exhaustive_solver.hpp</code>: Exhaustive Solver implementation</li>
+      <li><code class="language-plaintext highlighter-rouge">qbpp_grb.hpp</code>: Gurobi Optimizer interface</li>
+      <li><code class="language-plaintext highlighter-rouge">qbpp_misc.hpp</code>: Miscelleneous library</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">lib/</code> — QUBO++ shared libraries
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">libqbpp.so</code>: Shared library for the QUBO++ core</li>
+      <li><code class="language-plaintext highlighter-rouge">libqbpp_abs3c32.so</code>: Shared library for the ABS3 GPU solver with 32-bit term coefficients</li>
+      <li><code class="language-plaintext highlighter-rouge">libqbpp_abs3c64.so</code>: Shared library for the ABS3 GPU solver with 64-bit term coefficients</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">samples/</code> — Sample programs
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">factorization.cpp</code>: Integer factorization</li>
+      <li><code class="language-plaintext highlighter-rouge">graph_color.cpp</code>: Graph coloring</li>
+      <li><code class="language-plaintext highlighter-rouge">tsp.cpp</code>: Solving Traveling Salesman Problem using Easy Solver</li>
+      <li><code class="language-plaintext highlighter-rouge">qbpp_tsp.hpp</code>: Creating QUBO model for the TSP</li>
+      <li><code class="language-plaintext highlighter-rouge">integer_poly.cpp</code>: Integer polynomial optimization</li>
+      <li><code class="language-plaintext highlighter-rouge">labs.cpp</code>: Low Autocorrelation Binary Sequences problem</li>
+      <li><code class="language-plaintext highlighter-rouge">nqueen_easy.cpp</code>: Solving N-Queens problem using Easy Solver</li>
+      <li><code class="language-plaintext highlighter-rouge">qbpp_nqueen.hpp</code>: Generates QUBO expression for the N-Queens problem</li>
+      <li><code class="language-plaintext highlighter-rouge">shift_scheduling</code>: Shift scheduling problem</li>
+      <li><code class="language-plaintext highlighter-rouge">factorization_abs3.cpp</code>: Integer factorization using ABS3</li>
+      <li><code class="language-plaintext highlighter-rouge">labs_abs3.cpp</code>: Low Autocorrelation Binary Sequences problem using ABS3 GPU solver</li>
+      <li><code class="language-plaintext highlighter-rouge">ilp_grb.cpp</code>: Integer Linear Programming example using Gurobi Optimizer</li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="qubo-licensing">QUBO++ Licensing</h1>
+
+<h2 id="license-types">License Types</h2>
+<p>QUBO++ uses Cryptlex for license management.
+When activating a node-locked license, some information about the execution environment (e.g., hardware identifiers) is securely stored on Cryptlex servers to verify the license.</p>
+
+<ul>
+  <li><strong>Anonymous Trial</strong>
+    <ul>
+      <li>No license key required</li>
+      <li>Valid for 7 days</li>
+      <li>Maximum variable count: <strong>1,000 (CPU) / 1,000 (GPU)</strong></li>
+    </ul>
+  </li>
+  <li><strong>Registered Trial</strong>
+    <ul>
+      <li>Requires a free license key</li>
+      <li>Valid for 30 days</li>
+      <li>Maximum variable count: <strong>10,000 (CPU) / 10,000 (GPU)</strong></li>
+    </ul>
+  </li>
+  <li><strong>Standard License</strong>
+    <ul>
+      <li>Requires a paid license key</li>
+      <li>Valid for the duration of the license agreement</li>
+      <li>Maximum variable count: <strong>2,147,483,647 ($2^{31} - 1$) (CPU) / 1,000 (GPU)</strong></li>
+      <li><em>Practically, the maximum variable count may be limited by available physical memory.</em></li>
+    </ul>
+  </li>
+  <li><strong>Professional License</strong>
+    <ul>
+      <li>Requires a paid license key</li>
+      <li>Valid for the duration of the license agreement</li>
+      <li>Maximum variable count: <strong>2,147,483,647 ($2^{31} - 1$) (CPU) / 2,147,483,647 ($2^{31} - 1$) (GPU)</strong></li>
+      <li><em>Practically, the maximum variable count may be limited by available physical memory.</em></li>
+    </ul>
+  </li>
+  <li><strong>Fallback (No license / Expired license)</strong>
+    <ul>
+      <li>Maximum variable count: <strong>100 (CPU) / 100 (GPU)</strong></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="displayactivatedeactivate-qubo-license">Display/Activate/Deactivate QUBO++ License</h2>
+<ul>
+  <li>The <code class="language-plaintext highlighter-rouge">qbpp-license</code> utility (in the <code class="language-plaintext highlighter-rouge">/bin</code> directory of the QUBO++ installation) displays, activates, and deactivates the license on the current machine.</li>
+  <li>A QUBO++ license must be activated on the machine before QUBO++ programs can run.</li>
+  <li>Each license key has limits on how many times it can be activated and deactivated. These limits are tracked per license.</li>
+</ul>
+
+<h3 id="display-license">Display License</h3>
+<p>If the license has already been activated on this machine, running <code class="language-plaintext highlighter-rouge">qbpp-license</code> will show the license information (expiration date/time, total activations, total deactivations, and so on).</p>
+<ul>
+  <li><strong>Registered Trial</strong>/<strong>Standard License</strong>/<strong>Professional License</strong>
+You can specify the license key either by environment variable or by command-line option.
+    <ul>
+      <li>Using environment variable:
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">export </span><span class="nv">QBPP_LICENSE_KEY</span><span class="o">=</span>XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX
+<span class="nv">$ </span>qbpp-license
+</code></pre></div>        </div>
+      </li>
+      <li>Using command-line option:
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>qbpp-license <span class="nt">-k</span> XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li><strong>Anonymous Trial</strong><br />
+Just run the command without specifying a license key:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>qbpp-license
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h3 id="activate-license">Activate License</h3>
+<ul>
+  <li>To activate the license on the current machine, add the <code class="language-plaintext highlighter-rouge">-a</code> (or <code class="language-plaintext highlighter-rouge">--activate</code>) option to the above command:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>qbpp-license <span class="nt">-a</span>
+</code></pre></div>    </div>
+  </li>
+  <li>This consumes one activation from the license.</li>
+</ul>
+
+<h3 id="deactivate-license">Deactivate License</h3>
+<ul>
+  <li>To deactivate the license on the current machine, use the <code class="language-plaintext highlighter-rouge">-d</code> (or <code class="language-plaintext highlighter-rouge">--deactivate</code>) option:
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>qbpp-license <span class="nt">-d</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Anonymous Trial cannot be deactivated.</li>
+  <li>Deactivation will increase the deactivation count and free up an activation slot so that the license can be activated again on this or another machine.</li>
+</ul>
+
+<h2 id="executing-qubo-with-license-key">Executing QUBO++ with license key.</h2>
+<ul>
+  <li>For <strong>Anonymous Trial</strong>, there is no license key to set.</li>
+  <li>For <strong>Registered Trial</strong>, <strong>Standard</strong>, and <strong>Professional</strong> licenses, specify the key in one of the following ways before running your program:
+    <ul>
+      <li><strong>Via Code</strong>:
+        <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">qbpp</span><span class="o">::</span><span class="n">license_key</span><span class="p">(</span><span class="s">"XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX"</span><span class="p">);</span>
+</code></pre></div>        </div>
+      </li>
+      <li><strong>Via Environment Variable</strong>:
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">QBPP_LICENSE_KEY</span><span class="o">=</span>XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="terms-and-conditions">Terms and Conditions</h1>
+
+<p>By using QUBO++, you agree to the following terms and conditions:</p>
+
+<ol>
+  <li>
+    <p><strong>License Scope</strong><br />
+QUBO++ is provided under a time-limited license, depending on the license type (Anonymous Trial, Registered Trial, Standard or Professional License).</p>
+  </li>
+  <li>
+    <p><strong>Restrictions on Trial Licenses</strong><br />
+The Anonymous Trial and Registered Trial licenses are provided strictly for evaluation purposes only.</p>
+  </li>
+  <li>
+    <p><strong>Standard/Professional Licenses and Payment Requirement</strong><br />
+Standard/Professional Licenses require the purchase of a paid license key. These licenses grant full access to QUBO++ for commercial and research use, subject to the terms of the license agreement.</p>
+  </li>
+  <li>
+    <p><strong>Redistribution</strong><br />
+Redistribution of QUBO++ (in whole or in part, including headers and binaries) is prohibited without prior written permission from the copyright holder.</p>
+  </li>
+  <li>
+    <p><strong>Reverse Engineering</strong><br />
+You may not reverse engineer, decompile, or disassemble any part of the software.</p>
+  </li>
+  <li>
+    <p><strong>Disclaimer</strong><br />
+QUBO++ is provided “as is,” without any warranties, express or implied. The authors shall not be held liable for any damages resulting from the use of this software.</p>
+  </li>
+  <li>
+    <p><strong>Ownership</strong><br />
+All intellectual property rights related to QUBO++ remain the property of the original author or copyright holder.</p>
+  </li>
+  <li>
+    <p><strong>Termination</strong><br />
+This license will automatically terminate if you fail to comply with these terms. Upon termination, you must cease all use of the software and destroy all copies.</p>
+  </li>
+</ol>
+
+<h1 id="third-party-libraries">Third-Party Libraries</h1>
+
+<ul>
+  <li><strong>Gurobi Optimizer</strong>
+    <ul>
+      <li>QUBO++ supporting APIs for integration with the Gurobi Optimizer.</li>
+      <li>To use these APIs, you must obtain a valid license for the Gurobi Optimizer from Gurobi Optimization, LLC.</li>
+      <li>The Gurobi Optimizer is not included with QUBO++, and its use is subject to the terms and conditions of its own license agreement.</li>
+    </ul>
+  </li>
+  <li><strong>oneTBB (oneAPI Threading Building Blocks)</strong>
+    <ul>
+      <li>Licensed under the Apache License 2.0.</li>
+      <li>Copyright © Intel Corporation.</li>
+      <li>See <a href="https://www.apache.org/licenses/LICENSE-2.0">https://www.apache.org/licenses/LICENSE-2.0</a> for details.</li>
+      <li><em>Note:</em> If you redistribute binaries that include oneTBB, include the Apache 2.0 license text and any required NOTICE.</li>
+    </ul>
+  </li>
+  <li><strong>Boost C++ Libraries</strong>
+    <ul>
+      <li>Licensed under the Boost Software License, Version 1.0.</li>
+      <li>See <a href="https://www.boost.org/LICENSE_1_0.txt">https://www.boost.org/LICENSE_1_0.txt</a> for details.</li>
+    </ul>
+  </li>
+  <li><strong>xxHash</strong>
+    <ul>
+      <li>Licensed under the BSD 2-Clause License.</li>
+      <li>Copyright © Yann Collet.</li>
+      <li>See <a href="https://opensource.org/license/bsd-2-clause/">https://opensource.org/license/bsd-2-clause/</a> for details.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>If you have any questions regarding licensing or wish to obtain a license key, please contact the distributor or the developer.</p>
+
+
+    </main>
+  </div>
+</body>
+
+</html>

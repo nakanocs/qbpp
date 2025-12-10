@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>QUBO++ Documentation - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/assets/main.css">
+  
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+</head>
+
+<body>
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ（全ページ共通） -->
+    <nav style="min-width:220px; position:sticky; top:1rem; padding-right:1rem; border-right:1px solid #ddd;">
+      <h2>QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0;">
+        <li><a href="https://github.com/nakanocs/qbpp/releases"><strong>Releases</strong></a></li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/tutorial/TUTORIAL"><strong>Tutorial</strong></a></li>
+      </ul>
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="range-constraints-and-solving-integer-linear-programming">Range Constraints and Solving Integer Linear Programming</h1>
+
+<h2 id="polynomial-formulation-for-range-constraints">Polynomial formulation for range constraints</h2>
+<p>Let $f$ be a polynomial expression of binary variables.
+A range constraint has the form $l\leq f\leq u$ with $l&lt;u$.
+Our goal is to design a polynomial expression that takes the minimum value 0 if and only if the range constraint is satisfied.</p>
+
+<p>The key idea is to introduce an <strong>auxiliary integer variable</strong> $a$ that takes values in the range $[l,u]$.
+Consider the following expression:</p>
+
+\[\begin{aligned}
+g &amp;= (f-a)^2
+\end{aligned}\]
+
+<p>This expression $g$ takes the minimum value 0 exactly when $f=a$.
+Since $a$ can take any integer value in $[l,u]$, the expression 
+$g$ achieves 0 if and only if $f$ itself takes an integer value within the same range.</p>
+
+<p>Using this auxiliary-variable technique, QUBO++ implements range constraints.
+If $f$ is a linear expression, then $g$ becomes a QUBO expression.
+If $f$ is cubic or of higher degree, then $g$ becomes a HUBO expression.</p>
+
+<blockquote>
+  <p><strong>NOTE</strong>
+QUBO++ internally uses a more sophisticated method that requires fewer binary variables to represent range constraints.</p>
+</blockquote>
+
+<h2 id="solving-integer-linear-programming">Solving Integer Linear Programming</h2>
+<p>An instance of integer linear programming consists of an objective function and multiple linear constraints.
+For example, the following integer linear program has two variables, one objective, and two constraints:</p>
+
+\[\begin{aligned}
+{\rm Maximize: } &amp; &amp; 5x+4y\\
+{\rm Subject\,\, to: }&amp; &amp; 2x + 3y \leq 24 \\
+ &amp; &amp; 7 x + 5 y \leq 54
+\end{aligned}\]
+
+<p>The optimal solution of this problem is $x=4$, $y=5$, with the objective value $40$.</p>
+
+<p>The following QUBO++ program finds this optimal solution using the Easy Solver:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
+#include</span> <span class="cpf">"qbpp_easy_solver.hpp"</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var_int</span><span class="p">(</span><span class="s">"x"</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var_int</span><span class="p">(</span><span class="s">"y"</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">y</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">c1</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">y</span> <span class="o">&lt;=</span> <span class="mi">24</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">c2</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="mi">7</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">y</span> <span class="o">&lt;=</span> <span class="mi">54</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">g</span> <span class="o">=</span> <span class="o">-</span><span class="n">f</span> <span class="o">+</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="n">c1</span> <span class="o">+</span> <span class="n">c2</span><span class="p">);</span>
+  <span class="n">g</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">easy_solver</span><span class="o">::</span><span class="n">EasySolver</span><span class="p">(</span><span class="n">g</span><span class="p">);</span>
+  <span class="n">solver</span><span class="p">.</span><span class="n">time_limit</span><span class="p">(</span><span class="mf">1.0</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">sol</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search</span><span class="p">();</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"x = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">", y = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"c1 = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">c1</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">", c2 = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">c2</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"*c1 = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="o">*</span><span class="n">c1</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">", *c2 = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="o">*</span><span class="n">c2</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>In this QUBO++ program,</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">f</code> represents the objective function,</li>
+  <li><code class="language-plaintext highlighter-rouge">c1</code> and <code class="language-plaintext highlighter-rouge">c2</code> represent the range constraints,</li>
+  <li>and <code class="language-plaintext highlighter-rouge">g</code> combines them into a single optimization expression.</li>
+</ul>
+
+<p>Since the goal is maximization, the objective is negated as <code class="language-plaintext highlighter-rouge">-f</code>.
+The constraints <code class="language-plaintext highlighter-rouge">c1</code> and <code class="language-plaintext highlighter-rouge">c2</code> are penalized with a weight of 100 to ensure they are satisfied with high priority.</p>
+
+<p>An Easy Solver instance is created for <code class="language-plaintext highlighter-rouge">g</code>, and a search is performed with a time limit of 1.0 seconds.
+After obtaining the optimal solution <code class="language-plaintext highlighter-rouge">sol</code>, the program prints the values of <code class="language-plaintext highlighter-rouge">x</code>, <code class="language-plaintext highlighter-rouge">y</code>, <code class="language-plaintext highlighter-rouge">f</code>, <code class="language-plaintext highlighter-rouge">c1</code>, <code class="language-plaintext highlighter-rouge">c2</code>, <code class="language-plaintext highlighter-rouge">*c1</code>, and <code class="language-plaintext highlighter-rouge">*c2</code>.</p>
+
+<p>The program outputs:</p>
+<pre><code class="language-txt">x = 4, y = 5
+f = 40
+c1 = 0, c2 = 0
+*c1 = 23, *c2 = 53
+</code></pre>
+<p>Here,</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">c1</code> is the expression for the constraint <code class="language-plaintext highlighter-rouge">0 &lt;= 2 x + 3 y &lt;= 24</code>,</li>
+  <li>and <code class="language-plaintext highlighter-rouge">*c1</code> represents the linear expression  <code class="language-plaintext highlighter-rouge">2 x + 3 y</code>.</li>
+</ul>
+
+<p>We can confirm that the solver correctly finds the optimal solution.</p>
+
+    </main>
+  </div>
+</body>
+
+</html>

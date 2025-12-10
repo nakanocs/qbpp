@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>QUBO++ Documentation - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/assets/main.css">
+  
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+</head>
+
+<body>
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ（全ページ共通） -->
+    <nav style="min-width:220px; position:sticky; top:1rem; padding-right:1rem; border-right:1px solid #ddd;">
+      <h2>QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0;">
+        <li><a href="https://github.com/nakanocs/qbpp/releases"><strong>Releases</strong></a></li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/tutorial/TUTORIAL"><strong>Tutorial</strong></a></li>
+      </ul>
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="solving-partitioning-problem-using-vector-of-variables">Solving Partitioning Problem Using Vector of variables</h1>
+
+<h2 id="partitioning-problem">Partitioning problem</h2>
+<p>Let $w=(w_0, w_1, \ldots, w_{n-1})$ be $n$ positive numbers.
+The partitioning problem is to partition these numbers into two sets $P$ and $Q$ ($Q=\overline{P}$) such that the sums of the elements in the two sets are as close as possible.
+More specifically, the problem is to find a subset $L \subseteq {0,1,\ldots, n-1}$ that minimizes:</p>
+
+\[\begin{aligned}
+P(L) &amp;= \sum_{i\in L}w_i \\
+Q(L) &amp;= \sum_{i\not\in L}w_i \\
+f(L) &amp;= \left| P(L)-Q(L) \right|
+\end{aligned}\]
+
+<p>This problem can be formulated as a QUBO problem.
+Let $x=(x_0, x_1, \ldots, x_{n-1})$ be binary variables representing the set $L$,
+that is, $i\in L$ if and only if $x_i=1$.
+We can rewrite $P(L)$, $Q(L)$ and $f(L)$ using $x$ as follows:</p>
+
+\[\begin{aligned}
+P(x) &amp;= \sum_{i=0}^{n-1} w_ix_i \\
+Q(x) &amp;= \sum_{i=0}^{n-1} w_i (1-x_i) \\
+f(x)    &amp;= \left( P(x)-Q(x) \right)^2
+\end{aligned}\]
+
+<p>Clealy, $f(x)=f(L)^2$ holds.
+The function $f(x)$ is a quadratic expression of $x$, and an optimal solution that minimizes $f(x)$ also gives an optimal solution to the original partitioning problem.</p>
+
+<h2 id="qubo-program-for-the-partitioning-problem">QUBO++ program for the partitioning problem</h2>
+<p>The following QUBO++ program creates the QUBO formulation of the partitioning problem for a fixed set of 8 numbers and finds a solution using the Exhaustive Solver.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
+#include</span> <span class="cpf">"qbpp_exhaustive_solver.hpp"</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;</span> <span class="n">w</span> <span class="o">=</span> <span class="p">{</span><span class="mi">64</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="mi">47</span><span class="p">,</span> <span class="mi">74</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">83</span><span class="p">,</span> <span class="mi">63</span><span class="p">,</span> <span class="mi">40</span><span class="p">};</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">,</span> <span class="n">w</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+  <span class="k">auto</span> <span class="n">p</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">expr</span><span class="p">();</span>
+  <span class="k">auto</span> <span class="n">q</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">expr</span><span class="p">();</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">w</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">p</span> <span class="o">+=</span> <span class="n">w</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="n">q</span> <span class="o">+=</span> <span class="n">w</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+  <span class="p">}</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sqr</span><span class="p">(</span><span class="n">p</span> <span class="o">-</span> <span class="n">q</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">exhaustive_solver</span><span class="o">::</span><span class="n">ExhaustiveSolver</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">sol</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search</span><span class="p">();</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Solution: "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f(sol) = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"p(sol) = "</span> <span class="o">&lt;&lt;</span> <span class="n">p</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"q(sol) = "</span> <span class="o">&lt;&lt;</span> <span class="n">q</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"L  :"</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">w</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">](</span><span class="n">sol</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" "</span> <span class="o">&lt;&lt;</span> <span class="n">w</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"~L :"</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">w</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">](</span><span class="n">sol</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" "</span> <span class="o">&lt;&lt;</span> <span class="n">w</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>In this program <code class="language-plaintext highlighter-rouge">w</code> is defined as a <code class="language-plaintext highlighter-rouge">std::vector</code> object with 8 numbers.
+A vector <code class="language-plaintext highlighter-rouge">x</code> of <code class="language-plaintext highlighter-rouge">w.size()=8</code> binary variables is defined.
+Two <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> objects <code class="language-plaintext highlighter-rouge">p</code> and <code class="language-plaintext highlighter-rouge">q</code>  are defined, and the expressions for $P(x)$ and $Q(x)$
+are constructed in the for-loop.
+A <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> object <code class="language-plaintext highlighter-rouge">f</code> stores the expression for $f(x)$.</p>
+
+<p>An Exhaustive Solver object <code class="language-plaintext highlighter-rouge">solver</code> for <code class="language-plaintext highlighter-rouge">f</code> is created 
+and the solution <code class="language-plaintext highlighter-rouge">sol</code> (a <code class="language-plaintext highlighter-rouge">qbpp::Sol</code> object) is obtained by calling its <code class="language-plaintext highlighter-rouge">search()</code> member function.</p>
+
+<p>The values of $f(x)$, $P(x)$, and $Q(x)$ are evaluated by calling <code class="language-plaintext highlighter-rouge">f(sol)</code>, <code class="language-plaintext highlighter-rouge">p(sol)</code> and <code class="language-plaintext highlighter-rouge">q(sol)</code>, respectively.
+The numbers in the sets $L$ and $\overline{L}$ are displayed using the for loops.
+In these loops, <code class="language-plaintext highlighter-rouge">x[i](sol)</code> returns the value of <code class="language-plaintext highlighter-rouge">x[i]</code> in <code class="language-plaintext highlighter-rouge">sol</code>.</p>
+
+<p>This program outputs:</p>
+
+<pre><code class="language-txt">f = 168100 -88576*x[0] -41364*x[1] -68244*x[2] -99456*x[3] -19104*x[4] -108564*x[5] -87444*x[6] -59200*x[7] +13824*x[0]*x[1] +24064*x[0]*x[2] +37888*x[0]*x[3] +6144*x[0]*x[4] +42496*x[0]*x[5] +32256*x[0]*x[6] +20480*x[0]*x[7] +10152*x[1]*x[2] +15984*x[1]*x[3] +2592*x[1]*x[4] +17928*x[1]*x[5] +13608*x[1]*x[6] +8640*x[1]*x[7] +27824*x[2]*x[3] +4512*x[2]*x[4] +31208*x[2]*x[5] +23688*x[2]*x[6] +15040*x[2]*x[7] +7104*x[3]*x[4] +49136*x[3]*x[5] +37296*x[3]*x[6] +23680*x[3]*x[7] +7968*x[4]*x[5] +6048*x[4]*x[6] +3840*x[4]*x[7] +41832*x[5]*x[6] +26560*x[5]*x[7] +20160*x[6]*x[7]
+Solution: 0:{{x[0],0},{x[1],0},{x[2],1},{x[3],0},{x[4],1},{x[5],1},{x[6],1},{x[7],0}}
+f(sol) = 0
+p(sol) = 205
+q(sol) = 205
+L  : 47 12 83 63
+~L : 64 27 74 40
+</code></pre>
+
+<blockquote>
+  <p><strong>NOTE</strong>
+For a <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> object <code class="language-plaintext highlighter-rouge">f</code> and a <code class="language-plaintext highlighter-rouge">qbpp::Sol</code> object <code class="language-plaintext highlighter-rouge">sol</code>, both <code class="language-plaintext highlighter-rouge">f(sol)</code> and <code class="language-plaintext highlighter-rouge">sol(f)</code> return the resuting value of <code class="language-plaintext highlighter-rouge">f</code> for <code class="language-plaintext highlighter-rouge">sol</code>.
+Similarly, a <code class="language-plaintext highlighter-rouge">qbpp::Var</code> object <code class="language-plaintext highlighter-rouge">a</code> and a <code class="language-plaintext highlighter-rouge">qbpp::Sol</code> object <code class="language-plaintext highlighter-rouge">sol</code>, both <code class="language-plaintext highlighter-rouge">a(sol)</code> and <code class="language-plaintext highlighter-rouge">sol(a)</code> return the resuting value of <code class="language-plaintext highlighter-rouge">a</code> in the solution <code class="language-plaintext highlighter-rouge">sol</code>.
+Users can use either form according to their preference.</p>
+</blockquote>
+
+<h2 id="qubo-program-using-vector-operations">QUBO++ program using vector operations</h2>
+<p>QUBO++ has rich vector operations that can simplify the code.
+For this purpose,  <code class="language-plaintext highlighter-rouge">qbpp::Vector</code> class, which is similar to <code class="language-plaintext highlighter-rouge">std::vector</code> class shoud be used.
+In the following code, <code class="language-plaintext highlighter-rouge">w</code> is defined as an object of <code class="language-plaintext highlighter-rouge">qbpp::Vector&lt;uint32_t&gt;</code> class.
+Also, <code class="language-plaintext highlighter-rouge">x</code> is defined as an object of <code class="language-plaintext highlighter-rouge">qbpp::Vector&lt;qbpp::Var&gt;</code> class.
+Since the overloaded operator <code class="language-plaintext highlighter-rouge">*</code> for <code class="language-plaintext highlighter-rouge">qbpp::Vector</code> class returns the element-wise product of two
+<code class="language-plaintext highlighter-rouge">qbpp::Vector</code> objects, <code class="language-plaintext highlighter-rouge">qbpp::sum(w*x)</code> returns the <code class="language-plaintext highlighter-rouge">qbpp::Expr</code>object representing $P(L)$.
+Furthermore, the overloaded operator <code class="language-plaintext highlighter-rouge">-</code> for a scalar and a <code class="language-plaintext highlighter-rouge">qbpp::Vector</code> object returns
+a <code class="language-plaintext highlighter-rouge">qbpp::Vector</code> object whose components are the scalar minus each element of the vector.
+Thus, <code class="language-plaintext highlighter-rouge">qbpp::sum(w * (1 - x))</code> returns a <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> object storing $Q(L)$.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">qbpp</span><span class="o">::</span><span class="n">Vector</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;</span> <span class="n">w</span> <span class="o">=</span> <span class="p">{</span><span class="mi">64</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="mi">47</span><span class="p">,</span> <span class="mi">74</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">83</span><span class="p">,</span> <span class="mi">63</span><span class="p">,</span> <span class="mi">40</span><span class="p">};</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">,</span> <span class="n">w</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+  <span class="k">auto</span> <span class="n">p</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sum</span><span class="p">(</span><span class="n">w</span> <span class="o">*</span> <span class="n">x</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">q</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sum</span><span class="p">(</span><span class="n">w</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">x</span><span class="p">));</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sqr</span><span class="p">(</span><span class="n">p</span> <span class="o">-</span> <span class="n">q</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>QUBO++ programs can be simplified by using these vector operations.
+In addition, since vector operations for large vectors are parallelized by multithreading, they can accelerate the process of creating QUBO models.</p>
+
+<blockquote>
+  <p><strong>NOTE</strong>
+The operators <code class="language-plaintext highlighter-rouge">+</code>, <code class="language-plaintext highlighter-rouge">-</code>, and <code class="language-plaintext highlighter-rouge">*</code> are overloaded both for two <code class="language-plaintext highlighter-rouge">qbpp::Vector</code> objects and for a scalar and a <code class="language-plaintext highlighter-rouge">qbpp::Vector</code> object.
+For two <code class="language-plaintext highlighter-rouge">qbpp::Vector</code> objects, the overloaded operators perform element-wise operations.
+For a scalar and a <code class="language-plaintext highlighter-rouge">qbpp::Vector</code> object, the overloaded operators apply the scalar operation to each element of the vector.</p>
+</blockquote>
+
+    </main>
+  </div>
+</body>
+
+</html>

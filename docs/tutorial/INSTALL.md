@@ -48,6 +48,7 @@ To check the current status of your QUBO++ license, simply run:
 ```bash
 $ qbpp-license
 ```
+The current status can only be displayed for activated licenses.
 
 If you want to move the license to another machine, you can deactivate it on this machine as follows:
 ```bash
@@ -55,13 +56,9 @@ $ qbpp-license -d
 ```
 This decreases the activation count, and you can then activate the license on the other machine.
 
-> [!WARNING]
-> Since the license is node-locked, the activation information is stored on the machine, and re-activation is not necessary as long as the license has not expired.
+Since the license is node-locked, the activation information is stored on the machine, and re-activation is not necessary as long as the license has not expired.
 
-
-> [!WARNING]
+> **WARNING**
 > Each license key has a limited number of allowed activations and deactivations.
 > Once the total number of activations and deactivations reaches this limit, you will no longer be able to activate or deactivate that license.
 
-> [!WARNING]
-> The current status can only be displayed for activated licenses.

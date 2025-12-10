@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>QUBO++ Documentation - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/assets/main.css">
+  
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+</head>
+
+<body>
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ（全ページ共通） -->
+    <nav style="min-width:220px; position:sticky; top:1rem; padding-right:1rem; border-right:1px solid #ddd;">
+      <h2>QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0;">
+        <li><a href="https://github.com/nakanocs/qbpp/releases"><strong>Releases</strong></a></li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/tutorial/TUTORIAL"><strong>Tutorial</strong></a></li>
+      </ul>
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="integer-variables-and-solving-simultaneous-equations">Integer Variables and Solving Simultaneous Equations</h1>
+
+<h2 id="integer-variables">Integer variables</h2>
+<p>QUBO++ supports integer variables, which are internally implemented using multiple binary variables.
+A conventional binary encoding is used to represent integer values.
+Suppose that we have $n$ binary variables $x_0, x_1, \ldots, x_{n-1}$.
+These variables can represent all integers from $0$ to $2^n-1$ using the following linear expression:</p>
+
+\[\begin{aligned}
+2^0x_0+2^1x_1+\cdots 2^{n-1}x_{n-1}
+\end{aligned}\]
+
+<p>We can introduce a constant offset $l$ and replace the coefficient of $x_{n-1}$ with an arbitrary value $d$ as follows:</p>
+
+\[\begin{aligned}
+l+2^0x_0+2^1x_1+\cdots +2^{n-2}x_{n-2}+dx_{n-1}
+\end{aligned}\]
+
+<p>This expression can represent all integers from $l$ to $c+2^{n-1}+d-1$. 
+Based on this encoding, a variable whose integer range is $[l,u]$ can be constructed by choosing appropriate values of $n$ and $d$ ($1\leq d\leq 2^{n-1}$) to satisfy</p>
+
+\[\begin{aligned}
+u &amp;= l+2^0x_0+2^1x_1+\cdots +2^{n-2}x_{n-2}+dx_{n-1}
+\end{aligned}\]
+
+<p>The following QUBO++ program demonstrates how integer variables are defined:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var_int</span><span class="p">(</span><span class="s">"x"</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">8</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">y</span> <span class="o">=</span> <span class="o">-</span><span class="mi">10</span> <span class="o">&lt;=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var_int</span><span class="p">(</span><span class="s">"y"</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"x = "</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="s">" uses "</span> <span class="o">&lt;&lt;</span> <span class="n">x</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">" variables.</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"y = "</span> <span class="o">&lt;&lt;</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="s">" uses "</span> <span class="o">&lt;&lt;</span> <span class="n">y</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">" variables.</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>An integer variable is defined using the double inequality operator <code class="language-plaintext highlighter-rouge">&lt;= &lt;=</code>, which specifies the integer range that the variable can take.
+The function <code class="language-plaintext highlighter-rouge">qbpp::var_int(name)</code> creates a <code class="language-plaintext highlighter-rouge">qbpp::VarInt object</code> object with the given  <code class="language-plaintext highlighter-rouge">name</code>, representing the linear expression encoded by binary variables.
+The program outputs the following expressions:</p>
+<pre><code class="language-txt">x = 1 +x[0] +2*x[1] +4*x[2] uses 3 variables.
+y = -10 +y[0] +2*y[1] +4*y[2] +8*y[3] +5*y[4] uses 5 variables.
+</code></pre>
+
+<blockquote>
+  <p><strong>WARNING</strong>
+The number of binary variables required for an integer variable grows logarithmically with its range.
+When $u−l$ is large, the QUBO size increases, so wide integer ranges should be avoided whenever possible.</p>
+</blockquote>
+
+<h2 id="qubo-formulation-for-solving-simultaneous-equations">QUBO formulation for solving simultaneous equations</h2>
+<p>QUBO++ can solve systems of simultaneous equations by representing the variables as integer variables.
+As an example, we construct a QUBO formulation for the following equations, whose solution is $x=4$ and $y=6$:</p>
+
+\[\begin{aligned}
+x + y = 10\\
+2x+4y = 28 
+\end{aligned}\]
+
+<p>To solve these equations, we define integer variables $x$ and $y$ in the range $[0,10]$, each encoded by four binary variables:</p>
+
+\[\begin{aligned}
+x = x_0 +2x_1 +4x_2 +3x_3\\
+y = y_0 +2y_1 +4y_2 +3y_3
+\end{aligned}\]
+
+<p>Each of the following penalty expressions takes the minimum value 0 if and only if the corresponding equation is satisfied:</p>
+
+\[\begin{aligned}
+f(x,y) &amp;= (x+y-10)^2\\ 
+g(x,y) &amp;= (2x+4y -28)^2
+\end{aligned}\]
+
+<p>Thus, the combined expression</p>
+
+\[\begin{aligned}
+h(x,y) &amp;= f(x,y) +g(x,y)
+\end{aligned}\]
+
+<p>achieves its minimum value 0 precisely when both equations are satisfied simultaneously.</p>
+
+<h2 id="qubo-program">QUBO++ program</h2>
+<p>The following QUBO++ program constructs the QUBO expression $h(x,y)$, solves it, and decodes the resulting values of
+$x$ and $y$:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
+#include</span> <span class="cpf">"qbpp_easy_solver.hpp"</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var_int</span><span class="p">(</span><span class="s">"x"</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var_int</span><span class="p">(</span><span class="s">"y"</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="o">==</span> <span class="mi">10</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">g</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">y</span> <span class="o">==</span> <span class="mi">28</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">h</span> <span class="o">=</span> <span class="n">f</span> <span class="o">+</span> <span class="n">g</span><span class="p">;</span>
+  <span class="n">h</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">easy_solver</span><span class="o">::</span><span class="n">EasySolver</span><span class="p">(</span><span class="n">h</span><span class="p">);</span>
+  <span class="n">solver</span><span class="p">.</span><span class="n">target_energy</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">sol</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search</span><span class="p">();</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"sol = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"x = "</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="s">" = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"y = "</span> <span class="o">&lt;&lt;</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="s">" = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span> <span class="o">&lt;&lt;</span> <span class="s">" = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"g = "</span> <span class="o">&lt;&lt;</span> <span class="n">g</span> <span class="o">&lt;&lt;</span> <span class="s">" = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">g</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"*f = "</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">f</span> <span class="o">&lt;&lt;</span> <span class="s">" = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"*g = "</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">g</span> <span class="o">&lt;&lt;</span> <span class="s">" = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="o">*</span><span class="n">g</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>First, qbpp::VarInt objects  <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> are defined with the range $[0,10]$.
+A <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> object <code class="language-plaintext highlighter-rouge">f</code> is created to represent the constraint <code class="language-plaintext highlighter-rouge">x + y == 10</code>.
+Internally, this is equivalent to the QUBO expression <code class="language-plaintext highlighter-rouge">qbpp::sqr(x + y -10)</code>.
+Similarly, <code class="language-plaintext highlighter-rouge">g</code> represents the constraint <code class="language-plaintext highlighter-rouge">2 * x + 4 * y == 28</code>.
+The combined expression <code class="language-plaintext highlighter-rouge">h = f + g</code> encodes both equations.
+An Easy Solver instance is created with <code class="language-plaintext highlighter-rouge">h</code>, and the target energy is set to <code class="language-plaintext highlighter-rouge">0</code>, since the optimal solution minimizes all constraint violations.
+Calling <code class="language-plaintext highlighter-rouge">search()</code> returns a <code class="language-plaintext highlighter-rouge">qbpp::Sol</code> object sol that stores the optimal assignment of all binary variables.
+Finally, the program prints the values of <code class="language-plaintext highlighter-rouge">sol</code>, <code class="language-plaintext highlighter-rouge">sol(x)</code>, <code class="language-plaintext highlighter-rouge">sol(y)</code>, <code class="language-plaintext highlighter-rouge">sol(f)</code>, <code class="language-plaintext highlighter-rouge">sol(g)</code>, <code class="language-plaintext highlighter-rouge">sol(*f)</code>, and <code class="language-plaintext highlighter-rouge">sol(*g)</code>.
+Here,</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">f</code> is the penalty expression enforcing <code class="language-plaintext highlighter-rouge">x + y = 10</code>. Thus <code class="language-plaintext highlighter-rouge">sol(f) = 0</code> if and only if the equation is satisfied.</li>
+  <li><code class="language-plaintext highlighter-rouge">*f</code> is the linear expression <code class="language-plaintext highlighter-rouge">x + y</code>. Thus <code class="language-plaintext highlighter-rouge">sol(*f)</code> returns the actual evaluated value of <code class="language-plaintext highlighter-rouge">x + y</code></li>
+</ul>
+
+<p>The same applies to <code class="language-plaintext highlighter-rouge">g</code> and <code class="language-plaintext highlighter-rouge">*g</code>.</p>
+
+<p>The program outputs the following result:</p>
+
+<pre><code class="language-txt">sol = 0:{{x[0],0},{x[1],1},{x[2],1},{x[3],0},{y[0],0},{y[1],0},{y[2],1},{y[3],0}}
+x = x[0] +2*x[1] +4*x[2] +3*x[3] = 6
+y = y[0] +2*y[1] +4*y[2] +3*y[3] = 4
+f = 100 -19*x[0] -36*x[1] -64*x[2] -51*x[3] -19*y[0] -36*y[1] -64*y[2] -51*y[3] +4*x[0]*x[1] +8*x[0]*x[2] +6*x[0]*x[3] +2*x[0]*y[0] +4*x[0]*y[1] +8*x[0]*y[2] +6*x[0]*y[3] +16*x[1]*x[2] +12*x[1]*x[3] +4*x[1]*y[0] +8*x[1]*y[1] +16*x[1]*y[2] +12*x[1]*y[3] +24*x[2]*x[3] +8*x[2]*y[0] +16*x[2]*y[1] +32*x[2]*y[2] +24*x[2]*y[3] +6*x[3]*y[0] +12*x[3]*y[1] +24*x[3]*y[2] +18*x[3]*y[3] +4*y[0]*y[1] +8*y[0]*y[2] +6*y[0]*y[3] +16*y[1]*y[2] +12*y[1]*y[3] +24*y[2]*y[3] = 0
+g = 784 -108*x[0] -208*x[1] -384*x[2] -300*x[3] -208*y[0] -384*y[1] -640*y[2] -528*y[3] +16*x[0]*x[1] +32*x[0]*x[2] +24*x[0]*x[3] +16*x[0]*y[0] +32*x[0]*y[1] +64*x[0]*y[2] +48*x[0]*y[3] +64*x[1]*x[2] +48*x[1]*x[3] +32*x[1]*y[0] +64*x[1]*y[1] +128*x[1]*y[2] +96*x[1]*y[3] +96*x[2]*x[3] +64*x[2]*y[0] +128*x[2]*y[1] +256*x[2]*y[2] +192*x[2]*y[3] +48*x[3]*y[0] +96*x[3]*y[1] +192*x[3]*y[2] +144*x[3]*y[3] +64*y[0]*y[1] +128*y[0]*y[2] +96*y[0]*y[3] +256*y[1]*y[2] +192*y[1]*y[3] +384*y[2]*y[3] = 0
+*f = x[0] +2*x[1] +4*x[2] +3*x[3] +y[0] +2*y[1] +4*y[2] +3*y[3] = 10
+*g = 2*x[0] +4*x[1] +8*x[2] +6*x[3] +4*y[0] +8*y[1] +16*y[2] +12*y[3] = 28
+</code></pre>
+
+<p>Thus, we can confirm that the values of <code class="language-plaintext highlighter-rouge">x</code>, <code class="language-plaintext highlighter-rouge">y</code>, and the constraint expressions <code class="language-plaintext highlighter-rouge">f</code>, <code class="language-plaintext highlighter-rouge">g</code>, <code class="language-plaintext highlighter-rouge">*f</code>, and <code class="language-plaintext highlighter-rouge">*g</code> are consistent with the solution.</p>
+
+<blockquote>
+  <p><strong>WARNING</strong>
+QUBO++ supports the <code class="language-plaintext highlighter-rouge">==</code> operator only when the left-hand side is an expression and the right-hand side is an integer.
+Comparisons of the form integer <code class="language-plaintext highlighter-rouge">==</code> expression or expression <code class="language-plaintext highlighter-rouge">==</code> expression are not supported.</p>
+</blockquote>
+
+    </main>
+  </div>
+</body>
+
+</html>
