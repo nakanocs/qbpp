@@ -1,28 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>{{ page.title }} - {{ site.title }}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    {{ site.head }}
-  </head>
-  <body>
-    <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
 
-      <!-- 左ナビ（全ページ共通） -->
-      <nav style="min-width:220px; position:sticky; top:1rem; padding-right:1rem; border-right:1px solid #ddd;">
-        <h3>QUBO++</h3>
-        <ul style="list-style:none; padding-left:0;">
-          <li><a href="https://github.com/nakanocs/qbpp/releases"><strong>Releases</strong></a></li>
-          <li><a href="{{ '/DOCUMENT' | relative_url }}"><strong>Document</strong></a></li>
-          <li><a href="{{ '/tutorial/TUTORIAL' | relative_url }}"><strong>Tutorial</strong></a></li>
-        </ul>
-      </nav>
+<head>
+  <meta charset="utf-8">
+  <title>{{ page.title }} - {{ site.title }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {{ site.head }}
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
 
-      <!-- 右側：ページごとの本文 -->
-      <main style="flex:1;">
-        {{ content }}
-      </main>
-    </div>
-  </body>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+</head>
+
+<body>
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ（全ページ共通） -->
+    <nav style="min-width:220px; position:sticky; top:1rem; padding-right:1rem; border-right:1px solid #ddd;">
+      <h3>QUBO++</h3>
+      <ul style="list-style:none; padding-left:0;">
+        <li><a href="https://github.com/nakanocs/qbpp/releases"><strong>Releases</strong></a></li>
+        <li><a href="{{ '/DOCUMENT' | relative_url }}"><strong>Document</strong></a></li>
+        <li><a href="{{ '/tutorial/TUTORIAL' | relative_url }}"><strong>Tutorial</strong></a></li>
+      </ul>
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      {{ content }}
+    </main>
+  </div>
+</body>
+
 </html>

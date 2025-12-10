@@ -3,22 +3,7 @@ layout: default
 title: "QUBO++ Documentation"
 ---
 
-<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-
-<script>
-window.MathJax = {
-  tex: {
-    inlineMath: [['$', '$'], ['\\(', '\\)']],  
-    displayMath: [['$$','$$'], ['\\[','\\]']] 
-  }
-};
-</script>
-
-<script id="MathJax-script" async
-  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-</script>
-
-# QUBO++ Library Documantaion Version 2025.11.15
+# QUBO++ Library Documantaion 
 
 **QUBO (Quadratic Unconstrained Binary Optimization) models** use quadratic functions over binary variables {0,1}.
 **HUBO** (High-order Unconstrained Binary Optimization) generalizes QUBO to polynomial functions of arbitrary order.
