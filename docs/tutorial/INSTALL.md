@@ -3,7 +3,6 @@ layout: default
 title: "QUBO++ Documentation"
 ---
 
-
 # QUBO++ Installation/License Activation
 
 ## Installation

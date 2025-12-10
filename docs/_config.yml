@@ -1,3 +1,8 @@
 title: "QUBO++"
 markdown: kramdown
 theme: minima  
+
+highlighter: rouge
+
+kramdown:
+  syntax_highlighter: rouge
