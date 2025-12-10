@@ -12,7 +12,9 @@ As a fundamental technique for formulating such optimization problems, a matrix 
 Let $X=(x_{i,j})$ ($0\leq i,j\leq n-1$) is a matrix of $n\times n$ binary values.
 The matrix $X$ is called a permutation matrix if and only if every row and every column has exactly one entry equal to 1, as shown below.
 
-![Permutatoin matrix](images/matrix.png)
+<p align="center">
+  <img src="images/matrix.png" alt="Permutation matrix" width="50%">
+</p>
 
 A permutation matrix represents a permutation of $n$ numbers $(0,1,\ldots,n-1)$, where $x_{i,j} = 1$ if and only if the $i$-th element is $j$.
 For example, the above permutation matrix represents the permutation $(1,2,0,3)$.
