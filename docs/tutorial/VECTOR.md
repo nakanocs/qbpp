@@ -59,7 +59,8 @@ The output of this program is exactly the same as that of the previous program.
 ## QUBO for one-hot constraint
 A vector of binary variables is **one-hot** if it has exactly one entry equal to 1, that is, the sum of its elements is equal to 1.
 Let $X = (x_0, x_1, \ldots, x_{n-1})$ denote a vector of $n$ binary variables.
-The following QUBO expression $f(X)$ takes the minimum value of 0 if and only if $X$ is one-hot.
+The following QUBO expression $f(X)$ takes the minimum value of 0 if and only if $X$ is one-hot:
+
 $$
 \begin{align}
 f(X) &= \left(1 - \sum_{i=0}^{n-1}x_i\right)^2

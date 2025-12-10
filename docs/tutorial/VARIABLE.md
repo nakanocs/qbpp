@@ -56,6 +56,9 @@ With this change, the output of the program becomes:
 ```
 f.simplify() = 1 -a -2*b -c +a*b +a*c +b*b +b*c
 ```
+The member function call `f.simplify()` simplifies the expression `f` and returns the resulting value,
+which is then printed by `std::cout`.
+
 Assuming that all variables take binary values (0 or 1), we can use the identity 
 $b^2=b$ to further simplify the expression.
 For this purpose, we use simplify_as_binary() instead:
