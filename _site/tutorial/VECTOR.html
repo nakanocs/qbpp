@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>QUBO++ Documentation - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <link rel="stylesheet" href="/assets/main.css">
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+</head>
+
+<body>
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ（全ページ共通） -->
+    <nav style="min-width:220px; position:sticky; top:1rem; padding-right:1rem; border-right:1px solid #ddd;">
+      <h2>QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0;">
+        <li><a href="https://github.com/nakanocs/qbpp/releases"><strong>Releases</strong></a></li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/tutorial/TUTORIAL"><strong>Tutorial</strong></a></li>
+      </ul>
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="vector-of-variables-and-vector-functions">Vector of variables and vector functions</h1>
+
+<p>QUBO++ supports vector of variables and vector oparations.</p>
+
+<h2 id="defining-vector-of-variables">Defining vector of variables</h2>
+<p>A vector of binary variables can be created using the <code class="language-plaintext highlighter-rouge">qbpp::var()</code> function.</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">qbpp::var(name, size)</code> returns a vector of <code class="language-plaintext highlighter-rouge">size</code> binary variables with the given <code class="language-plaintext highlighter-rouge">name</code>.</li>
+</ul>
+
+<p>The following program defines a vector of 5 variables with the name <code class="language-plaintext highlighter-rouge">x</code>.
+By printing <code class="language-plaintext highlighter-rouge">x</code> with <code class="language-plaintext highlighter-rouge">std::cout</code>, we can confirm that it contains the 5 variables <code class="language-plaintext highlighter-rouge">x[0]</code>, <code class="language-plaintext highlighter-rouge">x[1]</code>, <code class="language-plaintext highlighter-rouge">x[2]</code>, <code class="language-plaintext highlighter-rouge">x[3]</code>, and <code class="language-plaintext highlighter-rouge">x[4]</code>.
+Next, using the <code class="language-plaintext highlighter-rouge">qbpp::expr()</code> function with type deduction, we create a <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> object <code class="language-plaintext highlighter-rouge">f</code> whose initial value is <code class="language-plaintext highlighter-rouge">0</code>.
+In the for-loop from <code class="language-plaintext highlighter-rouge">i = 0</code> to <code class="language-plaintext highlighter-rouge">4</code>, each variable <code class="language-plaintext highlighter-rouge">x[i]</code> is added to <code class="language-plaintext highlighter-rouge">f</code> using the compound operator <code class="language-plaintext highlighter-rouge">+=</code>.
+Finally, <code class="language-plaintext highlighter-rouge">f</code> is simplified and printed using <code class="language-plaintext highlighter-rouge">std::cout</code>.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">expr</span><span class="p">();</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">f</span> <span class="o">+=</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>The output of this program is as follows:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{x[0],x[1],x[2],x[3],x[4]}
+f = x[0] +x[1] +x[2] +x[3] +x[4]
+</code></pre></div></div>
+
+<blockquote>
+  <p><strong>NOTE</strong>
+<code class="language-plaintext highlighter-rouge">qbpp::var(name, size)</code> returns a <code class="language-plaintext highlighter-rouge">qbpp::Vector&lt;qbpp::var&gt;</code> object that contains <code class="language-plaintext highlighter-rouge">size</code> elements of type <code class="language-plaintext highlighter-rouge">qbpp::var</code>.
+The <code class="language-plaintext highlighter-rouge">qbpp::Vector&lt;T&gt;</code> class is almost compatible with <code class="language-plaintext highlighter-rouge">std::vector&lt;T&gt;</code>.
+It provides overloaded operators that support vector operations for elements of type <code class="language-plaintext highlighter-rouge">T</code>.</p>
+</blockquote>
+
+<h2 id="sum-function">Sum function</h2>
+<p>Using the vector utility function <code class="language-plaintext highlighter-rouge">qbpp::sum()</code>, you can obtain the sum of a vector of binary variables.
+The following program uses <code class="language-plaintext highlighter-rouge">qbpp::sum()</code> to compute the sum of all variables in the vector <code class="language-plaintext highlighter-rouge">x</code>:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sum</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>The output of this program is exactly the same as that of the previous program.</p>
+
+<h2 id="qubo-for-one-hot-constraint">QUBO for one-hot constraint</h2>
+<p>A vector of binary variables is <strong>one-hot</strong> if it has exactly one entry equal to 1, that is, the sum of its elements is equal to 1.
+Let $X = (x_0, x_1, \ldots, x_{n-1})$ denote a vector of $n$ binary variables.
+The following QUBO expression $f(X)$ takes the minimum value of 0 if and only if $X$ is one-hot:</p>
+
+\[\begin{align}
+f(X) &amp;= \left(1 - \sum_{i=0}^{n-1}x_i\right)^2
+\end{align}\]
+
+<p>The following program creates the expression $f$ and finds all optimal solutions:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
+#include</span> <span class="cpf">"qbpp_exhaustive_solver.hpp"</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sqr</span><span class="p">(</span><span class="n">qbpp</span><span class="o">::</span><span class="n">sum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">exhaustive_solver</span><span class="o">::</span><span class="n">ExhaustiveSolver</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">sol</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search_optimal_solutions</span><span class="p">();</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>The function <code class="language-plaintext highlighter-rouge">qbpp::sum()</code> computes the sum of all variables in the vector.
+The function <code class="language-plaintext highlighter-rouge">qbpp::sqr()</code> computes the square of its argument.
+The Exhaustive Solver finds all optimal solutions with energy value 0, which are printed using std::cout as follows:</p>
+
+<pre><code class="language-txt">f = 1 -x[0] -x[1] -x[2] -x[3] -x[4] +2*x[0]*x[1] +2*x[0]*x[2] +2*x[0]*x[3] +2*x[0]*x[4] +2*x[1]*x[2] +2*x[1]*x[3] +2*x[1]*x[4] +2*x[2]*x[3] +2*x[2]*x[4] +2*x[3]*x[4]
+(0) 0:{{x[0],0},{x[1],0},{x[2],0},{x[3],0},{x[4],1}}
+(1) 0:{{x[0],0},{x[1],0},{x[2],0},{x[3],1},{x[4],0}}
+(2) 0:{{x[0],0},{x[1],0},{x[2],1},{x[3],0},{x[4],0}}
+(3) 0:{{x[0],0},{x[1],1},{x[2],0},{x[3],0},{x[4],0}}
+(4) 0:{{x[0],1},{x[1],0},{x[2],0},{x[3],0},{x[4],0}}
+</code></pre>
+
+<p>All 5 optimal solutions are displayed.</p>
+
+    </main>
+  </div>
+</body>
+
+</html>
