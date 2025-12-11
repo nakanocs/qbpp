@@ -1,8 +1,12 @@
 title: "QUBO++"
+
 markdown: kramdown
-theme: minima  
+theme: minima
 
 highlighter: rouge
+
+url: "https://nakanocs.github.io"
+baseurl: "/qbpp"
 
 kramdown:
   syntax_highlighter: rouge
