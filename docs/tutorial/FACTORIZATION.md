@@ -18,7 +18,7 @@ $$
 \end{aligned}
 $$
 
-For such integer variables, the factorization problem for 35 can be formulated using the penalty expression:
+For such integer variables, the factorization problem for $35$ can be formulated using the penalty expression:
 
 $$
 \begin{aligned}
@@ -29,7 +29,7 @@ $$
 Because the integer variables $p$ and $q$ are implemented as linear expressions of binary variables, their product
 $pq$ becomes a quadratic expression, and therefore
 $f(p,q)$ becomes quartic.
-Clearly, $f(p,q)$ attains the minimum value 0 exactly when $p$ and $q$ arethe correct factors of 35.
+Clearly, $f(p,q)$ attains the minimum value 0 exactly when $p$ and $q$ are the correct factors of 35.
 
 ## QUBO++ program for factorization
 The following QUBO++ program constructs the HUBO expression $f(p,q)$, and solves the optimization problem using the Easy Solver:
@@ -111,5 +111,5 @@ q = 1000039
 {% endraw %}
 We can see that the expression `f` contains very large coefficients, and the factorization of the large composite number is correctly obtained.
 
->**NOTE**
+>**TIP**
 > `COEFF_TYPE` and `ENERGY_TYPE` can be set to `int8_t`, `int16_t`, `int32_t`, `int64_t`, `qbpp::int128_t`, `qbpp::int256_t`, `qbpp::int512_t`, `qbpp::int1024_t`, or `qbpp::cpp_int`.

@@ -7,7 +7,7 @@ title: "QUBO++ Documentation"
 # Solving Expressions using Easy Solver and Exhaustive Solver
 
 QUBO++ provides the **Easy Solver** and the **Exhaustive Solver** for QUBO/HUBO expressions.  
-They run in parallel on multicore CPUs using Intel Threading Building Blocks (TBB).
+They run in parallel on multicore CPUs using Intel Threading Building Blocks (oneTBB).
 
 - **Easy Solver**
   - Runs a heuristic algorithm based on simulated annealing.
@@ -22,7 +22,7 @@ Both solvers are used in two steps:
 1. Create a solver object, `qbpp::easy_solver::EasySolver` or `qbpp::exhaustive_solver::ExhaustiveSolver`.
 2. Call the `search()` member function on the solver object. It returns a `qbpp::Sol` object that stores the obtained solution.
 
-# Easy Solver
+## Easy Solver
 To use the **Easy Solver**, include the header file `qbpp_easy_solver.hpp`.
 It is defined in the namespace `qbpp::easy_solver`.
 
@@ -75,7 +75,7 @@ f = 25 -9*a -16*b -21*c -24*d +4*a*b +6*a*c +8*a*d +12*b*c +16*b*d +24*c*d
 {% endraw %}
 One of the optimal solutions is correctly output.
 
-# Exhaustive Solver
+## Exhaustive Solver
 To use the **Exhaustive Solver**, include the header file `qbpp_exhaustive_solver.hpp`.  
 It is defined in the namespace `qbpp::exhaustive_solver`.
 

@@ -3,12 +3,12 @@ layout: default
 title: "QUBO++ Documentation"
 ---
 
-# QUBO++
+# QUBO++: A model-and-solve framework for combinatorial optimization via QUBO/HUBO
 * A C++ library for constructing polynomials of binary variables to solve combinatorial optimization problems  
-* Currently built for **amd64** (**x86_64**) and **arm64** Linux systems**  
-* Bundled with two CPU solvers: Easy Solver (heuristic) and Exhaustive Solver (complete search)  
-* Bundled with a GPU solver: ABS3  
-* Supports High-order Unconstrained Binary Optimization (HUBO) up to degree 8  
+* Currently built for **amd64** (**x86_64**) and **arm64** Linux systems
+* Bundled with two CPU solvers: **Easy Solver** (heuristic) and **Exhaustive Solver** (complete search)  
+* Bundled with a GPU solver: **ABS3**
+* Supports High-Order Unconstrained Binary Optimization (HUBO) of degree up to 16 
 * Multithreading acceleration is applied using oneTBB wherever possible  
 * Includes APIs for calling the Gurobi Optimizer to solve Quadratic Unconstrained Binary Optimization (QUBO) problems  
 * Author: Koji Nakano  
@@ -16,18 +16,18 @@ title: "QUBO++ Documentation"
 
 # QUBO++ Solvers: Easy Solver, Exhaustive Solver, ABS3 Solver
 ## Easy Solver
-* Searches for solutions to QUBO/HUBO formulations on x86_64 multicore processors.
+* Searches for solutions to QUBO/HUBO formulations on multicore CPUs.
 * Multithreaded acceleration: utilizes Intel oneTBB for parallel search.
 * Integer coefficients: supports coefficients of arbitrary magnitude.
 
 ## Exhaustive Solver
-* Enumerates all solutions to QUBO/HUBO formulations on x86_64 multicore processors.
+* Enumerates all solutions to QUBO/HUBO formulations on multicore CPUs.
 * Optimality guaranteed: the global optimum is found and certifiable.
 * Multithreaded acceleration: utilizes Intel oneTBB for parallel enumeration.
 * Integer coefficients: supports coefficients of arbitrary magnitude.
 
 ## ABS3 Solver
-* Searches for solutions to QUBO/HUBO formulations on CUDA-enabled GPUs in x86_64 hosts.
+* Searches for solutions to QUBO/HUBO formulations on CUDA-enabled GPUs.
 
 ### **ABS3 Supported GPU architectures**
   - **sm_80** : NVIDIA A100  (Ampere) 

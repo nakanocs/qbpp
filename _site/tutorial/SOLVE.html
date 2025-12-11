@@ -42,7 +42,7 @@
       <h1 id="solving-expressions-using-easy-solver-and-exhaustive-solver">Solving Expressions using Easy Solver and Exhaustive Solver</h1>
 
 <p>QUBO++ provides the <strong>Easy Solver</strong> and the <strong>Exhaustive Solver</strong> for QUBO/HUBO expressions.<br />
-They run in parallel on multicore CPUs using Intel Threading Building Blocks (TBB).</p>
+They run in parallel on multicore CPUs using Intel Threading Building Blocks (oneTBB).</p>
 
 <ul>
   <li><strong>Easy Solver</strong>
@@ -66,7 +66,7 @@ They run in parallel on multicore CPUs using Intel Threading Building Blocks (TB
   <li>Call the <code class="language-plaintext highlighter-rouge">search()</code> member function on the solver object. It returns a <code class="language-plaintext highlighter-rouge">qbpp::Sol</code> object that stores the obtained solution.</li>
 </ol>
 
-<h1 id="easy-solver">Easy Solver</h1>
+<h2 id="easy-solver">Easy Solver</h2>
 <p>To use the <strong>Easy Solver</strong>, include the header file <code class="language-plaintext highlighter-rouge">qbpp_easy_solver.hpp</code>.
 It is defined in the namespace <code class="language-plaintext highlighter-rouge">qbpp::easy_solver</code>.</p>
 
@@ -115,7 +115,7 @@ class <code class="language-plaintext highlighter-rouge">qbpp::Sol</code>, which
 
 <p>One of the optimal solutions is correctly output.</p>
 
-<h1 id="exhaustive-solver">Exhaustive Solver</h1>
+<h2 id="exhaustive-solver">Exhaustive Solver</h2>
 <p>To use the <strong>Exhaustive Solver</strong>, include the header file <code class="language-plaintext highlighter-rouge">qbpp_exhaustive_solver.hpp</code>.<br />
 It is defined in the namespace <code class="language-plaintext highlighter-rouge">qbpp::exhaustive_solver</code>.</p>
 

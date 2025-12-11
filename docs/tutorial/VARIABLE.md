@@ -9,7 +9,9 @@ title: "QUBO++ Documentation"
 To use QUBO++, you need to include the header file `qbpp.hpp` and use the `qbpp` namespace.
 
 ## Defining variables and expressions
-You can define a variable by calling `qbpp::var("variable_name")` with `auto` type deduction.
+You can define a variable using `qbpp::var("name")` with auto type deduction.
+The specified `name` is used when the variable is printed with `std::cout`.
+
 Expressions are constructed using standard arithmetic operators such as `+`, `-`, and `*`.
 
 The following sample program defines three variables `a`, `b`, and `c`, and an expression `f`, which is printed using `std::cout`:
@@ -26,7 +28,7 @@ int main() {
 ```
 The expression `(a + b - 1) * (b + c - 1)` is automatically expanded and stored in `f`.
 
-In this QUBO++ program, the variables `a`, `b`, and `c` are objects of class `qbpp::Var`, and the expression f is an object of class `qbpp::Expr`.
+In this QUBO++ program, the variables `a`, `b`, and `c` are objects of class `qbpp::Var`, and the expression `f` is an object of class `qbpp::Expr`.
 
 Assuming the header and library paths are properly set up, this program (saved as `test.cpp`) can be compiled with `g++` as follows:
 ```bash
@@ -61,7 +63,7 @@ which is then printed by `std::cout`.
 
 Assuming that all variables take binary values (0 or 1), we can use the identity 
 $b^2=b$ to further simplify the expression.
-For this purpose, we use simplify_as_binary() instead:
+For this purpose, we use `simplify_as_binary()` instead:
 ```cpp
   std::cout << "f = " << f.simplify_as_binary() << std::endl;
 ```

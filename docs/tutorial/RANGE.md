@@ -28,7 +28,7 @@ If $f$ is a linear expression, then $g$ becomes a QUBO expression.
 If $f$ is cubic or of higher degree, then $g$ becomes a HUBO expression.
 
 >**NOTE**
-> QUBO++ internally uses a more sophisticated method that requires fewer binary variables to represent range constraints.
+> QUBO++ internally employs a lightweight improvement that enables range constraints to be encoded with a slightly smaller number of binary variables.
 
 
 ## Solving Integer Linear Programming

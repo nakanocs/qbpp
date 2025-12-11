@@ -6,24 +6,25 @@ title: "QUBO++ Documentation"
 # QUBO++ Installation/License Activation
 
 ## Installation
-Simply extract the `.tar.gz` file as follows:
+Download the `.tar.gz` file of the latest QUBO++ release from the [Releases](https://github.com/nakanocs/qbpp/releases) page.
+Extract the archive as follows:
 ```bash
 $ tar xf qbpp_amd64_2025.11.23.tar.gz
 ```
-The file name may differ depending on the version you downloaded.
+The actual file name varies depending on the version you downloaded.
 QUBO++ runs on Linux-based systems with the following CPUs:
 * amd64: 64-bit Intel and AMD processors
 * arm64: 64-bit ARM processors
 
 ## Setting Environment Variables
-It is recommended to set the following environment variables:
-* `CPLUS_INCLUDE_PATH`: Specifies the include path that contains the QUBO++ header files.
-* `LIBRARY_PATH`: Specifies the library path that contains the QUBO++ shared libraries for compiling and linking QUBO++ programs.
-* `LD_LIBRARY_PATH`: Specifies the library path that contains the QUBO++ shared libraries for executing QUBO++ programs.
-* `QBPP_LICENSE_KEY`: Specifies your license key. If omitted, an anonymous trial license is assumed.
-* `PATH`: Specifies the directory containing QUBO++ executable binaries.
+To compile and run QUBO++ programs, it is recommended to set the following environment variables:
+* `CPLUS_INCLUDE_PATH`: Path to the directory containing the QUBO++ header files.
+* `LIBRARY_PATH`: Path to the directory containing the QUBO++ shared libraries used during compilation and linking.
+* `LD_LIBRARY_PATH`: Path to the directory containing the QUBO++ shared libraries required at runtime.
+* `QBPP_LICENSE_KEY`: Your QUBO++ license key. If omitted, an anonymous trial license is used.
+* `PATH`: Path to the directory containing the QUBO++ executable binaries.
 
-To set these paths automatically when a shell starts, add the following lines to the end of your `~/.bashrc`:
+To set these paths automatically each time a shell starts, add the following lines to the end of your `~/.bashrc`:
 ```bash
 export QBPP_PATH=[QUBO++ install directory]
 

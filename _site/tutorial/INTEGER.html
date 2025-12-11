@@ -57,11 +57,11 @@ These variables can represent all integers from $0$ to $2^n-1$ using the followi
 l+2^0x_0+2^1x_1+\cdots +2^{n-2}x_{n-2}+dx_{n-1}
 \end{aligned}\]
 
-<p>This expression can represent all integers from $l$ to $c+2^{n-1}+d-1$. 
+<p>This expression can represent all integers from $l$ to $l+2^{n-1}+d-1$. 
 Based on this encoding, a variable whose integer range is $[l,u]$ can be constructed by choosing appropriate values of $n$ and $d$ ($1\leq d\leq 2^{n-1}$) to satisfy</p>
 
 \[\begin{aligned}
-u &amp;= l+2^0x_0+2^1x_1+\cdots +2^{n-2}x_{n-2}+dx_{n-1}
+u &amp;= l+2^{n-1}+d-1
 \end{aligned}\]
 
 <p>The following QUBO++ program demonstrates how integer variables are defined:</p>
@@ -107,8 +107,10 @@ y = y_0 +2y_1 +4y_2 +3y_3
 <p>Each of the following penalty expressions takes the minimum value 0 if and only if the corresponding equation is satisfied:</p>
 
 \[\begin{aligned}
-f(x,y) &amp;= (x+y-10)^2\\ 
-g(x,y) &amp;= (2x+4y -28)^2
+f(x,y) &amp;= (x+y-10)^2\\
+&amp;=(x_0 +2x_1 +4x_2 +3x_3+y_0 +2y_1 +4y_2 +3y_3-10)^2\\ 
+g(x,y) &amp;= (2x+4y -28)^2\\
+ &amp;= (2\cdot(x_0 +2x_1 +4x_2 +3x_3)+4\cdot( y_0 +2y_1 +4y_2 +3y_3)-28)^2
 \end{aligned}\]
 
 <p>Thus, the combined expression</p>
@@ -144,12 +146,12 @@ $x$ and $y$:</p>
   <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"*g = "</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">g</span> <span class="o">&lt;&lt;</span> <span class="s">" = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="o">*</span><span class="n">g</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre></div></div>
-<p>First, qbpp::VarInt objects  <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> are defined with the range $[0,10]$.
+<p>First, <code class="language-plaintext highlighter-rouge">qbpp::VarInt</code> objects  <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> are defined with the range $[0,10]$.
 A <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> object <code class="language-plaintext highlighter-rouge">f</code> is created to represent the constraint <code class="language-plaintext highlighter-rouge">x + y == 10</code>.
 Internally, this is equivalent to the QUBO expression <code class="language-plaintext highlighter-rouge">qbpp::sqr(x + y -10)</code>.
 Similarly, <code class="language-plaintext highlighter-rouge">g</code> represents the constraint <code class="language-plaintext highlighter-rouge">2 * x + 4 * y == 28</code>.
 The combined expression <code class="language-plaintext highlighter-rouge">h = f + g</code> encodes both equations.
-An Easy Solver instance is created with <code class="language-plaintext highlighter-rouge">h</code>, and the target energy is set to <code class="language-plaintext highlighter-rouge">0</code>, since the optimal solution minimizes all constraint violations.
+An Easy Solver instance is created with <code class="language-plaintext highlighter-rouge">h</code>, and the target energy is set to <code class="language-plaintext highlighter-rouge">0</code>, since the optimal solution satisfies all constraints.
 Calling <code class="language-plaintext highlighter-rouge">search()</code> returns a <code class="language-plaintext highlighter-rouge">qbpp::Sol</code> object sol that stores the optimal assignment of all binary variables.
 Finally, the program prints the values of <code class="language-plaintext highlighter-rouge">sol</code>, <code class="language-plaintext highlighter-rouge">sol(x)</code>, <code class="language-plaintext highlighter-rouge">sol(y)</code>, <code class="language-plaintext highlighter-rouge">sol(f)</code>, <code class="language-plaintext highlighter-rouge">sol(g)</code>, <code class="language-plaintext highlighter-rouge">sol(*f)</code>, and <code class="language-plaintext highlighter-rouge">sol(*g)</code>.
 Here,</p>

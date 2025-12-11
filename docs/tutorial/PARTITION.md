@@ -9,7 +9,7 @@ title: "QUBO++ Documentation"
 ## Partitioning problem
 Let $w=(w_0, w_1, \ldots, w_{n-1})$ be $n$ positive numbers.
 The partitioning problem is to partition these numbers into two sets $P$ and $Q$ ($Q=\overline{P}$) such that the sums of the elements in the two sets are as close as possible.
-More specifically, the problem is to find a subset $L \subseteq \{0,1,\ldots, n-1\}$ that minimizes:
+More specifically, the problem is to find a subset $L \subseteq \lbrace 0,1,\ldots, n-1\rbrace$ that minimizes:
 
 $$
 \begin{aligned}
@@ -102,10 +102,12 @@ L  : 47 12 83 63
 ~L : 64 27 74 40
 ```
 {% endraw %}
-> **NOTE**
-> For a `qbpp::Expr` object `f` and a `qbpp::Sol` object `sol`, both `f(sol)` and `sol(f)` return the resuting value of `f` for `sol`.
-> Similarly, a `qbpp::Var` object `a` and a `qbpp::Sol` object `sol`, both `a(sol)` and `sol(a)` return the resuting value of `a` in the solution `sol`.
-> Users can use either form according to their preference.
+> **TIP**
+> For a `qbpp::Expr` object `f` and a `qbpp::Sol` object `sol`, both `f(sol)` and `sol(f)` return the resulting value of `f` evaluated on `sol`.
+> Likewise, for a `qbpp::Var` object `a`, both `a(sol)` and `sol(a)` return the value of `a` in the solution `sol`.
+> The form `f(sol)` is natural from a **mathematical perspective**, as it corresponds to evaluating a function at a point.
+> In contrast, `sol(f)` is natural from an **object-oriented programming perspective**, where the solution object evaluates an expression.
+> You may use either form according to your preference.
 
 ## QUBO++ program using vector operations
 QUBO++ has rich vector operations that can simplify the code.
@@ -113,7 +115,7 @@ For this purpose,  `qbpp::Vector` class, which is similar to `std::vector` class
 In the following code, `w` is defined as an object of `qbpp::Vector<uint32_t>` class.
 Also, `x` is defined as an object of `qbpp::Vector<qbpp::Var>` class.
 Since the overloaded operator `*` for `qbpp::Vector` class returns the element-wise product of two
-`qbpp::Vector` objects, `qbpp::sum(w*x)` returns the `qbpp::Expr`object representing $P(L)$.
+`qbpp::Vector` objects, `qbpp::sum(w * x)` returns the `qbpp::Expr`object representing $P(L)$.
 Furthermore, the overloaded operator `-` for a scalar and a `qbpp::Vector` object returns
 a `qbpp::Vector` object whose components are the scalar minus each element of the vector.
 Thus, `qbpp::sum(w * (1 - x))` returns a `qbpp::Expr` object storing $Q(L)$.

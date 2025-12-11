@@ -42,10 +42,11 @@
       <h1 id="qubo-installationlicense-activation">QUBO++ Installation/License Activation</h1>
 
 <h2 id="installation">Installation</h2>
-<p>Simply extract the <code class="language-plaintext highlighter-rouge">.tar.gz</code> file as follows:</p>
+<p>Download the <code class="language-plaintext highlighter-rouge">.tar.gz</code> file of the latest QUBO++ release from the <a href="https://github.com/nakanocs/qbpp/releases">Releases</a> page.
+Extract the archive as follows:</p>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">tar </span>xf qbpp_amd64_2025.11.23.tar.gz
 </code></pre></div></div>
-<p>The file name may differ depending on the version you downloaded.
+<p>The actual file name varies depending on the version you downloaded.
 QUBO++ runs on Linux-based systems with the following CPUs:</p>
 <ul>
   <li>amd64: 64-bit Intel and AMD processors</li>
@@ -53,16 +54,16 @@ QUBO++ runs on Linux-based systems with the following CPUs:</p>
 </ul>
 
 <h2 id="setting-environment-variables">Setting Environment Variables</h2>
-<p>It is recommended to set the following environment variables:</p>
+<p>To compile and run QUBO++ programs, it is recommended to set the following environment variables:</p>
 <ul>
-  <li><code class="language-plaintext highlighter-rouge">CPLUS_INCLUDE_PATH</code>: Specifies the include path that contains the QUBO++ header files.</li>
-  <li><code class="language-plaintext highlighter-rouge">LIBRARY_PATH</code>: Specifies the library path that contains the QUBO++ shared libraries for compiling and linking QUBO++ programs.</li>
-  <li><code class="language-plaintext highlighter-rouge">LD_LIBRARY_PATH</code>: Specifies the library path that contains the QUBO++ shared libraries for executing QUBO++ programs.</li>
-  <li><code class="language-plaintext highlighter-rouge">QBPP_LICENSE_KEY</code>: Specifies your license key. If omitted, an anonymous trial license is assumed.</li>
-  <li><code class="language-plaintext highlighter-rouge">PATH</code>: Specifies the directory containing QUBO++ executable binaries.</li>
+  <li><code class="language-plaintext highlighter-rouge">CPLUS_INCLUDE_PATH</code>: Path to the directory containing the QUBO++ header files.</li>
+  <li><code class="language-plaintext highlighter-rouge">LIBRARY_PATH</code>: Path to the directory containing the QUBO++ shared libraries used during compilation and linking.</li>
+  <li><code class="language-plaintext highlighter-rouge">LD_LIBRARY_PATH</code>: Path to the directory containing the QUBO++ shared libraries required at runtime.</li>
+  <li><code class="language-plaintext highlighter-rouge">QBPP_LICENSE_KEY</code>: Your QUBO++ license key. If omitted, an anonymous trial license is used.</li>
+  <li><code class="language-plaintext highlighter-rouge">PATH</code>: Path to the directory containing the QUBO++ executable binaries.</li>
 </ul>
 
-<p>To set these paths automatically when a shell starts, add the following lines to the end of your <code class="language-plaintext highlighter-rouge">~/.bashrc</code>:</p>
+<p>To set these paths automatically each time a shell starts, add the following lines to the end of your <code class="language-plaintext highlighter-rouge">~/.bashrc</code>:</p>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">QBPP_PATH</span><span class="o">=[</span>QUBO++ <span class="nb">install </span>directory]
 
 <span class="nb">export </span><span class="nv">CPLUS_INCLUDE_PATH</span><span class="o">=</span><span class="nv">$QBPP_PATH</span>/include:<span class="nv">$CPLUS_INCLUDE_PATH</span>

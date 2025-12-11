@@ -25,12 +25,12 @@ l+2^0x_0+2^1x_1+\cdots +2^{n-2}x_{n-2}+dx_{n-1}
 \end{aligned}
 $$
 
-This expression can represent all integers from $l$ to $c+2^{n-1}+d-1$. 
+This expression can represent all integers from $l$ to $l+2^{n-1}+d-1$. 
 Based on this encoding, a variable whose integer range is $[l,u]$ can be constructed by choosing appropriate values of $n$ and $d$ ($1\leq d\leq 2^{n-1}$) to satisfy 
 
 $$
 \begin{aligned}
-u &= l+2^0x_0+2^1x_1+\cdots +2^{n-2}x_{n-2}+dx_{n-1}
+u &= l+2^{n-1}+d-1
 \end{aligned}
 $$
 
@@ -82,8 +82,10 @@ Each of the following penalty expressions takes the minimum value 0 if and only 
 
 $$
 \begin{aligned}
-f(x,y) &= (x+y-10)^2\\ 
-g(x,y) &= (2x+4y -28)^2
+f(x,y) &= (x+y-10)^2\\
+&=(x_0 +2x_1 +4x_2 +3x_3+y_0 +2y_1 +4y_2 +3y_3-10)^2\\ 
+g(x,y) &= (2x+4y -28)^2\\
+ &= (2\cdot(x_0 +2x_1 +4x_2 +3x_3)+4\cdot( y_0 +2y_1 +4y_2 +3y_3)-28)^2
 \end{aligned}
 $$
 
@@ -124,12 +126,12 @@ int main() {
   std::cout << "*g = " << *g << " = " << sol(*g) << std::endl;
 }
 ```
-First, qbpp::VarInt objects  `x` and `y` are defined with the range $[0,10]$.
+First, `qbpp::VarInt` objects  `x` and `y` are defined with the range $[0,10]$.
 A `qbpp::Expr` object `f` is created to represent the constraint `x + y == 10`.
 Internally, this is equivalent to the QUBO expression `qbpp::sqr(x + y -10)`.
 Similarly, `g` represents the constraint `2 * x + 4 * y == 28`.
 The combined expression `h = f + g` encodes both equations.
-An Easy Solver instance is created with `h`, and the target energy is set to `0`, since the optimal solution minimizes all constraint violations.
+An Easy Solver instance is created with `h`, and the target energy is set to `0`, since the optimal solution satisfies all constraints.
 Calling `search()` returns a `qbpp::Sol` object sol that stores the optimal assignment of all binary variables.
 Finally, the program prints the values of `sol`, `sol(x)`, `sol(y)`, `sol(f)`, `sol(g)`, `sol(*f)`, and `sol(*g)`.
 Here,

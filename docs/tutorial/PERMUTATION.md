@@ -10,7 +10,7 @@ As a fundamental technique for formulating such optimization problems, a matrix 
 
 ## Permutation matrix
 Let $X=(x_{i,j})$ ($0\leq i,j\leq n-1$) is a matrix of $n\times n$ binary values.
-The matrix $X$ is called a permutation matrix if and only if every row and every column has exactly one entry equal to 1, as shown below.
+The matrix $X$ is called a **permutation matrix** if and only if every row and every column has exactly one entry equal to 1, as shown below.
 
 <p align="center">
   <img src="images/matrix.png" alt="Permutation matrix" width="50%">
@@ -66,10 +66,9 @@ int main() {
 }
 ```
 
-In this program, a matrix `x` of binary variables is defined using `qbpp::var()` function.
-More specifically, `qbpp::var("x",4,4)` returns a `qbpp::Var` object
+In this program, `qbpp::var("x",4,4)` returns a `qbpp::Var` object
 of size $4\times 4$ with `x`.
-After that, for a qbpp::Expr object `f`, two double for-loops adds
+For a `qbpp::Expr` object `f`, two double for-loops adds
 formulas for $f(X)$.
 Using the Exhaustive Solver, all optimal solutions are computed and stored in `sols`.
 All solutions in `sols` are displayed one-by-one.
@@ -104,7 +103,7 @@ Solution 23 : {{1,0,0,0},{0,1,0,0},{0,0,1,0},{0,0,0,1}}
 ```
 {% endraw %}
 > **NOTE**
-> A matrix of binary variables is implemented as a nested vector using qbpp::Vector class.
+> A matrix of binary variables is implemented as a nested vector using `qbpp::Vector` class.
 > For example, `qbpp::var("x",4,4)` returns a `qbpp::Vector<qbpp::Vector<qbpp::Var>>` objects.
 > Each `qbpp::Var` object is represented as `x[i][j]` and the value of `x[i][j]` for `sol` can be obtained by either `sol(x[i][j])` or `x[i][j](sol)`.
 
@@ -113,12 +112,12 @@ Solution 23 : {{1,0,0,0},{0,1,0,0},{0,0,1,0},{0,0,0,1}}
 The following two functions for a matrix `x` of $n\times n$ binary variables are supported:
 - `qbpp::vector_sum(x)`: Computes the sum of each row and returns a vector of size $n$ containing these sums.
 - `qbpp::transpose(x)`: Returns the transposed matrix of size $n\times n$.
-Using these functions, vectors containing row-wise sums and column-wise sums can be computed by the following expressions:
-- `qbpp::vector_sum(x)`: returns a vector of row-wise sums of size $n$.
-- `qbpp::vector_sum(qbpp::transpose(x))`: returns a vector of column-wise sums of size $n$.
+Using these functions, vectors containing row-wise sums and column-wise sums can be computed by the following expressions.
+- `qbpp::vector_sum(qbpp::transpose(x))`: Returns a vector of column-wise sums of size $n$.
+
 A scalar–vector operation is used to subtract 1 from each element:
-`qbpp::vector_sum(x) - 1`: subtracts 1 from each row-wise sum.
-`qbpp::vector_sum(qbpp::transpose(x)) - 1`: subtracts 1 from each column-wise sum.
+- `qbpp::vector_sum(x) - 1`: subtracts 1 from each row-wise sum.
+- `qbpp::vector_sum(qbpp::transpose(x)) - 1`: subtracts 1 from each column-wise sum.
 For these two vectors of size $n$, `qbpp::sqr()` squares each element, and `qbpp::sum()` computes the sum of all elements.
 
 The following QUBO++ program implements a QUBO formulation using these vector functions and operations:
@@ -141,7 +140,7 @@ int main() {
 }
 ```
 
-In this program, `x(sol)` (or `sol(x)`) returns a matrix of assigned values to `x` in `sol`,
+In this program, `x(sol)` returns a matrix of assigned values to `x` in `sol`,
 which is a matrix of integers of size $n\times n$.
 Since `qbpp::onehot_to_int()` converts each one-hot vector to the corresponding integer,
 `qbpp::onehot_to_int(x(sol))` returns the permutation as a vector of integers.

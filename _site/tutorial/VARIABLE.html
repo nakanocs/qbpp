@@ -45,8 +45,10 @@
 <p>To use QUBO++, you need to include the header file <code class="language-plaintext highlighter-rouge">qbpp.hpp</code> and use the <code class="language-plaintext highlighter-rouge">qbpp</code> namespace.</p>
 
 <h2 id="defining-variables-and-expressions-1">Defining variables and expressions</h2>
-<p>You can define a variable by calling <code class="language-plaintext highlighter-rouge">qbpp::var("variable_name")</code> with <code class="language-plaintext highlighter-rouge">auto</code> type deduction.
-Expressions are constructed using standard arithmetic operators such as <code class="language-plaintext highlighter-rouge">+</code>, <code class="language-plaintext highlighter-rouge">-</code>, and <code class="language-plaintext highlighter-rouge">*</code>.</p>
+<p>You can define a variable using <code class="language-plaintext highlighter-rouge">qbpp::var("name")</code> with auto type deduction.
+The specified <code class="language-plaintext highlighter-rouge">name</code> is used when the variable is printed with <code class="language-plaintext highlighter-rouge">std::cout</code>.</p>
+
+<p>Expressions are constructed using standard arithmetic operators such as <code class="language-plaintext highlighter-rouge">+</code>, <code class="language-plaintext highlighter-rouge">-</code>, and <code class="language-plaintext highlighter-rouge">*</code>.</p>
 
 <p>The following sample program defines three variables <code class="language-plaintext highlighter-rouge">a</code>, <code class="language-plaintext highlighter-rouge">b</code>, and <code class="language-plaintext highlighter-rouge">c</code>, and an expression <code class="language-plaintext highlighter-rouge">f</code>, which is printed using <code class="language-plaintext highlighter-rouge">std::cout</code>:</p>
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
@@ -61,7 +63,7 @@ Expressions are constructed using standard arithmetic operators such as <code cl
 </code></pre></div></div>
 <p>The expression <code class="language-plaintext highlighter-rouge">(a + b - 1) * (b + c - 1)</code> is automatically expanded and stored in <code class="language-plaintext highlighter-rouge">f</code>.</p>
 
-<p>In this QUBO++ program, the variables <code class="language-plaintext highlighter-rouge">a</code>, <code class="language-plaintext highlighter-rouge">b</code>, and <code class="language-plaintext highlighter-rouge">c</code> are objects of class <code class="language-plaintext highlighter-rouge">qbpp::Var</code>, and the expression f is an object of class <code class="language-plaintext highlighter-rouge">qbpp::Expr</code>.</p>
+<p>In this QUBO++ program, the variables <code class="language-plaintext highlighter-rouge">a</code>, <code class="language-plaintext highlighter-rouge">b</code>, and <code class="language-plaintext highlighter-rouge">c</code> are objects of class <code class="language-plaintext highlighter-rouge">qbpp::Var</code>, and the expression <code class="language-plaintext highlighter-rouge">f</code> is an object of class <code class="language-plaintext highlighter-rouge">qbpp::Expr</code>.</p>
 
 <p>Assuming the header and library paths are properly set up, this program (saved as <code class="language-plaintext highlighter-rouge">test.cpp</code>) can be compiled with <code class="language-plaintext highlighter-rouge">g++</code> as follows:</p>
 <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>g++ test.cpp <span class="nt">-o</span> <span class="nb">test</span>
@@ -96,7 +98,7 @@ which is then printed by <code class="language-plaintext highlighter-rouge">std:
 
 <p>Assuming that all variables take binary values (0 or 1), we can use the identity 
 $b^2=b$ to further simplify the expression.
-For this purpose, we use simplify_as_binary() instead:</p>
+For this purpose, we use <code class="language-plaintext highlighter-rouge">simplify_as_binary()</code> instead:</p>
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
 </code></pre></div></div>
 <p>Then the output becomes:</p>

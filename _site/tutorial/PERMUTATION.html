@@ -46,7 +46,7 @@ As a fundamental technique for formulating such optimization problems, a matrix 
 
 <h2 id="permutation-matrix">Permutation matrix</h2>
 <p>Let $X=(x_{i,j})$ ($0\leq i,j\leq n-1$) is a matrix of $n\times n$ binary values.
-The matrix $X$ is called a permutation matrix if and only if every row and every column has exactly one entry equal to 1, as shown below.</p>
+The matrix $X$ is called a <strong>permutation matrix</strong> if and only if every row and every column has exactly one entry equal to 1, as shown below.</p>
 
 <p align="center">
   <img src="images/matrix.png" alt="Permutation matrix" width="50%" />
@@ -99,10 +99,9 @@ f(X) &amp;= \sum_{i=0}^{n-1}\left(1-\sum_{j=0}^{n-1}x_{i,j}\right)^2+\sum_{j=0}^
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>In this program, a matrix <code class="language-plaintext highlighter-rouge">x</code> of binary variables is defined using <code class="language-plaintext highlighter-rouge">qbpp::var()</code> function.
-More specifically, <code class="language-plaintext highlighter-rouge">qbpp::var("x",4,4)</code> returns a <code class="language-plaintext highlighter-rouge">qbpp::Var</code> object
+<p>In this program, <code class="language-plaintext highlighter-rouge">qbpp::var("x",4,4)</code> returns a <code class="language-plaintext highlighter-rouge">qbpp::Var</code> object
 of size $4\times 4$ with <code class="language-plaintext highlighter-rouge">x</code>.
-After that, for a qbpp::Expr object <code class="language-plaintext highlighter-rouge">f</code>, two double for-loops adds
+For a <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> object <code class="language-plaintext highlighter-rouge">f</code>, two double for-loops adds
 formulas for $f(X)$.
 Using the Exhaustive Solver, all optimal solutions are computed and stored in <code class="language-plaintext highlighter-rouge">sols</code>.
 All solutions in <code class="language-plaintext highlighter-rouge">sols</code> are displayed one-by-one.
@@ -137,7 +136,7 @@ This program outputs all 24 permutations as follows:</p>
 
 <blockquote>
   <p><strong>NOTE</strong>
-A matrix of binary variables is implemented as a nested vector using qbpp::Vector class.
+A matrix of binary variables is implemented as a nested vector using <code class="language-plaintext highlighter-rouge">qbpp::Vector</code> class.
 For example, <code class="language-plaintext highlighter-rouge">qbpp::var("x",4,4)</code> returns a <code class="language-plaintext highlighter-rouge">qbpp::Vector&lt;qbpp::Vector&lt;qbpp::Var&gt;&gt;</code> objects.
 Each <code class="language-plaintext highlighter-rouge">qbpp::Var</code> object is represented as <code class="language-plaintext highlighter-rouge">x[i][j]</code> and the value of <code class="language-plaintext highlighter-rouge">x[i][j]</code> for <code class="language-plaintext highlighter-rouge">sol</code> can be obtained by either <code class="language-plaintext highlighter-rouge">sol(x[i][j])</code> or <code class="language-plaintext highlighter-rouge">x[i][j](sol)</code>.</p>
 </blockquote>
@@ -147,12 +146,14 @@ Each <code class="language-plaintext highlighter-rouge">qbpp::Var</code> object 
 <ul>
   <li><code class="language-plaintext highlighter-rouge">qbpp::vector_sum(x)</code>: Computes the sum of each row and returns a vector of size $n$ containing these sums.</li>
   <li><code class="language-plaintext highlighter-rouge">qbpp::transpose(x)</code>: Returns the transposed matrix of size $n\times n$.
-Using these functions, vectors containing row-wise sums and column-wise sums can be computed by the following expressions:</li>
-  <li><code class="language-plaintext highlighter-rouge">qbpp::vector_sum(x)</code>: returns a vector of row-wise sums of size $n$.</li>
-  <li><code class="language-plaintext highlighter-rouge">qbpp::vector_sum(qbpp::transpose(x))</code>: returns a vector of column-wise sums of size $n$.
-A scalar–vector operation is used to subtract 1 from each element:
-<code class="language-plaintext highlighter-rouge">qbpp::vector_sum(x) - 1</code>: subtracts 1 from each row-wise sum.
-<code class="language-plaintext highlighter-rouge">qbpp::vector_sum(qbpp::transpose(x)) - 1</code>: subtracts 1 from each column-wise sum.
+Using these functions, vectors containing row-wise sums and column-wise sums can be computed by the following expressions.</li>
+  <li><code class="language-plaintext highlighter-rouge">qbpp::vector_sum(qbpp::transpose(x))</code>: Returns a vector of column-wise sums of size $n$.</li>
+</ul>
+
+<p>A scalar–vector operation is used to subtract 1 from each element:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">qbpp::vector_sum(x) - 1</code>: subtracts 1 from each row-wise sum.</li>
+  <li><code class="language-plaintext highlighter-rouge">qbpp::vector_sum(qbpp::transpose(x)) - 1</code>: subtracts 1 from each column-wise sum.
 For these two vectors of size $n$, <code class="language-plaintext highlighter-rouge">qbpp::sqr()</code> squares each element, and <code class="language-plaintext highlighter-rouge">qbpp::sum()</code> computes the sum of all elements.</li>
 </ul>
 
@@ -175,7 +176,7 @@ For these two vectors of size $n$, <code class="language-plaintext highlighter-r
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>In this program, <code class="language-plaintext highlighter-rouge">x(sol)</code> (or <code class="language-plaintext highlighter-rouge">sol(x)</code>) returns a matrix of assigned values to <code class="language-plaintext highlighter-rouge">x</code> in <code class="language-plaintext highlighter-rouge">sol</code>,
+<p>In this program, <code class="language-plaintext highlighter-rouge">x(sol)</code> returns a matrix of assigned values to <code class="language-plaintext highlighter-rouge">x</code> in <code class="language-plaintext highlighter-rouge">sol</code>,
 which is a matrix of integers of size $n\times n$.
 Since <code class="language-plaintext highlighter-rouge">qbpp::onehot_to_int()</code> converts each one-hot vector to the corresponding integer,
 <code class="language-plaintext highlighter-rouge">qbpp::onehot_to_int(x(sol))</code> returns the permutation as a vector of integers.</p>

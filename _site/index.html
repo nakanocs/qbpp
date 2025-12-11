@@ -39,13 +39,13 @@
 
     <!-- 右側：ページごとの本文 -->
     <main style="flex:1;min-width:0;">
-      <h1 id="qubo">QUBO++</h1>
+      <h1 id="qubo-a-model-and-solve-framework-for-combinatorial-optimization-via-qubohubo">QUBO++: A model-and-solve framework for combinatorial optimization via QUBO/HUBO</h1>
 <ul>
   <li>A C++ library for constructing polynomials of binary variables to solve combinatorial optimization problems</li>
-  <li>Currently built for <strong>amd64</strong> (<strong>x86_64</strong>) and <strong>arm64</strong> Linux systems**</li>
-  <li>Bundled with two CPU solvers: Easy Solver (heuristic) and Exhaustive Solver (complete search)</li>
-  <li>Bundled with a GPU solver: ABS3</li>
-  <li>Supports High-order Unconstrained Binary Optimization (HUBO) up to degree 8</li>
+  <li>Currently built for <strong>amd64</strong> (<strong>x86_64</strong>) and <strong>arm64</strong> Linux systems</li>
+  <li>Bundled with two CPU solvers: <strong>Easy Solver</strong> (heuristic) and <strong>Exhaustive Solver</strong> (complete search)</li>
+  <li>Bundled with a GPU solver: <strong>ABS3</strong></li>
+  <li>Supports High-Order Unconstrained Binary Optimization (HUBO) of degree up to 16</li>
   <li>Multithreading acceleration is applied using oneTBB wherever possible</li>
   <li>Includes APIs for calling the Gurobi Optimizer to solve Quadratic Unconstrained Binary Optimization (QUBO) problems</li>
   <li>Author: Koji Nakano</li>
@@ -55,14 +55,14 @@
 <h1 id="qubo-solvers-easy-solver-exhaustive-solver-abs3-solver">QUBO++ Solvers: Easy Solver, Exhaustive Solver, ABS3 Solver</h1>
 <h2 id="easy-solver">Easy Solver</h2>
 <ul>
-  <li>Searches for solutions to QUBO/HUBO formulations on x86_64 multicore processors.</li>
+  <li>Searches for solutions to QUBO/HUBO formulations on multicore CPUs.</li>
   <li>Multithreaded acceleration: utilizes Intel oneTBB for parallel search.</li>
   <li>Integer coefficients: supports coefficients of arbitrary magnitude.</li>
 </ul>
 
 <h2 id="exhaustive-solver">Exhaustive Solver</h2>
 <ul>
-  <li>Enumerates all solutions to QUBO/HUBO formulations on x86_64 multicore processors.</li>
+  <li>Enumerates all solutions to QUBO/HUBO formulations on multicore CPUs.</li>
   <li>Optimality guaranteed: the global optimum is found and certifiable.</li>
   <li>Multithreaded acceleration: utilizes Intel oneTBB for parallel enumeration.</li>
   <li>Integer coefficients: supports coefficients of arbitrary magnitude.</li>
@@ -70,7 +70,7 @@
 
 <h2 id="abs3-solver">ABS3 Solver</h2>
 <ul>
-  <li>Searches for solutions to QUBO/HUBO formulations on CUDA-enabled GPUs in x86_64 hosts.</li>
+  <li>Searches for solutions to QUBO/HUBO formulations on CUDA-enabled GPUs.</li>
 </ul>
 
 <h3 id="abs3-supported-gpu-architectures"><strong>ABS3 Supported GPU architectures</strong></h3>

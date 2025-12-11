@@ -8,7 +8,7 @@ title: "QUBO++ Documentation"
 QUBO++ supports vector of variables and vector oparations.
 
 ## Defining vector of variables
-A vector of binary variables can be created using the qbpp::var() function.
+A vector of binary variables can be created using the `qbpp::var()` function.
 - `qbpp::var(name, size)` returns a vector of `size` binary variables with the given `name`.
 
 The following program defines a vector of 5 variables with the name `x`.
@@ -30,8 +30,8 @@ int main() {
 }
 ```
 The output of this program is as follows:
-```txt
-{[0],x[0]},{[1],x[1]},{[2],x[2]},{[3],x[3]},{[4],x[4]}
+```
+{x[0],x[1],x[2],x[3],x[4]}
 f = x[0] +x[1] +x[2] +x[3] +x[4]
 ```
 
@@ -47,8 +47,7 @@ The following program uses `qbpp::sum()` to compute the sum of all variables in 
 #include "qbpp.hpp"
 
 int main() {
-  constexpr qbpp::vindex_t n = 5;
-  auto x = qbpp::var("x", n);
+  auto x = qbpp::var("x", 5);
   std::cout << x << std::endl;
   auto f = qbpp::sum(x);
   std::cout << "f = " << f.simplify_as_binary() << std::endl;

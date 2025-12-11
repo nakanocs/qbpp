@@ -52,7 +52,7 @@ For example, when the product $pq = 35$ is given, the goal is to recover the two
   6 \leq q \leq 17  
 \end{aligned}\]
 
-<p>For such integer variables, the factorization problem for 35 can be formulated using the penalty expression:</p>
+<p>For such integer variables, the factorization problem for $35$ can be formulated using the penalty expression:</p>
 
 \[\begin{aligned}
 f(p,q) &amp;= (pq-35)^2
@@ -61,7 +61,7 @@ f(p,q) &amp;= (pq-35)^2
 <p>Because the integer variables $p$ and $q$ are implemented as linear expressions of binary variables, their product
 $pq$ becomes a quadratic expression, and therefore
 $f(p,q)$ becomes quartic.
-Clearly, $f(p,q)$ attains the minimum value 0 exactly when $p$ and $q$ arethe correct factors of 35.</p>
+Clearly, $f(p,q)$ attains the minimum value 0 exactly when $p$ and $q$ are the correct factors of 35.</p>
 
 <h2 id="qubo-program-for-factorization">QUBO++ program for factorization</h2>
 <p>The following QUBO++ program constructs the HUBO expression $f(p,q)$, and solves the optimization problem using the Easy Solver:</p>
@@ -139,7 +139,7 @@ q = 1000039
 <p>We can see that the expression <code class="language-plaintext highlighter-rouge">f</code> contains very large coefficients, and the factorization of the large composite number is correctly obtained.</p>
 
 <blockquote>
-  <p><strong>NOTE</strong>
+  <p><strong>TIP</strong>
 <code class="language-plaintext highlighter-rouge">COEFF_TYPE</code> and <code class="language-plaintext highlighter-rouge">ENERGY_TYPE</code> can be set to <code class="language-plaintext highlighter-rouge">int8_t</code>, <code class="language-plaintext highlighter-rouge">int16_t</code>, <code class="language-plaintext highlighter-rouge">int32_t</code>, <code class="language-plaintext highlighter-rouge">int64_t</code>, <code class="language-plaintext highlighter-rouge">qbpp::int128_t</code>, <code class="language-plaintext highlighter-rouge">qbpp::int256_t</code>, <code class="language-plaintext highlighter-rouge">qbpp::int512_t</code>, <code class="language-plaintext highlighter-rouge">qbpp::int1024_t</code>, or <code class="language-plaintext highlighter-rouge">qbpp::cpp_int</code>.</p>
 </blockquote>
 

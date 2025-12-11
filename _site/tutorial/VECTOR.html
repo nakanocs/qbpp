@@ -44,7 +44,7 @@
 <p>QUBO++ supports vector of variables and vector oparations.</p>
 
 <h2 id="defining-vector-of-variables">Defining vector of variables</h2>
-<p>A vector of binary variables can be created using the qbpp::var() function.</p>
+<p>A vector of binary variables can be created using the <code class="language-plaintext highlighter-rouge">qbpp::var()</code> function.</p>
 <ul>
   <li><code class="language-plaintext highlighter-rouge">qbpp::var(name, size)</code> returns a vector of <code class="language-plaintext highlighter-rouge">size</code> binary variables with the given <code class="language-plaintext highlighter-rouge">name</code>.</li>
 </ul>
@@ -67,9 +67,9 @@ Finally, <code class="language-plaintext highlighter-rouge">f</code> is simplifi
 <span class="p">}</span>
 </code></pre></div></div>
 <p>The output of this program is as follows:</p>
-<pre><code class="language-txt">{[0],x[0]},{[1],x[1]},{[2],x[2]},{[3],x[3]},{[4],x[4]}
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{x[0],x[1],x[2],x[3],x[4]}
 f = x[0] +x[1] +x[2] +x[3] +x[4]
-</code></pre>
+</code></pre></div></div>
 
 <blockquote>
   <p><strong>NOTE</strong>
@@ -84,8 +84,7 @@ The following program uses <code class="language-plaintext highlighter-rouge">qb
 <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
 </span>
 <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-  <span class="k">constexpr</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">vindex_t</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
-  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">,</span> <span class="n">n</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">,</span> <span class="mi">5</span><span class="p">);</span>
   <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
   <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sum</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
   <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
