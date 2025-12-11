@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "QUBO++ Documentation"
+title: "VARIABLE"
 ---
 
 # Defining Variables and Expressions

@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "QUBO++ Documentation"
+title: "SOLVE"
 ---
 
 

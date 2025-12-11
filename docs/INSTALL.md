@@ -1,9 +1,9 @@
 ---
 layout: default
-title: "QUBO++ Documentation"
+title: "INSTALL"
 ---
 
-# QUBO++ Installation/License Activation
+# QUBO++ Installation and License MANAGEMENT
 
 ## Installation
 Download the `.tar.gz` file of the latest QUBO++ release from the [Releases](https://github.com/nakanocs/qbpp/releases) page.

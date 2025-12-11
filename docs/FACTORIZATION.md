@@ -1,9 +1,9 @@
 ---
 layout: default
-title: "QUBO++ Documentation"
+title: "FACTORIZATION"
 ---
 
-# Factorization Through HUBO expression
+# Factorization Through HUBO Expression
 
 ## HUBO for factorizing the product of two prime numbers
 We consider the factorization of integers that are products of two prime numbers.

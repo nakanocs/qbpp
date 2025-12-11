@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "QUBO++ Documentation"
+title: "RANGE"
 ---
 
 # Range Constraints and Solving Integer Linear Programming
