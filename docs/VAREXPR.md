@@ -1,4 +1,10 @@
-# Variable and Expression classes
+---
+layout: default
+title: "Variable and Expression Classes"
+---
+
+
+# Variable and Expression Classes
 
 ## qbpp::Var, qbpp::Term, and qbpp::Expr classes
 
