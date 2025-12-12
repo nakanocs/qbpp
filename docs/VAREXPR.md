@@ -117,7 +117,7 @@ In particular, `f` is created as a `qbpp::Expr` object containing only a constan
 The macros `COEFF_TYPE` and `ENERGY_TYPE` define the data types used for coefficients and energy values in expressions.
 The `ENERGY_TYPE` macro is also used as the data type for the integer constant term of a `qbpp::Expr` object.
 By default, `COEFF_TYPE` and `ENERGY_TYPE` are defined as `int32_t` and `int64_t`, respectively.
-They can be changed either by compiler options or by using #define directives in the source code.
+They can be changed either by compiler options or by using `#define` directives in the source code.
 
 The following data types are supported:
 - **Standard integer types**:

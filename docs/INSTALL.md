@@ -1,9 +1,9 @@
 ---
 layout: default
-title: "INSTALL"
+title: "Installation and License Management"
 ---
 
-# QUBO++ Installation and License MANAGEMENT
+# Installation and License Management
 
 ## Installation
 Download the `.tar.gz` file of the latest QUBO++ release from the [Releases](https://github.com/nakanocs/qbpp/releases) page.
@@ -36,7 +36,7 @@ export PATH=$QBPP_PATH/bin:$PATH
 export QBPP_LICENSE_KEY=[Your QUBO++ license key]
 ```
 
-## Lincense Activation
+## Lincense Magement
 The license is activated using the `qbpp-license` command as follows:
 ```bash
 $ qbpp-license -a
