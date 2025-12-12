@@ -21,7 +21,8 @@ title: "DOCUMENT"
 ## Details
 1. [Data Types of Variables and Expressions](VAREXPR)
 2. [Basic Operators and Functions](OPERATOR)
-2. [Multi-dimensional Variables and Expressions](MULTIDIM)
+3. [Evaluating Expressions](EVAL)
+4. [Multi-dimensional Variables and Expressions](MULTIDIM)
 
 ## References
 1. [References](REFERENCE)
