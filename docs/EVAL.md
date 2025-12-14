@@ -56,12 +56,13 @@ int main() {
 
 
 ## Evaluation using qbpp::Sol
-A solution (or qbpp::Sol) object can be used to evaluate the value of expression (or qbpp::Expr).
-For this purpose, we first create a qbpp::Sol object `sol` with respect to qbpp::Expr object `f`.
-A created qbpp::Sol object `f` is initialized by all zero solution.
-By `set()` member function for the qbpp::Sol object, we can assign a new value to a variable.
-Then `f(sol)` and `sol(f)` returns the resulting values of `f` for `sol`.
-Furthermore, `comp_energy()` member function computes this value and returns it.
+A solution object (`qbpp::Sol`) can be used to evaluate the value of an expression (`qbpp::Expr`).
+To do this, we first construct a `qbpp::Sol` object sol associated with a given expression `f`.
+The newly created `qbpp::Sol` object is initialized with the all-zero assignment.
+
+Using the `set()` member function of `qbpp::Sol`, we can assign values to individual variables.
+Then, both `f(sol)` and `sol(f)` return the value of the expression f under the assignment stored in sol.
+Furthermore, the `comp_energy()` member function computes and returns the same value.
 
 
 ```cpp
@@ -79,5 +80,4 @@ int main() {
   std::cout << "f(0,1,1) = " << sol(f) << std::endl;
   std::cout << "f(0,1,1) = " << sol.comp_energy() << std::endl;
 }
-
 ```

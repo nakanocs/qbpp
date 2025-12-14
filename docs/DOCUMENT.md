@@ -6,9 +6,19 @@ title: "DOCUMENT"
 # QUBO++ Document
 
 ## Installation
+This section explains how to install QUBO++ and set up the required environment.
+It also describes the license management process needed to use QUBO++.
+After completing this section, you will be ready to follow the tutorial
+and start modeling and solving optimization problems with QUBO++.
+
 1. [Installation and License Management](INSTALL)
 
 ## Basics
+This section provides a step-by-step introduction to QUBO++.
+By reading the pages in order, you will learn how to define variables and expressions,
+model optimization problems, and solve them using QUBO++.
+After completing this tutorial, you should be able to use QUBO++ for most typical applications.
+
 1. [Defining Variables and Creating Expressions](VARIABLE)
 2. [Solving Expressions](SOLVE)
 3. [Vector of Variables and Vector Functions](VECTOR)
@@ -18,7 +28,13 @@ title: "DOCUMENT"
 7. [Factorization Through HUBO Expression](FACTORIZATION)
 8. [Range Constraints and Solving Integer Linear Programming](RANGE)
 
-## Details
+## Topics
+This section provides topic-wise explanations of selected features of QUBO++.
+Each page focuses on a specific topic and offers deeper insights into design decisions,
+usage patterns, and, where appropriate, internal implementations.
+This section is not intended to be exhaustive, but to complement the Tutorial and Reference
+sections by providing a deeper understanding of QUBO++.
+
 1. [Data Types of Variables and Expressions](VAREXPR)
 2. [Basic Operators and Functions](OPERATOR)
 3. [Evaluating Expressions](EVAL)
