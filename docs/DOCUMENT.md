@@ -4,6 +4,9 @@ title: "DOCUMENT"
 ---
 
 # QUBO++ Document
+This documentation for QUBO++ is currently under development.
+Some pages may contain incomplete or provisional information.
+Feedback and contributions are welcome as the documentation continues to evolve.
 
 ## Installation
 This section explains how to install QUBO++ and set up the required environment.
@@ -42,6 +45,7 @@ sections by providing a deeper understanding of QUBO++.
 4. [Multi-dimensional Variables and Expressions](MULTIDIM)
 5. [Sum Functions for Multi-dimensional Arrays](SUM)
 6. [Easy Solver Usage](EASYSOLVER)
+7. [Exhaustive Solver Usage](EXHAUSTIVE)
 
 ## References
 1. [References](REFERENCE)

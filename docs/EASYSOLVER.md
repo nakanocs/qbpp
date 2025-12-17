@@ -4,13 +4,22 @@ title: "Easy Solver"
 ---
 
 # Easy Solver Usage
+The **Easy Solver** is a heuristic solver for QUBO/HUBO expressions.
 
-The Easy Solver (or `qbpp::easy_solver::EasySolver`) is constructed with
-an expression (or `qbpp::Expr`) object.
-The given expression must be simplified as a binary expression by calling
-the `simplify_as_binary()` function in advance.
+Solving a problem with the Easy Solver consists of the following three steps:
+1. Create an Easy Solver (or `qbpp::easy_solver::EasySolver`) object.
+2. Set search options by calling member functions of the solver object.
+3. Search for solutions by calling the `search()` member function, which returns a solution (or `qbpp::Sol`) object.
 
-# Easy Solver Options
+## Creating Easy Solver object
+To use the Easy Solver, an Easy Solver object (or `qbpp::easy_solver::EasySolver`) is constructed with an expression (or `qbpp::Expr`) object as follows:
+- `qbpp::easy_solver::EasySolver(const qbpp::Expr& f)`
+
+Here, `f` is the expression to be solved.
+It must be simplified as a binary expression in advance by calling the `simplify_as_binary()` function.
+This function converts the given expression `f` into an internal format that is used during the solution search.
+
+## Setting Easy Solver Options
 For a created Easy Solver object, the following member functions can be specified:
 - `time_limit(double time)`: 
 Specifies the time limit in seconds.
@@ -24,6 +33,10 @@ less than or equal to the specified value is found.
 - `enable_default_callback()`
 Enables the default callback function, which prints newly obtained best solutions.
 
+## Searching Solutions
+The Easy Solver searches for solutions by simply calling the `search()` member function of the Easy Solver object.
+
+## Program Example
 The following program searches for a solution to the Low Autocorrelation Binary Sequences (LABS) problem using the Easy Solver:
 ```cpp
 #include "qbpp.hpp"
