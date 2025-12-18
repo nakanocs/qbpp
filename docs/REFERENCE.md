@@ -3,7 +3,7 @@ layout: default
 title: "REFERENCE"
 ---
 
-# QUBO++ Library Documantaion 
+# QUBO++ Library
 
 **QUBO (Quadratic Unconstrained Binary Optimization) models** use quadratic functions over binary variables {0,1}.
 **HUBO** (High-order Unconstrained Binary Optimization) generalizes QUBO to polynomial functions of arbitrary order.
@@ -33,7 +33,7 @@ The resulting HUBO expression has:
 * constant term: none 
 * linear terms:  $4a$, $b$ 
 * quadratic terms: $-5ab$, $-2ac$, $7bc$ 
-* cubic term : $22acbc$
+* cubic term : $22abc$
 
 In this document, we refer to $(a+b+c)(a+2b+3c-3)^2$ as **a formula**  (or HUBO formula) and
 to the expanded, simplified polynomial $4a +b -5ab -2ac +7bc +22abc$ as **an expression** (or HUBO expression).

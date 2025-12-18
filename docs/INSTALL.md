@@ -9,7 +9,7 @@ title: "Installation and License Management"
 Download the `.tar.gz` file of the latest QUBO++ release from the [Releases](https://github.com/nakanocs/qbpp/releases) page.
 Extract the archive as follows:
 ```bash
-$ tar xf qbpp_amd64_2025.11.23.tar.gz
+$ tar xf qbpp_<arch>_<version>.tar.gz
 ```
 The actual file name varies depending on the version you downloaded.
 QUBO++ runs on Linux-based systems with the following CPUs:
@@ -36,7 +36,7 @@ export PATH=$QBPP_PATH/bin:$PATH
 export QBPP_LICENSE_KEY=[Your QUBO++ license key]
 ```
 
-## Lincense Magement
+## Lincense Management
 The license is activated using the `qbpp-license` command as follows:
 ```bash
 $ qbpp-license -a

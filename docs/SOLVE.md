@@ -96,7 +96,7 @@ int main() {
   auto c = qbpp::var("c");
   auto d = qbpp::var("d");
   auto f = qbpp::sqr(a + 2 * b + 3 * c + 4 * d - 5);
-  f.simplify_as_binary()
+  f.simplify_as_binary();
   auto solver = qbpp::exhaustive_solver::ExhaustiveSolver(f);
   auto sol = solver.search();
   std::cout << sol << std::endl;
