@@ -42,6 +42,7 @@ sections by providing a deeper understanding of QUBO++.
 2. [Basic Operators and Functions](OPERATOR)
 3. [Basic Operators and Functions for Vectors](OPVECTOR)
 3. [Evaluating Expressions](EVAL)
+4. [Replace functions](REPLACE)
 4. [Multi-dimensional Variables and Expressions](MULTIDIM)
 5. [Sum Functions for Multi-dimensional Arrays](SUM)
 6. [Easy Solver Usage](EASYSOLVER)
