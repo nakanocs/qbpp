@@ -10,7 +10,7 @@ QUBO++ provides the following replace function, which can be used to fix variabl
 
 Replaces (fixes) variable values in the expression f according to the mapping specified by ml.
 
-## Using the replace function to fix Variable Values
+## Using the replace function to fix variable values
 We explain the `qbpp::replace()` function using the
 [QUBO++ program for partitioning problem](PARTITION)> for explining
 the `qbpp::replace()` function.
@@ -171,6 +171,105 @@ We can confirm that:
 - the solution `sol` does not include x[0],
 - `x[0]` and `x[1]` take opposite values, and
 - 64 and 27 are placed in distinct subsets, as intended.
+
+## Replace Functions for Integer Variables
+Integer variables can be replaced with fixed integer values using the `replace()` functions.
+
+Here, we demonstrate this feature using a simple multiplication expression.
+Let $p$, $q$, and $r$ be integer variables, and consider the following constraint:
+
+$$
+\begin{aligned}
+p\times q - r &=0
+\end{aligned}
+$$
+
+This expression can be interpreted in several ways, leading to different types of problems:
+- Multiplication: For fixed values of $p$ and $q$, find $r$ that satisfies the expression.
+- Factorization: For a fixed value of $r$, find $p$ and $q$ that satisfy the expression.
+- Division: For fixed values of $p$ and $r$, find $q$ that satisfies the expression.
+
+Using the `qbpp::replace()` function, integer variables can be fixed to constant values.
+We demonstrate QUBO++ programs that solve these problems using `qbpp::replace()`.
+
+### Multiplication
+The folloing program fixes $p=5$ and $q=7$ and finds the product $r=35$:
+{% raw %}
+```cpp
+
+#include "qbpp.hpp"
+#include "qbpp_easy_solver.hpp"
+
+int main() {
+  auto p = 2 <= qbpp::var_int("p") <= 8;
+  auto q = 2 <= qbpp::var_int("q") <= 8;
+  auto r = 2 <= qbpp::var_int("r") <= 40;
+  auto f = p * q - r == 0;
+  qbpp::MapList ml({{p, 5}, {q, 7}});
+  auto g = qbpp::replace(f, ml);
+  g.simplify_as_binary();
+  std::cout << "g = " << g << std::endl;
+  auto solver = qbpp::easy_solver::EasySolver(g);
+  solver.target_energy(0);
+  auto sol = solver.search();
+  qbpp::Sol full_sol(f);
+  full_sol.set(sol);
+  full_sol.set(ml);
+  std::cout << "p= " << full_sol(p) << ", q= " << full_sol(q)
+            << ", r= " << full_sol(r) << std::endl;
+}
+```
+{% endraw %}
+In this program, a `qbpp::MapList` object `ml` is used to fix the values of the integer variables 
+`p` and `q` in the original expression `f`.
+By applying `qbpp::replace(f, ml)`, the variables `p` and `q` in `f` are replaced with the constants 5 and 7, respectively.
+The resulting expression is stored in `g`, which now contains only the variable `r`.
+The Easy Solver is then applied to `g`, and the resulting solution is stored in `sol`.
+To construct a complete solution for the original expression `f`, a `qbpp::Sol` object `full_sol` is created.
+The assignments obtained from sol and the fixed values specified by `ml` are combined and stored in `full_sol`.
+Finally, the values of $p$, $q$, and $r$ are printed.
+
+This program produces the following output, confirming that the multiplication result is obtained correctly:
+```
+g = 1089 -65*r[0] -128*r[1] -248*r[2] -464*r[3] -800*r[4] -413*r[5] +4*r[0]*r[1] +8*r[0]*r[2] +16*r[0]*r[3] +32*r[0]*r[4] +14*r[0]*r[5] +16*r[1]*r[2] +32*r[1]*r[3] +64*r[1]*r[4] +28*r[1]*r[5] +64*r[2]*r[3] +128*r[2]*r[4] +56*r[2]*r[5] +256*r[3]*r[4] +112*r[3]*r[5] +224*r[4]*r[5]
+p= 5, q= 7, r= 35
+```
+
+### Factorization
+For the factorization of $r=35$, the `qbpp::MapList` object `ml` in the QUBO++ program is modified as follows:
+{% raw %}
+```cpp
+  qbpp::MapList ml({{r, 35}});
+```
+{% endraw %}
+By fixing the value of $r$, the solver searches for integer values of $p$ and $q$ that satisfy the constraint
+
+$$
+\begin{aligned}
+p\times &=35
+\end{aligned}
+$$
+
+
+This program produces the following output:
+```
+g = 961 -120*p[0] -232*p[1] -336*p[2] -120*q[0] -232*q[1] -336*q[2] +16*p[0]*p[1] +24*p[0]*p[2] -45*p[0]*q[0] -80*p[0]*q[1] -105*p[0]*q[2] +48*p[1]*p[2] -80*p[1]*q[0] -136*p[1]*q[1] -168*p[1]*q[2] -105*p[2]*q[0] -168*p[2]*q[1] -189*p[2]*q[2] +16*q[0]*q[1] +24*q[0]*q[2] +48*q[1]*q[2] +20*p[0]*p[1]*q[0] +48*p[0]*p[1]*q[1] +84*p[0]*p[1]*q[2] +30*p[0]*p[2]*q[0] +72*p[0]*p[2]*q[1] +126*p[0]*p[2]*q[2] +20*p[0]*q[0]*q[1] +30*p[0]*q[0]*q[2] +60*p[0]*q[1]*q[2] +60*p[1]*p[2]*q[0] +144*p[1]*p[2]*q[1] +252*p[1]*p[2]*q[2] +48*p[1]*q[0]*q[1] +72*p[1]*q[0]*q[2] +144*p[1]*q[1]*q[2] +84*p[2]*q[0]*q[1] +126*p[2]*q[0]*q[2] +252*p[2]*q[1]*q[2] +16*p[0]*p[1]*q[0]*q[1] +24*p[0]*p[1]*q[0]*q[2] +48*p[0]*p[1]*q[1]*q[2] +24*p[0]*p[2]*q[0]*q[1] +36*p[0]*p[2]*q[0]*q[2] +72*p[0]*p[2]*q[1]*q[2] +48*p[1]*p[2]*q[0]*q[1] +72*p[1]*p[2]*q[0]*q[2] +144*p[1]*p[2]*q[1]*q[2]
+p= 5, q= 7, r= 35
+```
+
+### Division
+To compute the division $r/p$ with $r=35$ and $p=5$, the qbpp::MapList object ml in the QUBO++ program is modified as follows:
+{% raw %}
+```cpp
+  qbpp::MapList ml({{p, 5}, {r, 35}});
+```
+{% endraw %}
+This program produces the following output:
+```cpp
+g = 625 -225*q[0] -400*q[1] -525*q[2] +100*q[0]*q[1] +150*q[0]*q[2] +300*q[1]*q[2]
+p= 5, q= 7, r= 35
+```
+This confirms that the division result $q=r/p=7$ is correctly obtained.
 
 > **NOTE**
 > QUBO++ also provides a member function version of `replace()` for expressions.
