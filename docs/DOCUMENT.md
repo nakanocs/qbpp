@@ -47,6 +47,7 @@ sections by providing a deeper understanding of QUBO++.
 5. [Sum Functions for Multi-dimensional Arrays](SUM)
 6. [Easy Solver Usage](EASYSOLVER)
 7. [Exhaustive Solver Usage](EXHAUSTIVE)
+9. [ABS3 Solver Usage](ABS3)
 
 ## References
 1. [References](REFERENCE)
