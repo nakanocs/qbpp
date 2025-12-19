@@ -59,7 +59,7 @@ x = 6, y = 4
 ```
 {% endraw %}
 
-## Next to do
+## Next steps
 1. AActivate the Anonymous Trial license or your license key. See Installation in **Installation** in [QUBO++ Document](DOCUMENT).
 2. Learn the basics of QUBO++. Start from **Basics** in [QUBO++ Document](DOCUMENT).
 

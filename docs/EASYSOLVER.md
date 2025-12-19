@@ -135,3 +135,62 @@ TTS = 0.913s Energy = 902 thread = 4 PosMin(neighbor)
 TTS = 2.691s Energy = 898 thread = 15 PosMin
 898: ++-++-----+--+--++++++---++-+-+--++-------++-++-+-+-+-+-++-++++-++-+++++-+-+--++++++---+++--+++---++
 ```
+
+## Advanced Usage
+
+### Keeping multiple best solutions
+The Easy Solver can keep multiple best solutions found during the search.
+To enable this feature, call the following member function:
+- `enable_best_sols(size_t best_sol_count)`: Stores up to `best_sol_count` best solutions.
+
+Once this function is enabled, the solution object returned by `search()` contains the stored best solutions.
+You can access them using:
+- `best_sols()`: Returns a reference to the vector of best solutions.
+
+### Program example
+The following program solves the Low Autocorrelation Binary Sequence (LABS) problem using the Easy Solver.
+Since `enable_topk_sols(10)` is called, the solver keeps up to 10 top-k solutions.
+The program prints each stored solution using a range-based for loop over `sol.sols()`.
+```cpp
+#include "qbpp.hpp"
+#include "qbpp_easy_solver.hpp"
+
+int main() {
+  size_t size = 100;
+  auto x = qbpp::var("x", size);
+  auto f = qbpp::expr();
+  for (size_t d = 1; d < size; ++d) {
+    auto temp = qbpp::expr();
+    for (size_t i = 0; i < size - d; ++i) {
+      temp += (2 * x[i] - 1) * (2 * x[i + d] - 1);
+    }
+    f += qbpp::sqr(temp);
+  }
+  f.simplify_as_binary();
+
+  auto solver = qbpp::easy_solver::EasySolver(f);
+  solver.time_limit(5.0);
+  solver.enable_topk_sols(10);
+  auto sol = solver.search();
+  for (const auto& s : sol.sols()) {
+    std::cout << s.energy() << ": ";
+    for (auto val : s(x)) {
+      std::cout << (val == 0 ? "-" : "+");
+    }
+    std::cout << std::endl;
+  }
+}
+```
+This program desiplays the following output:
+```
+870: +--++--+----++--+--++-+--+++-+-++++--++++-+++++--+----+-++-+++++-+-+--++-+-+-+---++-+++----++++++---
+886: ++-------++-+++--+---+-++++-+++--+-+-+-----+-+-+----++------+-+---++--+-++-+--+--+--+--++--++++--+++
+914: ++-++---------++---+-----++--+++----++-++-+++-+-++--+---+---+++-++-+-++-+-+-+---+++++----+++-+--+-++
+914: +--++--+----++--+--++-+--+++-+-++++--++++-+++++--+----+-++-+++++-+-+--++-+-+-+---+--+++----++++++---
+918: +-+-+++++--++--+-------++-+++-+++-+--+-++-++++--+++---+-++-++-+---+++++---++-+-+++-++---++++-+-+-++-
+922: -+--+++--+-+++---+---+-----+++-+-+++--+--+---+--+-+---+----++--++-+-++--++-+-+++++-+--+-+++++-+----+
+926: --++-++--++--+--++++-----------++-+---+-+++++-++-+-+-----+++-++-+-++-+-+---++++-++-+-+-+++---++--+++
+930: --++-+--+++--+--+--+-++--++--+----+--+++++---+-+----+-+++----+++-+-+-------+-+--+-+-+++++++-+-+++--+
+934: +-+-+-+++-+++--+--+--------+--+++-++-++-+--+++--+++--+++++-+--+-+-++++++--+--+-++++++---++++---+-+++
+942: +-+-+++---++----+-+-+--++++-+-++-+-+---+-++---++--+----+--+---++++++++---++++++++---+--++-++-++-++--
+```

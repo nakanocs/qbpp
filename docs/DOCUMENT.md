@@ -41,13 +41,17 @@ sections by providing a deeper understanding of QUBO++.
 1. [Data Types of Variables and Expressions](VAREXPR)
 2. [Basic Operators and Functions](OPERATOR)
 3. [Basic Operators and Functions for Vectors](OPVECTOR)
-3. [Evaluating Expressions](EVAL)
-4. [Replace functions](REPLACE)
-4. [Multi-dimensional Variables and Expressions](MULTIDIM)
-5. [Sum Functions for Multi-dimensional Arrays](SUM)
-6. [Easy Solver Usage](EASYSOLVER)
-7. [Exhaustive Solver Usage](EXHAUSTIVE)
-9. [ABS3 Solver Usage](ABS3)
+4. [Evaluating Expressions](EVAL)
+5. [Replace functions](REPLACE)
+6. [Multi-dimensional Variables and Expressions](MULTIDIM)
+7. [Sum Functions for Multi-dimensional Arrays](SUM)
+8. [Easy Solver Usage](EASYSOLVER)
+9. [Exhaustive Solver Usage](EXHAUSTIVE)
+10. [ABS3 Solver Usage](ABS3)
+11. [Gurobi Optimizer Usage](GUROBI)
+
+## Case Study
+1. [Listing Pythagorean Triples](PYTHAGOREAN)
 
 ## References
 1. [References](REFERENCE)
