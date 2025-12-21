@@ -39,16 +39,15 @@ $$
 
 $$
 \begin{aligned}
-c_2(k): & \sum_{i=0}^3\sum_{j=0}^3 x _{i,j,k}=1 & (0\leq k\leq 8)
+c_2(k): & \sum_{i=0}^2\sum_{j=0}^2x _{i,j,k}=1 & (0\leq k\leq 8)
 \end{aligned}
 $$
 
-3. Row and column sums
-The sum of each row and each column must be 15:
+3. The sum of each row and each column must be 15:
 $$
 \begin{aligned}
-c_3(i): & \sum_{j=0}\sum_{k=0}^8 x _{i,j,k} (k+1)x _{i,j,k} = 15  &(0\leq i\leq 2)
-c_3(j): & \sum_{i=0}\sum_{k=0}^8  x _{i,j,k} (k+1)x _{i,j,k} = 15 &(0\leq j\leq 2)\\
+c_3(i): & \sum_{j=0}^2\sum_{k=0}^8  (k+1)x _{i,j,k} = 15  &(0\leq i\leq 2)\\
+c_3(j): & \sum_{i=0}^2\sum_{k=0}^8 (k+1)x _{i,j,k} = 15 &(0\leq j\leq 2)
 \end{aligned}
 $$
 
@@ -148,7 +147,7 @@ Therefore, we can also fix:
 
 $$
 \begin{aligned}
- x_{i,j,1} &=1 & {\rm if\,\,} (i,j)\neq (0,0)\\
+ x_{i,j,1} &=0 & {\rm if\,\,} (i,j)\neq (0,0)\\
 \end{aligned}
 $$
 
