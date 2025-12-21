@@ -14,7 +14,7 @@ An example is shown below:
 
 ## A formulation for finding magic square
 We formulate the problem of finding a 3-by-3 magic square 
-$S=(s_{i,j})$ ($0\leq i,j\leq 2) using one-hot encoding.
+$S=(s_{i,j})$ ($0\leq i,j\leq 2$) using one-hot encoding.
 We introduce binary variables $x_{i,j,k}$ ($0\leq i,j\leq 2, 0\leq k\leq 8$), where:
 
 $$
