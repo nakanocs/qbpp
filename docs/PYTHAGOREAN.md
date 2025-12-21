@@ -45,7 +45,7 @@ int main() {
 In this program, we define integer variables `x`, `y`, and `z` with ranges from 1 to 16.
 We then create two constraint expressions: 
 - `f` for $x^2+y^2-z^2=0$, and
-- `c` for x+1\leq y$.
+- `c` for $x+1\leq y$.
 
 They are combined into `g`.
 The expression `g` attains its minimum value 0 when all constraints are satisfied.
@@ -55,7 +55,7 @@ An Easy Solver object `solver` is created for `g` and configured with the follow
 - `enable_best_energy_sols(10)`: Keeps up to 10 solutions with the best (lowest) energy.
 
 The call to `search()` returns a result object `sol`.
-`sol.sols()` provides access to the stored best-energy solutions, which are printed using a range-based for loop.
+The member function call `sol.sols()` provides access to the stored best-energy solutions, which are printed using a range-based for loop.
 
 This program produces output like the following:
 ```

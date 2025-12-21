@@ -52,6 +52,7 @@ sections by providing a deeper understanding of QUBO++.
 
 ## Case Study
 1. [Listing Pythagorean Triples](PYTHAGOREAN)
+2. [3-by-3 Magic Square](MAGIC)
 
 ## References
 1. [References](REFERENCE)
