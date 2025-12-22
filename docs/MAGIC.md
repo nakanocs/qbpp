@@ -1,9 +1,9 @@
 ---
 layout: default
-title: "PERMUTATION"
+title: "Magic Square"
 ---
 
-# 3-by-3 Magic Square
+# Magic Square
 A 3-by-3 magic square is a 3-by-3 matrix that contains each integer from 1 to 9 exactly once, such that the sum of every row, every column, and the two diagonals is 15.
 An example is shown below:
 ```
@@ -130,7 +130,7 @@ This program produces the following output:
 4 9 2 
 ```
 
-## Fixing the binary variables
+## Fixing variable partially
 Suppose we want to find a solution in which the top-left cell is assigned the value 2.
 In the one-hot encoding, the value 2 corresponds to $k=1$, so we fix
 
@@ -153,7 +153,7 @@ $$
 
 These fixed assignments reduce the number of remaining binary variables, which is often beneficial for local-search-based solvers.
 
-## QUBO++ program for the magic square with Fixing solution partially
+## QUBO++ program for the magic square with fixing variable partially
 We modify the program above as follows:
 ```cpp
   qbpp::MapList ml;

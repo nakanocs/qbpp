@@ -4,7 +4,7 @@ title: "DOCUMENT"
 ---
 
 
-# Listing Pythagorean Triples
+# Pythagorean Triples
 
 ## Pythagorean Triples
 Three integers $x$, $y$, and $z$ are **Pythagorean triples** if they satisfy

@@ -6,7 +6,7 @@ theme: minima
 highlighter: rouge
 
 url: "https://nakanocs.github.io"
-baseurl: "/qbpp"
+baseurl: ""
 
 kramdown:
   syntax_highlighter: rouge

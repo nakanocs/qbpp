@@ -51,8 +51,8 @@ sections by providing a deeper understanding of QUBO++.
 11. [Gurobi Optimizer Usage](GUROBI)
 
 ## Case Study
-1. [Listing Pythagorean Triples](PYTHAGOREAN)
-2. [3-by-3 Magic Square](MAGIC)
+1. [Pythagorean Triples](PYTHAGOREAN)
+2. [Magic Square](MAGIC)
 
 ## References
 1. [References](REFERENCE)
