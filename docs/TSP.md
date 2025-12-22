@@ -46,6 +46,7 @@ this objective computes the path length of $X$.
 
 ## QUBO++ program for TSP
 Using a permutation matrix $X$, we can design a QUBO++ program for the TSP as follows:
+{% raw %}
 ```cpp
 
 #include "qbpp.hpp"
@@ -103,6 +104,7 @@ int main() {
   std::cout << "Result: " << result << std::endl;
 }
 ```
+{% endraw %}
 In this program, positions of nodes from 0 to 8 are given as a `Nodes` object `nodes`. 
 For an array `x` of binary variables, the constraints and objective for `nodes` are created, and combined as `f`.
 To prioritize constraints, a factor of 1000 is multiplied.
