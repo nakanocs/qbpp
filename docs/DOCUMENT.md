@@ -53,6 +53,7 @@ sections by providing a deeper understanding of QUBO++.
 ## Case Study
 1. [Pythagorean Triples](PYTHAGOREAN)
 2. [Magic Square](MAGIC)
+3. [Traveling Salesman Problem](TSP)
 
 ## References
 1. [References](REFERENCE)

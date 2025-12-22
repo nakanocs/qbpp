@@ -12,8 +12,7 @@ Replaces (fixes) variable values in the expression f according to the mapping sp
 
 ## Using the replace function to fix variable values
 We explain the `qbpp::replace()` function using the
-[QUBO++ program for partitioning problem](PARTITION)> for explining
-the `qbpp::replace()` function.
+[QUBO++ program for partitioning problem](PARTITION).
 This program finds a partition of the numbers in the following vector `w` into two subsets $L$ and $\overline{L}$ such that the difference between their sums is minimized:
 ```cpp
   std::vector<uint32_t> w = {64, 27, 47, 74, 12, 83, 63, 40};
