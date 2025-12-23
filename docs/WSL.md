@@ -110,3 +110,11 @@ You can then execute a sample program using the ABS3 GPU Solver as follows:
 ```bash
 $ ./labs_abs3
 ```
+
+## Upgrading to a new version of QUBO++
+Download and extract the new QUBO++ release using `tar`, as described above.
+Then update the qbpp symbolic link to point to the new version as follows:
+```bash
+$ ln -sfn qbpp_amd64_<new version> qbpp
+```
+This command overwrites the existing qbpp symbolic link so that it refers to the newly installed version.
