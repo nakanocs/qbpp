@@ -6,7 +6,7 @@ title: "Quick Start"
 
 # Quick Start
 This page provides an overview of the Quick Start procedure.
-More detailed instructions for installing QUBO++ on WSL on Windows 11 are available in [Installing QUBO++ on WSL](WSL).
+More detailed instructions for installing QUBO++ on WSL on Windows 11 are available in [Quick Start for Windows (WSL)](WSL).
 
 ## Download and Installation
 Download the latest `tar.gz` from <a href="https://github.com/nakanocs/qbpp/releases"><strong>Releases</strong></a> and extract it:
