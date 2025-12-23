@@ -88,3 +88,25 @@ For example, you can run the QUBO++ program that solves the N-Queens problem as 
 ```bash
 $ ./nqueen_easy
 ```
+
+## Execute ABS3 GPU Solver
+If your system has a CUDA-enabled GPU, the ABS3 GPU Solver can be executed from WSL.
+
+To enable GPU acceleration in WSL, install the NVIDIA GPU driver for Windows from the following page:
+
+https://www.nvidia.com/Download/index.aspx
+
+> **NOTE**
+> Do not install a Linux GPU driver inside WSL.
+> WSL uses the Windows GPU driver via its integration layer.
+
+
+After installing the driver, verify that the GPU is available in WSL by executing:
+```bash
+$ nvidia-smi
+```
+If the driver is installed correctly, this command displays information about the installed GPU.
+You can then execute a sample program using the ABS3 GPU Solver as follows:
+```bash
+$ ./labs_abs3
+```
