@@ -176,7 +176,7 @@ Solution 23: {0,1,2,3}
 ## Assignment problem and its QUBO formulation
 Let $C = (c_{i,j})$ be a cost matrix of size $n \times n$.
 The assignment problem for $C$ is to find a permutation
-$p:\{0,1,\ldots, n-1\} \rightarrow \{0,1,\ldots, n-1\}$
+$p:\lbrace 0,1,\ldots, n-1\rbrace \rightarrow \lbrace 0,1,\ldots, n-1\rbrace$
 that minimizes the total cost:
 
 $$
