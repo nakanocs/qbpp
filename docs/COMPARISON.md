@@ -280,3 +280,98 @@ a = 0, b = 1, c = 0, f = 0, *f = 9, sol = 0:{{a,0},{b,1},{c,0},{{0}[0],1},{{0}[1
 a = 1, b = 1, c = 0, f = 0, *f = 13, sol = 0:{{a,1},{b,1},{c,0},{{0}[0],1},{{0}[1],1},{{0}[2],1}}
 ```
 {% endraw %}
+
+## Lower and upper bound operators
+QUBO++ does not directly support the following one-sided bound operators:
+- Lower-bound operator: $l\leq f$
+- Upper-bound operator: $f\leq u$
+
+Instead, QUBO++ provides a symbolic representation of infinity ($\infty$)
+and these constraints are implemented using the range operator as follows:
+- Lower-bound operator: $l\leq f\leq +\infty$
+- Upper-bound operator: $-\infty \leq f\leq u$
+
+Since the range operator internally introduces auxiliary variables,
+true infinite values cannot be represented explicitly.
+Therefore, QUBO++ estimates finite maximum and minimum values of the expression 
+$f$ and substitutes them for $+\infty$ and $-\infty$, respectively.
+
+For example, consider the expression 
+
+$$
+\begin{aligned}
+f=4a + 9 b + 11 c
+\end{aligned}
+$$
+
+where $a$, $b$, and $c$ are binary variables.
+The minimum and maximum possible values of $f$ are 0 and 24, respectively.
+Thus, QUBO++ uses 0 and 24 as substitutes for $-\infty$ and $+\infty$
+when constructing the corresponding range constraints.
+
+### QUBO++ program for lower and upper bound operators
+In QUBO++, an infinite value is represented by `qbpp::inf`.
+
+The following program demonstrates the lower-bound operator:
+```cpp
+#include "qbpp.hpp"
+#include "qbpp_exhaustive_solver.hpp"
+
+int main() {
+  auto a = qbpp::var("a");
+  auto b = qbpp::var("b");
+  auto c = qbpp::var("c");
+  auto f = 14 <= 4 * a + 9 * b + 11 * c <= +qbpp::inf;
+  f.simplify_as_binary();
+  auto solver = qbpp::exhaustive_solver::ExhaustiveSolver(f);
+  auto sols = solver.search_optimal_solutions();
+  for (const auto& sol : sols) {
+    std::cout << "a = " << a(sol) << ", b = " << b(sol) << ", c = " << c(sol)
+              << ", f = " << f(sol) << ", *f = " << (*f)(sol)
+              << ", sol = " << sol << std::endl;
+  }
+}
+```
+In this program, `+qbpp::inf` represents a positive infinite value,
+which is automatically replaced by 24.
+
+This program produces the following output:
+{% raw %}
+```
+a = 0, b = 1, c = 1, f = 0, *f = 20, sol = 0:{{a,0},{b,1},{c,1},{{0}[0],1},{{0}[1],0},{{0}[2],1}}
+a = 0, b = 1, c = 1, f = 0, *f = 20, sol = 0:{{a,0},{b,1},{c,1},{{0}[0],1},{{0}[1],1},{{0}[2],0}}
+a = 1, b = 0, c = 1, f = 0, *f = 15, sol = 0:{{a,1},{b,0},{c,1},{{0}[0],0},{{0}[1],0},{{0}[2],0}}
+a = 1, b = 1, c = 1, f = 0, *f = 24, sol = 0:{{a,1},{b,1},{c,1},{{0}[0],1},{{0}[1],1},{{0}[2],1}}
+```
+{% endraw %}
+
+The following program demonstrates the upper-bound operator:
+```cpp
+int main() {
+  auto a = qbpp::var("a");
+  auto b = qbpp::var("b");
+  auto c = qbpp::var("c");
+  auto f = -qbpp::inf <= 4 * a + 9 * b + 11 * c <= 14;
+  f.simplify_as_binary();
+  auto solver = qbpp::exhaustive_solver::ExhaustiveSolver(f);
+  auto sols = solver.search_optimal_solutions();
+  for (const auto& sol : sols) {
+    std::cout << "a = " << a(sol) << ", b = " << b(sol) << ", c = " << c(sol)
+              << ", f = " << f(sol) << ", *f = " << (*f)(sol)
+              << ", sol = " << sol << std::endl;
+  }
+}
+```
+In this program, `-qbpp::inf` represents a negative infinite value,
+which is automatically replaced by 0.
+
+This program produces the following output:
+{% raw %}
+```
+a = 0, b = 0, c = 0, f = 0, *f = 0, sol = 0:{{a,0},{b,0},{c,0},{{0}[0],0},{{0}[1],0},{{0}[2],0}}
+a = 0, b = 0, c = 1, f = 0, *f = 11, sol = 0:{{a,0},{b,0},{c,1},{{0}[0],0},{{0}[1],1},{{0}[2],1}}
+a = 0, b = 1, c = 0, f = 0, *f = 9, sol = 0:{{a,0},{b,1},{c,0},{{0}[0],1},{{0}[1],0},{{0}[2],1}}
+a = 1, b = 0, c = 0, f = 0, *f = 4, sol = 0:{{a,1},{b,0},{c,0},{{0}[0],0},{{0}[1],1},{{0}[2],0}}
+a = 1, b = 1, c = 0, f = 0, *f = 13, sol = 0:{{a,1},{b,1},{c,0},{{0}[0],1},{{0}[1],1},{{0}[2],1}}
+```
+{% endraw %}
