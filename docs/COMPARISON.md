@@ -267,14 +267,16 @@ For three binary variables $a$, $b$, and $c$,
 this program searches for solutions satisfying the constraint
 
 $$
-\begin{aligned*}
+\begin{aligned}
 5\leq 4a+9b+15c \leq 15
-\end{aligned*}
+\end{aligned}
 $$
 
 This program produces the following output:
+{% raw %}
 ```
 a = 0, b = 1, c = 0, f = 0, *f = 9, sol = 0:{{a,0},{b,1},{c,0},{{0}[0],0},{{0}[1],1},{{0}[2],0}}
 a = 0, b = 1, c = 0, f = 0, *f = 9, sol = 0:{{a,0},{b,1},{c,0},{{0}[0],1},{{0}[1],0},{{0}[2],1}}
 a = 1, b = 1, c = 0, f = 0, *f = 13, sol = 0:{{a,1},{b,1},{c,0},{{0}[0],1},{{0}[1],1},{{0}[2],1}}
 ```
+{% endraw %}
