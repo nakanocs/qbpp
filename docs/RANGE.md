@@ -29,6 +29,7 @@ If $f$ is cubic or of higher degree, then $g$ becomes a HUBO expression.
 
 >**NOTE**
 > QUBO++ internally employs a lightweight improvement that enables range constraints to be encoded with a slightly smaller number of binary variables.
+> Details are described in [Comparison Operators](COMPARISON)
 
 
 ## Solving Integer Linear Programming

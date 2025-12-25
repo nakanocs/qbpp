@@ -98,8 +98,8 @@ $$
 Since there is no integer strictly between $l$ and $u$, this expression attains the minimum value of 0 if and only if 
 $f=l$ or $f=u$.
 
-### Case 3: $u=l+2$.
-We introduce an **auxiliary binary variable** $a$ \in \lbrace 0,1\rbrace$
+### Case 3: $u=l+2$
+We introduce an **auxiliary binary variable** $a \in \lbrace 0,1\rbrace$
 and use the following expression:
 
 $$
