@@ -76,30 +76,30 @@ which is fully supported.
 
 
 ## Range operator
-The range operator in the form of $l\leq f\leq u$, ($l\leq u), which
-creates an expression that attains the minimum value of 0 if and only if the constraints is satisfied.
+The range operator of the form $l\leq f \leq u$ ($l\leq u$) creates an expression that attains the minimum value of 0 if and only if the constraint is satisfied.
 
-We consider the following cases in terms of the value of $l$ and $u$:
+We consider the following cases depending on the values of $l$ and $u$.
 - Case 1: $u=l$
 - Case 2: $u=l+1$
 - Case 3: $u=l+2$
 - Case 4: $u\geq l+3$.
 
 ### Case 1: $u=l$
-It is easy to see that if $l=u$, it can be implemented as the equality operator $f=l$.
+If $u=l$, the range constraint reduces to the equality constraint $f=l$,
+which can be implemented directly using the equality operator.
 
 ### Case 2: $u=l+1$
-If $u=l+1$ then the following expression is created:
+If $u=l+1$, the following expression is created:
 
 $$
  (f-l)(f-u)
 $$
 
-Since no integer between $l$ and $u$ (exclusive), this expression attains a minimum value of 0
-if and only if $f=l$ or $f=u$.
+Since there is no integer strictly between $l$ and $u$, this expression attains the minimum value of 0 if and only if 
+$f=l$ or $f=u$.
 
 ### Case 3: $u=l+2$.
-We introduce an auxiary binary variable $a$ taking integer 0 or 1
+We introduce an **auxiliary binary variable** $a$ \in \lbrace 0,1\rbrace$
 and use the following expression:
 
 $$
@@ -108,7 +108,7 @@ $$
 \end{aligned}
 $$
 
-This expresion takes the following expressions of binary variable $a$ for $f=l$, $l+1$, and $l+2$
+This expression evaluates as follows for for $f=l$, $l+1$, and $l+2$
 
 $$
 \begin{aligned}
@@ -118,11 +118,11 @@ $$
 \end{aligned}
 $$
 
-Since all these expressions take a minimum value of 0,
-$(f-l-a)(f-l-(a+1))$ take a minimum value of 0 if $l\leq f\leq u$ is satisfied.
+In all cases, the minimum value 0 is attainable by an appropriate choice of $a$.
+Therefore, the expression takes the minimum value of 0 if $l\leq f\leq u$ is satisfied.
 
-Let $g = f-l-a$ be an integer.
-We have,
+Let $g = f-l-a$.
+Then We have,
 
 $$
 \begin{aligned}
@@ -130,14 +130,14 @@ $$
 \end{aligned}
 $$
 
-which cannot take a negative value.
-Thus,  $(f-l-a)(f-l-(a+1))$ takes a minimum value of 0 if and only if  $l\leq f\leq u$ is satisfied.
+which is always positive if $g\leq -1$ or $g\geq 2$.
+Hence, the expression attains the minimum value of 0 if and only if  $l\leq f\leq u$ is satisfied.
 
 ## Case 4: $u\geq l+3$
-We introduce an auxiary integer variable $a$ taking integer in the range $[l,u-1]$.
-Such integer variable can be defined using multiple binary variable as shown in [Integer Variables and Solving Simultaneous Equations](INTEGER).
+We introduce an auxiliary integer variable $a$ that takes integer values in the range $[l,u−1]$.
+Such an integer variable can be defined using multiple binary variables, as described in [Integer Variables and Solving Simultaneous Equations](INTEGER).
 
-The expression for thie case is as follows:
+The expression for this case is:
 
 $$
 \begin{aligned}
@@ -145,10 +145,10 @@ $$
 \end{aligned}
 $$
 
-Siminarly, we can prove that $(f-l-a)(f-l-(a+1))\geq 0$ always holds.
+Similarly to Case 3, we can show that this expression is always positive if $f$ is not in $[l,u]$.
 
-Suppose that $f$ takes an integer value in the range $[l,u]$.
-When $a=f$, then we have
+Suppose that $f$ takes an integer value in the range  $[l,u]$.
+If we choose $a=f$, then
 
 $$
 \begin{aligned}
@@ -157,13 +157,15 @@ f-(a+1) &= 0& {\rm if\,\,} f\in [l+1,u]
 \end{aligned}
 $$
 
-Thus, either $f-a$=0 or $f-(a+1)=0$ if $f\in [l,u]$ and so
-$(f-a)(f-(a+1))$ takes a minimum value of 0 if and only if $l\leq f \leq u$.
+Thus, either $f−a=0$ or $f−(a+1)=0$ holds for any $f\in[l,u]$.
+Therefore, $(f−a)(f−(a+1))$ attains the minimum value of 0
+if and only if $l\leq f\leq u$.
+
 
 ## Reducing the number of binary variables
 In [Integer Variables and Solving Simultaneous Equations](INTEGER),
-$n$ binary variables $x_0, x_1, \ldots, x_{n-1}$ are used to represent integer $a$ in rage $[l,u-1]$
-using the following linear expression:
+an integer variable $a\in [l,u]$ is represented using 
+$n$ binary variables $x_0, x_1, \ldots, x_{n-1}$ as follows:
 
 $$
 \begin{aligned}
@@ -171,26 +173,42 @@ a & = l+2^0x_0+2^1x_1+\cdots +2^{n-2}x_{n-2}+dx_{n-1}
 \end{aligned}
 $$
 
-This expression can represent all integers from $l$ to $l+2^{n-1}+d-1$, and so
-we can select $n$ and $d$ so that $u-1=l+2^{n-1}+d-1$.
+This expression can represent all integers from $l$ to $l+2^{n-1}+d-1$.
+Thus, we can choose $n$ and $d$ such that
 
-For Case 4, QUBO++ uses the following linear expression of $n-1$ binary variables $x_1, \ldots, x_{n-1}$ instead:
+$$
+\begin{aligned}
+u-1&=l+2^{n-1}+d-1$.
+\end{aligned}
+$$
+
+
+For Case 4, QUBO++ instead uses the following linear expression with $n-1$ binary variables $x_1, \ldots, x_{n-1}$:
+
 $$
 \begin{aligned}
 a &= l+2^1x_1+\cdots +2^{n-2}x_{n-2}+dx_{n-1}
 \end{aligned}
 $$
 
-This expression can represent integers from $l$ to $l+2^{n-1}+d-2$, and so
-we select $n$ and $d$ so that $u-1=l+2^{n-1}+d-2$.
-We call such binary variable $a$, **unit-gap integer variable** which takes
-integer value in $[l,u-1]$, but some values in it cannot take.
-However, if $a$ cannot take the value $k\in [l,u-1]$,
-then $a$ can take $k-1$.
-Thus, either $a$ or $a+1$ can take any value in $[k,u-1]$.
+This expression represents integers from $l$ to $l+2^{n-1}+d-2$.
+Accordingly, we select $n$ and $d$ so that 
 
-## QUBO++ program for the range operator
+$$
+\begin{aligned}
+u-1&=l+2^{n-1}+d-2$.
+\end{aligned}
+$$
 
+We call such an integer variable $a$ a **unit-gap integer variable**.
+Although some values in $[l,u]$ cannot be taken by $a$,
+for any $k\in[l,u]$ that cannot be represented, 
+$k−1$ can be represented.
+Therefore, either $a$ or $a+1$ can take any value in the range 
+$[l,u]$, which is sufficient for enforcing the range constraint.
+
+## QUBO++ program for the four cases
+The following program demonstrates how the four cases are implemented in QUBO++:
 ```cpp
 #include "qbpp.hpp"
 
@@ -205,4 +223,58 @@ int main() {
   std::cout << "f3 = " << f3.simplify() << std::endl;
   std::cout << "f4 = " << f4.simplify() << std::endl;
 }
+```
+This program produces the following output:
+```
+f1 = 1 -2*f +f*f
+f2 = 2 -3*f +f*f
+f3 = 2 -3*f +3*{0} +f*f -2*f*{0} +{0}*{0}
+f4 = 2 -3*f +6*{1}[0] +3*{1}[1] +f*f -4*f*{1}[0] -2*f*{1}[1] +4*{1}[0]*{1}[0] +4*{1}[0]*{1}[1] +{1}[1]*{1}[1]
+```
+These outputs correspond to the following expressions:
+
+$$
+\begin{aligned}
+f_1 &= (f-1)^2\\
+f_2 &= (f-1)(f-2)\\
+f_3 &= (f-x_0)(f-(x_0+1))\\
+f_4 &= (f-(2x_{1,0}+x_{1,1}+1))(f-(2x_{1,0}+x_{1,1}+2))
+\end{aligned}
+$$
+
+## QUBO++ program using the range operator
+The following program demonstrates the use of the range operator in QUBO++:
+```cpp
+#include "qbpp.hpp"
+#include "qbpp_exhaustive_solver.hpp"
+
+int main() {
+  auto a = qbpp::var("a");
+  auto b = qbpp::var("b");
+  auto c = qbpp::var("c");
+  auto f = 5 <= 4 * a + 9 * b + 15 * c <= 14;
+  f.simplify_as_binary();
+  auto solver = qbpp::exhaustive_solver::ExhaustiveSolver(f);
+  auto sols = solver.search_optimal_solutions();
+  for (const auto& sol : sols) {
+    std::cout << "a = " << a(sol) << ", b = " << b(sol) << ", c = " << c(sol)
+              << ", f = " << f(sol) << ", *f = " << (*f)(sol)
+              << ", sol = " << sol << std::endl;
+  }
+}
+```
+For three binary variables $a$, $b$, and $c$,
+this program searches for solutions satisfying the constraint
+
+$$
+\begin{aligned*}
+5\leq 4a+9b+15c \leq 15
+\end{aligned*}
+$$
+
+This program produces the following output:
+```
+a = 0, b = 1, c = 0, f = 0, *f = 9, sol = 0:{{a,0},{b,1},{c,0},{{0}[0],0},{{0}[1],1},{{0}[2],0}}
+a = 0, b = 1, c = 0, f = 0, *f = 9, sol = 0:{{a,0},{b,1},{c,0},{{0}[0],1},{{0}[1],0},{{0}[2],1}}
+a = 1, b = 1, c = 0, f = 0, *f = 13, sol = 0:{{a,1},{b,1},{c,0},{{0}[0],1},{{0}[1],1},{{0}[2],1}}
 ```
