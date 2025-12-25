@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "Comparison operators"
+title: "Comparison Operators"
 ---
 
 # Comparison Operators
@@ -133,7 +133,7 @@ $$
 which is always positive if $g\leq -1$ or $g\geq 2$.
 Hence, the expression attains the minimum value of 0 if and only if  $l\leq f\leq u$ is satisfied.
 
-## Case 4: $u\geq l+3$
+### Case 4: $u\geq l+3$
 We introduce an auxiliary integer variable $a$ that takes integer values in the range $[l,u−1]$.
 Such an integer variable can be defined using multiple binary variables, as described in [Integer Variables and Solving Simultaneous Equations](INTEGER).
 
@@ -162,7 +162,7 @@ Therefore, $(f−a)(f−(a+1))$ attains the minimum value of 0
 if and only if $l\leq f\leq u$.
 
 
-## Reducing the number of binary variables
+### Reducing the number of binary variables
 In [Integer Variables and Solving Simultaneous Equations](INTEGER),
 an integer variable $a\in [l,u]$ is represented using 
 $n$ binary variables $x_0, x_1, \ldots, x_{n-1}$ as follows:
@@ -207,7 +207,7 @@ $k−1$ can be represented.
 Therefore, either $a$ or $a+1$ can take any value in the range 
 $[l,u]$, which is sufficient for enforcing the range constraint.
 
-## QUBO++ program for the four cases
+### QUBO++ program for the four cases
 The following program demonstrates how the four cases are implemented in QUBO++:
 ```cpp
 #include "qbpp.hpp"
@@ -242,7 +242,7 @@ f_4 &= (f-(2x_{1,0}+x_{1,1}+1))(f-(2x_{1,0}+x_{1,1}+2))
 \end{aligned}
 $$
 
-## QUBO++ program using the range operator
+### QUBO++ program using the range operator
 The following program demonstrates the use of the range operator in QUBO++:
 ```cpp
 #include "qbpp.hpp"
