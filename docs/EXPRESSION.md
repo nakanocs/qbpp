@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "QUBO++ Classes"
+title: "Expression Classes"
 ---
 
 # Expression Classes
@@ -15,7 +15,7 @@ The following three classes are used for this purpose:
 | `qbpp::Term` | A product term | Zero or more variables and an integer coefficient |
 | `qbpp::Expr` | An expression | Zero ore moter terms and an integer constant term |
 
-### `qbpp::Var` class
+## `qbpp::Var` class
 An instance of this class represents a variable symbolically.
 In many cases, it is used to represent a binary variable.
 However, this class is not associated with any specific variable attributes, and its instances can be used to represent variables of any type symbolically.
@@ -39,7 +39,7 @@ but a different display string can also be used:
 ```
 This prints `symbol_x`.
 
-### `qbpp::Term` class
+## `qbpp::Term` class
 An instance of this class represents a product term involving:
 - an integer coefficient, and
 - zero or more qbpp::Var objects.
@@ -57,7 +57,7 @@ This program prints:
 2*x*y`
 ```
 
-### `qbpp::Expr` class
+## `qbpp::Expr` class
 An instance of this class represents an expression involving:
 - an integer constant term, and
 - zero or more `qbpp::Term` objects.
