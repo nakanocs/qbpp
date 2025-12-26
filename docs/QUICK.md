@@ -23,6 +23,7 @@ $ export CPLUS_INCLUDE_PATH=$QBPP_PATH/include:$CPLUS_INCLUDE_PATH
 $ export LIBRARY_PATH=$QBPP_PATH/lib:$LIBRARY_PATH
 $ export LD_LIBRARY_PATH=$QBPP_PATH/lib:$LD_LIBRARY_PATH
 ```
+These environment variables are used for license management and for compiling, linking, and executing QUBO++ programs.
 
 ## Compile and execute a sample program
 ### Create a QUBO++ sample program below and save as file `test.cpp`:
@@ -45,14 +46,19 @@ int main() {
 }
 ```
 
-### Compile the program:
+### Compile the program
 Compile the program:
 ```bash
 $ g++ test.cpp -o test -std=c++17 -lqbpp -ltbb
 ```
+This command creates an executable file named test.
+The compiler options mean the following:
+- -std=c++17: Use the C++17 standard.
+- -lqbpp: Link against the QUBO++ shared library.
+- -ltbb: Link against the oneTBB shared library.
 
 ### Execute the program:
-Run the program:
+Run the program as follows:
 {% raw %}
 ```
 $ ./test
