@@ -309,6 +309,12 @@ The minimum and maximum possible values of $f$ are 0 and 24, respectively.
 Thus, QUBO++ uses 0 and 24 as substitutes for $-\infty$ and $+\infty$
 when constructing the corresponding range constraints.
 
+> **NOTE**
+> QUBO++ intentionally requires both lower and upper bounds to be specified in inequality constraints.
+> This avoids ambiguity between MIP-style interpretations (e.g., 
+> $f\leq u$ meaning $0\leq f≤\leq u$) and QUBO-style interpretations (e.g., $f\leq u$ meaning $-\infty\leq f\leq u$),
+> which could otherwise lead to subtle modeling errors.
+
 ### QUBO++ program for lower and upper bound operators
 In QUBO++, an infinite value is represented by `qbpp::inf`.
 

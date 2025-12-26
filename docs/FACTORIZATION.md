@@ -1,27 +1,27 @@
 ---
 layout: default
-title: "FACTORIZATION"
+title: "Factorization Through HUBO Expression"
 ---
 
 # Factorization Through HUBO Expression
 
 ## HUBO for factorizing the product of two prime numbers
-We consider the factorization of integers that are products of two prime numbers.
-For example, when the product $pq = 35$ is given, the goal is to recover the two prime factors  $p=5$ and $q=7$.
+We consider the **factorization of integers** that are products of two prime numbers.
+For example, when the product $pq = 35$ is given, the goal is to recover the two prime factors $p=5$ and $q=7$.
 
 Since $\sqrt{15}=5.91$ and $35/2=17.5$, we can restrict the search ranges $p$ and $q$ as follows:
 
 $$
 \begin{aligned}
-  2 \leq p \leq 5 \\
-  6 \leq q \leq 17  
+  2 \leq &p \leq 5 \\
+  6 \leq &q \leq 17  
 \end{aligned}
 $$
 
 For such integer variables, the factorization problem for $35$ can be formulated using the penalty expression:
 
 $$
-\begin{aligned}
+\begin{aligned}\
 f(p,q) &= (pq-35)^2
 \end{aligned}
 $$
@@ -51,7 +51,7 @@ int main() {
 }
 ```
 
-this program, the expression `p * q == 35` is automatically converted into `qbpp::sqr(p * q - 35)`, which achieves an energy value of 0 when the equality is satisfied.
+In this program, the expression `p * q == 35` is automatically converted into `qbpp::sqr(p * q - 35)`, which achieves an energy value of 0 when the equality is satisfied.
 The output of this program is as follows:
 
 {% raw %}
@@ -67,10 +67,10 @@ The solver correctly finds the prime factors $p=5$ and $q=7$.
 
 ## Unlimited large coefficients for prime factorization of large numbers
 By default, the data types of expression coefficients and energy values in QUBO++ are `int32_t` and `int64_t`, respectively.
-These types can be changed by defining the macros `COEFF_TYPE` and `ENERGY_TYPE`.
+These types can be changed by defining the macros **`COEFF_TYPE`** and **`ENERGY_TYPE`**.
 
 Furthermore, QUBO++ supports expressions with arbitrarily large coefficients and energy values.
-To enable this option, both macros can be set to `qbpp::cpp_int`.
+To enable this option, both macros can be set to **`qbpp::cpp_int`**.
 The following QUBO++ program factorizes the product of two large prime numbers:
 ```cpp
 #define COEFF_TYPE qbpp::cpp_int
@@ -94,7 +94,7 @@ int main() {
 ```
 
 Before including `qbpp.hpp`, the macros `COEFF_TYPE` and `ENERGY_TYPE` are set to `qbpp::cpp_int`.
-Constant integers are specified using `qbpp::cpp_int()` with a string literal as its argument.
+Constant integers are specified using **`qbpp::cpp_int()`** with a string literal as its argument.
 
 This program outputs the following result:
 {% raw %}
@@ -112,4 +112,4 @@ q = 1000039
 We can see that the expression `f` contains very large coefficients, and the factorization of the large composite number is correctly obtained.
 
 >**TIP**
-> `COEFF_TYPE` and `ENERGY_TYPE` can be set to `int8_t`, `int16_t`, `int32_t`, `int64_t`, `qbpp::int128_t`, `qbpp::int256_t`, `qbpp::int512_t`, `qbpp::int1024_t`, or `qbpp::cpp_int`.
+> **`COEFF_TYPE`** and **`ENERGY_TYPE`** can be set to **`int8_t`**, **`int16_t`**, **`int32_t`**, **`int64_t`**, **`qbpp::int128_t`**, **`qbpp::int256_t`**, **`qbpp::int512_t`**, **`qbpp::int1024_t`**, or **`qbpp::cpp_int`**.

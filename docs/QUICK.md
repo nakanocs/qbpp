@@ -13,7 +13,7 @@ Download the latest `tar.gz` from <a href="https://github.com/nakanocs/qbpp/rele
 ```bash
 $ tar xf qbpp_<arch>_<version>.tar.gz
 ```
-QUBO++ will be extracted into a directory such as `qbpp_<arch>_<version>`.
+QUBO++ will be extracted into a directory such as **`qbpp_<arch>_<version>`**.
 
 ## Set Environment Variable
 Set the environment variables as follows:
@@ -26,7 +26,7 @@ $ export LD_LIBRARY_PATH=$QBPP_PATH/lib:$LD_LIBRARY_PATH
 These environment variables are used for license management and for compiling, linking, and executing QUBO++ programs.
 
 ## Compile and execute a sample program
-### Create a QUBO++ sample program below and save as file `test.cpp`:
+### Create a QUBO++ sample program below and save as file **`test.cpp`**:
 
 ```cpp
 #include "qbpp.hpp"
@@ -53,9 +53,9 @@ $ g++ test.cpp -o test -std=c++17 -lqbpp -ltbb
 ```
 This command creates an executable file named test.
 The compiler options mean the following:
-- -std=c++17: Use the C++17 standard.
-- -lqbpp: Link against the QUBO++ shared library.
-- -ltbb: Link against the oneTBB shared library.
+- **`-std=c++17`**: Use the C++17 standard.
+- **`-lqbpp`**: Link against the QUBO++ shared library.
+- **`-ltbb`**: Link against the oneTBB shared library.
 
 ### Execute the program:
 Run the program as follows:
@@ -68,6 +68,6 @@ x = 6, y = 4
 {% endraw %}
 
 ## Next steps
-1. Activate the Anonymous Trial license or your license key. See Installation in **Installation** in [QUBO++ Document](DOCUMENT).
-2. Learn the basics of QUBO++. Start from **Basics** in [QUBO++ Document](DOCUMENT).
+1. Activate the Anonymous Trial license or your license key. See Installation in **Installation** in [**QUBO++ Document**](DOCUMENT).
+2. Learn the basics of QUBO++. Start from **Basics** in [**QUBO++ Document**](DOCUMENT).
 

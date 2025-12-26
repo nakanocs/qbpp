@@ -6,13 +6,13 @@ title: "VARIABLE"
 # Defining Variables and Expressions
 
 ## Header file and namespace
-To use QUBO++, you need to include the header file `qbpp.hpp` and use the `qbpp` namespace.
+To use QUBO++, you need to include the header file **`qbpp.hpp`** and use the **`qbpp`** namespace.
 
 ## Defining variables and expressions
-You can define a variable using `qbpp::var("name")` with auto type deduction.
+You can define a variable using **`qbpp::var("name")`** with auto type deduction.
 The specified `name` is used when the variable is printed with `std::cout`.
 
-Expressions are constructed using standard arithmetic operators such as `+`, `-`, and `*`.
+Expressions are constructed using standard arithmetic operators such as **`+`**, **`-`**, and **`*`**.
 
 The following sample program defines three variables `a`, `b`, and `c`, and an expression `f`, which is printed using `std::cout`:
 ```cpp
@@ -30,7 +30,7 @@ The expression `(a + b - 1) * (b + c - 1)` is automatically expanded and stored 
 
 In this QUBO++ program, the variables `a`, `b`, and `c` are objects of class `qbpp::Var`, and the expression `f` is an object of class `qbpp::Expr`.
 
-Assuming the header and library paths are properly set up, this program (saved as `test.cpp`) can be compiled with `g++` as follows:
+Assuming the header and library paths are properly set up, this program (saved as **`test.cpp`**) can be compiled with `g++` as follows:
 ```bash
 $ g++ test.cpp -o test -std=c++17 -lqbpp -ltbb
 ```
@@ -50,7 +50,7 @@ f = 1 +a*b +b*b +a*c +b*c -a -b -b -c
 > In addition, the output shown in the QUBO++ documentation may have been generated with an older version of QUBO++, so the output produced by the latest version may differ.
 
 ## Simplifying expression
-The expression stored in a `qbpp::Expr` object can be simplified by calling the `simplify()` member function:
+The expression stored in a `qbpp::Expr` object can be simplified by calling the **`simplify()`** member function:
 ```cpp
   std::cout << "f = " << f.simplify() << std::endl;
 ```
@@ -58,7 +58,7 @@ With this change, the output of the program becomes:
 ```
 f.simplify() = 1 -a -2*b -c +a*b +a*c +b*b +b*c
 ```
-The member function call `f.simplify()` simplifies the expression `f` and returns the resulting value,
+The member function call **`f.simplify()`** simplifies the expression `f` and returns the resulting value,
 which is then printed by `std::cout`.
 
 Assuming that all variables take binary values (0 or 1), we can use the identity 
@@ -77,7 +77,7 @@ The variables themselves are ordered according to the order in which they were d
 
 ## Simplifying expressions with spin variables
 If variables are assumed to take spin values $-1$/$+1$, the identity $b^2 = 1$ can be used to further simplify the expression.
-In this case, the expression can be simplified using the `simplify_as_spin()` member function:
+In this case, the expression can be simplified using the **`simplify_as_spin()`** member function:
 ```cpp
   std::cout << "f = " << f.simplify_as_spin() << std::endl;
 ```
@@ -89,7 +89,7 @@ f = 2 -a -2*b -c +a*b +a*c +b*c
 ## Global functions for simplification
 Member functions update the expression stored in `f`.
 If you do not want to modify `f`, you can instead use the global functions
-`qbpp::simplify(f)`, `qbpp::simplify_as_binary(f)`, and `qbpp::simplify_as_spin(f)`, which return the simplified expressions without changing `f`.
+**`qbpp::simplify(f)`**, **`qbpp::simplify_as_binary(f)`**, and **`qbpp::simplify_as_spin(f)`**, which return the simplified expressions without changing `f`.
 
 > **NOTE**
 > In QUBO++, most member functions update the object in place when possible, whereas global functions return a new value without modifying the original object.

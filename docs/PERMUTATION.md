@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "PERMUTATION"
+title: "Permutation matrix genration"
 ---
 
 # Permutation matrix genration
@@ -16,7 +16,7 @@ The matrix $X$ is called a **permutation matrix** if and only if every row and e
   <img src="images/matrix.png" alt="Permutation matrix" width="50%">
 </p>
 
-A permutation matrix represents a permutation of $n$ numbers $(0,1,\ldots,n-1)$, where $x_{i,j} = 1$ if and only if the $i$-th element is $j$.
+A **permutation matrix** represents a permutation of $n$ numbers $(0,1,\ldots,n-1)$, where $x_{i,j} = 1$ if and only if the $i$-th element is $j$.
 For example, the above permutation matrix represents the permutation $(1,2,0,3)$.
 
 ## QUBO formulation for permutation matrices
@@ -66,11 +66,11 @@ int main() {
 }
 ```
 
-In this program, `qbpp::var("x",4,4)` returns a `qbpp::Var` object
-of size $4\times 4$ with `x`.
-For a `qbpp::Expr` object `f`, two double for-loops adds
+In this program, **`qbpp::var("x",4,4)`** returns a `qbpp::Var` object
+of size $4\times 4$ with **`x`**.
+For a `qbpp::Expr` object **`f`**, two double for-loops adds
 formulas for $f(X)$.
-Using the Exhaustive Solver, all optimal solutions are computed and stored in `sols`.
+Using the Exhaustive Solver, all optimal solutions are computed and stored in **`sols`**.
 All solutions in `sols` are displayed one-by-one.
 Heare, `sol(x)` returns a matrix of values of `x` in `sol`.
 This program outputs all 24 permutations as follows:
@@ -110,14 +110,14 @@ Solution 23 : {{1,0,0,0},{0,1,0,0},{0,0,1,0},{0,0,0,1}}
 
 ## QUBO formulation for permutation matrix using vector functions and operations
 The following two functions for a matrix `x` of $n\times n$ binary variables are supported:
-- `qbpp::vector_sum(x)`: Computes the sum of each row and returns a vector of size $n$ containing these sums.
-- `qbpp::transpose(x)`: Returns the transposed matrix of size $n\times n$.
+- **`qbpp::vector_sum(x)`**: Computes the sum of each row and returns a vector of size $n$ containing these sums.
+- **`qbpp::transpose(x)`**: Returns the transposed matrix of size $n\times n$.
 Using these functions, vectors containing row-wise sums and column-wise sums can be computed by the following expressions.
-- `qbpp::vector_sum(qbpp::transpose(x))`: Returns a vector of column-wise sums of size $n$.
+- **`qbpp::vector_sum(qbpp::transpose(x))`**: Returns a vector of column-wise sums of size $n$.
 
 A scalar–vector operation is used to subtract 1 from each element:
-- `qbpp::vector_sum(x) - 1`: subtracts 1 from each row-wise sum.
-- `qbpp::vector_sum(qbpp::transpose(x)) - 1`: subtracts 1 from each column-wise sum.
+- **`qbpp::vector_sum(x) - 1`**: subtracts 1 from each row-wise sum.
+- **`qbpp::vector_sum(qbpp::transpose(x)) - 1`**: subtracts 1 from each column-wise sum.
 For these two vectors of size $n$, `qbpp::sqr()` squares each element, and `qbpp::sum()` computes the sum of all elements.
 
 The following QUBO++ program implements a QUBO formulation using these vector functions and operations:
@@ -140,10 +140,10 @@ int main() {
 }
 ```
 
-In this program, `x(sol)` returns a matrix of assigned values to `x` in `sol`,
+In this program, **`x(sol)`** returns a matrix of assigned values to `x` in `sol`,
 which is a matrix of integers of size $n\times n$.
-Since `qbpp::onehot_to_int()` converts each one-hot vector to the corresponding integer,
-`qbpp::onehot_to_int(x(sol))` returns the permutation as a vector of integers.
+Since **`qbpp::onehot_to_int()`** converts each one-hot vector to the corresponding integer,
+**`qbpp::onehot_to_int(x(sol))`** returns the permutation as a vector of integers.
 
 This program outputs all permutations as integer vectors as follows:
 ```txt
@@ -175,7 +175,7 @@ Solution 23: {0,1,2,3}
 
 ## Assignment problem and its QUBO formulation
 Let $C = (c_{i,j})$ be a cost matrix of size $n \times n$.
-The assignment problem for $C$ is to find a permutation
+The **assignment problem** for $C$ is to find a permutation
 $p:\lbrace 0,1,\ldots, n-1\rbrace \rightarrow \lbrace 0,1,\ldots, n-1\rbrace$
 that minimizes the total cost:
 
@@ -208,7 +208,7 @@ Here, $P$ is a sufficiently large positive constant that prioritizes the permuta
 
 ## QUBO++ program for the assignment problem
 We are now ready to design a QUBO++ program for the assignment problem.
-In this program, a fixed matrix $C$ of size $4\times4$ is given as a nested qbpp::Vector.
+In this program, a fixed matrix $C$ of size $4\times4$ is given as a nested `qbpp::Vector`.
 The formulas for $f(X)$ and $g(X)$ are defined using vector functions and operations.
 Here, `qbpp::vector_sum(x) == 1` returns a QUBO expression that takes the minimum value 0 if the equality is satisfied.
 In fact, it returns the same QUBO expression as `qbpp::sqr(qbpp::vector_sum(x) - 1)`.
@@ -244,7 +244,7 @@ int main() {
 ```
 
 We use the Easy Solver to find a solution of `h`.
-For an Easy Solver object solver for `h`, the time limit for searching a solution is set to 1.0 seconds by calling the `time_limit()` member function.
+For an Easy Solver object `solver` for `h`, the time limit for searching a solution is set to 1.0 seconds by calling the `time_limit()` member function.
 The resulting permutation is stored in `result`, and the selected `c[i][j]` values are printed in turn.
 The output of this program is as follows:
 

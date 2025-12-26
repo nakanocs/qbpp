@@ -8,7 +8,7 @@ title: "PARTITION"
 
 ## Partitioning problem
 Let $w=(w_0, w_1, \ldots, w_{n-1})$ be $n$ positive numbers.
-The partitioning problem is to partition these numbers into two sets $P$ and $Q$ ($Q=\overline{P}$) such that the sums of the elements in the two sets are as close as possible.
+The **partitioning problem** is to partition these numbers into two sets $P$ and $Q$ ($Q=\overline{P}$) such that the sums of the elements in the two sets are as close as possible.
 More specifically, the problem is to find a subset $L \subseteq \lbrace 0,1,\ldots, n-1\rbrace$ that minimizes:
 
 $$
@@ -37,7 +37,6 @@ The function $f(x)$ is a quadratic expression of $x$, and an optimal solution th
 
 ## QUBO++ program for the partitioning problem
 The following QUBO++ program creates the QUBO formulation of the partitioning problem for a fixed set of 8 numbers and finds a solution using the Exhaustive Solver.
-
 
 ```cpp
 #include "qbpp.hpp"
@@ -77,18 +76,18 @@ int main() {
 }
 ```
 
-In this program `w` is defined as a `std::vector` object with 8 numbers.
-A vector `x` of `w.size()=8` binary variables is defined.
-Two `qbpp::Expr` objects `p` and `q`  are defined, and the expressions for $P(x)$ and $Q(x)$
+In this program **`w`** is defined as a `std::vector` object with 8 numbers.
+A vector **`x`** of `w.size()=8` binary variables is defined.
+Two `qbpp::Expr` objects **`p`** and **`q`** are defined, and the expressions for $P(x)$ and $Q(x)$
 are constructed in the for-loop.
-A `qbpp::Expr` object `f` stores the expression for $f(x)$.
+A `qbpp::Expr` object **`f`** stores the expression for $f(x)$.
 
-An Exhaustive Solver object `solver` for `f` is created 
-and the solution `sol` (a `qbpp::Sol` object) is obtained by calling its `search()` member function.
+An Exhaustive Solver object **`solver`** for `f` is created 
+and the solution **`sol`** (a `qbpp::Sol` object) is obtained by calling its `search()` member function.
 
-The values of $f(x)$, $P(x)$, and $Q(x)$ are evaluated by calling `f(sol)`, `p(sol)` and `q(sol)`, respectively.
+The values of $f(x)$, $P(x)$, and $Q(x)$ are evaluated by calling **`f(sol)`**, **`p(sol)`** and **`q(sol)`**, respectively.
 The numbers in the sets $L$ and $\overline{L}$ are displayed using the for loops.
-In these loops, `x[i](sol)` returns the value of `x[i]` in `sol`.
+In these loops, **`x[i](sol)`** returns the value of `x[i]` in `sol`.
 
 This program outputs:
 {% raw %}
@@ -102,23 +101,23 @@ L  : 47 12 83 63
 ~L : 64 27 74 40
 ```
 {% endraw %}
-> **TIP**
-> For a `qbpp::Expr` object `f` and a `qbpp::Sol` object `sol`, both `f(sol)` and `sol(f)` return the resulting value of `f` evaluated on `sol`.
-> Likewise, for a `qbpp::Var` object `a`, both `a(sol)` and `sol(a)` return the value of `a` in the solution `sol`.
-> The form `f(sol)` is natural from a **mathematical perspective**, as it corresponds to evaluating a function at a point.
-> In contrast, `sol(f)` is natural from an **object-oriented programming perspective**, where the solution object evaluates an expression.
+> **NOTE**
+> For a `qbpp::Expr` object `f` and a `qbpp::Sol` object `sol`, both **`f(sol)`** and **`sol(f)`** return the resulting value of `f` evaluated on `sol`.
+> Likewise, for a `qbpp::Var` object `a`, both **`a(sol)`** and **`sol(a)`** return the value of `a` in the solution `sol`.
+> The form **`f(sol)`** is natural from a **mathematical perspective**, as it corresponds to evaluating a function at a point.
+> In contrast, **`sol(f)`** is natural from an **object-oriented programming perspective**, where the solution object evaluates an expression.
 > You may use either form according to your preference.
 
 ## QUBO++ program using vector operations
 QUBO++ has rich vector operations that can simplify the code.
-For this purpose,  `qbpp::Vector` class, which is similar to `std::vector` class shoud be used.
-In the following code, `w` is defined as an object of `qbpp::Vector<uint32_t>` class.
-Also, `x` is defined as an object of `qbpp::Vector<qbpp::Var>` class.
+For this purpose, **`qbpp::Vector`** class, which is similar to `std::vector` class shoud be used.
+In the following code, **`w`** is defined as an object of **`qbpp::Vector<uint32_t>`** class.
+Also, **`x`** is defined as an object of **`qbpp::Vector<qbpp::Var>`** class.
 Since the overloaded operator `*` for `qbpp::Vector` class returns the element-wise product of two
-`qbpp::Vector` objects, `qbpp::sum(w * x)` returns the `qbpp::Expr`object representing $P(L)$.
+`qbpp::Vector` objects, **`qbpp::sum(w * x)`** returns the `qbpp::Expr`object representing $P(L)$.
 Furthermore, the overloaded operator `-` for a scalar and a `qbpp::Vector` object returns
 a `qbpp::Vector` object whose components are the scalar minus each element of the vector.
-Thus, `qbpp::sum(w * (1 - x))` returns a `qbpp::Expr` object storing $Q(L)$.
+Thus, **`qbpp::sum(w * (1 - x))`** returns a `qbpp::Expr` object storing $Q(L)$.
 
 ```cpp
   qbpp::Vector<uint32_t> w = {64, 27, 47, 74, 12, 83, 63, 40};

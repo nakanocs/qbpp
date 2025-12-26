@@ -8,13 +8,13 @@ title: "VECTOR"
 QUBO++ supports vector of variables and vector oparations.
 
 ## Defining vector of variables
-A vector of binary variables can be created using the `qbpp::var()` function.
-- `qbpp::var(name, size)` returns a vector of `size` binary variables with the given `name`.
+A vector of binary variables can be created using the **`qbpp::var()`** function.
+- **`qbpp::var("name", size)`** returns a vector of `size` variables with the given `name`.
 
-The following program defines a vector of 5 variables with the name `x`.
-By printing `x` with `std::cout`, we can confirm that it contains the 5 variables `x[0]`, `x[1]`, `x[2]`, `x[3]`, and `x[4]`.
-Next, using the `qbpp::expr()` function with type deduction, we create a `qbpp::Expr` object `f` whose initial value is `0`.
-In the for-loop from `i = 0` to `4`, each variable `x[i]` is added to `f` using the compound operator `+=`.
+The following program defines a vector of 5 variables with the name **`x`**.
+By printing `x` with `std::cout`, we can confirm that it contains the 5 variables **`x[0]`**, **`x[1]`**, **`x[2]`**, **`x[3]`**, and **`x[4]`**.
+Next, using the **`qbpp::expr()`** function with type deduction, we create a **`qbpp::Expr`** object **`f`** whose initial value is `0`.
+In the for-loop from `i = 0` to `4`, each variable `x[i]` is added to `f` using the compound operator **`+=`**.
 Finally, `f` is simplified and printed using `std::cout`.
 ```cpp
 #include "qbpp.hpp"
@@ -36,12 +36,12 @@ f = x[0] +x[1] +x[2] +x[3] +x[4]
 ```
 
 > **NOTE**
-> `qbpp::var(name, size)` returns a `qbpp::Vector<qbpp::var>` object that contains `size` elements of type `qbpp::var`.
-> The `qbpp::Vector<T>` class is almost compatible with `std::vector<T>`.
+> **`qbpp::var(name, size)`** returns a **`qbpp::Vector<qbpp::Var>`** object that contains `size` elements of type `qbpp::Var`.
+> The **`qbpp::Vector<T>`** class is almost compatible with **`std::vector<T>`**.
 > It provides overloaded operators that support vector operations for elements of type `T`.
 
 ## Sum function
-Using the vector utility function `qbpp::sum()`, you can obtain the sum of a vector of binary variables.
+Using the vector utility function **`qbpp::sum()`**, you can obtain the sum of a vector of binary variables.
 The following program uses `qbpp::sum()` to compute the sum of all variables in the vector `x`:
 ```cpp
 #include "qbpp.hpp"
@@ -56,9 +56,9 @@ int main() {
 The output of this program is exactly the same as that of the previous program.
 
 ## QUBO for one-hot constraint
-A vector of binary variables is **one-hot** if it has exactly one entry equal to 1, that is, the sum of its elements is equal to 1.
+A vector of binary variables is **one-hot** if it has **exactly one entry equal to 1**, that is, the sum of its elements is equal to 1.
 Let $X = (x_0, x_1, \ldots, x_{n-1})$ denote a vector of $n$ binary variables.
-The following QUBO expression $f(X)$ takes the minimum value of 0 if and only if $X$ is one-hot:
+The following expression $f(X)$ takes the minimum value of 0 if and only if $X$ is one-hot:
 
 $$
 \begin{align}
@@ -80,8 +80,8 @@ int main() {
   std::cout << sol << std::endl;
 }
 ```
-The function `qbpp::sum()` computes the sum of all variables in the vector.
-The function `qbpp::sqr()` computes the square of its argument.
+The function **`qbpp::sum()`** computes the sum of all variables in the vector.
+The function **`qbpp::sqr()`** computes the square of its argument.
 The Exhaustive Solver finds all optimal solutions with energy value 0, which are printed using std::cout as follows:
 {% raw %}
 ```txt

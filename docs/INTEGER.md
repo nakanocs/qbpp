@@ -6,7 +6,7 @@ title: "INTEGER"
 # Integer Variables and Solving Simultaneous Equations
 
 ## Integer variables
-QUBO++ supports integer variables, which are internally implemented using multiple binary variables.
+QUBO++ supports **integer variables, which are internally implemented using multiple binary variables.
 A conventional binary encoding is used to represent integer values.
 Suppose that we have $n$ binary variables $x_0, x_1, \ldots, x_{n-1}$.
 These variables can represent all integers from $0$ to $2^n-1$ using the following linear expression:
@@ -46,8 +46,8 @@ int main() {
 }
 ```
 
-An integer variable is defined using the double inequality operator `<= <=`, which specifies the integer range that the variable can take.
-The function `qbpp::var_int(name)` creates a `qbpp::VarInt object` object with the given  `name`, representing the linear expression encoded by binary variables.
+An integer variable is defined using the range operator **`<= <=`**, which specifies the integer range that the variable can take.
+The function `qbpp::var_int("name")` creates a `qbpp::VarInt` object object with the given  `name`, representing the linear expression encoded by binary variables.
 The program outputs the following expressions:
 ```txt
 x = 1 +x[0] +2*x[1] +4*x[2] uses 3 variables.
@@ -126,19 +126,19 @@ int main() {
   std::cout << "*g = " << *g << " = " << sol(*g) << std::endl;
 }
 ```
-First, `qbpp::VarInt` objects  `x` and `y` are defined with the range $[0,10]$.
-A `qbpp::Expr` object `f` is created to represent the constraint `x + y == 10`.
+First, `qbpp::VarInt` objects **`x`** and **`y`** are defined with the range $[0,10]$.
+A `qbpp::Expr` object **`f`** is created to represent the constraint **`x + y == 10`**.
 Internally, this is equivalent to the QUBO expression `qbpp::sqr(x + y -10)`.
-Similarly, `g` represents the constraint `2 * x + 4 * y == 28`.
-The combined expression `h = f + g` encodes both equations.
+Similarly, **`g`** represents the constraint **`2 * x + 4 * y == 28`**.
+The combined expression **`h = f + g`** encodes both equations.
 An Easy Solver instance is created with `h`, and the target energy is set to `0`, since the optimal solution satisfies all constraints.
 Calling `search()` returns a `qbpp::Sol` object sol that stores the optimal assignment of all binary variables.
 Finally, the program prints the values of `sol`, `sol(x)`, `sol(y)`, `sol(f)`, `sol(g)`, `sol(*f)`, and `sol(*g)`.
 Here,
-- `f` is the penalty expression enforcing `x + y = 10`. Thus `sol(f) = 0` if and only if the equation is satisfied.
-- `*f` is the linear expression `x + y`. Thus `sol(*f)` returns the actual evaluated value of `x + y`
+- **`f`**: The penalty expression enforcing `x + y = 10`. Thus `sol(f) = 0` if and only if the equation is satisfied.
+- **`*f`**: The linear expression `x + y`. Thus `sol(*f)` returns the actual evaluated value of `x + y`
 
-The same applies to `g` and `*g`.
+The same applies to **`g`** and **`*g`**.
 
 The program outputs the following result:
 
@@ -159,3 +159,4 @@ Thus, we can confirm that the values of `x`, `y`, and the constraint expressions
 > **WARNING**
 > QUBO++ supports the `==` operator only when the left-hand side is an expression and the right-hand side is an integer.
 > Comparisons of the form integer `==` expression or expression `==` expression are not supported.
+> Details are explained in [**Comparison Operators**](COMPARISON).

@@ -40,11 +40,11 @@ $ sudo apt install -y build-essential libboost-all-dev libtbb-dev
 ```
 
 ## Install QUBO++
-Download the `.tar.gz` file of the latest QUBO++ release from the [Latest Release](https://github.com/nakanocs/qbpp/releases/latest) page.
+Download the `.tar.gz` file of the latest QUBO++ release from the [**Latest Release**](https://github.com/nakanocs/qbpp/releases/latest) page.
 
 Download one of the following files, depending on your Windows PC architecture:
-- `qbpp_amd64_<version>.tar.gz` : For Intel- or AMD-based Windows PCs
-- `qbpp_arm64_<version>.tar.gz` : For ARM-based Windows PCs (e.g., Copilot+ PCs)
+- **`qbpp_amd64_<version>.tar.gz`** : For Intel- or AMD-based Windows PCs
+- **`qbpp_arm64_<version>.tar.gz`** : For ARM-based Windows PCs (e.g., Copilot+ PCs)
 
 
 If the file is downloaded to your Windows Downloads folder, extract it as follows:
@@ -52,14 +52,14 @@ If the file is downloaded to your Windows Downloads folder, extract it as follow
 $ tar xf /mnt/c/Users/<user name>/Downloads/qbpp_<arch>_<version>.tar.gz
 ```
 
-This creates a directory named `qbpp_<arch>_<version>` containing all required files.
+This creates a directory named **`qbpp_<arch>_<version>`** containing all required files.
 
 
 It is recommended to create a symbolic link to this directory:
 ```bask
 $ ln -s qbpp_<arch>_<version> qbpp
 ```
-This creates a symbolic link named `qbpp`, which simplifies access to the installation directory.
+This creates a symbolic link named **`qbpp`**, which simplifies access to the installation directory.
 
 
 ## Set environment variables
@@ -75,7 +75,7 @@ If you have a QUBO++ license key, set it using:
 ```bash
 $ export QBPP_LICENSE_KEY=[Your QUBO++ license key]
 ```
-It is recommended to append these commands to the end of the `~/.bashrc` file so that they are automatically executed when the WSL shell starts.
+It is recommended to append these commands to the end of the **`~/.bashrc`** file so that they are automatically executed when the WSL shell starts.
 
 ## Activate license
 You can now activate the QUBO++ license by executing:

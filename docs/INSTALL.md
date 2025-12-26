@@ -6,25 +6,25 @@ title: "Installation and License Management"
 # Installation and License Management
 
 ## Installation
-Download the `.tar.gz` file of the latest QUBO++ release from the [Releases](https://github.com/nakanocs/qbpp/releases) page.
+Download the `.tar.gz` file of the latest QUBO++ release from the [**Latest Releases**](https://github.com/nakanocs/qbpp/releases/latest) page.
 Extract the archive as follows:
 ```bash
 $ tar xf qbpp_<arch>_<version>.tar.gz
 ```
 The actual file name varies depending on the version you downloaded.
 QUBO++ runs on Linux-based systems with the following CPUs:
-* amd64: 64-bit Intel and AMD processors
-* arm64: 64-bit ARM processors
+* **amd64**: 64-bit Intel and AMD processors
+* **arm64**: 64-bit ARM processors
 
 ## Setting Environment Variables
 To compile and run QUBO++ programs, it is recommended to set the following environment variables:
-* `CPLUS_INCLUDE_PATH`: Path to the directory containing the QUBO++ header files.
-* `LIBRARY_PATH`: Path to the directory containing the QUBO++ shared libraries used during compilation and linking.
-* `LD_LIBRARY_PATH`: Path to the directory containing the QUBO++ shared libraries required at runtime.
-* `QBPP_LICENSE_KEY`: Your QUBO++ license key. If omitted, an anonymous trial license is used.
-* `PATH`: Path to the directory containing the QUBO++ executable binaries.
+* **`CPLUS_INCLUDE_PATH`**: Path to the directory containing the QUBO++ header files.
+* **`LIBRARY_PATH`**: Path to the directory containing the QUBO++ shared libraries used during compilation and linking.
+* **`LD_LIBRARY_PATH`:** Path to the directory containing the QUBO++ shared libraries required at runtime.
+* **`QBPP_LICENSE_KEY`**: Your QUBO++ license key. If omitted, an anonymous trial license is used.
+* **`PATH`**: Path to the directory containing the QUBO++ executable binaries.
 
-To set these paths automatically each time a shell starts, add the following lines to the end of your `~/.bashrc`:
+To set these paths automatically each time a shell starts, add the following lines to the end of your **`~/.bashrc`**:
 ```bash
 export QBPP_PATH=[QUBO++ install directory]
 
@@ -37,13 +37,13 @@ export QBPP_LICENSE_KEY=[Your QUBO++ license key]
 ```
 
 ## Lincense Management
-The license is activated using the `qbpp-license` command as follows:
+The license is activated using the **`qbpp-license`** command as follows:
 ```bash
 $ qbpp-license -a
 ```
 This increments the activation count.
 Each license has a limited number of allowed activations.
-If `QBPP_LICENSE_KEY` is not set, the command attempts to activate an anonymous trial license.
+If `QBPP_LICENSE_KEY` is not set, the command attempts to activate an **Anonymous Trial License**.
 
 To check the current status of your QUBO++ license, simply run:
 ```bash

@@ -9,11 +9,11 @@ title: "Variable and Expression Classes"
 ## qbpp::Var, qbpp::Term, and qbpp::Expr classes
 
 QUBO++ provides the following fundamental classes:
-- `qbpp::Var`: Represents a variable symbolically and is associated with a string used for display.
+- **`qbpp::Var`**: Represents a variable symbolically and is associated with a string used for display.
 Internally, a 32-bit unsigned integer is used as its identifier.
-- `qbpp::Term`: Represents a product term consisting of an integer coefficient and one or more `qbpp::Var` objects.
+- **`qbpp::Term`**: Represents a product term consisting of an integer coefficient and one or more `qbpp::Var` objects.
 The data type of the integer coefficient is defined by the `COEFF_TYPE` macro, whose default value is `int32_t`.
-- `qbpp::Expr`: Represents an expanded expression consisting of an integer constant term and zero or more `qbpp::Term` objects.
+- **`qbpp::Expr`**: Represents an expanded expression consisting of an integer constant term and zero or more `qbpp::Term` objects.
 The data type of the integer constant term is defined by the `ENERGY_TYPE` macro, whose default value is `int64_t`.
 
 In the following program, `x` and `y` are `qbpp::Var` objects, `t` is a `qbpp::Term` object, and `f` is a `qbpp::Expr` object:

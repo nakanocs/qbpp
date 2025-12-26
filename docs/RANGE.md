@@ -7,7 +7,7 @@ title: "RANGE"
 
 ## Polynomial formulation for range constraints
 Let $f$ be a polynomial expression of binary variables.
-A range constraint has the form $l\leq f\leq u$ with $l<u$.
+A range constraint has the form **$l\leq f\leq u$** with $l<u$.
 Our goal is to design a polynomial expression that takes the minimum value 0 if and only if the range constraint is satisfied.
 
 The key idea is to introduce an **auxiliary integer variable** $a$ that takes values in the range $[l,u]$.
@@ -38,9 +38,9 @@ For example, the following integer linear program has two variables, one objecti
 
 $$
 \begin{aligned}
-{\rm Maximize: } & & 5x+4y\\
-{\rm Subject\,\, to: }& & 2x + 3y \leq 24 \\
- & & 7 x + 5 y \leq 54
+\text{Maximize: } & & & 5x + 4y \\
+\text{Subject to: } & && 2x + 3y \le 24 \\
+                   & & & 7x + 5y \le 54
 \end{aligned}
 $$
 
@@ -70,9 +70,9 @@ int main() {
 ```
 
 In this QUBO++ program,
-- `f` represents the objective function,
-- `c1` and `c2` represent the range constraints,
-- and `g` combines them into a single optimization expression.
+- **`f`** represents the objective function,
+- **`c1`** and **`c2`** represent the range constraints, and
+- **`g`** combines them into a single optimization expression.
 
 Since the goal is maximization, the objective is negated as `-f`.
 The constraints `c1` and `c2` are penalized with a weight of 100 to ensure they are satisfied with high priority.
@@ -88,7 +88,7 @@ c1 = 0, c2 = 0
 *c1 = 23, *c2 = 53
 ```
 Here, 
-- `c1` is the expression for the constraint `0 <= 2 x + 3 y <= 24`,
-- and `*c1` represents the linear expression  `2 x + 3 y`.
+- **`c1`** is the expression for the constraint `0 <= 2 x + 3 y <= 24`, and
+- **`*c1`** represents the linear expression  `2 x + 3 y`.
 
 We can confirm that the solver correctly finds the optimal solution.
