@@ -44,7 +44,7 @@ The following program searches for a solution to the partitioning problem using 
 #include "qbpp_grb.hpp"
 
 int main() {
-  qbpp::Vector<uint32_t> w = {64, 27, 47, 74, 12, 83, 63, 40};
+  std::vector<uint32_t> w = {64, 27, 47, 74, 12, 83, 63, 40};
   auto x = qbpp::var("x", w.size());
   auto p = qbpp::expr();
   auto q = qbpp::expr();
@@ -53,7 +53,7 @@ int main() {
     q += w[i] * (1 - x[i]);
   }
   auto f = qbpp::sqr(p - q);
-
+  f.simplify_as_binary();
   auto model = qbpp::grb::QuboModel(f);
   model.time_limit(10.0);
   auto sol = model.optimize();
@@ -85,14 +85,14 @@ The obtained solution is stored in `sol`.
 This program produces the following output:
 {% raw %}
 ```
-Solution: -64820:{{x[0],1},{x[1],0},{x[2],0},{x[3],1},{x[4],0},{x[5],1},{x[6],0},{x[7],0}}
-Bound = -64820
-f(sol) = 1024
-p(sol) = 221
-q(sol) = 189
-P : 64 74 83
-Q : 27 47 12 63 40
+Solution: 0:{{x[0],1},{x[1],1},{x[2],0},{x[3],1},{x[4],0},{x[5],0},{x[6],0},{x[7],1}}
+Bound = 0
+f(sol) = 0
+p(sol) = 205
+q(sol) = 205
+P : 64 27 74 40
+Q : 47 12 83 63
 ```
 {% endraw %}
-Since the solution value and the bound have the same energy (-64820),
+Since the solution value and the bound have the same energy 0
 the obtained solution is guaranteed to be optimal.

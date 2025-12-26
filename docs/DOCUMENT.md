@@ -50,6 +50,7 @@ sections by providing a deeper understanding of QUBO++.
 10. [Easy Solver Usage](EASYSOLVER)
 11. [Exhaustive Solver Usage](EXHAUSTIVE)
 12. [ABS3 Solver Usage](ABS3)
+13. [Gurobi Solver Usage](GUROBI)
 
 ## Case Study
 1. [Pythagorean Triples](PYTHAGOREAN)
