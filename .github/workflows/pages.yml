@@ -21,20 +21,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # 履歴がないと最終更新日が取れない
+          fetch-depth: 0
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.2"
           bundler-cache: true
+          working-directory: docs   # ★ docs/Gemfile を使う
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
       - name: Build with Jekyll
         working-directory: docs
-        run: bundle exec jekyll build --destination _site
+        run: bundle exec jekyll build --destination ../_site  # ★ 出力を直下へ
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
