@@ -33,6 +33,7 @@ jobs:
         uses: actions/configure-pages@v5
 
       - name: Build with Jekyll
+        working-directory: docs
         run: bundle exec jekyll build --destination _site
 
       - name: Upload artifact
