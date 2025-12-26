@@ -59,14 +59,14 @@ int main() {
   std::cout << "f(sol) = " << f(sol) << std::endl;
   std::cout << "p(sol) = " << p(sol) << std::endl;
   std::cout << "q(sol) = " << q(sol) << std::endl;
-  std::cout << "L  :";
+  std::cout << "P :";
   for (size_t i = 0; i < w.size(); ++i) {
     if (x[i](sol) == 1) {
       std::cout << " " << w[i];
     }
   }
   std::cout << std::endl;
-  std::cout << "~L :";
+  std::cout << "Q :";
   for (size_t i = 0; i < w.size(); ++i) {
     if (x[i](sol) == 0) {
       std::cout << " " << w[i];
@@ -97,8 +97,8 @@ Solution: 0:{{x[0],0},{x[1],0},{x[2],1},{x[3],0},{x[4],1},{x[5],1},{x[6],1},{x[7
 f(sol) = 0
 p(sol) = 205
 q(sol) = 205
-L  : 47 12 83 63
-~L : 64 27 74 40
+P : 47 12 83 63
+Q : 64 27 74 40
 ```
 {% endraw %}
 > **NOTE**

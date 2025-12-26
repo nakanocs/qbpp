@@ -9,7 +9,7 @@ Basically, operators and functions for vectors operate element-wise.
 
 
 ## Basic operators for vectors
-The basic operators `+`, `-`, `*`, and `/` work for vectors of variables and expressions.
+The basic operators **`+`**, **`-`**, **`*`**, and **`/`** work for vectors of variables and expressions.
 The following example demonstrates how these operators work for a vector of size 3:
 ```cpp
 #include "qbpp.hpp"
@@ -43,7 +43,7 @@ g[2] = 2 -2*x[2]*y[2] +2*x[2] -2*y[2]
 ```
 
 ## Compound opertors for vectors
-Similarly, the compound operators `+=`, `-=`, `*=`, and `/=` work for vectors of variables and expressions.
+Similarly, the compound operators **`+=`**, **`-=`**, **`*=`**, and **`/=`** work for vectors of variables and expressions.
 The following example demonstrates how these operators work for a vector of size 3:
 ```cpp
 #include "qbpp.hpp"
@@ -115,4 +115,4 @@ simplified_as_spin(f) = {2 -2*x[0],2 -2*x[1],2 -2*x[2]}
 ```
 
 > **NOTE**
-> These operators and functions also work for multi-dimensional arrays.
+> These operators and functions also work for **multi-dimensional arrays**.

@@ -8,7 +8,7 @@ The **Exhaustive Solver** is a complete-search solver for QUBO/HUBO expressions.
 Since all possible assignments are examined, the optimality of the solutions is guaranteed.
 
 Solving a problem with the Exhaustive Solver consists of the following three steps:
-1. Create an Exhaustive Solver (or qbpp::exhaustive_solver::ExhaustiveSolver) object.
+1. Create an Exhaustive Solver (or `qbpp::exhaustive_solver::ExhaustiveSolver`) object.
 2. Set search options by calling member functions of the solver object.
 3. Search for solutions by calling one of the search member functions.
 
@@ -17,7 +17,7 @@ Solving a problem with the Exhaustive Solver consists of the following three ste
 To use the Exhaustive Solver, an Exhaustive Solver object (or
 `qbpp::exhaustive_solver::ExhaustiveSolver`) is constructed with an expression
 (`or qbpp::Expr`) object as follows:
-- `qbpp::exhaustive_solver::ExhaustiveSolver(const qbpp::Expr& f)`:
+- **`qbpp::exhaustive_solver::ExhaustiveSolver(const qbpp::Expr& f)`**:
 Here, `f` is the expression to be solved.
 It must be simplified as a binary expression in advance by calling the
 `simplify_as_binary()` function.
@@ -25,15 +25,15 @@ This function converts the given expression `f` into an internal format that is
 used during the solution search.
 
 ## Setting Exhaustive Solver Options
-- `enable_default_callback()`
+- **`enable_default_callback()`**
 Enables the default callback function, which prints newly obtained best solutions.
 
 ## Searching Solutions
 The Exhaustive Solver searches for solutions by calling one of the following
 member functions of the solver object:
-- `search()`: Returns the first optimal solution found.
-- `search_optimal_solutions()`: Returns a vector containing all optimal solutions.
-- `search_all_solutions()`: Returns a vector containing all solutions, sorted in increasing order of
+- **`search()`**: Returns the first optimal solution found.
+- **`search_optimal_solutions()`**: Returns a vector containing all optimal solutions.
+- **`search_all_solutions()`**: Returns a vector containing all solutions, sorted in increasing order of
 energy.
 
 # Program example
@@ -86,7 +86,7 @@ TTS = 0.004s Energy = 26
 ```
 {% endraw %}
 All optimal solutions can be obtained by calling the
-`search_optimal_solutions()` member function as follows:
+**`search_optimal_solutions()`** member function as follows:
 ```cpp
   auto solver = qbpp::exhaustive_solver::ExhaustiveSolver(f);
   auto sols = solver.search_optimal_solutions();
@@ -111,7 +111,7 @@ The output is as follows:
 ```
 {% endraw %}
 Furthermore, all solutions, including non-optimal ones, can be obtained by calling
-the `search_all_solutions()` member function as follows:
+the **`search_all_solutions()`** member function as follows:
 ```cpp
   auto solver = qbpp::exhaustive_solver::ExhaustiveSolver(f);
   solver.enable_default_callback();
@@ -124,9 +124,6 @@ the `search_all_solutions()` member function as follows:
     std::cout << std::endl;
   }
 ```
-Furthermore, all solutions, including non-optimal ones, can be obtained by calling
-the `search_all_solutions()` member function as follows:
-
 This program prints all $2^{20}$ solutions in increasing order of energy, as
 shown below:
 {% raw %}

@@ -6,13 +6,13 @@ title: "Basic Operators and Functions"
 # Basic Operators and Functions
 
 ## Unary and Binary Operators
-QUBO++ supports the following basic binary operators for constructing expressions (i.e., qbpp::Expr objects):
-- `+`: Returns the sum of the operands.
-- `-`: Returns the difference of the operands.
-- `*`: Returns the product of the operands.
-- `/`: Returns the quotient of the operands.
+QUBO++ supports the following basic binary operators for constructing expressions (i.e., `qbpp::Expr` objects):
+- **`+`**: Returns the sum of the operands.
+- **`-`**: Returns the difference of the operands.
+- **`*`**: Returns the product of the operands.
+- **`/`**: Returns the quotient of the operands.
 The divisor must be an integer, and both the constant term and all coefficients of the dividend must be divisible by the divisor.
-- unary `-`: Returns the negation of the operand.
+- unary **`-`**: Returns the negation of the operand.
 
 The precedence of these operators follows the standard C++ operator precedence rules.
 
@@ -38,10 +38,10 @@ g = 2 -2*x*y +2*x -2*y
 
 ## Compound operators
 Also the following compound operators to update qbpp::Expr objects are supported.
-- `+=` : Adds the righthand size operand to the lefthand side. 
-- `-=` : Subtract the righthand size operand from the lefthand side. 
-- `*=` : Multiply the righthand side operand to the lefthand side.
-- `/=` : Divides the lefthand side operand by the righthand side. The righthand side operand must be an integer and the constant term integer and all coefficiets of the lefthand side must be divisible.
+- **`+=`** : Adds the righthand size operand to the lefthand side. 
+- **`-=`** : Subtract the righthand size operand from the lefthand side. 
+- **`*=`** : Multiply the righthand side operand to the lefthand side.
+- **`/=`** : Divides the lefthand side operand by the righthand side. The righthand side operand must be an integer and the constant term integer and all coefficiets of the lefthand side must be divisible.
 
 The following program demonstrates how to construct expressions using these compound operators:
 ```cpp
@@ -70,10 +70,10 @@ f = 6*x*y +3*y*y -8*y
 ```
 
 ## Square functions
-QUBO++ provides both a global function `qbpp::sqr()` and a member function `sqr()` of the `qbpp::Expr` class to compute the square of an expression.
+QUBO++ provides both a global function **`qbpp::sqr()`** and a member function **`sqr()`** of the `qbpp::Expr` class to compute the square of an expression.
 
-In the following program, for a `qbpp::Expr` object `f`, the global function `qbpp::sqr(f)` returns a new `qbpp::Expr` object representing the square of `f`,
-whereas the member function `f.sqr()` updates `f` in place by replacing it with its square.
+In the following program, for a `qbpp::Expr` object `f`, the global function **`qbpp::sqr(f)`** returns a new `qbpp::Expr` object representing the square of `f`,
+whereas the member function **`f.sqr()`** updates `f` in place by replacing it with its square.
 
 ```cpp
 #include "qbpp.hpp"
@@ -99,12 +99,12 @@ After operators or functions are applied to `qbpp::Expr` objects, expressions ar
 To sort terms and simplify the resulting expressions, simplify functions must be explicitly called.
 
 QUBO++ provides the following three global simplify functions:
-- `qbpp::simplify()`:
+- **`qbpp::simplify()`**:
 Returns a simplified expression by merging coefficients of identical terms.
-- `qbpp::simplify_as_binary()`:
+- **`qbpp::simplify_as_binary()`**:
 Returns a simplified expression under the assumption that all variables take binary values $0/1$
 i.e., the identity $x^2=x$ holds.
-- `qbpp::simplify_as_spin()`:
+- **`qbpp::simplify_as_spin()`**:
 Returns a simplified expression under the assumption that all variables take spin values $−1/+1$, i.e., the identity $x^2=1$ holds.
 
 The following program demonstrates the behavior of these simplify functions:
@@ -132,7 +132,7 @@ simplified_as_spin(f) = 2 -2*x
 
 Member function versions of these simplify functions are also provided for `qbpp::Expr` objects, and they update the object in place with the simplified result.
 
-For example, the following program updates `f` by applying `simplify()`:
+For example, the following program updates `f` by applying **`simplify()`**:
 ```cpp
 #include "qbpp.hpp"
 

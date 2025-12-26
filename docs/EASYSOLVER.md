@@ -13,7 +13,7 @@ Solving a problem with the Easy Solver consists of the following three steps:
 
 ## Creating Easy Solver object
 To use the Easy Solver, an Easy Solver object (or `qbpp::easy_solver::EasySolver`) is constructed with an expression (or `qbpp::Expr`) object as follows:
-- `qbpp::easy_solver::EasySolver(const qbpp::Expr& f)`
+- **`qbpp::easy_solver::EasySolver(const qbpp::Expr& f)`**
 
 Here, `f` is the expression to be solved.
 It must be simplified as a binary expression in advance by calling the `simplify_as_binary()` function.
@@ -21,20 +21,20 @@ This function converts the given expression `f` into an internal format that is 
 
 ## Setting Easy Solver Options
 For a created Easy Solver object, the following member functions can be specified:
-- `time_limit(double time)`: 
+- **`time_limit(double time)`**: 
 Specifies the time limit in seconds.
 The Easy Solver terminates the search when the elapsed time reaches the specified limit.
 The default value is 10.0 seconds.
 If the time limit is set to 0, the solver never terminates due to the time limit.
-- `target_energy(energy_t energy)`
+- **`target_energy(energy_t energy)`**
 Specifies the target energy.
 The Easy Solver terminates the search when a solution whose energy is
 less than or equal to the specified value is found.
-- `enable_default_callback()`
+- **`enable_default_callback()`**
 Enables the default callback function, which prints newly obtained best solutions.
 
 ## Searching Solutions
-The Easy Solver searches for solutions by simply calling the `search()` member function of the Easy Solver object.
+The Easy Solver searches for solutions by simply calling the **`search()`** member function of the Easy Solver object.
 
 ## Program Example
 The following program searches for a solution to the Low Autocorrelation Binary Sequences (LABS) problem using the Easy Solver:
@@ -138,25 +138,24 @@ TTS = 2.691s Energy = 898 thread = 15 PosMin
 
 ## Advanced Usage
 
-### Keeping multiple best solutions
-The Easy Solver can keep multiple best solutions found during the search.
+### Keeping multiple top-k solutions
+The Easy Solver can store **multiple top-k solutions** found during the search.
 To enable this feature, call the following member function:
-- `enable_best_sols(size_t best_sol_count)`: Stores up to `best_sol_count` best solutions.
+- **`enable_topk_sols(size_t topk_count)`**: Stores up to topk_count best solutions.
 
-Once this function is enabled, the solution object returned by `search()` contains the stored best solutions.
+Once this function is enabled, the solution object returned by `search()` contains the stored top-k solutions.
 You can access them using:
-- `best_sols()`: Returns a reference to the vector of best solutions.
+- **`sols()`: Returns a reference to the vector of stored best solutions.
 
-### Program example
 The following program solves the Low Autocorrelation Binary Sequence (LABS) problem using the Easy Solver.
-Since `enable_topk_sols(10)` is called, the solver keeps up to 10 top-k solutions.
-The program prints each stored solution using a range-based for loop over `sol.sols()`.
+Since **`enable_topk_sols(20)`** is called, the solver keeps **up to 20 top-k solutions**.
+The program prints each stored solution using a range-based for loop over **`sols.sols()`**.
 ```cpp
 #include "qbpp.hpp"
 #include "qbpp_easy_solver.hpp"
 
 int main() {
-  size_t size = 100;
+  size_t size = 20;
   auto x = qbpp::var("x", size);
   auto f = qbpp::expr();
   for (size_t d = 1; d < size; ++d) {
@@ -170,11 +169,11 @@ int main() {
 
   auto solver = qbpp::easy_solver::EasySolver(f);
   solver.time_limit(5.0);
-  solver.enable_topk_sols(10);
-  auto sol = solver.search();
-  for (const auto& s : sol.sols()) {
-    std::cout << s.energy() << ": ";
-    for (auto val : s(x)) {
+  solver.enable_topk_sols(20);
+  auto sols = solver.search();
+  for (const auto& sol : sols.sols()) {
+    std::cout << sol.energy() << ": ";
+    for (auto val : sol(x)) {
       std::cout << (val == 0 ? "-" : "+");
     }
     std::cout << std::endl;
@@ -183,14 +182,46 @@ int main() {
 ```
 This program desiplays the following output:
 ```
-870: +--++--+----++--+--++-+--+++-+-++++--++++-+++++--+----+-++-+++++-+-+--++-+-+-+---++-+++----++++++---
-886: ++-------++-+++--+---+-++++-+++--+-+-+-----+-+-+----++------+-+---++--+-++-+--+--+--+--++--++++--+++
-914: ++-++---------++---+-----++--+++----++-++-+++-+-++--+---+---+++-++-+-++-+-+-+---+++++----+++-+--+-++
-914: +--++--+----++--+--++-+--+++-+-++++--++++-+++++--+----+-++-+++++-+-+--++-+-+-+---+--+++----++++++---
-918: +-+-+++++--++--+-------++-+++-+++-+--+-++-++++--+++---+-++-++-+---+++++---++-+-+++-++---++++-+-+-++-
-922: -+--+++--+-+++---+---+-----+++-+-+++--+--+---+--+-+---+----++--++-+-++--++-+-+++++-+--+-+++++-+----+
-926: --++-++--++--+--++++-----------++-+---+-+++++-++-+-+-----+++-++-+-++-+-+---++++-++-+-+-+++---++--+++
-930: --++-+--+++--+--+--+-++--++--+----+--+++++---+-+----+-+++----+++-+-+-------+-+--+-+-+++++++-+-+++--+
-934: +-+-+-+++-+++--+--+--------+--+++-++-++-+--+++--+++--+++++-+--+-+-++++++--+--+-++++++---++++---+-+++
-942: +-+-+++---++----+-+-+--++++-+-++-+-+---+-++---++--+----+--+---++++++++---++++++++---+--++-++-++-++--
+26: -----+-+++-+--+++--+
+26: +--+++--+-+++-+-----
+26: -+-+----+----++-++--
+26: --++-++----+----+-+-
+26: -++---++-+---+-+++++
+34: ---+++++-+++-++-+-++
+34: +-+-+++++----++--++-
+34: -+++++---+---+-+--+-
+34: +++-----+---+--+-+--
+34: --++--++-+--+-+-----
+34: -+--+-+---+---+++++-
+34: ---+++-+-+----+--+--
+38: -++-++-+-+---++-----
+38: --++++--+-+--+---+--
+38: -+-+---++------++-++
+38: ++++-++-+--+++-+---+
+38: ----+--+-++---+-+++-
+42: -+++++++--++-+-+-++-
+42: -+-+----+++++-++--++
+42: ++-----+---+--+-+--+
+```
+
+### Keeping multiple best-energy solutions
+The Easy Solver can store multiple solutions that share the best (minimum) energy found during the search.
+To enable this feature, call the following member function:
+- **`enable_best_energy_sols(size_t best_sol_count)`**: Stores up to `best_sol_count` solutions with the best energy.
+
+The usage is the same as that of `enable_topk_sols()`.
+Therefore, to enable this feature in a QUBO++ program above, you can replace
+`enable_topk_sols(20)` with `enable_best_energy_sols(20)` as follows:
+```cpp
+  solver.enable_best_energy_sols(20);
+```
+With this option enabled, the solver stores only the solutions whose energy is equal to the best energy found.
+The resulting program produces the following solutions, all of which have the best energy value of 26:
+```
+26: +++++-+---+-++---++-
+26: ++--+--++++-++++-+-+
+26: -+-+----+----++-++--
+26: +-+-++++-++++--+--++
+26: -++---++-+---+-+++++
+26: --++-++----+----+-+-
 ```

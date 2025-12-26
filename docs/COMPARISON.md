@@ -10,13 +10,15 @@ QUBO++ supports two types of operators for creating constraints:
 - **Range operator**: $l\leq f\leq u$, where $f$ is an expression and 
 $l$ and $u$ ($l\leq u$) are integers.
 
-These operators return an expression that attains the minimum value of 0 if and only if the corresponding constraints are satisfied.
+These operators return an expression that attains **the minimum value of 0 if and only if the corresponding constraints are satisfied**.
 
 ## Equality operator
 The equality operator $f=n$ creates the following expression:
+
 $$
 (f−n)^2
 $$
+
 This expression attains the minimum value of 0 if and only if the equality $f=n$ is satisfied.
 
 The following QUBO++ program searches for all solutions satisfying
@@ -43,10 +45,10 @@ int main() {
 }
 ```
 In this program, `f` internally holds two qbpp::Expr objects:
-- `f`: $(a+2b+3c−3)^2$, which attains the minimum value of 0 if the equality $a+2b+3c=3$ is satisfied.
-- `*f`: the left-hand side of the equality, $a+2b+3c$.
+- **`f`**: $(a+2b+3c−3)^2$, which attains the minimum value of 0 if the equality $a+2b+3c=3$ is satisfied.
+- **`*f`**: the left-hand side of the equality, $a+2b+3c$.
 
-Using the Exhaustive Solver object created for `f`, all optimal solutions are stored in `sols`.
+Using the Exhaustive Solver object created for `f`, all optimal solutions are stored in **`sols`**.
 By iterating over `sols`, all solutions and the values of `f` and `*f` are printed as follows:
 ```
 f = 9 -5*a -8*b -9*c +4*a*b +6*a*c +12*b*c
@@ -56,21 +58,16 @@ a = 1, b = 1, c = 0, f = 0, *f = 3
 ```
 These results confirm that two optimal solutions attain `f = 0` and satisfy `*f = 3`.
 
-Note that QUBO++ supports the euqlity operator in the form of 
-`expression == integer` only.
-Neigher `integer == expression` nor `expression == expression` is not supported.
-Instead of `expression == expression`, we can use `expression - expression == 0`.
-
 ## Notes on Supported Equality Forms
 QUBO++ supports the equality operator only in the following form:
-- `expression == integer`.
+- **`expression == integer`**.
 
 The following forms are not supported:
-- `integer == expression`
-- `expression1 == expression2`
+- **`integer == expression`**
+- **`expression1 == expression2`**
 
 Instead of `expression1 == expression2`, you can rewrite the constraint as:
-- `expression1 - expression2 == 0`
+- **`expression1 - expression2 == 0`**
 
 which is fully supported.
 
@@ -79,10 +76,10 @@ which is fully supported.
 The range operator of the form $l\leq f \leq u$ ($l\leq u$) creates an expression that attains the minimum value of 0 if and only if the constraint is satisfied.
 
 We consider the following cases depending on the values of $l$ and $u$.
-- Case 1: $u=l$
-- Case 2: $u=l+1$
-- Case 3: $u=l+2$
-- Case 4: $u\geq l+3$.
+- **Case 1**: **$u=l$**
+- **Case 2**: **$u=l+1$**
+- **Case 3**: **$u=l+2$**
+- **Case 4**: **$u\geq l+3$**.
 
 ### Case 1: $u=l$
 If $u=l$, the range constraint reduces to the equality constraint $f=l$,
@@ -112,9 +109,9 @@ This expression evaluates as follows for for $f=l$, $l+1$, and $l+2$
 
 $$
 \begin{aligned}
-(f-l-a)(f-l-(a+1)) &= (-a)(-(a+1)) & {\rm if\,\,} f=l \\
-                   &= (1-a)(-a) & {\rm if\,\,} f=l+1 \\
-                   &=(2-a)(1-a)  & {\rm if\,\,} f=l+2
+(f-l-a)(f-l-(a+1)) &= (-a)(-(a+1)) && \text{if } f=l \\
+                   &= (1-a)(-a) && \text{if } f=l+1 \\
+                   &=(2-a)(1-a)  && \text{if } f=l+2
 \end{aligned}
 $$
 
@@ -178,7 +175,7 @@ Thus, we can choose $n$ and $d$ such that
 
 $$
 \begin{aligned}
-u-1&=l+2^{n-1}+d-1$.
+u-1&=l+2^{n-1}+d-1.
 \end{aligned}
 $$
 
@@ -196,7 +193,7 @@ Accordingly, we select $n$ and $d$ so that
 
 $$
 \begin{aligned}
-u-1&=l+2^{n-1}+d-2$.
+u-1&=l+2^{n-1}+d-2.
 \end{aligned}
 $$
 
@@ -282,18 +279,18 @@ a = 1, b = 1, c = 0, f = 0, *f = 13, sol = 0:{{a,1},{b,1},{c,0},{{0}[0],1},{{0}[
 {% endraw %}
 
 ## Lower and upper bound operators
-QUBO++ does not directly support the following one-sided bound operators:
-- Lower-bound operator: $l\leq f$
-- Upper-bound operator: $f\leq u$
+QUBO++ does not directly support the following **one-sided bound operators**:
+- **Lower-bound operator**: $l\leq f$
+- **Upper-bound operator**: $f\leq u$
 
-Instead, QUBO++ provides a symbolic representation of infinity ($\infty$)
-and these constraints are implemented using the range operator as follows:
-- Lower-bound operator: $l\leq f\leq +\infty$
-- Upper-bound operator: $-\infty \leq f\leq u$
+Instead, QUBO++ provides a symbolic representation of **infinity** ($\infty$)
+and these constraints are implemented using **the range operator** as follows:
+- **Lower-bound operator**: $l\leq f\leq +\infty$
+- **Upper-bound operator**: $-\infty \leq f\leq u$
 
 Since the range operator internally introduces auxiliary variables,
 true infinite values cannot be represented explicitly.
-Therefore, QUBO++ estimates finite maximum and minimum values of the expression 
+Therefore, QUBO++ estimates **finite maximum and minimum values** of the expression 
 $f$ and substitutes them for $+\infty$ and $-\infty$, respectively.
 
 For example, consider the expression 
@@ -311,14 +308,14 @@ when constructing the corresponding range constraints.
 
 > **NOTE**
 > QUBO++ intentionally requires both lower and upper bounds to be specified in inequality constraints.
-> This avoids ambiguity between MIP-style interpretations (e.g., 
-> $f\leq u$ meaning $0\leq f≤\leq u$) and QUBO-style interpretations (e.g., $f\leq u$ meaning $-\infty\leq f\leq u$),
+> This avoids ambiguity between **MIP-style interpretations** (e.g., 
+> $f\leq u$ meaning $0\leq f\leq u$) and **QUBO-style interpretations** (e.g., $f\leq u$ meaning $-\infty\leq f\leq u$),
 > which could otherwise lead to subtle modeling errors.
 
 ### QUBO++ program for lower and upper bound operators
-In QUBO++, an infinite value is represented by `qbpp::inf`.
+In QUBO++, an infinite value is represented by **`qbpp::inf`**.
 
-The following program demonstrates the lower-bound operator:
+The following program demonstrates **the lower-bound operator**:
 ```cpp
 #include "qbpp.hpp"
 #include "qbpp_exhaustive_solver.hpp"
@@ -338,7 +335,7 @@ int main() {
   }
 }
 ```
-In this program, `+qbpp::inf` represents a positive infinite value,
+In this program, **`+qbpp::inf`** represents a positive infinite value,
 which is automatically replaced by 24.
 
 This program produces the following output:
@@ -351,7 +348,7 @@ a = 1, b = 1, c = 1, f = 0, *f = 24, sol = 0:{{a,1},{b,1},{c,1},{{0}[0],1},{{0}[
 ```
 {% endraw %}
 
-The following program demonstrates the upper-bound operator:
+The following program demonstrates **the upper-bound operator**:
 ```cpp
 int main() {
   auto a = qbpp::var("a");
@@ -368,7 +365,7 @@ int main() {
   }
 }
 ```
-In this program, `-qbpp::inf` represents a negative infinite value,
+In this program, **`-qbpp::inf`** represents a negative infinite value,
 which is automatically replaced by 0.
 
 This program produces the following output:

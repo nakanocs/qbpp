@@ -5,9 +5,9 @@ title: "ABS3"
 
 # ABS3 Solver Usage
 Solving an expression `f` using the ABS3 Solver involves the following three steps:
-1. Create an ABS3 Solver (or `qbpp::abs3::ABS3Solver`) object for the expression `f`.
-2. Create a parameter object (or `qbpp::abs3::Params`) and set the options for solution search.
-3. Call the `search()` member function of the ABS3 Solver object, which returns the obtained solution.
+1. Create an ABS3 Solver (or **`qbpp::abs3::ABS3Solver`**) object for the expression `f`.
+2. Create a parameter object (or **`qbpp::abs3::Params`**) and set the options for solution search.
+3. Call the **`search()`** member function of the ABS3 Solver object, which returns the obtained solution.
 
 ## Solving LABS problem using the ABS3 Solver
 The following QUBO++ program solves the **Low Autocorrelation Binary Sequence (LABS)** problem using the ABS3 Solver:
@@ -41,10 +41,10 @@ int main() {
   std::cout << std::endl;
 }
 ```
-In this program, an ABS3 Solver object `solver` is first created for the expression `f`.
-Next, a parameter object `params` is created, and the options `time_limit` and `enable_callback` are set.
+In this program, an ABS3 Solver object **`solver`** is first created for the expression `f`.
+Next, a parameter object **`params`** is created, and the options `time_limit` and `enable_callback` are set.
 The `time_limit` option specifies the maximum search time in seconds, while `enable_callback` enables a callback function that reports newly found best solutions during the search.
-The `search()` member function of the `solver` is then invoked with `params` as its argument.
+The **`search()`** member function of the `solver` is then invoked with `params` as its argument.
 This function returns the best solution found within the given time limit, which is stored in `sol`.
 
 The program prints the energy of the solution and the corresponding binary sequence, where "+" represents 1 and "-" represents 0.
@@ -65,14 +65,14 @@ TTS = 4.364s Energy = 834
 An ABS3 Solver (or `qbpp::abs3::ABS3Solver`) object is created for a given expression.
 When the solver object is constructed, the expression is converted into an internal data format and loaded into GPU memory.
 Therefore, the number of GPU devices to be used can be specified as a second argument:
-- `qbpp::abs3::ABS3Solver(expression, device_count)`
+- **`qbpp::abs3::ABS3Solver(expression, device_count)`**:
 If `device_count` is omitted, all available GPUs are used by default.
 
 A parameter object (or `qbpp::abs3::Params`) stores the options used by the ABS3 Solver during solution search.
 Each option is specified as a key–value pair of strings.
 In the example above:
-- `params("time_limit", "10.0")` sets the time limit to 10.0 seconds.
-- `params("enable_callback", "1")` enables the callback function, which reports the energy of newly obtained solutions.
+- **`params("time_limit", "10.0")`**: Sets the time limit to 10.0 seconds.
+- **`params("enable_callback", "1")`**: Enables the callback function, which reports the energy of newly obtained solutions.
 
 ## ABS3 Parameters
 A parameter (or `qbpp::abs3::Param()`) object stores parameter options used when the ABS3 Solver searches a solution.
@@ -84,13 +84,13 @@ and `params("enable_callback", "1")` enables the callback function, which displa
 
 | Key | Value | Description |
 |----|----|----|
-| `time_limit` | time limit in seconds | Terminates the search when the time limit is reached |
-| `target_energy` | target enagy value | Terminates the search when the target energy is achieved |
+| **`time_limit`** | time limit in seconds | Terminates the search when the time limit is reached |
+| **`target_energy`** | target enagy value | Terminates the search when the target energy is achieved |
 
 ### Advanced Options
 
 | Key | Value | Description |
 |----|----|----|
-| `enable_callback` | "1" | Enables the callback function |
-| `block_count` | CUDA block count per GPU | Number of CUDA blocks launched by the solver kernel |
-| `thread_count` | thread count per CUDA block | Number of threads per CUDA block|
+| **`enable_callback`** | "1" | Enables the callback function |
+| **`block_count`** | CUDA block count per GPU | Number of CUDA blocks launched by the solver kernel |
+| **`thread_count`** | thread count per CUDA block | Number of threads per CUDA block|

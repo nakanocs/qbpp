@@ -16,7 +16,7 @@ The data type of the integer coefficient is defined by the `COEFF_TYPE` macro, w
 - **`qbpp::Expr`**: Represents an expanded expression consisting of an integer constant term and zero or more `qbpp::Term` objects.
 The data type of the integer constant term is defined by the `ENERGY_TYPE` macro, whose default value is `int64_t`.
 
-In the following program, `x` and `y` are `qbpp::Var` objects, `t` is a `qbpp::Term` object, and `f` is a `qbpp::Expr` object:
+In the following program, **`x`** and **`y`** are `qbpp::Var` objects, **`t`** is a `qbpp::Term` object, and **`f`** is a `qbpp::Expr` object:
 ```cpp
 #include "qbpp.hpp"
 
@@ -53,8 +53,8 @@ int main() {
   std::cout << "f = " << f << std::endl;
 }
 ```
-`qbpp::Var` objects are immutable and cannot be updated after creation.
-In contrast, `qbpp::Term` and `qbpp::Expr` objects are mutable and can be updated via assignment.
+`qbpp::Var` objects are **immutable** and cannot be updated after creation.
+In contrast, `qbpp::Term` and `qbpp::Expr` objects are **mutable** and can be updated via assignment.
 
 For example, as shown in the following program, compound assignment operators can be used to update `qbpp::Term` and `qbpp::Expr` objects:
 ```cpp
@@ -95,7 +95,7 @@ int main() {
   t = x + 1;
 }
 ```
-If a qbpp::Expr object is intended, `qbpp::toExpr()` can be used to explicitly construct one, as shown below:
+If a `qbpp::Expr` object is intended, **`qbpp::toExpr()`** can be used to explicitly construct one, as shown below:
 ```cpp
 #include "qbpp.hpp"
 
@@ -110,23 +110,23 @@ int main() {
   std::cout << "f = " << f << std::endl;
 }
 ```
-In this program, both `t` and `f` are `qbpp::Expr` objects and can store general expressions.
+In this program, both **`t`** and **`f`** are `qbpp::Expr` objects and can store general expressions.
 In particular, `f` is created as a `qbpp::Expr` object containing only a constant term with value `1` and no product terms.
 
 ## COEFF_TYPE and ENERGY_TYPE
-The macros `COEFF_TYPE` and `ENERGY_TYPE` define the data types used for coefficients and energy values in expressions.
+The macros **`COEFF_TYPE`** and **`ENERGY_TYPE`** define the data types used for coefficients and energy values in expressions.
 The `ENERGY_TYPE` macro is also used as the data type for the integer constant term of a `qbpp::Expr` object.
-By default, `COEFF_TYPE` and `ENERGY_TYPE` are defined as `int32_t` and `int64_t`, respectively.
+By default, `COEFF_TYPE` and `ENERGY_TYPE` are defined as **`int32_t`** and **`int64_t`**, respectively.
 They can be changed either by compiler options or by using `#define` directives in the source code.
 
 The following data types are supported:
 - **Standard integer types**:
-`int8_t`, `int16_t`, `int32_t`, and `int64_t`
+**`int8_t`**, **`int16_t`**, **`int32_t`**, and **`int64_t`**
 
 - **Boost.Multiprecision integer types**:
-`qbpp::int128_t`, `qbpp::int256_t`, `qbpp::int512_t`, `qbpp::int1024_t`, and `qbpp::cpp_int`
+**`qbpp::int128_t`**, **`qbpp::int256_t`**, **`qbpp::int512_t`**, **`qbpp::int1024_t`**, and **`qbpp::cpp_int`**
 
-The type `qbpp::cpp_int` represents an integer with an arbitrary number of digits.
+The type **`qbpp::cpp_int`** represents an integer with an arbitrary number of digits.
 Constant values of this type can be specified using string literals.
 
 For example, the following program creates a `qbpp::Expr` object with very large coefficient and constant terms:

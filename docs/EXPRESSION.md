@@ -4,8 +4,6 @@ title: "Expression Classes"
 ---
 
 # Expression Classes
-
-## Basic classes for creating an expression
 The most important feature of QUBO++ is its ability to create expressions for solving combinatorial optimization problems.
 The following three classes are used for this purpose:
 
@@ -16,15 +14,15 @@ The following three classes are used for this purpose:
 | `qbpp::Expr` | An expression | Zero ore moter terms and an integer constant term |
 
 ## `qbpp::Var` class
-An instance of this class represents a variable symbolically.
+An instance of this class represents **a variable symbolically**.
 In many cases, it is used to represent a binary variable.
 However, this class is not associated with any specific variable attributes, and its instances can be used to represent variables of any type symbolically.
 
 Each qbpp::Var instance simply consists of:
-- a unique 32-bit ID, and
-- a string used for display.
+- **a unique 32-bit ID,** and
+- **a string used for display**.
 
-For example, the following program creates a `qbpp::Var` object `x`,
+For example, the following program creates a `qbpp::Var` object **`x`**,
 which is assigned an automatically generated ID and uses the string `"x"` for display:
 ```cpp
   auto x = qbpp::var("x");
@@ -40,11 +38,11 @@ but a different display string can also be used:
 This prints `symbol_x`.
 
 ## `qbpp::Term` class
-An instance of this class represents a product term involving:
-- an integer coefficient, and
-- zero or more qbpp::Var objects.
+An instance of this class represents **a product term** involving:
+- **an integer coefficient**, and
+- **zero or more `qbpp::Var` objects**.
 
-For example, the following program creates a `qbpp::Term` object `t`
+For example, the following program creates a `qbpp::Term` object **`t`**
 with an integer coefficient `2` and variables `x` and `y`:
 ```cpp
   auto x = qbpp::var("x");
@@ -58,11 +56,11 @@ This program prints:
 ```
 
 ## `qbpp::Expr` class
-An instance of this class represents an expression involving:
-- an integer constant term, and
-- zero or more `qbpp::Term` objects.
+An instance of this class represents **an expression** involving:
+- **an integer constant term**, and
+- **zero or more `qbpp::Term` objects**.
 
-For example, the following program creates a `qbpp::Expr` object `f`
+For example, the following program creates a `qbpp::Expr` object **`f`**
 with a constant term `3` and the terms `2*x*y` and `3*x`:
 ```cpp
   auto x = qbpp::var("x");
@@ -75,11 +73,11 @@ This program prints
 3 +2*x*y +3*x
 ```
 
-Expressions can be written using basic operators such as `+`, `-`, and `*`,
-as well as parentheses `(` and `)`.
+Expressions can be written using basic operators such as **`+`**, **`-`**, and **`*`**,
+as well as parentheses **`(`** and **`)`**.
 
 Expressions are automatically expanded and stored as a `qbpp::Expr` object.
-For example, the following program creates a `qbpp::Expr` object `f` that stores the expanded expression:
+For example, the following program creates a `qbpp::Expr` object **`f`** that stores the expanded expression:
 ```cpp
   auto x = qbpp::var("x");
   auto y = qbpp::var("y");
@@ -121,7 +119,7 @@ because `t` is a `qbpp::Term` object:
   std::cout << t << std::endl;
 ```
 To store and manipulate expressions, you must explicitly create a
-`qbpp::Expr` object using the `qbpp::toExpr()` function, as shown below:
+`qbpp::Expr` object using the **`qbpp::toExpr()`** function, as shown below:
 ```cpp
   auto x = qbpp::var("x");
   auto y = qbpp::var("y");
@@ -129,7 +127,7 @@ To store and manipulate expressions, you must explicitly create a
   t += 3 * x;
   std::cout << t << std::endl;
 ```
-This program creates a `qbpp::Expr` object `t` and prints:
+This program creates a `qbpp::Expr` object **`t`** and prints:
 ```cpp
 2*x*y +3*x
 ```
@@ -150,7 +148,7 @@ If `qbpp::toExpr()` is not used, they would instead be of type `int`,
 `qbpp::Var`, and `qbpp::Term`, respectively.
 
 For example, the following program incrementally builds an expression
-using a `qbpp::Expr` object `f`:
+using a `qbpp::Expr` object **`f**:
 ```cpp
   auto x = qbpp::var("x", 4);
   auto f = qbpp::toExpr(-1);

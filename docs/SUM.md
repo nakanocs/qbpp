@@ -6,8 +6,8 @@ title: "Sum Functions for Multi-dimensional Arrays"
 
 # Sum Functions for Multi-dimensional Arrays
 QUBO++ provides two sum functions for multi-dimensional arrays of variables or expressions:
-- `qbpp::sum()`: Computes the sum of all elements in the array.
-- `qbpp::vector_sum()`: Computes the sum along the lowest (innermost) dimension.
+- **`qbpp::sum()`**: Computes the sum of all elements in the array.
+- **`qbpp::vector_sum()`**: Computes the sum along the lowest (innermost) dimension.
 The resulting array has one fewer dimension than the input array.
 The input array must have a dimension of 2 or greater.
 

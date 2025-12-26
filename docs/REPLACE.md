@@ -6,18 +6,18 @@ title: "REPLACE"
 # Replace functions
 
 QUBO++ provides the following replace function, which can be used to fix variable values in an expression.
-- `qbpp::replace(const qbpp::Expr& f, const qbpp::MapList& ml)`
+- **`qbpp::replace(const qbpp::Expr& f, const qbpp::MapList& ml)`**
 
-Replaces (fixes) variable values in the expression f according to the mapping specified by ml.
+Replaces (fixes) variable values in the expression `f` according to the mapping specified by `ml`.
 
 ## Using the replace function to fix variable values
-We explain the `qbpp::replace()` function using the
+We explain the **`qbpp::replace()`** function using the
 [QUBO++ program for partitioning problem](PARTITION).
-This program finds a partition of the numbers in the following vector `w` into two subsets $L$ and $\overline{L}$ such that the difference between their sums is minimized:
+This program finds a partition of the numbers in the following vector **`w`** into two subsets $P$ and $Q$ ($=\overline{L}$) such that the difference between their sums is minimized:
 ```cpp
   std::vector<uint32_t> w = {64, 27, 47, 74, 12, 83, 63, 40};
 ```
-We modify this partitioning problem so that 64 must belong to $L$ and 27 must belong to $\overline{L}$, ensuring that they are placed in distinct subsets.
+We modify this partitioning problem so that 64 must belong to $P$ and 27 must belong to $Q$, ensuring that they are placed in distinct subsets.
 
 To enforce this constraint, the values of `x[0]` and `x[1]` are fixed to 1 and 0, respectively, using the `qbpp::replace()` function.
 
@@ -39,22 +39,24 @@ int main() {
   g.simplify_as_binary();
   auto solver = qbpp::exhaustive_solver::ExhaustiveSolver(g);
   auto sol = solver.search();
-  std::cout << "sol = " << sol << std::endl;
 
   qbpp::Sol full_sol(f);
   full_sol.set(sol);
   full_sol.set(ml);
+  std::cout << "sol = " << sol << std::endl;
+  std::cout << "ml = " << ml << std::endl;
+  std::cout << "full_sol = " << full_sol << std::endl;
   std::cout << "f(full_sol) = " << f(full_sol) << std::endl;
   std::cout << "p(full_sol) = " << p(full_sol) << std::endl;
   std::cout << "q(full_sol) = " << q(full_sol) << std::endl;
-  std::cout << "L  :";
+  std::cout << "P :";
   for (size_t i = 0; i < w.size(); ++i) {
     if (x[i](full_sol) == 1) {
       std::cout << " " << w[i];
     }
   }
   std::cout << std::endl;
-  std::cout << "~L :";
+  std::cout << "Q :";
   for (size_t i = 0; i < w.size(); ++i) {
     if (x[i](full_sol) == 0) {
       std::cout << " " << w[i];
@@ -65,29 +67,33 @@ int main() {
 ```
 {% endraw %}
 
-First, a `qbpp::MapList` object `ml` is defined, which specifies fixed values for the variables `x[0]` and `x[1]`.
-Given the original expression `f` for the partitioning problem and the qbpp::MapList object `ml`, the `qbpp::replace()` function is used to replace `x[0]` and `x[1]` in `f` with the constants 1 and 0, respectively.
-The resulting expression is stored in `g`.
+First, a `qbpp::MapList` object **`ml`** is defined, which specifies fixed values for the variables `x[0]` and `x[1]`.
+Given the original expression `f` for the partitioning problem and the qbpp::MapList object `ml`, the **`qbpp::replace()`** function is used to replace `x[0]` and `x[1]` in `f` with the constants 1 and 0, respectively.
+The resulting expression is stored in **`g`**.
 
 The Exhaustive Solver is then applied to `g` to find an optimal solution, which is stored in `sol`.
 Note that the expression `g` no longer contains the variables `x[0]` and `x[1]`, and consequently, `sol` also does not include assignments for these variables.
 
-To construct a complete solution that includes all variables, we create a `qbpp::Sol` object `full_sol` from the original expression `f`.
+To construct a complete solution that includes all variables, we create a `qbpp::Sol` object **`full_sol`** from the original expression `f`.
 Initially, `full_sol` represents an all-zero solution.
 We then use the `set()` member function to incorporate both:
-- the solution `sol` obtained from the reduced problem, and
-- the fixed assignments specified in `ml`.
+- the solution **`sol`** obtained from the reduced problem, and
+- the fixed assignments specified in **`ml`**.
 These assignments are combined and stored in `full_sol`.
 
-From the output below, we can confirm that 64 is placed in $L$ and 27 is placed in $\overline{L}$, as intended:
+From the output below, we can confirm that 64 is placed in $P$ and 27 is placed in $Q$, as intended:
+{% raw %}
 ```
+sol = 4:{{x[2],1},{x[3],0},{x[4],1},{x[5],1},{x[6],0},{x[7],0}}
+ml = {{x[0],1},{x[1],0}}
+full_sol = 4:{{x[0],1},{x[1],0},{x[2],1},{x[3],0},{x[4],1},{x[5],1},{x[6],0},{x[7],0}}
 f(full_sol) = 4
 p(full_sol) = 206
 q(full_sol) = 204
-L  : 64 47 12 83
-~L : 27 74 63 40
+P : 64 47 12 83
+Q : 27 74 63 40
 ```
-
+{% endraw %}
 ## Using the replace function to replace variables with expressions
 The `replace()` function can also replace a variable with an expression, not only with a constant value.
 
@@ -98,43 +104,15 @@ This enforces the constraint that `x[0]` and `x[1]` always take opposite values,
 The following C++ program implements this idea:
 {% raw %}
 ```cpp
-#include "qbpp.hpp"
-#include "qbpp_exhaustive_solver.hpp"
-
-int main() {
-  qbpp::Vector<uint32_t> w = {64, 27, 47, 74, 12, 83, 63, 40};
-  auto x = qbpp::var("x", w.size());
-  auto p = qbpp::sum(w * x);
-  auto q = qbpp::sum(w * (1 - x));
-  auto f = qbpp::sqr(p - q);
   qbpp::MapList ml({{x[0], 1 - x[1]}});
   auto g = qbpp::replace(f, ml);
   g.simplify_as_binary();
   auto solver = qbpp::exhaustive_solver::ExhaustiveSolver(g);
   auto sol = solver.search();
-  std::cout << "sol = " << sol << std::endl;
 
   qbpp::Sol full_sol(f);
   full_sol.set(sol);
   full_sol.set({{x[0], sol(1 - x[1])}});
-  std::cout << "f(full_sol) = " << f(full_sol) << std::endl;
-  std::cout << "p(full_sol) = " << p(full_sol) << std::endl;
-  std::cout << "q(full_sol) = " << q(full_sol) << std::endl;
-  std::cout << "L  :";
-  for (size_t i = 0; i < w.size(); ++i) {
-    if (x[i](full_sol) == 1) {
-      std::cout << " " << w[i];
-    }
-  }
-  std::cout << std::endl;
-  std::cout << "~L :";
-  for (size_t i = 0; i < w.size(); ++i) {
-    if (x[i](full_sol) == 0) {
-      std::cout << " " << w[i];
-    }
-  }
-  std::cout << std::endl;
-}
 ```
 {% endraw %}
 In this program, a qbpp::MapList object ml is defined so that the variable `x[0]` is replaced by the expression `1 - x[1]`.
@@ -159,11 +137,13 @@ This program produces the following output:
 {% raw %}
 ```
 sol = 4:{{x[1],0},{x[2],1},{x[3],0},{x[4],1},{x[5],1},{x[6],0},{x[7],0}}
+ml = {{x[0],1 -x[1]}}
+full_sol = 4:{{x[0],1},{x[1],0},{x[2],1},{x[3],0},{x[4],1},{x[5],1},{x[6],0},{x[7],0}}
 f(full_sol) = 4
 p(full_sol) = 206
 q(full_sol) = 204
-L  : 64 47 12 83
-~L : 27 74 63 40
+P : 64 47 12 83
+Q : 27 74 63 40
 ```
 {% endraw %}
 We can confirm that:
@@ -174,7 +154,7 @@ We can confirm that:
 ## Replace Functions for Integer Variables
 Integer variables can be replaced with fixed integer values using the `replace()` functions.
 
-Here, we demonstrate this feature using a simple multiplication expression.
+Here, we demonstrate this feature using a simple **multiplication expression**.
 Let $p$, $q$, and $r$ be integer variables, and consider the following constraint:
 
 $$
@@ -184,11 +164,11 @@ p\times q - r &=0
 $$
 
 This expression can be interpreted in several ways, leading to different types of problems:
-- Multiplication: For fixed values of $p$ and $q$, find $r$ that satisfies the expression.
-- Factorization: For a fixed value of $r$, find $p$ and $q$ that satisfy the expression.
-- Division: For fixed values of $p$ and $r$, find $q$ that satisfies the expression.
+- **Multiplication**: For fixed values of $p$ and $q$, find $r$ that satisfies the expression.
+- **Factorization**: For a fixed value of $r$, find $p$ and $q$ that satisfy the expression.
+- **Division**: For fixed values of $p$ and $r$, find $q$ that satisfies the expression.
 
-Using the `qbpp::replace()` function, integer variables can be fixed to constant values.
+Using the **`qbpp::replace()`** function, integer variables can be fixed to constant values.
 We demonstrate QUBO++ programs that solve these problems using `qbpp::replace()`.
 
 ### Multiplication
@@ -273,8 +253,6 @@ This confirms that the division result $q=r/p=7$ is correctly obtained.
 > **NOTE**
 > QUBO++ also provides a member function version of `replace()` for expressions.
 > In other words:
-> - `f.replace(ml)` updates the expression `f` in place by applying the replacements specified in `ml`.
-> - `qbpp::replace(f, ml)` returns a new expression in which the replacements have been applied, without modifying the original expression `f`.
-> 
-> Use `f.replace(ml)` when you want to permanently modify an existing expression, and
-use `qbpp::replace(f, ml)` when you want to keep the original expression unchanged.
+> - **`f.replace(ml)`** updates the expression `f` in place by applying the replacements specified in `ml`.
+> - **`qbpp::replace(f, ml)`** returns a new expression in which the replacements have been applied, without modifying the original expression `f`.
+>  Use `f.replace(ml)` when you want to permanently modify an existing expression, and use `qbpp::replace(f, ml)` when you want to keep the original expression unchanged.
