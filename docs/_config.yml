@@ -11,5 +11,6 @@ baseurl: ""
 kramdown:
   syntax_highlighter: rouge
 
+safe: false
 plugins:
   - jekyll-last-modified-at
