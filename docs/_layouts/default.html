@@ -27,6 +27,7 @@
 
 
 <body>
+
   <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
 
     <!-- 左ナビ（全ページ共通） -->
@@ -44,6 +45,7 @@
     <!-- 右側：ページごとの本文 -->
     <main style="flex:1;min-width:0;">
       {{ content }}
+      {% include footer.html %}
     </main>
   </div>
 </body>
