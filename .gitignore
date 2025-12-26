@@ -4,7 +4,6 @@ _site/
 # bundler / ruby
 .bundle/
 vendor/
-Gemfile.lock
 
 # OS / editor
 .DS_Store

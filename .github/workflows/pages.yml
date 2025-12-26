@@ -33,9 +33,16 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
+      - name: Show bundle env
+        working-directory: docs
+        run: |
+          bundle -v
+          bundle config
+          bundle list | grep -E "jekyll|last-modified" || true
+          
       - name: Build with Jekyll
         working-directory: docs
-        run: bundle exec jekyll build --destination ../_site  # ★ 出力を直下へ
+        run: bundle exec jekyll build --destination ../_site --verbose --trace
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
