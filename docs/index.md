@@ -166,7 +166,7 @@ You can specify the license key either by environment variable or by command-lin
 
 ## Executing QUBO++ with license key.
 - For **Anonymous Trial**, there is no license key to set.
-- For **Registered Trial**, **Standard**, and **Professional** licenses, specify the key in one of the following ways before running your program:
+- If you have a license key, specify it in one of the following ways before running your program:
   - **Via Code**:
   ```cpp
   qbpp::license_key("XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX");
