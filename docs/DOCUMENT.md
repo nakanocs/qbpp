@@ -58,4 +58,5 @@ sections by providing a deeper understanding of QUBO++.
 3. [Traveling Salesman Problem](TSP)
 
 ## References
-1. [References](REFERENCE)
+1. [Quick Reference](QUICKREF)
+2. [References](REFERENCE)
