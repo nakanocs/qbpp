@@ -3,7 +3,7 @@ layout: default
 title: "Reference Variables"
 ---
 
-# Quick Reference
+# Quick Reference: Variables and Expressions
 
 ## Data types used in `qbpp::Expr`
 - **`coeff_t`**:  
@@ -145,7 +145,8 @@ For a `qbpp::VarInt` instance `x`, the following member functions are available:
 
 - **`const qbpp::Vector<energy_t>& x.coeffs()`**:  
   Returns the const reference of the integer coefficient vector.  
-  The following expression is equivalent to the expression stored in `x`:
-  ```cpp
-  x.min_val() + qbpp::sum(x.coeffs() * x.vars())
-  ```
+  
+The following expression is equivalent to the expression stored in `x`:
+```cpp
+x.min_val() + qbpp::sum(x.coeffs() * x.vars())
+```

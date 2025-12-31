@@ -56,7 +56,10 @@ sections by providing a deeper understanding of QUBO++.
 1. [Pythagorean Triples](PYTHAGOREAN)
 2. [Magic Square](MAGIC)
 3. [Traveling Salesman Problem](TSP)
+4. [Remainder Problem](REMAINDER)
+
+## Quick References
+1. [Variables and Expressions](QR_VARIABLE)
 
 ## References
-1. [Quick Reference](QUICKREF)
-2. [References](REFERENCE)
+1. [References](REFERENCE)
