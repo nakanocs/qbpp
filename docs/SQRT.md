@@ -50,9 +50,10 @@ The following QUBO++ program constructs a HUBO expression based on the above ide
 #include "qbpp_easy_solver.hpp"
 
 int main() {
+  const int c = 2;
   auto s = qbpp::cpp_int("10000000000");
-  auto x = s <= qbpp::var_int("x") <= 2 * s;
-  auto f = x * x == 2 * s * s;
+  auto x = s <= qbpp::var_int("x") <= c * s;
+  auto f = x * x == c * s * s;
   f.simplify_as_binary();
   auto solver = qbpp::easy_solver::EasySolver(f);
   solver.time_limit(1.0);
