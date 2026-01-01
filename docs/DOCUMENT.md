@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "DOCUMENT"
+title: "QUBO++ Document"
 ---
 
 # QUBO++ Document

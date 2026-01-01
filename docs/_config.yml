@@ -14,3 +14,5 @@ kramdown:
 safe: false
 plugins:
   - jekyll-last-modified-at
+  - jekyll-seo-tag
+  - jekyll-sitemap
