@@ -57,6 +57,7 @@ sections by providing a deeper understanding of QUBO++.
 2. [Magic Square](MAGIC)
 3. [Traveling Salesman Problem](TSP)
 4. [Remainder Problem](REMAINDER)
+5. [Square Root](SQRT)
 
 ## Quick References
 1. [Variables and Expressions](QR_VARIABLE)
