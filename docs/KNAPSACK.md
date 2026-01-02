@@ -83,8 +83,8 @@ int main() {
 }
 ```
 
-In this program, the expressions constraint and objective are constructed separately and combined into the final QUBO expression f using a penalty coefficient of `1000`.
-The Exhaustive Solver is then applied to f to enumerate all optimal solutions.
+In this program, the expressions `constraint` and `objective` are constructed separately and combined into the final QUBO expression `f` using a penalty coefficient of `1000`.
+The Exhaustive Solver is then applied to `f` to enumerate all optimal solutions.
 
 The following output shows the optimal solutions, including the energy, constraint value, and objective value:
 ```

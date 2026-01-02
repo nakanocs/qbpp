@@ -56,7 +56,7 @@ This creates a directory named **`qbpp_<arch>_<version>`** containing all requir
 
 
 It is recommended to create a symbolic link to this directory:
-```bask
+```bash
 $ ln -s qbpp_<arch>_<version> qbpp
 ```
 This creates a symbolic link named **`qbpp`**, which simplifies access to the installation directory.

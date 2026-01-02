@@ -62,6 +62,7 @@ sections by providing a deeper understanding of QUBO++.
 
 ## Quick References
 1. [Variables and Expressions](QR_VARIABLE)
+2. [Operators and Functions for Expressions](QR_OPERATION)
 
 ## References
 1. [References](REFERENCE)
