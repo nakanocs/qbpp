@@ -58,6 +58,7 @@ sections by providing a deeper understanding of QUBO++.
 3. [Traveling Salesman Problem](TSP)
 4. [Remainder Problem](REMAINDER)
 5. [Square Root](SQRT)
+6. [Knapsack Problem](KNAPSACK)
 
 ## Quick References
 1. [Variables and Expressions](QR_VARIABLE)
