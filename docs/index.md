@@ -13,7 +13,7 @@ title: "TOP"
 * Multithreading acceleration is applied using oneTBB wherever possible  
 * Includes APIs for calling the Gurobi Optimizer to solve Quadratic Unconstrained Binary Optimization (QUBO) problems  
 * Author: Koji Nakano  
-* Copyright: © 2025 Koji Nakano. All rights reserved.
+* Copyright: © 2026 Koji Nakano. All rights reserved.
 
 # QUBO++ Solvers: Easy Solver, Exhaustive Solver, ABS3 Solver
 ## Easy Solver

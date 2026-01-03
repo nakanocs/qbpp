@@ -34,11 +34,10 @@ int main() {
   auto solver = qbpp::easy_solver::EasySolver(g);
   solver.time_limit(10.0);
   solver.enable_best_energy_sols(10);
-  auto sol = solver.search();
-  for (const auto& best_sol : sol.sols()) {
-    std::cout << "x=" << best_sol(x) << ", y=" << best_sol(y)
-              << ", z=" << best_sol(z) << ", *f=" << best_sol(*f)
-              << ", *c=" << best_sol(*c) << std::endl;
+  auto sols = solver.search();
+  for (const auto& sol : sols) {
+    std::cout << "x=" << sol(x) << ", y=" << sol(y) << ", z=" << sol(z)
+              << ", *f=" << sol(*f) << ", *c=" << sol(*c) << std::endl;
   }
 }
 ```
@@ -54,8 +53,8 @@ An Easy Solver object `solver` is created for `g` and configured with the follow
 - `time_limit(10.0)`: Terminates the search after 10 seconds.
 - `enable_best_energy_sols(10)`: Keeps up to 10 solutions with the best (lowest) energy.
 
-The call to `search()` returns a result object `sol`.
-The member function call `sol.sols()` provides access to the stored best-energy solutions, which are printed using a range-based for loop.
+The call to `search()` returns a `qbpp::easy_solver::Sols` object named `sols`, which stores the best solutions.
+Since `qbpp::easy_solver::Sols` provides iterator access to the stored best-energy solutions (`begin()`, `end()`, `cbegin()`, and `cend()`), they can be printed using a range-based for loop.
 
 This program produces output like the following:
 ```

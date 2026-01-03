@@ -144,12 +144,14 @@ To enable this feature, call the following member function:
 - **`enable_topk_sols(size_t topk_count)`**: Stores up to topk_count best solutions.
 
 Once this function is enabled, the solution object returned by `search()` contains the stored top-k solutions.
-You can access them using:
-- **`sols()`: Returns a reference to the vector of stored best solutions.
+For the returned object sols, you can access the stored solutions using either indices or iterators:
+- `sols[i]`: Returns the i-th qbpp::Sol object.
+- `size()`: Returns the number of stored solutions.
+- `begin()`, `end()`, `cbegin()`, `cend()`: Iterators that allow you to access each solution in turn using a range-based for loop.
 
 The following program solves the Low Autocorrelation Binary Sequence (LABS) problem using the Easy Solver.
 Since **`enable_topk_sols(20)`** is called, the solver keeps **up to 20 top-k solutions**.
-The program prints each stored solution using a range-based for loop over **`sols.sols()`**.
+The program prints each stored solution using a range-based for loop.
 ```cpp
 #include "qbpp.hpp"
 #include "qbpp_easy_solver.hpp"
@@ -171,7 +173,7 @@ int main() {
   solver.time_limit(5.0);
   solver.enable_topk_sols(20);
   auto sols = solver.search();
-  for (const auto& sol : sols.sols()) {
+  for (const auto& sol : sols) {
     std::cout << sol.energy() << ": ";
     for (auto val : sol(x)) {
       std::cout << (val == 0 ? "-" : "+");
