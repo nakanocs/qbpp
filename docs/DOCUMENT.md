@@ -59,6 +59,7 @@ sections by providing a deeper understanding of QUBO++.
 4. [Remainder Problem](REMAINDER)
 5. [Square Root](SQRT)
 6. [Knapsack Problem](KNAPSACK)
+7. [Adder Simulation](ADDER)
 
 ## Quick References
 1. [Variables and Expressions](QR_VARIABLE)

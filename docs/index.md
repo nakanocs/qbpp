@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "TOP"
+title: "QUBO++ documentation"
 ---
 
 
@@ -215,7 +215,6 @@ By using QUBO++, you agree to the following terms and conditions:
   - Licensed under the Apache License 2.0.  
   - Copyright © Intel Corporation.  
   - See <https://www.apache.org/licenses/LICENSE-2.0> for details.  
-  - *Note:* If you redistribute binaries that include oneTBB, include the Apache 2.0 license text and any required NOTICE.
 
 - **Boost C++ Libraries**  
   - Licensed under the Boost Software License, Version 1.0.  

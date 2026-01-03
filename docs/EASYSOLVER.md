@@ -145,7 +145,7 @@ To enable this feature, call the following member function:
 
 Once this function is enabled, the solution object returned by `search()` contains the stored top-k solutions.
 For the returned object sols, you can access the stored solutions using either indices or iterators:
-- `sols[i]`: Returns the i-th qbpp::Sol object.
+- `sols[i]`: Returns the `i`-th `qbpp::Sol` object.
 - `size()`: Returns the number of stored solutions.
 - `begin()`, `end()`, `cbegin()`, `cend()`: Iterators that allow you to access each solution in turn using a range-based for loop.
 

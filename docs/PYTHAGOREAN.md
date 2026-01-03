@@ -1,12 +1,11 @@
 ---
 layout: default
-title: "DOCUMENT"
+title: "Pythagorean Triples"
 ---
 
 
 # Pythagorean Triples
 
-## Pythagorean Triples
 Three integers $x$, $y$, and $z$ are **Pythagorean triples** if they satisfy
 
 $$
