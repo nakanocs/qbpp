@@ -209,13 +209,15 @@ This program desiplays the following output:
 ### Keeping multiple best-energy solutions
 The Easy Solver can store multiple solutions that share the best (minimum) energy found during the search.
 To enable this feature, call the following member function:
-- **`enable_best_energy_sols(size_t best_sol_count)`**: Stores up to `best_sol_count` solutions with the best energy.
+- **`enable_best_energy_sols(size_t best_sol_count)`**:
+Stores up to `best_sol_count` solutions with the best energy.
+If the argument is omitted, the number of stored solutions is unlimited.
 
 The usage is the same as that of `enable_topk_sols()`.
 Therefore, to enable this feature in a QUBO++ program above, you can replace
 `enable_topk_sols(20)` with `enable_best_energy_sols(20)` as follows:
 ```cpp
-  solver.enable_best_energy_sols(20);
+  solver.enable_best_energy_sols();
 ```
 With this option enabled, the solver stores only the solutions whose energy is equal to the best energy found.
 The resulting program produces the following solutions, all of which have the best energy value of 26:
