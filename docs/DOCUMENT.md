@@ -63,10 +63,8 @@ This section provides examples of solving optimization and mathematical problems
 7. [Adder Simulation](ADDER)
 8. [LABS problem](LABS)
 9. [Shift Scheduling Problem](SHIFT_SCHEDULING)
+10. [Greatest Common Divisor (GCD)](GCD)
 
 ## Quick References
 1. [Variables and Expressions](QR_VARIABLE)
 2. [Operators and Functions for Expressions](QR_OPERATION)
-
-## References
-1. [References](REFERENCE)

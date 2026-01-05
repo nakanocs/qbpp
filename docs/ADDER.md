@@ -83,8 +83,8 @@ Conversely, if the two output bits are fixed:
 {% raw %}
 ```cpp
   fa.replace({{o, 1}, {s, 0}});
-{% endraw %}
 ```
+{% endraw %}
 the program produces all valid combinations of the input bits:
 {% raw %}
 ```
