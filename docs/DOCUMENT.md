@@ -62,6 +62,7 @@ This section provides examples of solving optimization and mathematical problems
 6. [Knapsack Problem](KNAPSACK)
 7. [Adder Simulation](ADDER)
 8. [LABS problem](LABS)
+9. [Shift Scheduling Problem](SHIFT_SCHEDULING)
 
 ## Quick References
 1. [Variables and Expressions](QR_VARIABLE)
