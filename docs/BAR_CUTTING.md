@@ -52,7 +52,7 @@ int main() {
   const qbpp::Vector<int> l = {13, 23, 8, 11};
   const qbpp::Vector<int> c = {10, 4, 8, 6};
   const size_t N = l.size();
-  const size_t M = 6;
+  const size_t M = 5;
 
   qbpp::Vector<qbpp::Vector<qbpp::VarInt>> x(M);
   for (size_t i = 0; i < M; i++) {
@@ -62,8 +62,8 @@ int main() {
     }
   }
 
-  auto order_fullfilled_count = qbpp::vector_sum(qbpp::transpose(x));
-  auto order_constraint = order_fullfilled_count - c == 0;
+  auto order_fulfilled_count = qbpp::vector_sum(qbpp::transpose(x));
+  auto order_constraint = order_fulfilled_count - c == 0;
 
   auto bar_length_used = qbpp::expr(M);
   for (size_t i = 0; i < M; i++) {
@@ -88,8 +88,8 @@ int main() {
   }
   for (size_t j = 0; j < N; j++) {
     std::cout << "Order " << j
-              << " Fulfilled = " << sol(order_fullfilled_count[j])
-              << " Required = " << c[j] << std::endl;
+              << " fulfilled = " << sol(order_fulfilled_count[j])
+              << ", required = " << c[j] << std::endl;
   }
 }
 ```
@@ -99,24 +99,36 @@ We implement `x` as a nested `qbpp::Vector` of `qbpp::VarInt` objects, and each 
 $0\leq x_{i,j} \leq c_j$.
 
 The constraints are defined as follows:
-- `order_fullfilled_count`: a vector of $N$ expressions where `order_fullfilled_count[j]` represents the total number of pieces produced for order $j$.
-- `order_constraint`: a vector of $N$ constraint expressions enforcing `order_fullfilled_count[j] == c[j]` for all $j$.
+- `order_fulfilled_count`: a vector of $N$ expressions where `order_fulfilled_count[j]` represents the total number of pieces produced for order $j$.
+- `order_constraint`: a vector of $N$ constraint expressions enforcing `order_fulfilled_count[j] == c[j]` for all $j$.
 - `bar_length_used`: a vector of $M$ expressions where `bar_length_used[i]` represents the total length used in bar $i$.
 - `bar_constraint`: a vector of $M$ constraint expressions enforcing `0 <= bar_length_used[i] <= L` for all $i$.
 - `f`: the sum of all constraint expressions. After calling `f.simplify_as_binary()`, the Easy Solver searches for a solution with target energy 0 (i.e., all constraints satisfied).
 
 The following output is an example feasible solution:
 ```
-Bar 0:  1  1  3  0   used = 60, waste = 0
-Bar 1:  0  1  1  2   used = 53, waste = 7
-Bar 2:  0  0  2  4   used = 60, waste = 0
-Bar 3:  4  0  1  0   used = 60, waste = 0
-Bar 4:  4  0  1  0   used = 60, waste = 0
+Bar 0:  2  0  0  3   used = 59, waste = 1
+Bar 1:  4  0  1  0   used = 60, waste = 0
+Bar 2:  1  1  3  0   used = 60, waste = 0
+Bar 3:  0  0  4  2   used = 54, waste = 6
+Bar 4:  2  1  0  1   used = 60, waste = 0
 Bar 5:  1  2  0  0   used = 59, waste = 1
-Order 0 Fulfilled = 10 Required = 10
-Order 1 Fulfilled = 4 Required = 4
-Order 2 Fulfilled = 8 Required = 8
-Order 3 Fulfilled = 6 Required = 6
+Order 0 fulfilled = 10, required = 10
+Order 1 fulfilled = 4, required = 4
+Order 2 fulfilled = 8, required = 8
+Order 3 fulfilled = 6, required = 6
 ```
 We observe that all $N=4$ orders are fulfilled using $M=6$ bars.
 
+If we set $M=5$, the solver returns the following infeasible solution, in which not all orders are satisfied:
+```
+Bar 0:  4  0  1  0   used = 60, waste = 0
+Bar 1:  0  0  6  1   used = 59, waste = 1
+Bar 2:  2  1  0  1   used = 60, waste = 0
+Bar 3:  2  0  0  3   used = 59, waste = 1
+Bar 4:  1  2  0  0   used = 59, waste = 1
+Order 0 fulfilled = 9, required = 10
+Order 1 fulfilled = 3, required = 4
+Order 2 fulfilled = 7, required = 8
+Order 3 fulfilled = 5, required = 6
+```
