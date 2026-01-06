@@ -64,6 +64,7 @@ This section provides examples of solving optimization and mathematical problems
 8. [LABS problem](LABS)
 9. [Shift Scheduling Problem](SHIFT_SCHEDULING)
 10. [Greatest Common Divisor (GCD)](GCD)
+11. [Bar Cutting Problem](BAR_CUTTING)
 
 ## Quick References
 1. [Variables and Expressions](QR_VARIABLE)
