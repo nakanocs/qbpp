@@ -151,8 +151,8 @@ Alternatively, we can define a C++ function `fa` to construct full-adder constra
 #include "qbpp.hpp"
 #include "qbpp_exhaustive_solver.hpp"
 
-qbpp::Expr fa(qbpp::Var a, qbpp::Var b, qbpp::Var i, qbpp::Var o, qbpp::Var sum) {
-  return (a + b + i) - (2 * o + sum) == 0;
+qbpp::Expr fa(qbpp::Var a, qbpp::Var b, qbpp::Var i, qbpp::Var o, qbpp::Var s) {
+  return (a + b + i) - (2 * o + s) == 0;
 }
 
 int main() {

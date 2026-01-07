@@ -103,6 +103,7 @@ int main() {
   sol.flip(z);
   std::cout << "flipped sol = " << sol << std::endl;
   std::cout << "flipped energy = " << sol.energy() << std::endl;
+}
 ```
 In this program, `sol.energy()` correctly returns 0.
 However, after flipping the variable `z`, the cached energy value becomes invalid.
