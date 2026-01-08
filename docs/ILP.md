@@ -9,7 +9,7 @@ As an example, consider the following ILP:
 
 $$
 \begin{aligned}
-\text{Maximize:} && x_0 +5x_1+5x_2\\
+\text{Maximize:} && 2x_0 +5x_1+5x_2\\
 \text{Subject to:} && x_0 + 3 x_1 + x_2 &\leq 12 \\
                 &&  x_0 + 2x_2 &\leq 5\\
                 && x_1 + x_2 &\leq 4;
