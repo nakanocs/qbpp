@@ -66,6 +66,7 @@ This section provides examples of solving optimization and mathematical problems
 10. [Greatest Common Divisor (GCD)](GCD)
 11. [Bar Cutting Problem](BAR_CUTTING)
 12. [Integer Linear Programming](ILP)
+13. [N-Queens Problem](QUEENS)
 
 ## Quick References
 1. [Variables and Expressions](QR_VARIABLE)
