@@ -18,7 +18,7 @@ $$
 
 Clearly, $r$ is a common divisor of $P$ and $Q$.
 Therefore, the maximum value of $r$ satisfying these constraints is the GCD of $P$ and $Q$.
-To find such an $r$, we use $−r$ as the objective function in the QUBO formulation.
+To find such an $r$, we use $−r$ as the objective function in the HUBO formulation.
 
 ## QUBO++ program
 Based on the idea above, the following QUBO++ program computes the GCD of two integers,
