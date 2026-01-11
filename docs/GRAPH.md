@@ -5,7 +5,7 @@ title: "QUBO++ Simple Graph Drawing Library and Solving the Maximum Independent 
 
 # QUBO++ Simple Graph Drawing Library and Solving the Maximum Independent Set (MIS) Problem
 
-# QUBO++ Simple Graph Drawing Library
+## QUBO++ Simple Graph Drawing Library
 QUBO++ bundles a simple graph drawing library to visualize results obtained from graph-theoretic problems.
 It is a wrapper around Graphviz, which you can install on Ubuntu as follows:
 
