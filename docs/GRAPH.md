@@ -117,3 +117,11 @@ This implies that the obtained solution selects 7 nodes and satisfies all constr
 <p align="center">
   <img src="images/mis.png" alt="The solution of the MIS problem." width="80%">
 </p>
+
+## API of the QUBO++ Simple Graph Drawing Library
+The QUBO++ Simple Graph Drawing Library has two classes qbpp::graph::Node
+and qbpp::graph::Edge, which store a single node and edge, respecitively,
+when they are renderred.
+
+### qbpp::graph::Node
+The following 

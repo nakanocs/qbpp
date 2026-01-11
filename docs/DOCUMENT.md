@@ -53,7 +53,7 @@ sections by providing a deeper understanding of QUBO++.
 13. [Gurobi Solver Usage](GUROBI)
 
 ## Case Study
-This section provides examples of solving optimization and mathematical problems using QUBO++.
+This section provides examples of solving optimization, mathematical, and graph problems using QUBO++.
 1. [Pythagorean Triples](PYTHAGOREAN)
 2. [Magic Square](MAGIC)
 3. [Traveling Salesman Problem](TSP)
@@ -67,6 +67,10 @@ This section provides examples of solving optimization and mathematical problems
 11. [Bar Cutting Problem](BAR_CUTTING)
 12. [Integer Linear Programming](ILP)
 13. [N-Queens Problem](QUEENS)
+14. [Graph Drawing Library and MIS Problem](GRAPH)
+15. [Max-Cut Problem](MAXCUT)
+16. [Maximum Matching Problem](MAX_MATCHING)
+17. [Maximum Clique Problem](MAX_CLIQUE)
 
 ## Quick References
 1. [Variables and Expressions](QR_VARIABLE)

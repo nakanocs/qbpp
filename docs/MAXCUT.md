@@ -5,11 +5,11 @@ title: "Max-Cut Problem"
 
 # Max-Cut Problem
 
-Given an undirected graph $G=(V,E)$, the **Max-Cut** problem aims to partition the vertex set $V$ into two disjoint subsets $S$ and $\overline{S}$ so that the number of edges in $E$ that have one endpoint in $S$ and the other in $\overline{S}$ is **maximized**.
+Given an undirected graph $G=(V,E)$, the **Max-Cut** problem aims to partition the node set $V$ into two disjoint subsets $S$ and $\overline{S}$ so that the number of edges in $E$ that have one endpoint in $S$ and the other in $\overline{S}$ is **maximized**.
 
-Assume that the vertices are labeled $0,1,\ldots,n-1$.
+Assume that the nodes are labeled $0,1,\ldots,n-1$.
 We introduce $n$ binary variables $x_0, x_1, \ldots, x_{n-1}$, where
-$x_i=1$ if and only if vertex $i$ belongs to $S$ ($0\le i\le n-1$).
+$x_i=1$ if and only if node $i$ belongs to $S$ ($0\le i\le n-1$).
 Then, the number of edges crossing the cut $(S,\overline{S})$ is given by
 
 $$
