@@ -119,9 +119,52 @@ This implies that the obtained solution selects 7 nodes and satisfies all constr
 </p>
 
 ## API of the QUBO++ Simple Graph Drawing Library
-The QUBO++ Simple Graph Drawing Library has two classes qbpp::graph::Node
-and qbpp::graph::Edge, which store a single node and edge, respecitively,
-when they are renderred.
+The QUBO++ Simple Graph Drawing Library provides the following classes:
+- **`qbpp::graph::Node`**:
+Stores node information such as the label, color, pen width, and position.
+- **`qbpp::graph::Edge`**:
+Stores edge information such as the two endpoint nodes, whether the edge is directed or undirected, its color, and pen width.
+- **`qbpp::graph::GraphDrawing`**:
+Stores vectors of `qbpp::graph::Node` and `qbpp::graph::Edge` that together constitute a graph.
 
-### qbpp::graph::Node
-The following 
+### `qbpp::graph::Node`
+- **`Node(std::string s)`**:
+Constructs a node whose label is s.
+- **`Node(size_t i)`**
+Constructs a node whose label is `std::to_string(i)`.
+- **`color(std::string s)`**
+Sets the node color to s, which must be in the form #RRGGBB.
+- **`color(std::string s)`:
+Sets the node color to `s`, which must be in the form `#RRGGBB`.
+- **`color(int i)`**:
+Sets the node color to the `i`-th entry in the color palette. The default color 0 is white.
+- **`penwidth(float f)`**:
+Sets the pen width to `f` for drawing the node outline.
+- **`position(float x, float y)`**
+Sets the node position to `(x, y)`.
+
+### `qbpp::graph::Edge`
+The following constructors and member functions are supported:
+- **`Edge(std::string from, std::string to)`**:
+Constructs an edge connecting the nodes labeled from and to.
+- **`Edge(size_t from, size_t to)`**;
+Constructs an edge connecting the node labeled `std::to_string(from)` to the node labeled `std::to_string(to)`.
+- **`directed()`**:
+Configures the edge as directed.
+- **`color(std::string s)`**:
+Sets the edge color to `s`, which must be in the form `#RRGGBB`.
+- **`color(int i)`**:
+Sets the edge color to the i-th entry in the color palette. The default color 0 is black.
+- **`penwidth(float f)`**:
+Sets the pen width to `f` for drawing the edge.
+
+### `qbpp::graph::GraphDrawing`
+The following member functions are supported:
+- **`add_node(const Node& node)`**:
+Appends node to the graph.
+- **`add_edge(const Edge& edge)`**:
+Appends edge to the graph.
+- **`write(std::string file_name)`**:
+Renders the graph and writes it to `file_name`.
+Supported formats include `png`, `svg`, `jpg`, and `pdf` (via Graphviz).
+The output format is determined by the file extension.
