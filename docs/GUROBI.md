@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "Gurobi"
+title: "Gurobi Optimizer Usage"
 ---
 
 # Gurobi Optimizer Usage

@@ -58,7 +58,7 @@ $$
 
 The penalty coefficient $2$ is sufficient to prioritize feasibility over increasing the set size.
 
-# QUBO++ Program for the MIS Problem
+## QUBO++ Program for the MIS Problem
 Based on the QUBO formulation of the MIS problem described above, the following QUBO++ program solves an instance with 16 nodes. The edges are stored in `edges`, and the obtained solution is visualized using the QUBO++ graph drawing library:
 ```cpp
 #include "qbpp.hpp"
