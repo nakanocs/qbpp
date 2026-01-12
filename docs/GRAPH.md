@@ -133,9 +133,7 @@ Constructs a node whose label is s.
 - **`Node(size_t i)`**
 Constructs a node whose label is `std::to_string(i)`.
 - **`color(std::string s)`**
-Sets the node color to s, which must be in the form #RRGGBB.
-- **`color(std::string s)`:
-Sets the node color to `s`, which must be in the form `#RRGGBB`.
+Sets the node color to s, which must be in the form `#RRGGBB`.
 - **`color(int i)`**:
 Sets the node color to the `i`-th entry in the color palette. The default color 0 is white.
 - **`penwidth(float f)`**:
