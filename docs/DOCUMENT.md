@@ -76,6 +76,7 @@ This section provides examples of solving optimization, mathematical, and graph 
 20. [Minimum Dominating Set Problem](DOMINATING) (Medium)
 21. [Subgraph Isomorphism Problem](SUBGRAPH_ISOMORPHISM) (Hard)
 22. [3-Digit Math Problem](3DIGIT_MATH) (Easy)
+23. [Minimum Set Cover Problem](SETCOVER) (Medium)
 
 ## Quick References
 1. [Variables and Expressions](QR_VARIABLE)
