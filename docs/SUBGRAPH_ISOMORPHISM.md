@@ -19,7 +19,7 @@ For example, consider the following host and guest graphs:
 
 <p align="center">
   <img src="images/guest_graph.svg" alt="Guest Graph" width="40%"><br>
-  An example of the host graph $G_G=(V_G,E_G)$ with 6 nodes
+  An example of the guest graph $G_G=(V_G,E_G)$ with 6 nodes
 </p>
 
 One solution $\sigma$ is:
@@ -38,7 +38,7 @@ This solution is visualized as follows:
 
 ## QUBO formulation of the subgraph isomorphic problem
 Assume that the guest graph $G_G=(V_G,E_G)$ has $m$ nodes labeled $0, 1, \ldots m-1$, and
-and the host graph $G_H=(V_H,E_H) $has $n$ nodes labeled $0, 1, \ldots n-1$.
+and the host graph $G_H=(V_H,E_H) $ has $n$ nodes labeled $0, 1, \ldots n-1$.
 We introduce an $m\times n$ binary matrix $X=(x_{i,j})$ ($0\leq i\leq m-1, 0\leq j\leq n-1$) with $mn$ binary variables.
 This matrix represents an injective mapping $\sigma:V_G\rightarrow V_H$
 such that $x_{i,j}=1$ if and only if $\sigma(i)=j$.
@@ -58,7 +58,7 @@ Because $X$ represents an injective mapping, it must satisfy the following const
 - Row constraint: Each guest node is mapped to exactly one host node, i.e., the sum of each row is 1.
 - Column constraint: Each host node is used by at most one guest node, i.e., the sum of each column is 0 or 1.
 
-These can be combined into the following “QUBO++-style” constraint, which attains its minimum value when all constraints are satisfied:
+These can be combined into the following **QUBO++-style** constraint, which attains its minimum value when all constraints are satisfied:
 
 $$
 \begin{aligned}
@@ -93,7 +93,7 @@ Finally, we combine the objective and the constraint into a single QUBO expressi
 
 $$
 \begin{aligned}
-f  &= -objective + mn\times constraint
+f  &= -\text{objective} + mn\times \text{constraint}
 \end{aligned}
 $$
 

@@ -55,7 +55,7 @@ sections by providing a deeper understanding of QUBO++.
 ## Case Study
 This section provides examples of solving optimization, mathematical, and graph problems using QUBO++.
 1. [Pythagorean Triples](PYTHAGOREAN) (Easy)
-2. [Magic Square](MAGIC) (Medium)
+2. [Magic Square](MAGIC) (Hard)
 3. [Traveling Salesman Problem](TSP) (Medium)
 4. [Remainder Problem](REMAINDER) (Easy)
 5. [Square Root](SQRT) (Medium)
@@ -63,7 +63,7 @@ This section provides examples of solving optimization, mathematical, and graph 
 7. [Knapsack Problem](KNAPSACK) (Medium)
 8. [Adder Simulation](ADDER) (Medium)
 9. [LABS problem](LABS) (Medium)
-10. [Shift Scheduling Problem](SHIFT_SCHEDULING) (Medium)
+10. [Shift Scheduling Problem](SHIFT_SCHEDULING) (Hard)
 11. [Greatest Common Divisor (GCD)](GCD) (Easy)
 12. [Bar Cutting Problem](BAR_CUTTING) (Hard)
 13. [Integer Linear Programming](ILP) (Easy)
@@ -75,6 +75,7 @@ This section provides examples of solving optimization, mathematical, and graph 
 19. [Minimum Vertex Cover Problem](VERTEX_COVER) (Easy)
 20. [Minimum Dominating Set Problem](DOMINATING) (Medium)
 21. [Subgraph Isomorphism Problem](SUBGRAPH_ISOMORPHISM) (Hard)
+22. [3-digit Math Problem](3DIGIT_MATH) (Easy)
 
 ## Quick References
 1. [Variables and Expressions](QR_VARIABLE)
