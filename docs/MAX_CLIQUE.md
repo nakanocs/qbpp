@@ -97,7 +97,7 @@ int main() {
     }
     graph.add_edge(edge);
   }
-  graph.write("maxclique.png");
+  graph.write("maxclique.svg");
 }
 
 ```
@@ -115,8 +115,8 @@ objective = 4
 constraint = 0
 ```
 From this output, we obtain a maximum clique of 4 nodes without violating the constraint.
-The result is visualized in `maxclique.png` as follows:
+The result is visualized in `maxclique.svg` as follows:
 
 <p align="center">
-  <img src="images/maxclique.png" alt="The solution of the Maximum clique problem." width="80%">
+  <img src="images/maxclique.svg" alt="The solution of the Maximum clique problem." width="80%">
 </p>

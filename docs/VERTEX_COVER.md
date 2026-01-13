@@ -80,13 +80,13 @@ int main() {
   for (const auto& e : edges) {
     graph.add_edge(qbpp::graph::Edge(e.first, e.second));
   }
-  graph.write("vertexcover.png");
+  graph.write("vertexcover.svg");
 }
 ```
 {% endraw %}
 In this program, `objective`, `constraint`, and `f` are constructed according to the formulation above.
 The Exhaustive Solver is applied to `f` to search for an optimal solution.
-The obtained solution `sol` is visualized and saved as `vertexcover.png`.
+The obtained solution `sol` is visualized and saved as `vertexcover.svg`.
 
 This program prints the following output:
 ```cpp
@@ -97,5 +97,5 @@ An optimal solution with objective value 9 and constraint value 0 is obtained.
 The resulting image, which highlights the selected vertices, is shown below:
 
 <p align="center">
-  <img src="images/vertexcover.png" alt="The solution of the minimum vertex cover problem." width="80%">
+  <img src="images/vertexcover.svg" alt="The solution of the minimum vertex cover problem." width="80%">
 </p>

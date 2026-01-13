@@ -12,7 +12,7 @@ The sum of the three input bits is represented using these two output bits.
 
 A ripple-carry adder computes the sum of two multi-bit integers by cascading multiple full adders, as illustrated below:
 <p align="center">
- <img src="images/adder.png" alt="4-bit ripple carry adder" width="50%">
+ <img src="images/adder.svg" alt="4-bit ripple carry adder" width="50%">
 </p>
 
 This ripple-carry adder computes the sum of two 4-bit integers $x_3x_2x_1x_0$ and $y_3y_2y_1y_0$

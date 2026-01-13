@@ -96,26 +96,25 @@ int main() {
   for (const auto& e : edges) {
     graph.add_edge(qbpp::graph::Edge(e.first, e.second));
   }
-  graph.write("mis.png");
+  graph.write("mis.svg");
 }
-
 ```
 For a vector `x` of `N = 16` binary variables, the expressions `objective`, `constraint`, and `f` are constructed according to the above QUBO formulation.
 The Exhaustive Solver is then used to find an optimal solution for `f`, which is stored in `sol`. The values of `objective` and `constraint` evaluated at `sol` are printed.
 
 A `qbpp::graph::GraphDrawer` object, `graph`, is created next. In the loop over `i`, a `qbpp::graph::Node` object is created with label `i`, and its color is set to 0 or 1 depending on the value of `x[i]` in `sol` via the `color()` member function. Each node is added to graph using `add_node()`.
 
-Similarly, in the loop over edges, an `qbpp::graph::Edge(e.first, e.second)` object is created for each edge and added to graph using `add_edge()`. Finally, `graph.write("mis.png")` renders the graph and writes the resulting image to `mis.png`.
+Similarly, in the loop over edges, an `qbpp::graph::Edge(e.first, e.second)` object is created for each edge and added to graph using `add_edge()`. Finally, `graph.write("mis.svg")` renders the graph and writes the resulting image to `mis.svg`.
 
 This program produces the following output:
 ```
 objective = -7
 constraint = 0
 ```
-This implies that the obtained solution selects 7 nodes and satisfies all constraints. The rendered image is saved as `mis.png`:
+This implies that the obtained solution selects 7 nodes and satisfies all constraints. The rendered image is saved as `mis.svg`:
 
 <p align="center">
-  <img src="images/mis.png" alt="The solution of the MIS problem." width="80%">
+  <img src="images/mis.svg" alt="The solution of the MIS problem." width="80%">
 </p>
 
 ## API of the QUBO++ Simple Graph Drawing Library
@@ -164,5 +163,5 @@ Appends node to the graph.
 Appends edge to the graph.
 - **`write(std::string file_name)`**:
 Renders the graph and writes it to `file_name`.
-Supported formats include `png`, `svg`, `jpg`, and `pdf` (via Graphviz).
+Supported formats include `svg`, `png`, `jpg`, and `pdf` (via Graphviz).
 The output format is determined by the file extension.

@@ -71,7 +71,7 @@ int main() {
     }
     graph.add_edge(edge);
   }
-  graph.write("maxcut.png");
+  graph.write("maxcut.svg");
 }
 ```
 This program creates the expressions `objective` and `f`, where `f` is the negation of `objective`.
@@ -84,8 +84,8 @@ This program prints the following output:
 ```
 objective = 22
 ```
-The resulting graph is rendered and stored in the file `maxcut.png`:
+The resulting graph is rendered and stored in the file `maxcut.svg`:
 
 <p align="center">
-  <img src="images/maxcut.png" alt="The solution of the Max Cut problem." width="80%">
+  <img src="images/maxcut.svg" alt="The solution of the Max Cut problem." width="80%">
 </p>

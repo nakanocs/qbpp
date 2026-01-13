@@ -108,13 +108,13 @@ int main() {
   for (const auto& e : edges) {
     graph.add_edge(qbpp::graph::Edge(e.first, e.second));
   }
-  graph.write("dominatingset.png");
+  graph.write("dominatingset.svg");
 }
 ```
 This program first builds the adjacency list `adj` from the edge list `edges`, where each `adj[i]` stores the neighbors of vertex `i`.
 It then constructs `constraint`, `objective`, and `f` according to the HUBO formulation.
 The Easy Solver is applied to `f` to obtain a solution `sol`.
-The values of `objective` and `constraint` for sol are printed, and the resulting graph is saved as `dominatingset.png`, where the selected vertices are highlighted.
+The values of `objective` and `constraint` for sol are printed, and the resulting graph is saved as `dominatingset.svg`, where the selected vertices are highlighted.
 
 This program produces the following output:
 ```
@@ -124,7 +124,7 @@ constraint = 0
 The image file stores the following image:
 
 <p align="center">
-  <img src="images/dominatingset.png" alt="The solution of the minimum dominating set problem." width="80%">
+  <img src="images/dominatingset.svg" alt="The solution of the minimum dominating set problem." width="80%">
 </p>
 
 ## QUBO formulation and the QUBO++ program

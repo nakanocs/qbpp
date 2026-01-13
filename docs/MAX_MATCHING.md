@@ -91,7 +91,7 @@ int main() {
     }
     graph.add_edge(edge);
   }
-  graph.write("maxmatching.png");
+  graph.write("maxmatching.svg");
 }
 ```
 This program creates the expressions `objective`, `constraint`, and `f`, where `f` is the negated `objective` plus a penalty term.
@@ -100,9 +100,9 @@ The Exhaustive Solver minimizes `f`, and an optimal assignment is stored in `sol
 To visualize the solution, a `GraphDrawer` object `graph` is created and populated with nodes and edges.
 In this visualization, selected edges in $S$ (i.e., edges $i$ with $x_i=1$) are highlighted.
 
-The resulting graph is rendered and stored in the file `maxmatching.png`:
+The resulting graph is rendered and stored in the file `maxmatching.svg`:
 
 <p align="center">
-  <img src="images/maxmatching.png" alt="The solution of the maximum matching problem." width="80%">
+  <img src="images/maxmatching.svg" alt="The solution of the maximum matching problem." width="80%">
 </p>
 
