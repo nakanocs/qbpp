@@ -9,26 +9,28 @@ title: "QUBO++ documentation"
 * Currently built for **amd64** (**x86_64**) and **arm64** Linux systems
 * Bundled with two CPU solvers: **Easy Solver** (heuristic) and **Exhaustive Solver** (complete search)  
 * Bundled with a GPU solver: **ABS3**
-* Supports High-Order Unconstrained Binary Optimization (HUBO) of degree up to 16 
-* Multithreading acceleration is applied using oneTBB wherever possible  
-* Includes APIs for calling the Gurobi Optimizer to solve Quadratic Unconstrained Binary Optimization (QUBO) problems  
+* Supports High-Order Unconstrained Binary Optimization (HUBO) of degree up to **16** 
+* **Multithreading acceleration** is applied using oneTBB wherever possible
+* Includes APIs for calling the **Gurobi Optimizer** to solve Quadratic Unconstrained Binary Optimization (QUBO) problems  
 * Author: Koji Nakano  
 * Copyright: © 2026 Koji Nakano. All rights reserved.
 
 # QUBO++ Solvers: Easy Solver, Exhaustive Solver, ABS3 Solver
 ## Easy Solver
-* Searches for solutions to QUBO/HUBO formulations on multicore CPUs.
-* Multithreaded acceleration: utilizes Intel oneTBB for parallel search.
-* Integer coefficients: supports coefficients of arbitrary magnitude.
+* **Heuristic solver optimized for QUBO/HUBO**: Searches for solutions to QUBO/HUBO models on multicore CPUs.
+* **Multithreaded acceleration**: Uses Intel oneTBB for parallel search.
+* **Unlimited integer coefficients**: Supports integer coefficients of arbitrary magnitude.
 
 ## Exhaustive Solver
 * Enumerates all solutions to QUBO/HUBO formulations on multicore CPUs.
-* Optimality guaranteed: the global optimum is found and certifiable.
-* Multithreaded acceleration: utilizes Intel oneTBB for parallel enumeration.
-* Integer coefficients: supports coefficients of arbitrary magnitude.
+* **Optimality guaranteed**: the global optimum is found and certifiable.
+* **Multithreaded acceleration**: Uses Intel oneTBB for parallel search.
+* **Unlimited integer coefficients**: Supports integer coefficients of arbitrary magnitude.
 
 ## ABS3 Solver
-* Searches for solutions to QUBO/HUBO formulations on CUDA-enabled GPUs.
+* **GPU-optimized heuristic solver**: Finds solutions to QUBO/HUBO instances on CUDA-enabled GPUs.
+* **Multi-GPU scaling**: Uses all detected GPUs on a Linux host.
+* **64-bit integer coefficients**: Supports coefficients representable in signed 64-bit integers.
 
 ### **ABS3 Supported GPU architectures**
   - **sm_80** : NVIDIA A100  (Ampere) 
@@ -47,7 +49,8 @@ title: "QUBO++ documentation"
 
 
 ## Build Environment
-The following environment was used to build QUBO++.  
+The following environment was used to build QUBO++.
+**QUBO++ is not limited to Ubuntu 20.04**; it has also been tested on Ubuntu 22.04/24.04 and other Linux distributions (including CentOS/RHEL-based systems).
 To ensure compatibility, please use the same or newer versions of the listed components.
 - **Operating System**: Ubuntu 20.04.6 LTS 
 - **glibc**: 2.31  
@@ -126,9 +129,9 @@ When activating a node-locked license, some information about the execution envi
 
 
 ## Display/Activate/Deactivate QUBO++ License
-- The `qbpp-license` utility (in the `/bin` directory of the QUBO++ installation) displays, activates, and deactivates the license on the current machine.
-- A QUBO++ license must be activated on the machine before QUBO++ programs can run.
-- Each license key has limits on how many times it can be activated and deactivated. These limits are tracked per license.
+- The **`qbpp-license`** utility (in the `/bin` directory of the QUBO++ installation) displays, activates, and deactivates the license on the current machine.
+- A QUBO++ license must be activated on the machine before QUBO++ programs can run. Otherwise, QUBO++ runs in **Fallback Mode**.
+- Each license key has limits on the number of **activations** and **deactivations**. These limits are tracked per license.
 
 ### Display License
 If the license has already been activated on this machine, running `qbpp-license` will show the license information (expiration date/time, total activations, total deactivations, and so on).
@@ -161,8 +164,8 @@ You can specify the license key either by environment variable or by command-lin
   ```bash
   $ qbpp-license -d
   ```
-- Anonymous Trial cannot be deactivated.
-- Deactivation will increase the deactivation count and free up an activation slot so that the license can be activated again on this or another machine.
+- **Anonymous Trial** cannot be deactivated.
+- **Deactivation** will increase the **deactivation count** and free up an activation slot so that the license can be activated again on this or another machine.
 
 ## Executing QUBO++ with license key.
 - For **Anonymous Trial**, there is no license key to set.

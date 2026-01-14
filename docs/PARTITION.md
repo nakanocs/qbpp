@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "PARTITION"
+title: "Solving Partitioning Problem Using Vector of variables"
 ---
 
 
@@ -8,7 +8,7 @@ title: "PARTITION"
 
 ## Partitioning problem
 Let $w=(w_0, w_1, \ldots, w_{n-1})$ be $n$ positive numbers.
-The **partitioning problem** is to partition these numbers into two sets $P$ and $Q$ ($Q=\overline{P}$) such that the sums of the elements in the two sets are as close as possible.
+The **partitioning problem** is to partition these numbers into two sets $P$ and $Q$ ($=\overline{P}$) such that the sums of the elements in the two sets are as close as possible.
 More specifically, the problem is to find a subset $L \subseteq \lbrace 0,1,\ldots, n-1\rbrace$ that minimizes:
 
 $$

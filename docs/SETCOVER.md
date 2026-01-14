@@ -4,7 +4,7 @@ title: "Minimum Set Cover Problem"
 ---
 
 # Minimum Set Cover Problem
-Let $U$ be a universe set, and let ${\cal 𝐹}=\{S_0, S_1, \ldots S_{m-1}} be a family of subsets of $U$.
+Let $U$ be a universe set, and let ${\cal 𝐹}=\{S_0, S_1, \ldots S_{m-1}\}$ be a family of subsets of $U$.
 A subfamily $\cal S\subseteq \cal F$ is called a **set cover** if it covers all elements of $U$, i.e.,
 
 $$
@@ -16,11 +16,11 @@ $$
 The **minimum set cover problem** is to find a set cover 
 $\cal S$ with the minimum cardinality.
 Here, we consider the weighted version, where each subset 
-$S_j$ has a weight $w_j$, and the goal is to find a set cover with the minimum total weight.
+$S_j$ has a weight $w_j$, and the goal is to find a **set cover with the minimum total weight**.
 
 ## HUBO formulation of the minimum set cover problem
 We formulate this problem as a HUBO problem.
-Assume that $U=\{0,1,\ldots, n-\}$, and $m$ subsets $S_0, S_1, \ldots, S_{m-1}$ are given.
+Assume that $U=\lbrace 0,1,\ldots, n-1\rbrace$, and $m$ subsets $S_0, S_1, \ldots, S_{m-1}$ are given.
 We introduce $m$ binary variables $x_0, x_1, \ldots, x_{m-1}$,
 where $x_j=1$ if and only if $S_j\in\cal S$.  
 
@@ -36,7 +36,7 @@ If none of the selected subsets contains $i$, then $i$ is not covered.
 In that case, $x_j=0$ holds for all $j$ such that $i\in S_j$
 and hence $c_i=1$.
 On the other hand, if at least one selected subset contains $i$, then $x_j$=1 for some $j$ with $i\in S$, and the factor $(1−x_j)$ becomes 0, so $c_i=1$.
-Therefore, the following penalty term becomes 0 if and only if all elements are covered:
+Therefore, the following **constraint** becomes 0 if and only if all elements are covered:
 
 $$
 \begin{aligned}
@@ -44,7 +44,7 @@ $$
 \end{aligned}
 $$
 
-The objective is to minimize the total weight of the selected subsets:
+The **objective** is to minimize the total weight of the selected subsets:
 
 $$
 \begin{aligned}
@@ -112,15 +112,15 @@ int main() {
   }
 }
 ```
-This program defines a vector `x` of $m=8$ binary variables and constructs a vector `c` of $n=10$ expressions.
+This program defines a vector **`x`** of $m=8$ **binary variables** and constructs a vector **`c`** of $n=10$ **expressions**.
 Each expression `c[j]` corresponds to an element $j\in U$ and is initialized to 1.
 For every subset $S_i$, and for every element $j\in S_i$, we multiply `c[j]` by 
 `(1 − x[i])`.
 As a result, `c[j]` becomes 0 if at least one selected subset covers element `j`, and remains 1 otherwise.
 
-The penalty term constraint is defined as the sum of all entries in `c`, and it becomes 0 if and only if all elements are covered.
-The weighted `objective` is defined as the dot product of `cost` and `x`.
-They are combined into the HUBO expression
+The **`constraint`** is defined as the sum of all entries in `c`, and it becomes 0 if and only if all elements are covered.
+The weighted **`objective`** is defined as the dot product of `cost` and `x`.
+They are combined into the HUBO expression:
 
 $$
 \begin{aligned}
@@ -128,7 +128,7 @@ f &= \text{objective} + 1000\times\text{constraint},
 \end{aligned}
 $$
 
-where the constant 1000 is chosen sufficiently large to prioritize feasibility.
+where the penalty constant 1000 is chosen sufficiently large to prioritize feasibility.
 
 The Exhaustive Solver is then used to find an optimal solution `sol`.
 The program prints the values of `objective` and `constraint`, and finally lists all selected subsets. For example, the output is:
@@ -150,11 +150,11 @@ For each element $i\in U$, define
 
 $$
 \begin{aligned}
-c_i &=\sum{j: i\in S_j} x_j && (0\leq i\leq n-1)
+c_i &=\sum_{j: i\in S_j} x_j && (0\leq i\leq n-1)
 \end{aligned}
 $$
 
-If $c_i\geq 1$, then at least one selected subset $S_j$ covers $i$
+If $c_i\geq 1$, then at least one selected subset $S_j$ covers $i$.
 If $c_i=0$, then no selected subset covers $i$.
 Thus, we can express the covering constraint in the QUBO++ style as:
 
@@ -177,7 +177,7 @@ Based on this formulation, the QUBO++ program can be modified as follows:
   auto constraint = qbpp::sum(1 <= c <= +qbpp::inf);
 ```
 In this program, the expressions `1 <= c[j] <= +qbpp::inf` are created for all 
-`j`, and their sum is stored in constraint.
+`j`, and their sum is stored in `constraint`.
 
 > **Remark**.
 > The term `1 <= c[j] <= +qbpp::inf` may introducing auxiliary binary variables

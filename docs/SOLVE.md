@@ -68,7 +68,7 @@ int main() {
 
 The output of this program is as follows:
 {% raw %}
-```txt
+```
 f = 25 -9*a -16*b -21*c -24*d +4*a*b +6*a*c +8*a*d +12*b*c +16*b*d +24*c*d
 0:{{a,1},{b,0},{c,0},{d,1}}
 ```
@@ -104,7 +104,7 @@ int main() {
 ```
 The output of this program is as follows:
 {% raw %}
-```txt
+```
 0:{{a,0},{b,1},{c,1},{d,0}}
 ```
 {% endraw %}
@@ -114,7 +114,7 @@ All optimal solutions can be obtained by the **`search_optimal_solutions()`** me
 ```
 The output is as follows:
 {% raw %}
-```txt
+```
 (0) 0:{{a,0},{b,1},{c,1},{d,0}}
 (1) 0:{{a,1},{b,0},{c,0},{d,1}}
 ```

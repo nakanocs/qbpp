@@ -28,7 +28,7 @@ int main() {
 ```
 The expression `(a + b - 1) * (b + c - 1)` is automatically expanded and stored in `f`.
 
-In this QUBO++ program, the variables `a`, `b`, and `c` are objects of class `qbpp::Var`, and the expression `f` is an object of class `qbpp::Expr`.
+In this QUBO++ program, the variables `a`, `b`, and `c` are objects of class **`qbpp::Var`**, and the expression `f` is an object of class **`qbpp::Expr`**.
 
 Assuming the header and library paths are properly set up, this program (saved as **`test.cpp`**) can be compiled with `g++` as follows:
 ```bash
@@ -50,7 +50,7 @@ f = 1 +a*b +b*b +a*c +b*c -a -b -b -c
 > In addition, the output shown in the QUBO++ documentation may have been generated with an older version of QUBO++, so the output produced by the latest version may differ.
 
 ## Simplifying expression
-The expression stored in a `qbpp::Expr` object can be simplified by calling the **`simplify()`** member function:
+The expression stored in a **`qbpp::Expr`** object can be simplified by calling the **`simplify()`** member function:
 ```cpp
   std::cout << "f = " << f.simplify() << std::endl;
 ```
@@ -63,7 +63,7 @@ which is then printed by `std::cout`.
 
 Assuming that all variables take binary values (0 or 1), we can use the identity 
 $b^2=b$ to further simplify the expression.
-For this purpose, we use `simplify_as_binary()` instead:
+For this purpose, we use **`simplify_as_binary()`** instead:
 ```cpp
   std::cout << "f = " << f.simplify_as_binary() << std::endl;
 ```

@@ -5,10 +5,10 @@ title: "Subgraph Isomorphism Problem"
 
 # Subgraph Isomorphism Problem
 Given two undirected graphs $G_H=(V_H,E_H)$ (the host graph) and 
-$G_G=(V_G,E_G)$ (the guest graph), the subgraph isomorphism problem asks whether 
+$G_G=(V_G,E_G)$ (the guest graph), the **subgraph isomorphism problem** asks whether 
 $G_H$ contains a subgraph that is isomorphic to $G_G$.
 
-More formally, the goal is to find an injective mapping $\sigma:V_G\rightarrow V_H$
+More formally, the goal is to find an **injective mapping** $\sigma:V_G\rightarrow V_H$
 such that, for every edge $(u,v)\in E_G$, the pair $(\sigma(u),\sigma(v))$ is also an edge of the host graph, i.e., $(\sigma(u),\sigma(v))\in E_H$.
 
 For example, consider the following host and guest graphs:
@@ -24,9 +24,9 @@ For example, consider the following host and guest graphs:
 
 One solution $\sigma$ is:
 
-| node $i$ | 0 | 1 | 2 | 3 | 4 | 5 |
+| node $i$ in $G_G$ | 0 | 1 | 2 | 3 | 4 | 5 |
 |---|---|---|---|---|---|---|
-| $\sigma(i)$ | 1 | 4 | 6 | 7 | 9 | 8 |
+| node $\sigma(i)$ in $G_H$ | 1 | 4 | 6 | 7 | 9 | 8 |
 
 
 This solution is visualized as follows:
@@ -37,28 +37,28 @@ This solution is visualized as follows:
 </p>
 
 ## QUBO formulation of the subgraph isomorphic problem
-Assume that the guest graph $G_G=(V_G,E_G)$ has $m$ nodes labeled $0, 1, \ldots m-1$, and
-and the host graph $G_H=(V_H,E_H) $ has $n$ nodes labeled $0, 1, \ldots n-1$.
-We introduce an $m\times n$ binary matrix $X=(x_{i,j})$ ($0\leq i\leq m-1, 0\leq j\leq n-1$) with $mn$ binary variables.
+Assume that the g**uest graph** $G_G=(V_G,E_G)$ has $m$ nodes labeled $0, 1, \ldots m-1$, and
+and the **host graph** $G_H=(V_H,E_H) $ has $n$ nodes labeled $0, 1, \ldots n-1$.
+We introduce an $m\times n$ **binary matrix** $X=(x_{i,j})$ ($0\leq i\leq m-1, 0\leq j\leq n-1$) with $mn$ binary variables.
 This matrix represents an injective mapping $\sigma:V_G\rightarrow V_H$
 such that $x_{i,j}=1$ if and only if $\sigma(i)=j$.
 
 For example, the solution of the subgraph isomorphism problem can be represented by the following  $6\times 10$ binary matrix:
 
-|  | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
-|---|---|---|---|---|---|---|---|---|---|---|
-| 0 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
-| 1 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 0 | 0 |
-| 2 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 |
-| 3 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 |
-| 4 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
-| 5 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 |
+| $i$ | $\sigma(i)$ | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| 0 | 1 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 1 | 4 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 | 0 | 0 |
+| 2 | 6 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 | 0 |
+| 3 | 7 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 |
+| 4 | 9 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |
+| 5 | 8 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 |
 
 Because $X$ represents an injective mapping, it must satisfy the following constraints:
-- Row constraint: Each guest node is mapped to exactly one host node, i.e., the sum of each row is 1.
-- Column constraint: Each host node is used by at most one guest node, i.e., the sum of each column is 0 or 1.
+- **Row constraint**: Each guest node is mapped to exactly one host node, i.e., the sum of each row is 1.
+- **Column constraint**: Each host node is used by at most one guest node, i.e., the sum of each column is 0 or 1.
 
-These can be combined into the following **QUBO++-style** constraint, which attains its minimum value when all constraints are satisfied:
+These can be combined into the following **QUBO++-style constraint**, which attains its minimum value when all constraints are satisfied:
 
 $$
 \begin{aligned}
@@ -84,7 +84,7 @@ $$
 $$
 
 Here, an undirected guest edge $(u_G,v_G)\in E_G$ can correspond to a host edge $(u_H,v_H)\in E_H$  in two symmetric ways:
-- $(u_G, v_G)\mapsto (u_H,v_H)$, and
+- $(u_G, v_G)\mapsto (u_H,v_H)$
 - $(u_G, v_G)\mapsto (v_H,u_H)$
 
 Therefore, we include both quadratic terms $x_{u_G,u_H}x_{v_G,v_H}$ and $x_{u_G,v_H}x_{v_G,u_H}$.

@@ -28,6 +28,6 @@ This simple problem structure enables solvers to efficiently explore solutions b
 Furthermore, because constraints can be encoded into the objective function using penalty terms, many constrained optimization problems can be reformulated as equivalent HUBO or QUBO problems.
 
 
-**QUBO++** is a model-and-solve tool implemented in C++.
+**QUBO++** is a **model-and-solve tool** implemented in C++.
 It allows users to formulate combinatorial optimization problems as HUBO or QUBO polynomials and then solve them.
 QUBO++ also includes three built-in solvers.

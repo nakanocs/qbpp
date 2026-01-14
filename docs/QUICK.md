@@ -9,7 +9,7 @@ This page provides an overview of the Quick Start procedure.
 More detailed instructions for installing QUBO++ on WSL on Windows 11 are available in [Quick Start for Windows (WSL)](WSL).
 
 ## Download and Installation
-Download the latest `tar.gz` from <a href="https://github.com/nakanocs/qbpp/releases"><strong>Releases</strong></a> and extract it:
+Download the latest `tar.gz` from <a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Releases</strong></a> and extract it:
 ```bash
 $ tar xf qbpp_<arch>_<version>.tar.gz
 ```
@@ -26,8 +26,8 @@ $ export LD_LIBRARY_PATH=$QBPP_PATH/lib:$LD_LIBRARY_PATH
 These environment variables are used for license management and for compiling, linking, and executing QUBO++ programs.
 
 ## Compile and execute a sample program
-### Create a QUBO++ sample program below and save as file **`test.cpp`**:
-
+### Create a QUBO++ sample program
+Create a QUBO++ sample program below and save as file **`test.cpp`**:
 ```cpp
 #include "qbpp.hpp"
 #include "qbpp_exhaustive_solver.hpp"
@@ -47,7 +47,7 @@ int main() {
 ```
 
 ### Compile the program
-Compile the program:
+Compile **`test.cpp`** to generate the executable **`test`**:
 ```bash
 $ g++ test.cpp -o test -std=c++17 -lqbpp -ltbb
 ```
@@ -57,10 +57,10 @@ The compiler options mean the following:
 - **`-lqbpp`**: Link against the QUBO++ shared library.
 - **`-ltbb`**: Link against the oneTBB shared library.
 
-### Execute the program:
-Run the program as follows:
+### Execute the program
+Run `test` as follows:
 {% raw %}
-```
+```bash
 $ ./test
 sol = 0:{{x[0],0},{x[1],1},{x[2],1},{x[3],0},{y[0],0},{y[1],0},{y[2],1},{y[3],0}}
 x = 6, y = 4
@@ -70,4 +70,3 @@ x = 6, y = 4
 ## Next steps
 1. Activate the Anonymous Trial license or your license key. See Installation in **Installation** in [**QUBO++ Document**](DOCUMENT).
 2. Learn the basics of QUBO++. Start from **Basics** in [**QUBO++ Document**](DOCUMENT).
-

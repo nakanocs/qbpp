@@ -7,7 +7,7 @@ title: "3-Digit Math Problem"
 
 Let us solve the following math problem using QUBO++.
 
-> **Math Problem**
+> **Math Problem**:
 > Find all three-digit odd integers whose **product of digits** is **252**.
 
 Let $x$, $y$, and $z$ be the hundreds, tens, and ones digits of the integer, respectively.
@@ -64,8 +64,8 @@ int main() {
   std::cout << std::endl;
 }
 ```
-In this program, `x`, `y`, and `t` are defined as integer variables with the ranges above.
-Then `z`, `v`, and `f` are defined as expressions.
+In this program, **`x`**, **`y`**, and **`t`** are defined as integer variables with the ranges above.
+Then **`z`**, **`v`**, and **`f`** are defined as expressions.
 We create an Exhaustive Solver instance for `f` and store all optimal solutions in `sols`.
 
 Because `x`, `y`, and `t` are encoded by multiple binary variables, different binary assignments can represent the same integer values.
