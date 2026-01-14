@@ -203,7 +203,7 @@ $−∣E_G|$ (the negative number of guest edges), which is the best possible va
 The obtained solution is stored in `sol`.
 The values of `x`, `objective`, and `constraint` under `sol` are then printed.
 
-Using the function `qbpp::onehot_to_int()`, the program also outputs the mappings from guest nodes to host nodes (`guest_to_host`) and from host nodes to guest nodes (`host_to_guest`).
+Using the function **`qbpp::onehot_to_int()`**, the program also outputs the mappings from guest nodes to host nodes (`guest_to_host`, $\sigma$) and from host nodes to guest nodes (`host_to_guest`,$\sigma^{-1}$).
 
 The guest and host graphs are saved as `guest_graph.svg` and `host_graph.svg`, respectively.
 Finally, the solution is visualized in `subgraph_isomorphism.svg`, where the host nodes selected by the mapping and the host edges corresponding to guest edges are highlighted.
@@ -216,8 +216,8 @@ sol(objective) = 8
 sol(constraint) = 0
 guest_to_host = {1,4,6,7,9,8}
 host_to_guest = {-1,0,-1,-1,1,-1,2,3,5,4}
-{% endraw %}
 ```
+{% endraw %}
 The objective value equals the number of guest edges ($|E_G|=8$), and all constraints are satisfied (`constraint` = 0).
 Therefore, the program finds an optimal solution that corresponds to a valid subgraph isomorphism.
 Note that an entry of host_to_guest is `-1` if the corresponding host node is not mapped from any guest node.
