@@ -21,8 +21,8 @@ This condition is satisfied if and only if $S$ constitute a maximal matching.
 
 Let $N'(u)=N(u)\setminus{(u,v)}$ and $N'(v)=N(v)\setminus{(u,v)}$.
 To ensure that $S$ is a maximal matching, the following cases cover all possibilities:
-- $(u,v)\in S$,$N'(u)=\emptyset$, and $N'(v)=\emptyset$: $|N(u)|+|N(v)|=2$.
-- $(u,v)\not\in S$,$|N'(u)|=1$, and $|N'(v)|=1$: $|N(u)|+|N(v)|=2$.
+- $(u,v)\in S$, $N'(u)=\emptyset$, and $N'(v)=\emptyset$: $|N(u)|+|N(v)|=2$.
+- $(u,v)\not\in S$, $|N'(u)|=1$, and $|N'(v)|=1$: $|N(u)|+|N(v)|=2$.
 - $(u,v)\not\in S$, $|N'(u)|=1$, and $|N'(v)|=0$: $|N(u)|+|N(v)|=1$.
 - $(u,v)\not\in S$, $|N'(u)|=0$, and $|N'(v)|=1$: $|N(u)|+|N(v)|=1$.
 
