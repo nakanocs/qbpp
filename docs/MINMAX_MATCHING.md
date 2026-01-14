@@ -17,10 +17,7 @@ $$
  1 \leq |N(u)|+|N(v)| \leq 2 
 $$
 
-This condition is satisfied if and only if $S$ constitute a maximal matching.
-
-Let $N'(u)=N(u)\setminus{(u,v)}$ and $N'(v)=N(v)\setminus{(u,v)}$.
-To ensure that $S$ is a maximal matching, the following cases cover all possibilities:
+This condition is satisfied if and only if $S$ constitute a maximal matching. To ensure that $S$ is a maximal matching, the following cases cover all possibilities:
 
 <p align="center">
   <img src="images/min_max_matching.svg" alt="The solution of the maximum matching problem." width="80%">
