@@ -134,7 +134,9 @@ When activating a node-locked license, some information about the execution envi
 - Each license key has limits on the number of **activations** and **deactivations**. These limits are tracked per license.
 
 ### Display License
-If the license has already been activated on this machine, running `qbpp-license` will show the license information (expiration date/time, total activations, total deactivations, and so on).
+If a license has already been activated on this machine, running `qbpp-license`
+displays the current license details (e.g., expiry date/time, activation usage/limit,
+and license message).
 - **Registered Trial**/**Standard License**/**Professional License**
 You can specify the license key either by environment variable or by command-line option.
   - Using environment variable:
@@ -146,6 +148,21 @@ You can specify the license key either by environment variable or by command-lin
   ```bash
   $ qbpp-license -k XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX
   ```
+`qbpp-license` always tries to refresh the license status from the license server,
+so it may take a few seconds depending on your network.
+In contrast, QUBO++ user programs do not block on this synchronization step and
+use the local cache by default.
+They may perform synchronization only when necessary — for example, when the license
+has not been synchronized for a long time.
+
+Depending on your network environment, license synchronization may time out and
+return an error.
+In such cases, you can increase the timeout with the `-t` option:
+  ```bash
+  $ qbpp-license -t 60
+  ```
+This sets the timeout to 60 seconds.
+
 - **Anonymous Trial**  
   Just run the command without specifying a license key:
   ```bash
