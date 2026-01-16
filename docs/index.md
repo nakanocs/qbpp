@@ -170,7 +170,20 @@ You can specify the license key either by environment variable or by command-lin
 - **Anonymous Trial** cannot be deactivated.
 - **Deactivation** will increase the **deactivation count** and free up an activation slot so that the license can be activated again on this or another machine.
 
-### Notes on the license-check mechanism
+
+## Executing QUBO++ with license key.
+- For **Anonymous Trial**, there is no license key to set.
+- If you have a license key, specify it in one of the following ways before running your program:
+  - **Via Code**:
+  ```cpp
+  qbpp::license_key("XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX");
+  ```
+  - **Via Environment Variable**:
+  ```bash
+  export QBPP_LICENSE_KEY=XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX
+  ```
+
+## Notes on the license-check mechanism
 - `qbpp-license` always tries to refresh the license status from the license server,
   so it may take a few seconds depending on your network.
 - By default, QUBO++ user programs verify the license using the local cache and do not
@@ -184,18 +197,6 @@ $ qbpp-license -t 60
 ```
 This sets the timeout to 60 seconds.
 
-
-## Executing QUBO++ with license key.
-- For **Anonymous Trial**, there is no license key to set.
-- If you have a license key, specify it in one of the following ways before running your program:
-  - **Via Code**:
-  ```cpp
-  qbpp::license_key("XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX");
-  ```
-  - **Via Environment Variable**:
-  ```bash
-  export QBPP_LICENSE_KEY=XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX
-  ```
 
 # Terms and Conditions
 
