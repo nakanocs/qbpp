@@ -148,6 +148,7 @@ You can specify the license key either by environment variable or by command-lin
   ```bash
   $ qbpp-license -k XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX
   ```
+
 `qbpp-license` always tries to refresh the license status from the license server,
 so it may take a few seconds depending on your network.
 In contrast, QUBO++ user programs do not block on this synchronization step and
