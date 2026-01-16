@@ -149,21 +149,6 @@ You can specify the license key either by environment variable or by command-lin
   $ qbpp-license -k XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX
   ```
 
-`qbpp-license` always tries to refresh the license status from the license server,
-so it may take a few seconds depending on your network.
-In contrast, QUBO++ user programs do not block on this synchronization step and
-use the local cache by default.
-They may perform synchronization only when necessary — for example, when the license
-has not been synchronized for a long time.
-
-Depending on your network environment, license synchronization may time out and
-return an error.
-In such cases, you can increase the timeout with the `-t` option:
-  ```bash
-  $ qbpp-license -t 60
-  ```
-This sets the timeout to 60 seconds.
-
 - **Anonymous Trial**  
   Just run the command without specifying a license key:
   ```bash
@@ -184,6 +169,21 @@ This sets the timeout to 60 seconds.
   ```
 - **Anonymous Trial** cannot be deactivated.
 - **Deactivation** will increase the **deactivation count** and free up an activation slot so that the license can be activated again on this or another machine.
+
+### Notes on the license-check mechanism
+- `qbpp-license` always tries to refresh the license status from the license server,
+  so it may take a few seconds depending on your network.
+- By default, QUBO++ user programs verify the license using the local cache and do not
+  block on server synchronization. They may contact the license server only when necessary
+  (for example, when the license has not been synchronized for a long time).
+
+Depending on your network environment, license synchronization by `qbpp-license` may time out
+and return an error. In such cases, you can increase the timeout with the `-t` option:
+```bash
+$ qbpp-license -t 60
+```
+This sets the timeout to 60 seconds.
+
 
 ## Executing QUBO++ with license key.
 - For **Anonymous Trial**, there is no license key to set.
