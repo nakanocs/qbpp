@@ -18,10 +18,12 @@ int main() {
   auto y = qbpp::var("y");
   auto z = qbpp::var("z");
   auto f = qbpp::sqr(x + 2 * y + 3 * z - 3);
+
   qbpp::MapList ml;
   ml.push_back({x, 0});
   ml.push_back({y, 1});
   ml.push_back({z, 1});
+  
   std::cout << ml << std::endl;
   std::cout << "f(0,1,1) = " << f(ml) << std::endl;
 }
@@ -49,6 +51,7 @@ int main() {
   auto y = qbpp::var("y");
   auto z = qbpp::var("z");
   auto f = qbpp::sqr(x + 2 * y + 3 * z - 3);
+
   std::cout << "f(0,1,1) = " << f({{x, 0}, {y, 1}, {z, 1}}) << std::endl;
 }
 ```
@@ -73,9 +76,11 @@ int main() {
   auto y = qbpp::var("y");
   auto z = qbpp::var("z");
   auto f = qbpp::sqr(x + 2 * y + 3 * z - 3);
+
   qbpp::Sol sol(f);
   sol.set(y, 1);
   sol.set(z, 1);
+  
   std::cout << "f(0,1,1) = " << f(sol) << std::endl;
   std::cout << "f(0,1,1) = " << sol(f) << std::endl;
   std::cout << "f(0,1,1) = " << sol.comp_energy() << std::endl;
@@ -94,12 +99,15 @@ int main() {
   auto y = qbpp::var("y");
   auto z = qbpp::var("z");
   auto f = qbpp::sqr(x + 2 * y + 3 * z - 4);
+
   f.simplify_as_binary();
   auto solver = qbpp::easy_solver::EasySolver(f);
   solver.target_energy(0);
   auto sol = solver.search();
+  
   std::cout << "sol = " << sol << std::endl;
   std::cout << "energy = " << sol.energy() << std::endl;
+  
   sol.flip(z);
   std::cout << "flipped sol = " << sol << std::endl;
   std::cout << "flipped energy = " << sol.energy() << std::endl;
@@ -119,6 +127,7 @@ To resolve this issue, you must explicitly recompute the energy by calling **`so
 ```cpp
   std::cout << "sol = " << sol << std::endl;
   std::cout << "energy = " << sol.energy() << std::endl;
+  
   sol.flip(z);
   std::cout << "sol.comp_energy() = " << sol.comp_energy() << std::endl;
   std::cout << "flipped sol = " << sol << std::endl;

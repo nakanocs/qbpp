@@ -61,8 +61,8 @@ f.simplify() = 1 -a -2*b -c +a*b +a*c +b*b +b*c
 The member function call **`f.simplify()`** simplifies the expression `f` and returns the resulting value,
 which is then printed by `std::cout`.
 
-Assuming that all variables take binary values (0 or 1), we can use the identity 
-$b^2=b$ to further simplify the expression.
+Assuming that all variables take **binary values (0 or 1)**, we can use the identity 
+**$b^2=b$** to further simplify the expression.
 For this purpose, we use **`simplify_as_binary()`** instead:
 ```cpp
   std::cout << "f = " << f.simplify_as_binary() << std::endl;
@@ -76,7 +76,7 @@ The simplify functions reorder the variables within each term and the terms with
 The variables themselves are ordered according to the order in which they were defined.
 
 ## Simplifying expressions with spin variables
-If variables are assumed to take spin values $-1$/$+1$, the identity $b^2 = 1$ can be used to further simplify the expression.
+If variables are assumed to take **spin values $-1$/$+1$**, the identity **$b^2 = 1$** can be used to further simplify the expression.
 In this case, the expression can be simplified using the **`simplify_as_spin()`** member function:
 ```cpp
   std::cout << "f = " << f.simplify_as_spin() << std::endl;
@@ -92,4 +92,4 @@ If you do not want to modify `f`, you can instead use the global functions
 **`qbpp::simplify(f)`**, **`qbpp::simplify_as_binary(f)`**, and **`qbpp::simplify_as_spin(f)`**, which return the simplified expressions without changing `f`.
 
 > **NOTE**
-> In QUBO++, most member functions update the object in place when possible, whereas global functions return a new value without modifying the original object.
+> In QUBO++, most **member functions** update the object in place when possible, whereas **global functions** return a new value without modifying the original object.

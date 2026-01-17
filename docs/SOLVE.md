@@ -7,7 +7,7 @@ title: "SOLVE"
 # Solving Expressions using Easy Solver and Exhaustive Solver
 
 QUBO++ provides the **Easy Solver** and the **Exhaustive Solver** for QUBO/HUBO expressions.  
-They run in parallel on multicore CPUs using Intel Threading Building Blocks (oneTBB).
+They run in parallel on multicore CPUs using **Intel Threading Building Blocks (oneTBB)**.
 
 - **Easy Solver**
   - Runs a heuristic algorithm based on simulated annealing.

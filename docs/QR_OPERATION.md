@@ -185,11 +185,7 @@ Both variants are available as member functions and global functions:
 A **`qbpp::MapList`** object stores a list of pairs consisting of a `qbpp::Var` object and an integer.
 Each pair defines a mapping from a variable to an integer value.
 
-For a `qbpp::Expr` object `f` and a `qbpp::MapList` object `ml`, the evaluation function
-```cpp
-f(ml)
-```
-evaluates the value of `f` under the variable assignments specified by `ml` and returns the resulting integer value.
+For a `qbpp::Expr` object `f` and a `qbpp::MapList` object `ml`, the evaluation function `f(ml)` evaluates the value of `f` under the variable assignments specified by `ml` and returns the resulting integer value.
 
 All variables appearing in `f` must have corresponding mappings defined in `ml`.
 
@@ -212,7 +208,7 @@ Returns a new `qbpp::Expr` object with linear and quadratic terms that is equiva
 - **`f.reduce()`**:
 Replaces `f` with the result of `qbpp::reduce(f)` and returns the updated expression.
 
-## Binar_y/Spin Conversion functions: `spin_to_binary()`, `binary_to_spin()`
+## Binary/Spin Conversion functions: `spin_to_binary()`, `binary_to_spin()`
 Let `x` be a binary variable and s be a spin variable.
 We assume that `x = 1` if and only if `s = 1`.
 Under this assumption, the following relations hold:

@@ -25,6 +25,7 @@ int main() {
   auto y = qbpp::var("y");
   auto f = 6 * -(x + 1) * (y - 1);
   auto g = f / 3;
+
   std::cout << "f = " << f << std::endl;
   std::cout << "g = " << g << std::endl;
 }
@@ -51,12 +52,16 @@ int main() {
   auto x = qbpp::var("x");
   auto y = qbpp::var("y");
   auto f = 6 * x + 4;
+
   f += 3 * y;
   std::cout << "f = " << f << std::endl;
+  
   f -= 12;
   std::cout << "f = " << f << std::endl;
+  
   f *= 2 * y;
   std::cout << "f = " << f << std::endl;
+  
   f /= 2;
   std::cout << "f = " << f << std::endl;
 }
@@ -81,8 +86,10 @@ whereas the member function **`f.sqr()`** updates `f` in place by replacing it w
 int main() {
   auto x = qbpp::var("x");
   auto f = x + 1;
+
   std::cout << "f = " << qbpp::sqr(f) << std::endl;
   std::cout << "f = " << f << std::endl;
+
   f.sqr();
   std::cout << "f = " << f << std::endl;
 }
@@ -98,7 +105,7 @@ f = 1 +x*x +x +x
 After operators or functions are applied to `qbpp::Expr` objects, expressions are automatically expanded.
 To sort terms and simplify the resulting expressions, simplify functions must be explicitly called.
 
-QUBO++ provides the following three global simplify functions:
+QUBO++ provides the following three **global simplify functions**:
 - **`qbpp::simplify()`**:
 Returns a simplified expression by merging coefficients of identical terms.
 - **`qbpp::simplify_as_binary()`**:
@@ -114,12 +121,11 @@ The following program demonstrates the behavior of these simplify functions:
 int main() {
   auto x = qbpp::var("x");
   auto f = qbpp::sqr(x - 1);
+
   std::cout << "f = " << f << std::endl;
   std::cout << "simplified(f) = " << qbpp::simplify(f) << std::endl;
-  std::cout << "simplified_as_binary(f) = " << qbpp::simplify_as_binary(f)
-            << std::endl;
-  std::cout << "simplified_as_spin(f) = " << qbpp::simplify_as_spin(f)
-            << std::endl;
+  std::cout << "simplified_as_binary(f) = " << qbpp::simplify_as_binary(f) << std::endl;
+  std::cout << "simplified_as_spin(f) = " << qbpp::simplify_as_spin(f) << std::endl;
 }
 ```
 This program produces the following output:
@@ -130,7 +136,7 @@ simplified_as_binary(f) = 1 -x
 simplified_as_spin(f) = 2 -2*x
 ```
 
-Member function versions of these simplify functions are also provided for `qbpp::Expr` objects, and they update the object in place with the simplified result.
+**Member function** versions of these simplify functions are also provided for `qbpp::Expr` objects, and they update the object in place with the simplified result.
 
 For example, the following program updates `f` by applying **`simplify()`**:
 ```cpp
@@ -139,6 +145,7 @@ For example, the following program updates `f` by applying **`simplify()`**:
 int main() {
   auto x = qbpp::var("x");
   auto f = qbpp::sqr(x - 1);
+  
   f.simplify();
   std::cout << "f = " << f << std::endl;
 }

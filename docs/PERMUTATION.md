@@ -112,12 +112,16 @@ Solution 23 : {{1,0,0,0},{0,1,0,0},{0,0,1,0},{0,0,0,1}}
 The following two functions for a matrix `x` of $n\times n$ binary variables are supported:
 - **`qbpp::vector_sum(x)`**: Computes the sum of each row and returns a vector of size $n$ containing these sums.
 - **`qbpp::transpose(x)`**: Returns the transposed matrix of size $n\times n$.
+
 Using these functions, vectors containing row-wise sums and column-wise sums can be computed by the following expressions.
-- **`qbpp::vector_sum(qbpp::transpose(x))`**: Returns a vector of column-wise sums of size $n$.
+- **Row sums**: `qbpp::vector_sum(x)`
+- **Column sums**: `qbpp::vector_sum(qbpp::transpose(x))`
+This computes the row sums of the transposed matrix, which are exactly the column sums of the original matrix `x`
 
 A scalar–vector operation is used to subtract 1 from each element:
 - **`qbpp::vector_sum(x) - 1`**: subtracts 1 from each row-wise sum.
 - **`qbpp::vector_sum(qbpp::transpose(x)) - 1`**: subtracts 1 from each column-wise sum.
+
 For these two vectors of size $n$, `qbpp::sqr()` squares each element, and `qbpp::sum()` computes the sum of all elements.
 
 The following QUBO++ program implements a QUBO formulation using these vector functions and operations:

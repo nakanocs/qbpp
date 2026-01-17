@@ -33,7 +33,7 @@ If $f$ is cubic or of higher degree, then $g$ becomes a HUBO expression.
 
 
 ## Solving Integer Linear Programming
-An instance of integer linear programming consists of an objective function and multiple linear constraints.
+An instance of **integer linear programming** consists of an **objective function** and multiple **linear constraints**.
 For example, the following integer linear program has two variables, one objective, and two constraints:
 
 $$

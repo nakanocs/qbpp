@@ -25,6 +25,7 @@ int main() {
   auto y = qbpp::var("y");
   auto t = 2 * x * y;
   auto f = t - x + 1;
+
   std::cout << "x = " << x << std::endl;
   std::cout << "y = " << y << std::endl;
   std::cout << "t = " << t << std::endl;
@@ -47,6 +48,7 @@ int main() {
   qbpp::Var y = qbpp::var("y");
   qbpp::Term t = 2 * x * y;
   qbpp::Expr f = t - x + 1;
+
   std::cout << "x = " << x << std::endl;
   std::cout << "y = " << y << std::endl;
   std::cout << "t = " << t << std::endl;
@@ -65,10 +67,13 @@ int main() {
   qbpp::Var y = qbpp::var("y");
   qbpp::Term t = 2 * x * y;
   qbpp::Expr f = t - x + 1;
+
   std::cout << "t = " << t << std::endl;
   std::cout << "f = " << f << std::endl;
+
   t *= 3 * x;
   f += 2 * y;
+  
   std::cout << "t = " << t << std::endl;
   std::cout << "f = " << f << std::endl;
 }
@@ -83,7 +88,7 @@ f = 1 -x +2*x*y +2*y
 In most cases, there is no need to explicitly use `qbpp::Term` objects.
 They should only be used when maximum performance optimization is required.
 
-However, note that auto type deduction may create a `qbpp::Term` object, which cannot store general expressions.
+However, note that `auto` type deduction may create a `qbpp::Term` object, which cannot store general expressions.
 For example, the following program results in a compilation error because an expression is assigned to a `qbpp::Term` object:
 ```cpp
 #include "qbpp.hpp"
@@ -91,6 +96,7 @@ For example, the following program results in a compilation error because an exp
 int main() {
   auto x = qbpp::var("x");
   auto y = qbpp::var("y");
+
   auto t = 2 * x * y;
   t = x + 1;
 }
@@ -104,8 +110,10 @@ int main() {
   auto y = qbpp::var("y");
   auto t = qbpp::toExpr(2 * x * y);
   auto f = qbpp::toExpr(1);
+
   t += x + 1;
   f += t;
+  
   std::cout << "t = " << t << std::endl;
   std::cout << "f = " << f << std::endl;
 }

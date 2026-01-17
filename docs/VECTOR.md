@@ -82,7 +82,7 @@ int main() {
 ```
 The function **`qbpp::sum()`** computes the sum of all variables in the vector.
 The function **`qbpp::sqr()`** computes the square of its argument.
-The Exhaustive Solver finds all optimal solutions with energy value 0, which are printed using std::cout as follows:
+The Exhaustive Solver finds all optimal solutions with energy value 0, which are printed using `std::cout` as follows:
 {% raw %}
 ```txt
 f = 1 -x[0] -x[1] -x[2] -x[3] -x[4] +2*x[0]*x[1] +2*x[0]*x[2] +2*x[0]*x[3] +2*x[0]*x[4] +2*x[1]*x[2] +2*x[1]*x[3] +2*x[1]*x[4] +2*x[2]*x[3] +2*x[2]*x[4] +2*x[3]*x[4]

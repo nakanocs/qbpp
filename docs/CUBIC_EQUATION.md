@@ -24,8 +24,10 @@ int main() {
   auto x = -100 <= qbpp::var_int("x") <= 100;
   auto f = x * x * x - 147 * x + 286 == 0;
   f.simplify_as_binary();
+  
   auto solver = qbpp::exhaustive_solver::ExhaustiveSolver(f);
   auto sols = solver.search_optimal_solutions();
+
   for (const auto& sol : sols) {
     std::cout << "x= " << x(sol) << " sol = " << sol << std::endl;
   }
@@ -42,7 +44,7 @@ $$
 Since the integer variable `x` is implemented as a linear expression of binary variables, `f` becomes a polynomial of degree 6.
 This program produces the following output:
 {% raw %}
-```cpp
+```
 x = -100 +x[0] +2*x[1] +4*x[2] +8*x[3] +16*x[4] +32*x[5] +64*x[6] +73*x[7]
 x = 11 sol = 0:{{x[0],0},{x[1],1},{x[2],1},{x[3],0},{x[4],0},{x[5],1},{x[6],0},{x[7],1}}
 x = 2 sol = 0:{{x[0],0},{x[1],1},{x[2],1},{x[3],0},{x[4],0},{x[5],1},{x[6],1},{x[7],0}}
@@ -56,3 +58,24 @@ The first line indicates that the integer variable `x` is encoded using 8 binary
 Also, the program outputs 6 optimal solutions even though the original cubic equation has only 3 integer solutions.
 This happens because the coefficient `73` of `x[7]` is not a power of two, so the same integer value can be represented by multiple different assignments of the binary variables encoding `x`.
 
+To eliminate duplicate values of `x`, you can modify the program to use `std::unordered_set` as follows:
+```cpp
+#include <unordered_set>
+
+... omitted ...
+
+  std::unordered_set<qbpp::energy_t> seen;
+  for (const auto& sol : sols) {
+    const auto xv = x(sol);
+    if (!seen.insert(xv).second) continue;
+    std::cout << "x = " << xv << " sol = " << sol << "\n";
+  }
+```
+This modified program outputs the following unique solutions:
+{% raw %}
+```
+x = 11 sol = 0:{{x[0],0},{x[1],1},{x[2],1},{x[3],0},{x[4],0},{x[5],1},{x[6],0},{x[7],1}}
+x = 2 sol = 0:{{x[0],0},{x[1],1},{x[2],1},{x[3],0},{x[4],0},{x[5],1},{x[6],1},{x[7],0}}
+x = -13 sol = 0:{{x[0],0},{x[1],1},{x[2],1},{x[3],1},{x[4],0},{x[5],0},{x[6],0},{x[7],1}}
+```
+{% endraw %}

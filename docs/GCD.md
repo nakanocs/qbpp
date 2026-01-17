@@ -5,7 +5,7 @@ title: "Greatest Common Divisor (GCD)"
 
 # Greatest Common Divisor (GCD)
 Let $P$ and $Q$ be two positive integers.
-The computation of the greatest common divisor (GCD) can be formulated as a QUBO problem.
+The computation of the greatest common divisor (GCD) can be formulated as a HUBO problem.
 
 Let $p$, $q$, and $r$ be positive integers satisfying the following constraints:
 
@@ -42,6 +42,7 @@ int main() {
   auto solver = qbpp::easy_solver::EasySolver(f);
   solver.time_limit(1.0);
   auto sol = solver.search();
+  
   std::cout << "GCD = " << sol(r) << std::endl;
   std::cout << sol(p) << " * " << sol(r) << " = " << P << std::endl;
   std::cout << sol(q) << " * " << sol(r) << " = " << Q << std::endl;

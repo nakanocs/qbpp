@@ -44,6 +44,7 @@ The following QUBO++ program creates the QUBO formulation of the partitioning pr
 
 int main() {
   std::vector<uint32_t> w = {64, 27, 47, 74, 12, 83, 63, 40};
+  
   auto x = qbpp::var("x", w.size());
   auto p = qbpp::expr();
   auto q = qbpp::expr();
@@ -53,12 +54,15 @@ int main() {
   }
   auto f = qbpp::sqr(p - q);
   std::cout << "f = " << f.simplify_as_binary() << std::endl;
+
   auto solver = qbpp::exhaustive_solver::ExhaustiveSolver(f);
   auto sol = solver.search();
+  
   std::cout << "Solution: " << sol << std::endl;
   std::cout << "f(sol) = " << f(sol) << std::endl;
   std::cout << "p(sol) = " << p(sol) << std::endl;
   std::cout << "q(sol) = " << q(sol) << std::endl;
+  
   std::cout << "P :";
   for (size_t i = 0; i < w.size(); ++i) {
     if (x[i](sol) == 1) {
@@ -66,6 +70,7 @@ int main() {
     }
   }
   std::cout << std::endl;
+  
   std::cout << "Q :";
   for (size_t i = 0; i < w.size(); ++i) {
     if (x[i](sol) == 0) {
@@ -76,7 +81,7 @@ int main() {
 }
 ```
 
-In this program **`w`** is defined as a `std::vector` object with 8 numbers.
+In this program, **`w`** is defined as a `std::vector` object with 8 numbers.
 A vector **`x`** of `w.size()=8` binary variables is defined.
 Two `qbpp::Expr` objects **`p`** and **`q`** are defined, and the expressions for $P(x)$ and $Q(x)$
 are constructed in the for-loop.

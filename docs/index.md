@@ -5,14 +5,13 @@ title: "QUBO++ documentation"
 
 
 # QUBO++: A model-and-solve framework for combinatorial optimization via QUBO/HUBO
-* A C++ library for constructing polynomials of binary variables to solve combinatorial optimization problems  
-* Currently built for **amd64** (**x86_64**) and **arm64** Linux systems
-* Bundled with two CPU solvers: **Easy Solver** (heuristic) and **Exhaustive Solver** (complete search)  
-* Bundled with a GPU solver: **ABS3**
-* Supports High-Order Unconstrained Binary Optimization (HUBO) of degree up to **16** 
-* **Multithreading acceleration** is applied using oneTBB wherever possible
-* Includes APIs for calling the **Gurobi Optimizer** to solve Quadratic Unconstrained Binary Optimization (QUBO) problems  
-* Author: Koji Nakano  
+* A **C++ library** for constructing polynomials of binary variables to solve combinatorial optimization problems.
+* Currently built for **amd64** (**x86_64**) and **arm64** Linux systems.
+* Bundled with two CPU solvers: **Easy Solver** (heuristic) and **Exhaustive Solver** (complete search)  .
+* Bundled with a GPU solver: **ABS3**.
+* Supports **High-Order Unconstrained Binary Optimization (HUBO)** of degree up to **16**.
+* **Multithreading acceleration** is applied using oneTBB wherever possible.
+* Includes APIs for calling the **Gurobi Optimizer** to solve Quadratic Unconstrained Binary Optimization (QUBO) problems.
 * Copyright: © 2026 Koji Nakano. All rights reserved.
 
 # QUBO++ Solvers: Easy Solver, Exhaustive Solver, ABS3 Solver
@@ -22,7 +21,7 @@ title: "QUBO++ documentation"
 * **Unlimited integer coefficients**: Supports integer coefficients of arbitrary magnitude.
 
 ## Exhaustive Solver
-* Enumerates all solutions to QUBO/HUBO formulations on multicore CPUs.
+* **Enumerates all solutions** to QUBO/HUBO formulations on multicore CPUs.
 * **Optimality guaranteed**: the global optimum is found and certifiable.
 * **Multithreaded acceleration**: Uses Intel oneTBB for parallel search.
 * **Unlimited integer coefficients**: Supports integer coefficients of arbitrary magnitude.
@@ -39,7 +38,8 @@ title: "QUBO++ documentation"
   - **sm_90** : NVIDIA H100 / H200 / GH200 (Hopper) 
   - **sm_100** : NVIDIA B200 / GB200 (Blackwell, data center) 
   - **sm_120** : GeForce RTX 5090/5080/5070(Ti)/5060(Ti)/5050、RTX PRO 6000/5000/4500/4000/2000 Blackwell (workstation)  
-  - **Note on verification** : Only a subset of the architectures above has been verified on real hardware.  
+  - **Note on verification** : Only a subset of the architectures above has been verified on real hardware. 
+
 ###  **Numeric types**
   - 32-bit and 64-bit term coefficients
   - 64-bit energy values
@@ -53,8 +53,8 @@ The following environment was used to build QUBO++.
 **QUBO++ is not limited to Ubuntu 20.04**; it has also been tested on Ubuntu 22.04/24.04 and other Linux distributions (including CentOS/RHEL-based systems).
 To ensure compatibility, please use the same or newer versions of the listed components.
 - **Operating System**: Ubuntu 20.04.6 LTS 
-- **glibc**: 2.31  
 - **C++ Standard**: C++17  
+- **glibc**: 2.31  
 - **Compiler**: g++ 9.4.0  
 - **Boost**: 1.81.0
 - **CUDA**: 12.8
@@ -161,6 +161,7 @@ You can specify the license key either by environment variable or by command-lin
   $ qbpp-license -a
   ```
 - This consumes one activation from the license.
+- If the license is already activated on this machine, running the command again does not consume an additional activation for the same license key.
 
 ### Deactivate License
 - To deactivate the license on the current machine, use the `-d` (or `--deactivate`) option:
@@ -184,13 +185,12 @@ You can specify the license key either by environment variable or by command-lin
   ```
 
 ## Notes on the license-check mechanism
-- `qbpp-license` always tries to refresh the license status from the license server,
+- **`qbpp-license`**  tries to refresh the license status from the license server,
   so it may take a few seconds depending on your network.
 - By default, QUBO++ user programs verify the license using the local cache and do not
   block on server synchronization. They may contact the license server only when necessary
   (for example, when the license has not been synchronized for a long time).
-
-Depending on your network environment, license synchronization by `qbpp-license` may time out
+- Depending on your network environment, license synchronization by `qbpp-license` may time out
 and return an error. In such cases, you can increase the timeout with the `-t` option:
 ```bash
 $ qbpp-license -t 60
@@ -228,11 +228,6 @@ By using QUBO++, you agree to the following terms and conditions:
 
 # Third-Party Libraries
 
-- **Gurobi Optimizer**  
-  - QUBO++ supporting APIs for integration with the Gurobi Optimizer.  
-  - To use these APIs, you must obtain a valid license for the Gurobi Optimizer from Gurobi Optimization, LLC.  
-  - The Gurobi Optimizer is not included with QUBO++, and its use is subject to the terms and conditions of its own license agreement.
-
 - **oneTBB (oneAPI Threading Building Blocks)**  
   - Licensed under the Apache License 2.0.  
   - Copyright © Intel Corporation.  
@@ -246,6 +241,11 @@ By using QUBO++, you agree to the following terms and conditions:
   - Licensed under the BSD 2-Clause License.  
   - Copyright © Yann Collet.  
   - See <https://opensource.org/license/bsd-2-clause/> for details.
+
+- **Gurobi Optimizer**  
+  - QUBO++ supporting APIs for integration with the Gurobi Optimizer.  
+  - To use these APIs, you must obtain a valid license for the Gurobi Optimizer from Gurobi Optimization, LLC.  
+  - The Gurobi Optimizer is not included with QUBO++, and its use is subject to the terms and conditions of its own license agreement.
 
 
 If you have any questions regarding licensing or wish to obtain a license key, please contact the distributor or the developer.

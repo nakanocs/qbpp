@@ -6,7 +6,7 @@ title: "INTEGER"
 # Integer Variables and Solving Simultaneous Equations
 
 ## Integer variables
-QUBO++ supports **integer variables, which are internally implemented using multiple binary variables.
+QUBO++ supports **integer variables**, which are internally implemented using multiple binary variables.
 A conventional binary encoding is used to represent integer values.
 Suppose that we have $n$ binary variables $x_0, x_1, \ldots, x_{n-1}$.
 These variables can represent all integers from $0$ to $2^n-1$ using the following linear expression:
@@ -46,8 +46,8 @@ int main() {
 }
 ```
 
-An integer variable is defined using the range operator **`<= <=`**, which specifies the integer range that the variable can take.
-The function `qbpp::var_int("name")` creates a `qbpp::VarInt` object object with the given  `name`, representing the linear expression encoded by binary variables.
+An integer variable is defined using the **range operator** **`<= <=`**, which specifies the integer range that the variable can take.
+The function **`qbpp::var_int("name")`** creates a **`qbpp::VarInt`** object object with the given `name`, representing the linear expression encoded by binary variables.
 The program outputs the following expressions:
 ```txt
 x = 1 +x[0] +2*x[1] +4*x[2] uses 3 variables.
@@ -110,13 +110,16 @@ $x$ and $y$:
 int main() {
   auto x = 0 <= qbpp::var_int("x") <= 10;
   auto y = 0 <= qbpp::var_int("y") <= 10;
+
   auto f = x + y == 10;
   auto g = 2 * x + 4 * y == 28;
   auto h = f + g;
   h.simplify_as_binary();
+  
   auto solver = qbpp::easy_solver::EasySolver(h);
   solver.target_energy(0);
   auto sol = solver.search();
+  
   std::cout << "sol = " << sol << std::endl;
   std::cout << "x = " << x << " = " << sol(x) << std::endl;
   std::cout << "y = " << y << " = " << sol(y) << std::endl;

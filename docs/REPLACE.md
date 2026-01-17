@@ -13,7 +13,7 @@ Replaces (fixes) variable values in the expression `f` according to the mapping 
 ## Using the replace function to fix variable values
 We explain the **`qbpp::replace()`** function using the
 [QUBO++ program for partitioning problem](PARTITION).
-This program finds a partition of the numbers in the following vector **`w`** into two subsets $P$ and $Q$ ($=\overline{L}$) such that the difference between their sums is minimized:
+This program finds a partition of the numbers in the following vector **`w`** into two subsets $P$ and $Q$ ($=\overline{P}$) such that the difference between their sums is minimized:
 ```cpp
   std::vector<uint32_t> w = {64, 27, 47, 74, 12, 83, 63, 40};
 ```
@@ -34,6 +34,7 @@ int main() {
   auto p = qbpp::sum(w * x);
   auto q = qbpp::sum(w * (1 - x));
   auto f = qbpp::sqr(p - q);
+
   qbpp::MapList ml({{x[0], 1}, {x[1], 0}});
   auto g = qbpp::replace(f, ml);
   g.simplify_as_binary();
@@ -43,6 +44,7 @@ int main() {
   qbpp::Sol full_sol(f);
   full_sol.set(sol);
   full_sol.set(ml);
+
   std::cout << "sol = " << sol << std::endl;
   std::cout << "ml = " << ml << std::endl;
   std::cout << "full_sol = " << full_sol << std::endl;
@@ -184,13 +186,16 @@ int main() {
   auto q = 2 <= qbpp::var_int("q") <= 8;
   auto r = 2 <= qbpp::var_int("r") <= 40;
   auto f = p * q - r == 0;
+
   qbpp::MapList ml({{p, 5}, {q, 7}});
   auto g = qbpp::replace(f, ml);
   g.simplify_as_binary();
   std::cout << "g = " << g << std::endl;
+  
   auto solver = qbpp::easy_solver::EasySolver(g);
   solver.target_energy(0);
   auto sol = solver.search();
+  
   qbpp::Sol full_sol(f);
   full_sol.set(sol);
   full_sol.set(ml);
@@ -225,7 +230,7 @@ By fixing the value of $r$, the solver searches for integer values of $p$ and $q
 
 $$
 \begin{aligned}
-p\times &=35
+p\times q&=35
 \end{aligned}
 $$
 

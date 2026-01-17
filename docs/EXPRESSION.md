@@ -60,7 +60,7 @@ An instance of this class represents **an expression** involving:
 - **an integer constant term**, and
 - **zero or more `qbpp::Term` objects**.
 
-For example, the following program creates a `qbpp::Expr` object **`f`**
+For example, the following program creates a **`qbpp::Expr`** object **`f`**
 with a constant term `3` and the terms `2*x*y` and `3*x`:
 ```cpp
   auto x = qbpp::var("x");
@@ -77,7 +77,7 @@ Expressions can be written using basic operators such as **`+`**, **`-`**, and *
 as well as parentheses **`(`** and **`)`**.
 
 Expressions are automatically expanded and stored as a `qbpp::Expr` object.
-For example, the following program creates a `qbpp::Expr` object **`f`** that stores the expanded expression:
+For example, the following program creates a **`qbpp::Expr`** object **`f`** that stores the expanded expression:
 ```cpp
   auto x = qbpp::var("x");
   auto y = qbpp::var("y");

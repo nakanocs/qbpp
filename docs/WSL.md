@@ -9,7 +9,7 @@ On Windows 11, QUBO++ can be used through **WSL (Windows Subsystem for Linux)**,
 This document explains how to install WSL, required libraries, and QUBO++, and how to compile and run sample programs.
 
 ## Install WSL
-On Windows 11, WSL can be installed from Windows PowerShell.
+On Windows 11, **WSL** can be installed from Windows PowerShell.
 Open PowerShell as Administrator and execute the following command:
 ```
 C:\WINDOWS\System32> wsl --install
@@ -32,7 +32,7 @@ $ sudo apt upgrade -y
 ```
 
 ## Install C++ compiler, Boost, and oneTBB
-QUBO++ requires a C++ compiler, the Boost library, and oneTBB.
+QUBO++ requires a **C++ compiler**, **the Boost library**, and **oneTBB**.
 
 Install them using the following command:
 ```bash
@@ -63,7 +63,7 @@ This creates a symbolic link named **`qbpp`**, which simplifies access to the in
 
 
 ## Set environment variables
-Execute the following commands to set the environment variables required to compile and run QUBO++ programs:
+Execute the following commands to set the **environment variables** required to compile and run QUBO++ programs:
 ```bash
 $ export QBPP_PATH=$HOME/qbpp
 $ export CPLUS_INCLUDE_PATH=$QBPP_PATH/include:$CPLUS_INCLUDE_PATH
@@ -71,14 +71,14 @@ $ export LIBRARY_PATH=$QBPP_PATH/lib:$LIBRARY_PATH
 $ export LD_LIBRARY_PATH=$QBPP_PATH/lib:$LD_LIBRARY_PATH
 $ export PATH=$QBPP_PATH/bin:$PATH
 ```
-If you have a QUBO++ license key, set it using:
+If you have a **QUBO++ license key**, set it using:
 ```bash
 $ export QBPP_LICENSE_KEY=[Your QUBO++ license key]
 ```
 It is recommended to append these commands to the end of the **`~/.bashrc`** file so that they are automatically executed when the WSL shell starts.
 
 ## Activate license
-You can now activate the QUBO++ license by executing:
+You can now **activate the QUBO++ license** by executing:
 ```bash
 $  qbpp-license -a
 ```
@@ -97,7 +97,7 @@ $ ./nqueen_easy
 ```
 
 ## Execute ABS3 GPU Solver
-If your system has a CUDA-enabled GPU, the ABS3 GPU Solver can be executed from WSL.
+If your system has a **CUDA-enabled GPU**, the ABS3 GPU Solver can be executed from WSL.
 
 To enable GPU acceleration in WSL, install the **NVIDIA GPU driver for Windows** from the following page:
 

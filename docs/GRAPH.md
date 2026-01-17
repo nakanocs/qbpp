@@ -137,7 +137,7 @@ Sets the node color to s, which must be in the form `#RRGGBB`.
 Sets the node color to the `i`-th entry in the color palette. The default color 0 is white.
 - **`penwidth(float f)`**:
 Sets the pen width to `f` for drawing the node outline.
-- **`position(float x, float y)`**
+- **`position(float x, float y)`**:
 Sets the node position to `(x, y)`.
 
 ### `qbpp::graph::Edge`
