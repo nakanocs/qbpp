@@ -78,6 +78,7 @@ This section provides examples of solving optimization, mathematical, and graph 
 22. [3-Digit Math Problem](3DIGIT_MATH) (Easy)
 23. [Minimum Set Cover Problem](SETCOVER) (Medium)
 24. [Minimum Maximal Matching Problem](MINMAX_MATCHING) (Medium)
+25. [Graph Coloring Problem](GRAPH_COLOR) (Easy)
 
 ## Quick References
 1. [Variables and Expressions](QR_VARIABLE)
