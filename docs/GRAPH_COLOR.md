@@ -96,7 +96,7 @@ Next, we print the values of `onehot` and `different` evaluated at `sol`. We als
 
 Finally, we draw the colored graph using `qbpp::graph::GraphDrawer`. Each node `i` is colored with color number `node_color[i] + 1`.
 
-The function qbpp::onehot_to_int() returns a vector of integers in the range $[0,m−1]$, where each entry indicates the position of the 1 in the corresponding row of the one-hot matrix. If a row is not a valid one-hot vector, the function returns 
+The function `qbpp::onehot_to_int()` returns a vector of integers in the range $[0,m−1]$, where each entry indicates the position of the 1 in the corresponding row of the one-hot matrix. If a row is not a valid one-hot vector, the function returns 
 $−1$ for that row.
 In this case, the node color becomes $-1 + 1 = 0$, so the node is drawn in color 0 (white).
 
