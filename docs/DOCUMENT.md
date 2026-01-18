@@ -79,6 +79,7 @@ This section provides examples of solving optimization, mathematical, and graph 
 23. [Minimum Set Cover Problem](SETCOVER) (Medium)
 24. [Minimum Maximal Matching Problem](MINMAX_MATCHING) (Medium)
 25. [Graph Coloring Problem](GRAPH_COLOR) (Easy)
+26. [Graph Edge Coloring Problem](EDGE_COLOR) (Easy)
 
 ## Quick References
 1. [Variables and Expressions](QR_VARIABLE)
