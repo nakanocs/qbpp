@@ -4,11 +4,11 @@ title: "8-Queens Problem"
 ---
 
 # N-Queens Problem
-The 8-Queens problem aims to place 8 queens on a chessboard so that no two queens attack each other; that is, no two queens share the same row, the same column, or the same diagonal (in either direction).
-The N-Queens problem generalizes this: place 
+The **8-Queens problem** aims to place 8 queens on a chessboard so that no two queens attack each other; that is, no two queens share the same row, the same column, or the same diagonal (in either direction).
+The **N-Queens problem** generalizes this: place 
 $N$ queens on an $N\times N$ chessboard under the same conditions.
 
-To formulate this problem using QUBO++, we use an $N\times N$ matrix $X=(x_{i,j}) of binary variables, where 
+To formulate this problem using QUBO++, we use an $N\times N$ matrix $X=(x_{i,j})$ of binary variables, where 
 $x_{i,j}=1 if a queen is placed at row $i$ and column $j$, and $x_{i,j}=0$ otherwise.
 We impose the following constraints:
 - Exactly one queen in each row:

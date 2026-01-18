@@ -5,7 +5,7 @@ title: "Greatest Common Divisor (GCD)"
 
 # Greatest Common Divisor (GCD)
 Let $P$ and $Q$ be two positive integers.
-The computation of the greatest common divisor (GCD) can be formulated as a HUBO problem.
+The computation of the **greatest common divisor (GCD)** can be formulated as a HUBO problem.
 
 Let $p$, $q$, and $r$ be positive integers satisfying the following constraints:
 

@@ -5,8 +5,8 @@ title: "Bar Cutting Problem"
 
 # Bar Cutting Problem
 Suppose that we are given $M$ identical bars of fixed length $L$, and a set of $N$ orders specified by pairs $(l_j,c_j)$
-(0≤j≤N−1), where $l_j$ is the required length and $c_j$ is the required quantity of order $j$.
-The bar cutting problem aims to determine how the $M$ bars can be cut to satisfy all orders.
+($0\leq j\leq N−1$), where $l_j$ is the required length and $c_j$ is the required quantity of order $j$.
+The **bar cutting problem** aims to determine how the $M$ bars can be cut to satisfy all orders.
 
 In general, the bar cutting problem is formulated as a minimization problem that seeks to minimize the number of used bars.
 For simplicity, in this example we consider the feasibility problem of determining whether the $M$ bars can fulfill all $N$ orders.

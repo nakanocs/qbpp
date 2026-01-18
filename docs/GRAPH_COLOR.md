@@ -4,7 +4,7 @@ title: "Graph Coloring Problem"
 ---
 
 # Graph Coloring Problem
-Given an undirected graph $G=(V,E)$, the graph coloring problem aims to assign a color to each node so that adjacent nodes receive different colors.
+Given an undirected graph $G=(V,E)$, the **graph coloring problem** aims to assign a color to each node so that adjacent nodes receive different colors.
 More specifically, for a set $C$ of colors, the goal is to find an assignment $\sigma:V\rightarrow C$ such that for every edge $(u,v)\in E$, we have $\sigma(u)\neq \sigma(v)$. The graph coloring problem can be formulated easily as a QUBO expression.
 Let $V=\lbrace 0,1,\ldots ,n−1\rbrace$ and $C=\lbrace 0,1,\ldots ,m−1\rbrace$.
 We introduce an $n\times m$ matrix $X=(x_{i,j})$ of binary variables, where $x_{i,j}=1$ if and only if node $i$ is assigned color $j$.

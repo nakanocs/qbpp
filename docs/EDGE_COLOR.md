@@ -4,10 +4,10 @@ title: "Graph Edge Coloring Problem"
 ---
 
 # Graph Edge Coloring Problem
-Given an undirected graph $G=(V,E)$, the graph edge coloring problem aims to assign a color to each edge so that no two edges of the same color share a common endpoint.
+Given an undirected graph $G=(V,E)$, the **graph edge coloring problem** aims to assign a color to each edge so that no two edges of the same color share a common endpoint.
 
 More specifically, for a set $C$ of colors, the goal is to find an assignment 
-$\sigma:E\rightarrow C$ such that for any two distinct edges $𝑒$ and $e'$ incident to the same node, we have $\sigma(e)\neq \sigma(e')$
+$\sigma:E\rightarrow C$ such that for any two distinct edges $𝑒$ and $e'$ incident to the same node, we have $\sigma(e)\neq \sigma(e')$.
 Equivalently, for every node $u\in V$ and any two distinct neighbors $v\neq v'$
 with $(u,v)\in E$ and $(u,v')\in E$ the following must hold:
 
@@ -29,7 +29,7 @@ $X$ must be one-hot:
 
 $$
 \begin{aligned}
-  \text{onehot}&= \sum_{i=0}^{e-1}\sum_{j=0}^{m-1}x_{i,j}==1\\
+  \text{onehot}&= \sum_{i=0}^{e-1}\bigr(\sum_{j=0}^{m-1}x_{i,j}==1\bigl)\\
    &=\sum_{i=0}^{e-1}\bigr(1-\sum_{j=0}^{m-1}x_{i,j}\bigl)^2
 \end{aligned}
 $$

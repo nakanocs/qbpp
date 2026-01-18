@@ -4,7 +4,7 @@ title: "Integer Linear Programming"
 ---
 
 # Integer Linear Programming (ILP)
-Integer Linear Programming (ILP) can be converted into a QUBO expression using QUBO++.
+**Integer Linear Programming (ILP)** can be converted into a QUBO expression using QUBO++.
 As an example, consider the following ILP:
 
 $$

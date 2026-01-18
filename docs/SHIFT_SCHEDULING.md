@@ -4,7 +4,7 @@ title: "Shift Scheduling"
 ---
 
 # Shift Scheduling Problem
-Consider the following shift scheduling problem, which aims to find a schedule that minimizes the total worker cost.
+Consider the following **shift scheduling problem**, which aims to find a schedule that minimizes the total worker cost.
 
 - There are 6 workers and a planning horizon of 31 days, from day 1 to day 31.
 For simplicity, we assume that all workers are off on day 0 and day 32.
