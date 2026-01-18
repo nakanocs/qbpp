@@ -18,8 +18,7 @@ $$
 
 The graph edge coloring problem can be formulated easily as a QUBO expression.
 Let $V=\lbrace 0,1,\ldots,n−1\rbrace$ and $C=\lbrace 0,1,\ldots,m−1\rbrace$.
-We assign unique IDs $0,1,\ldots,e−1$ to the $e=∣E∣$ edges, and let 
-$(u_i,v_i$)$ denote the $i$-th edge.
+We assign unique IDs $0,1,\ldots,e−1$ to the $e=∣E∣$ edges, and let $(u_i,v_i)$ denote the $i$-th edge.
 
 We introduce an $e\times m$ matrix $X=(x_{i,j})$ of binary variables, where 
 $x_{i,j}=1$ if and only if edge $(u_i,v_i)$ is assigned color $j$.
@@ -44,6 +43,7 @@ $$
    &=\sum_{u\in V}\sum_{\substack{i<k\\ i,k\in I(u)}}\sum_{j=0}^{m-1}x_{u,j}x_{v,j}
 \end{aligned}
 $$
+
 where $I(u)\subseteq \lbrace 0,1,\ldots,e−1\rbrace$ denotes the set of edge IDs incident to node $u$.
 
 ## QUBO objective
