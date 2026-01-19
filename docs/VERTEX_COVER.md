@@ -9,7 +9,7 @@ $S\subseteq V$ such that, for every edge $(u,v)\in E$, at least one of its endpo
 The **minimum vertex cover problem** is to find a vertex cover with minimum cardinality.
 
 We can formulate this problem as a QUBO expression.
-For an $n-node$ graph $G=(V,E)$ whose nodes are labeled $0,1,\ldots,n−1$,
+For an $n$-node graph $G=(V,E)$ whose nodes are labeled $0,1,\ldots,n−1$,
 we introduce $n$ binary variables $x_0,x_1,\ldots, x_{n-1}$, where $x_i=1$ if and only if node 
 $i$ is selected (i.e., $i\in S$).
 
@@ -22,6 +22,27 @@ $$
 $$
 
 For an edge $(i,j)$, the product $(1-x_i)(1-x_j)$ equals 1 only when neither endpoint is selected, meaning the edge is uncovered. Therefore, the sum counts the number of uncovered edges.
+
+Equivalently, since the condition $1\leq x_i+x_j\leq 2$ means that one or both endpoints are selected, we can write a QUBO++-style formulation as:
+
+$$
+\begin{aligned}
+\text{constraint'} &= \sum_{(i,j)\in E} (1\leq x_i+x_j\leq 2) \\
+                   &= \sum_{(i,j)\in E}(x_i+x_j-1)(x_i+x_j+2)
+\end{aligned}
+$$
+
+These two constraints are equivalent up to a constant scaling factor. Indeed, for binary variables,
+
+$$
+\begin{aligned}
+(1-x_i)(1-x_j) & = 1 -x_i -x_i +x_ix_j,\\
+(x_i+x_j-1)(x_i+x_j+2) &= 2 -2x_i -2x_i +2x_ix_j.
+\end{aligned}
+$$
+
+Both expressions evaluate to $1$ exactly when $x_i=x_j=0$ and to $0
+$0 otherwise; hence they impose the same feasibility condition (and differ only by an affine transformation when used as penalties).
 
 The objective is to minimize the number of selected vertices:
 
