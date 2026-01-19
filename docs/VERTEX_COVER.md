@@ -28,7 +28,7 @@ Equivalently, since the condition $1\leq x_i+x_j\leq 2$ means that one or both e
 $$
 \begin{aligned}
 \text{constraint'} &= \sum_{(i,j)\in E} (1\leq x_i+x_j\leq 2) \\
-                   &= \sum_{(i,j)\in E}(x_i+x_j-1)(x_i+x_j+2)
+                   &= \sum_{(i,j)\in E}(x_i+x_j-1)(x_i+x_j-2)
 \end{aligned}
 $$
 
@@ -37,12 +37,12 @@ These two constraints are equivalent up to a constant scaling factor. Indeed, fo
 $$
 \begin{aligned}
 (1-x_i)(1-x_j) & = 1 -x_i -x_i +x_ix_j,\\
-(x_i+x_j-1)(x_i+x_j+2) &= 2 -2x_i -2x_i +2x_ix_j.
+(x_i+x_j-1)(x_i+x_j-2) &= 2 -2x_i -2x_i +2x_ix_j.
 \end{aligned}
 $$
 
 Both expressions evaluate to $1$ exactly when $x_i=x_j=0$ and to $0
-$0 otherwise; hence they impose the same feasibility condition (and differ only by an affine transformation when used as penalties).
+$ otherwise; hence they impose the same feasibility condition (and differ only by an affine transformation when used as penalties).
 
 The objective is to minimize the number of selected vertices:
 
