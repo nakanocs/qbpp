@@ -56,7 +56,8 @@ Finally, the QUBO expression $f$ is given by:
 
 $$
 \begin{aligned}
-f &= \text{objective} + 2\times \text{constraint}
+f &= \text{objective} + 2\times \text{constraint}, \text{or}\\
+  &= \text{objective} + \text{constraint'}
 \end{aligned}
 $$
 
@@ -64,6 +65,7 @@ The penalty coefficient 2 is used to prioritize satisfying the constraint over m
 
 ## QUBO++ program for the minimum vertex cover problem
 The following QUBO++ program solves the minimum vertex cover problem for a graph with $N=16$ nodes:
+
 {% raw %}
 ```cpp
 #include "qbpp.hpp"
