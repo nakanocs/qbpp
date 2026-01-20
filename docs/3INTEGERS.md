@@ -11,8 +11,10 @@ The following math problem can be solved using QUBO++.
 Find integers $x$, $y$, $z$ that satisfy:
 
 $$
+\begin{aligned}
 \frac{1}{x}+\frac{1}{y}+\frac{1}{z} = 1\\
 1 < x < y < z
+\end{aligned}
 $$
 
 ### QUBO++ program
