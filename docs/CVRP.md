@@ -87,7 +87,7 @@ $$
 \end{aligned}
 $$
 
-row\_constraint attains its minimum value $0$
+**row\_constraint** attains its minimum value $0$
 if and only if every row is one-hot. 
 
 We also fix the first position to be the depot:
@@ -118,7 +118,7 @@ $$
 \end{aligned}
 $$
 
-consecutive\_constraint attains 0 if and only if the depot indicators are monotone nondecreasing in 
+**consecutive\_constraint** attains 0 if and only if the depot indicators are monotone nondecreasing in 
 $t$ ($1\leq t\leq N-1$).
 
 This constraint is redundant if the distance metric satisfies the triangle inequality (such “leave again” solutions cannot be optimal), but it often helps solvers avoid such non-optimal structures.
@@ -134,7 +134,7 @@ $$
 \end{aligned}
 $$
 
-column\_constraint is 0 if and only if every customer $i = 1, \dots ,N−1$ is visited exactly once.
+**column\_constraint** is 0 if and only if every customer $i = 1, \dots ,N−1$ is visited exactly once.
 
 ### Capacity constraint 
 For each vehicle $v$, the total delivered demand is
@@ -152,7 +152,7 @@ $$
 \end{aligned}
 $$
 
-capacity\_constraint is 0 if and only if all vehicles do not exceed their capacity.
+**capacity\_constraint** is 0 if and only if all vehicles do not exceed their capacity.
 
 
 ## Objective for QUBO formulation
