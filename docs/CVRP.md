@@ -87,7 +87,7 @@ $$
 \end{aligned}
 $$
 
-$\mathrm{row\_constraint}$ attains its minimum value $0$
+$\mathrm{row}\_\mathrm{constraint}$ attains its minimum value $0$
 if and only if every row is one-hot.
 
 We also fix the first position to be the depot:
