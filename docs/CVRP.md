@@ -114,11 +114,11 @@ This is enforced by penalizing the forbidden transition $1\rightarrow 0$:
 
 $$
 \begin{aligned}
-\text{consecutive\_constraint} &= \sum_{v=0}^{V-1}\sum_{t=1}^{N-2} (1-a_{v,t})a_{v,t+1}
+\text{consecutive}\_\text{constraint} &= \sum_{v=0}^{V-1}\sum_{t=1}^{N-2} (1-a_{v,t})a_{v,t+1}
 \end{aligned}
 $$
 
-$\text{consecutive\_constraint}$ attains 0 if and only if the depot indicators are monotone nondecreasing in 
+$\text{consecutive}\_\text{constraint}$ attains 0 if and only if the depot indicators are monotone nondecreasing in 
 $t$ ($1\leq t\leq N-1$).
 
 This constraint is redundant if the distance metric satisfies the triangle inequality (such “leave again” solutions cannot be optimal), but it often helps solvers avoid such non-optimal structures.
