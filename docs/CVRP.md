@@ -4,7 +4,7 @@ title: "CVRP"
 ---
 
 # Capacitated Vehicle Routing Problem (CVRP)
-The **Capacitated Vehicle Routing Problem (CVRP)** aims to find a set of routes for $V$ vehicles that start and end at a single depot and collectively serve all customers.
+The **Capacitated Vehicle Routing Problem (CVRP)** aims to find a set of routes for $V$ **vehicles** that start and end at a single **depot** and collectively serve all **customers**.
 We index the locations by $i \in \lbrace 0,1,\ldots,N-1\rbrace$, where location 0 denotes the depot and locations $1,\ldots,N-1$ are customers.  
 Each customer $i\in \lbrace 1,\ldots,N-1\rbrace$ has a demand $d_i$ to be delivered (and we set $d_0=0$ for the depot).  
 Each vehicle $v \in \lbrace 0,\ldots,V-1\rbrace$ departs from the depot, visits a subset of customers, and returns to the depot, subject to the capacity constraint that the total delivered demand on its route does not exceed the vehicle capacity $q_v$.
@@ -25,6 +25,7 @@ Each customer $1, \ldots, 9$ is visited exactly once by exactly one vehicle, so 
 
 ### Vehicle $v=0$
 Representing tour: $0\rightarrow 4\rightarrow 0$
+
 | $t\backslash i$ | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | onehot value |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
@@ -38,8 +39,10 @@ Representing tour: $0\rightarrow 4\rightarrow 0$
 | 8 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | 9 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 
+
 ### Vehicle $v=1$
 Representing tour: $0\rightarrow 6\rightarrow 5\rightarrow 8\rightarrow  0$
+
 | $t\backslash i$ | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | onehot value |
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | 0 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
@@ -54,6 +57,7 @@ Representing tour: $0\rightarrow 6\rightarrow 5\rightarrow 8\rightarrow  0$
 | 9 | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 
 ### Vehicle $v=2$
+
 Representing tour: $0\rightarrow 7\rightarrow 9\rightarrow 1\rightarrow  3\rightarrow  2\rightarrow  0$
 | $t\backslash i$ | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | onehot value | 
 |:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
