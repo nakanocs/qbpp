@@ -118,7 +118,7 @@ $$
 \end{aligned}
 $$
 
-$\text{consecutive}\_\text{constraint}$ attains 0 if and only if the depot indicators are monotone nondecreasing in 
+consecutive\_constraint attains 0 if and only if the depot indicators are monotone nondecreasing in 
 $t$ ($1\leq t\leq N-1$).
 
 This constraint is redundant if the distance metric satisfies the triangle inequality (such “leave again” solutions cannot be optimal), but it often helps solvers avoid such non-optimal structures.
