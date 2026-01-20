@@ -82,12 +82,12 @@ We impose the one-hot constraint:
 
 $$
 \begin{aligned}
-\text{row\_constraint} & = \sum_{v=0}^{V-1}\sum_{t=0}^{N-1}\bigr(\sum_{i=0}^{N-1} a_{v,t,i} = 1\bigl)\\
+\text{row}\_\text{constraint} & = \sum_{v=0}^{V-1}\sum_{t=0}^{N-1}\bigr(\sum_{i=0}^{N-1} a_{v,t,i} = 1\bigl)\\
  &= \sum_{v=0}^{V-1}\sum_{t=0}^{N-1}\bigr(1-\sum_{i=0}^{N-1} a_{v,t,i}\bigl)^2
 \end{aligned}
 $$
 
-\text{row\_constraint} attains its minimum value $0$
+$\text{row}\_\text{constraint}$ attains its minimum value $0$
 if and only if every row is one-hot.
 
 We also fix the first position to be the depot:
@@ -111,6 +111,7 @@ $$
 
 consists of consecutive 0’s followed by consecutive 1’s (i.e., once it becomes 1, it stays 1).
 This is enforced by penalizing the forbidden transition $1\rightarrow 0$:
+
 $$
 \begin{aligned}
 \text{consecutive\_constraint} &= \sum_{v=0}^{V-1}\sum_{t=1}^{N-2} (1-a_{v,t})a_{v,t+1}
