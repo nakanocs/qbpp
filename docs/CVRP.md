@@ -318,9 +318,9 @@ int main() {
 ```
 This program defines a $V\times N\times N$ array `a` of binary variables.
 It then defines the objective term `objective` and the constraint terms
-`row_constraint + column_constraint + consecutive_constraint + capacity_constraint`
+`row_constraint`, `column_constraint`. `consecutive_constraint` and `capacity_constraint`
 according to the formulation described above, and combines them into the penalized objective
-`f = objective + 100000 * ( ... )`.
+`f = objective + 100000 * ( row_constraint + column_constraint + consecutive_constraint + capacity_constraint )`.
 
 To fix the first visited location ($t=0$)
 of every vehicle to the depot (location 0), the program constructs a mapping `ml` and applies it to `f` using `qbpp::replace()`.
