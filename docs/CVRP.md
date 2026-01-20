@@ -161,9 +161,13 @@ The total tour cost is computed from consecutive visited locations:
 
 $$
 \begin{aligned}
-\text{objective} &= \sum_{v=0}^{V-1}\sum_{t=0}^{N-1}\sum_{i=0}^{N-1}\sum_{j=0}^{N-1}d_{i,j}x_{v,t,i}x_{v,(t+1)\bmod N, j}
+\text{objective} &= \sum_{v=0}^{V-1}\sum_{t=0}^{N-1}\sum_{i=0}^{N-1}\sum_{j=0}^{N-1}c_{i,j}x_{v,t,i}x_{v,(t+1)\bmod N, j}
 \end{aligned}
 $$
+
+If vehicle $v$ visits location $i$ at time step $t$ and then moves to location $j$ at time step $(t+1)\bmod N$, we have $x_{v,t,i}=x_{v,(t+1)\bmod N, j}=1$.
+In this case, the corresponding term contributes $c_{i,j}$ to the sum. Therefore, when all constraints are satisfied (so that each $(v,t)$ has exactly one active location), 
+$\text{objective}$ equals the total travel cost of all vehicles.
 
 Under the Euclidean metric, we have $c_{i,i}=0$ for all $i$, so staying at the same location does not add extra cost.
 
