@@ -82,12 +82,12 @@ We impose the one-hot constraint:
 
 $$
 \begin{aligned}
-\text{row}\_\text{constraint} & = \sum_{v=0}^{V-1}\sum_{t=0}^{N-1}\bigr(\sum_{i=0}^{N-1} a_{v,t,i} = 1\bigl)\\
+\mathrm{row}\_\mathrm{constraint} & = \sum_{v=0}^{V-1}\sum_{t=0}^{N-1}\bigr(\sum_{i=0}^{N-1} a_{v,t,i} = 1\bigl)\\
  &= \sum_{v=0}^{V-1}\sum_{t=0}^{N-1}\bigr(1-\sum_{i=0}^{N-1} a_{v,t,i}\bigl)^2
 \end{aligned}
 $$
 
-$\text{row}\_\text{constraint}$ attains its minimum value $0$
+$\mathrm{row\_constraint}$ attains its minimum value $0$
 if and only if every row is one-hot.
 
 We also fix the first position to be the depot:
