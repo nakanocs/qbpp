@@ -14,7 +14,7 @@ We assume that locations are points in the two-dimensional plane and that the tr
 Let $c_{i,j}$ denote the distance (cost) between locations $i$ and $j$.
 
 ## QUBO++ formulation: array of binary variables
-We use a $V\times N\times N$ array $A=(a_{v,t,i})$ ($0\leq v\leq N, 0\leq t,i\leq N-1$) of binary variables to formulate the CVRP as a QUBO expression,
+We use a $V\times N\times N$ array $A=(a_{v,t,i})$ ($0\leq v\leq V, 0\leq t,i\leq N-1$) of binary variables to formulate the CVRP as a QUBO expression,
 where $a_{v,t,i}$ is 1 if and only if the $t$-th visited location of vehicle $v$ is location $i$.
 
 Below is an example assignment of $A=(a_{v,t,i})$ with $V=3$ and $N=10$ representing
@@ -180,8 +180,7 @@ $$
 where $P$ is a sufficiently large constant so that feasibility (constraints) is prioritized over cost minimization.
 
 ## QUBO++ program
-The following QUBO++ program finds a solution to the CVRP instance with $N=10$
-$V=3$ vehicles.
+The following QUBO++ program finds a solution to the CVRP instance with $N=10$ locations and $V=3$ vehicles.
 The vector `locations` stores triples `(x,y,d)`, where  `(x,y)` is the 2D coordinate of the location and  `d` is the customer demand (with demand 0 for the depot).
 The vector `vehicle_capacity` stores the capacities of the $V=3$ vehicles.
 In this example, it is set to `{100, 200, 300}`, so vehicles 0, 1, and 2 have small, medium, and large capacities, respectively.
