@@ -125,3 +125,8 @@ This output indicates that the solver failed to assign a color to exactly one no
   <img src="images/graph_color_m3.svg" alt="The solution of the graph coloring problem with $m=3$ colors." width="80%">
 </p>
 
+
+<p align="center">
+  <img src="images/graph_color_m3.svg" alt="The solution of the graph coloring problem with $m=3$ colors." width="80%">
+</p>
+
