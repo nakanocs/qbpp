@@ -134,7 +134,7 @@ $$
 \end{aligned}
 $$
 
-$\text{column\_constraint}=0$ holds if and only if every customer $i = 1, \dots ,N−1$ is visited exactly once.
+column\_constraint is 0 if and only if every customer $i = 1, \dots ,N−1$ is visited exactly once.
 
 ### Capacity constraint 
 For each vehicle $v$, the total delivered demand is
@@ -148,11 +148,11 @@ Then the following constraint must be 0:
 
 $$
 \begin{aligned}
-\text{capacity\_constraint} &= \sum_{v=0}^{V-1}\Bigr(0\leq \sum_{t=1}^{N-1}\sum_{i=1}^{N-1}d_ix_{t,i}\leq q_v\Bigl)
+\text{capacity}\_\text{constraint} &= \sum_{v=0}^{V-1}\Bigr(0\leq \sum_{t=1}^{N-1}\sum_{i=1}^{N-1}d_ix_{t,i}\leq q_v\Bigl)
 \end{aligned}
 $$
 
-\text{capacity\_constraint} holds if all vehicles do not exceed their capacity.
+capacity\_constraint is 0 if and only if all vehicles do not exceed their capacity.
 
 
 ## Objective for QUBO formulation
@@ -173,7 +173,7 @@ Combining the objective and constraints, we obtain the QUBO:
 
 $$
 \begin{aligned}
-f &= \text{objective} + P\cdot (\text{row\_constraint}+\text{consecutive\_constraint}+\text{column\_constraint}+\text{capacity\_constraint}),
+f &= \text{objective} + P\cdot (\text{row}\_\text{constraint}+\text{consecutive}\_\text{constraint}+\text{column}\_\text{constraint}+\text{capacity}\_\text{constraint}),
 \end{aligned}
 $$
 
