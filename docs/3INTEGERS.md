@@ -17,6 +17,8 @@ $$
 \end{aligned}
 $$
 
+
+
 ### QUBO++ program
 
 Since QUBO++ can handle polynomial expressions, we first rewrite the constraints.
