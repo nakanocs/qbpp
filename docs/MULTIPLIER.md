@@ -1,25 +1,73 @@
 ---
 layout: default
-title: "Adder Simulation"
+title: "Multiplier SIMULATION and Factorization"
 ---
 
-# Adder Simulation
+# 
 
-## Full adder and ripple carry adder 
-A full adder has three input bits: $a$, $b$, and $i$ (carry-in) and
-$o$ (carry-out) and $s$ (sum).
-The sum of the three input bits is represented using these two output bits.
+## Multiplier SIMULATION and Factorization
+Multiplication of two integers can be done using additions.
+The below figure shows how 4-bit integers $x_3x_2x_1x_0$ and
+$y_3y_2y_1y_0$ and multiplied into 8-bit integer $z_7z_6z_5z_4z_3z_2z_1z_0$.
+In this figure, $p_{i,j}=x_iy_j$ ($0\leq i,j\leq 3$) and
+the sum of them is computed to obtain the 8-bit integer.
 
-A ripple-carry adder computes the sum of two multi-bit integers by cascading multiple full adders, as illustrated below:
 <p align="center">
- <img src="images/adder.svg" alt="4-bit ripple carry adder" width="50%">
+ <img src="images/multiplication.svg" alt="4-bit multiplication" width="50%">
 </p>
 
-This ripple-carry adder computes the sum of two 4-bit integers $x_3x_2x_1x_0$ and $y_3y_2y_1y_0$
-and outputs the 4-bit sum$z_3z_2z_1z_0$ using four full adders.
-The corresponding 5-bit carry signals $c_4c_3c_2c_1c_0$ are also shown.
+The sum of them computed by three 4-bit adders.
+They are connected by wires $c_{i,j}$ ($0\leq i\leq 2, 0\leq j\leq 3$).
+The figure below shows how they are connected:
+<p align="center">
+ <img src="images/multiplier.svg" alt="The 4-bit multiplier using tree 4-bit adders" width="50%">
+</p>
 
 ## QUBO formulation for full adder
+We will show QUBO formulation for simulating the 4-bit multiplier.
+For this purpose, we implement functions to create
+a full adder, an adder, and multiplier.
+
+### Full adder
+The QUBO exprssion for simuating the full adder 
+with 3 input bits `a`, `b`, `i`, and 2 outbit bits carry out `o` and the sum `s` is as follows:
+```cpp
+qbpp::Expr fa(const qbpp::Expr& a, const qbpp::Expr& b, const qbpp::Expr& i,
+              const qbpp::Expr& o, const qbpp::Expr& s) {
+  return (a + b + i) - (2 * o + s) == 0;
+}
+```
+The function `fa` returns an expression for simulating a full adder
+such that the input and output bits are consistent with the full adder.
+
+### Adder
+Consider that the vectors of `qbpp::Expr` objects `a`, `b`, and `s` representing integers
+are given.
+We assume that `a` and `b` has `N` elements, while `s` has `N + 1`
+elements.
+The following function `adder` retuns the QUBO expression
+that achieves a minimum value of 0 if the sum of `a` and `b`
+is equal to `s`:
+```cpp
+qbpp::Expr adder(const qbpp::Vector<qbpp::Expr>& a,
+                 const qbpp::Vector<qbpp::Expr>& b,
+                 const qbpp::Vector<qbpp::Expr>& s) {
+  auto N = a.size();
+  auto c = qbpp::var(N + 1);
+  auto f = qbpp::toExpr(0);
+  for (size_t j = 0; j < N; ++j) {
+    f += fa(a[j], b[j], c[j], c[j + 1], s[j]);
+  }
+  f.replace({{c[0], 0}, {c[N], s[N]}});
+  return f;
+}
+```
+In this function, `c` is a vector of `N` variables used to
+connect four `fa` objects.
+They are 
+
+
+
 A full adder can be formulated using the following expression:
 
 $$
