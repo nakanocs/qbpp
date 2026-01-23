@@ -120,6 +120,7 @@ The following program constructs a 4-bit multiplier with
 - `x`: 4 binary variables,
 - `y`: 4 binary variables,
 - `z`: a vector of constants `{1, 1, 1, 1, 0, 0, 0, 1}`, representing the 8-bit integer `10001111` `(143)`, and stores the resulting expression in `f`:
+{% raw %}
 ```cpp
 #include "qbpp.hpp"
 #include "qbpp_easy_solver.hpp"
@@ -207,6 +208,7 @@ int main() {
   std::cout << std::endl;
 }
 ```
+{% endraw %}
 The Easy Solver is executed on `f`, and the obtained solution is stored in `sol`.
 The resulting values of `x` and `y` are printed as:
 ```
