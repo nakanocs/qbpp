@@ -52,37 +52,7 @@ sections by providing a deeper understanding of QUBO++.
 12. [ABS3 Solver Usage](ABS3)
 13. [Gurobi Solver Usage](GUROBI)
 
-## Case Study
-This section provides examples of solving optimization, mathematical, and graph problems using QUBO++.
-1. [Pythagorean Triples](PYTHAGOREAN) (Easy)
-2. [Magic Square](MAGIC) (Hard)
-3. [Traveling Salesman Problem](TSP) (Medium)
-4. [Remainder Problem](REMAINDER) (Easy)
-5. [Square Root](SQRT) (Medium)
-6. [Cubic Equation](CUBIC_EQUATION) (Easy)
-7. [Knapsack Problem](KNAPSACK) (Medium)
-8. [Adder Simulation](ADDER) (Medium)
-9. [LABS problem](LABS) (Medium)
-10. [Shift Scheduling Problem](SHIFT_SCHEDULING) (Hard)
-11. [Greatest Common Divisor (GCD)](GCD) (Easy)
-12. [Bar Cutting Problem](BAR_CUTTING) (Hard)
-13. [Integer Linear Programming](ILP) (Easy)
-14. [N-Queens Problem](QUEENS) (Medium)
-15. [Graph Drawing Library and MIS Problem](GRAPH) (Easy)
-16. [Max-Cut Problem](MAXCUT) (Easy)
-17. [Maximum Matching Problem](MAX_MATCHING) (Easy)
-18. [Maximum Clique Problem](MAX_CLIQUE) (Easy)
-19. [Minimum Vertex Cover Problem](VERTEX_COVER) (Easy)
-20. [Minimum Dominating Set Problem](DOMINATING) (Medium)
-21. [Subgraph Isomorphism Problem](SUBGRAPH_ISOMORPHISM) (Hard)
-22. [3-Digit Math Problem](3DIGIT_MATH) (Easy)
-23. [Minimum Set Cover Problem](SETCOVER) (Medium)
-24. [Minimum Maximal Matching Problem](MINMAX_MATCHING) (Medium)
-25. [Graph Coloring Problem](GRAPH_COLOR) (Easy)
-26. [Graph Edge Coloring Problem](EDGE_COLOR) (Easy)
-27. [Capacitated Vehicle Routing Problem (CVRP)](CVRP) (Hard)
-28. [Math Problem: Find Three Integers](3INTEGERS) (Easy)
-29. [Multiplier Simulation and Factorization](MULTIPLIER) (Hard)
+
 
 ## Quick References
 1. [Variables and Expressions](QR_VARIABLE)

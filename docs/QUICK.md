@@ -69,4 +69,5 @@ x = 6, y = 4
 
 ## Next steps
 1. Activate the Anonymous Trial license or your license key. See Installation in **Installation** in [**QUBO++ Document**](DOCUMENT).
-2. Learn the basics of QUBO++. Start from **Basics** in [**QUBO++ Document**](DOCUMENT).
+2. Learn the basics of QUBO++. Start with**Basics** in [**QUBO++ Document**](DOCUMENT).
+3. Explore example QUBO++ programs in the [**Case Stidies**](CASE_STUDIES)
