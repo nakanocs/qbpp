@@ -82,6 +82,7 @@ This section provides examples of solving optimization, mathematical, and graph 
 26. [Graph Edge Coloring Problem](EDGE_COLOR) (Easy)
 27. [Capacitated Vehicle Routing Problem (CVRP)](CVRP) (Hard)
 28. [Math Problem: Find Three Integers](3INTEGERS) (Easy)
+29. [Multiplier Simulation and Factorization](MULTIPLIER) (Hard)
 
 ## Quick References
 1. [Variables and Expressions](QR_VARIABLE)
