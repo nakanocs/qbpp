@@ -25,7 +25,9 @@ This function converts the given expression `f` into an internal format that is
 used during the solution search.
 
 ## Setting Exhaustive Solver Options
-- **`enable_default_callback()`**
+- **`verbose()`**:
+Displays the search progress as a percentage, which is helpful for estimating the total runtime.
+- **`enable_default_callback()`**:
 Enables the default callback function, which prints newly obtained best solutions.
 
 ## Searching Solutions

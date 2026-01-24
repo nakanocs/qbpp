@@ -100,7 +100,7 @@ library itself does not require linking against TBB for the default use cases.
 
 ## License Types
 QUBO++ uses Cryptlex for license management.
-When activating a node-locked license, some information about the execution environment (e.g., hardware identifiers) is securely stored on Cryptlex servers to verify the license.
+When activating a node-locked license, some information about the execution environment is securely stored on Cryptlex servers to verify the license.
 
 - **Anonymous Trial**  
   - No license key required  
