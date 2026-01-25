@@ -192,128 +192,48 @@ In this example, it is set to `{100, 200, 300}`, so vehicles 0, 1, and 2 have sm
 ```cpp
 #include "qbpp.hpp"
 #include "qbpp_easy_solver.hpp"
-#include "qbpp_graph.hpp"
 
 int main() {
-  std::vector<std::tuple<float, float, int>> locations = {
-      {200, 200, 0},  {247, 296, 44}, {31, 393, 57}, {96, 398, 94},
-      {391, 230, 91}, {118, 95, 66},  {197, 99, 59}, {224, 8, 10},
-      {3, 10, 52},    {281, 379, 83}};
-  std::vector<int> vehicle_capacity = {100, 200, 300};
+  const int L = 60;
+  const qbpp::Vector<int> l = {13, 23, 8, 11};
+  const qbpp::Vector<int> c = {10, 4, 8, 6};
+  const size_t N = l.size();
+  const size_t M = 5;
 
-  const size_t N = locations.size();
-
-  const int V = vehicle_capacity.size();
-
-  auto a = qbpp::var("a", V, N, N);
-
-  auto row_constraint = qbpp::sum(qbpp::vector_sum(a) == 1);
-
-  auto column_sum = qbpp::expr(N - 1);
-  for (size_t v = 0; v < V; ++v) {
-    for (size_t t = 0; t < N; ++t) {
-      for (size_t i = 1; i < N; ++i) {
-        column_sum[i - 1] += a[v][t][i];
-      }
-    }
-  }
-  auto column_constraint = qbpp::sum(column_sum == 1);
-
-  auto consecutive_constraint = qbpp::toExpr(0);
-  for (size_t v = 0; v < V; ++v) {
-    for (size_t t = 1; t < N - 1; ++t) {
-      consecutive_constraint += a[v][t][0] * (1 - a[v][t + 1][0]);
-    }
+  auto x = qbpp::Vector<qbpp::Vector<qbpp::VarInt>>(M);
+  for (size_t i = 0; i < M; i++) {
+    x[i] = 0 <= qbpp::var_int("x[" + qbpp::str(i) + "]", N) <= c;
   }
 
-  auto vehicle_load = qbpp::expr(V);
-  auto capacity_constraint = qbpp::toExpr(0);
-  for (size_t v = 0; v < V; ++v) {
-    for (size_t t = 0; t < N; ++t) {
-      for (size_t i = 1; i < N; ++i) {
-        const auto [x, y, q] = locations[i];
-        vehicle_load[v] += a[v][t][i] * q;
-      }
-    }
-    capacity_constraint += 0 <= vehicle_load[v] <= vehicle_capacity[v];
+  auto order_fulfilled_count = qbpp::vector_sum(qbpp::transpose(x));
+  auto order_constraint = order_fulfilled_count - c == 0;
+
+  auto bar_length_used = qbpp::expr(M);
+  for (size_t i = 0; i < M; i++) {
+    bar_length_used[i] = qbpp::sum(x[i] * l);
   }
+  auto bar_constraint = 0 <= bar_length_used <= L;
 
-  auto objective = qbpp::toExpr(0);
-  for (size_t v = 0; v < V; ++v) {
-    for (size_t t = 0; t < N; ++t) {
-      auto next_t = (t + 1) % N;
-      for (size_t i = 0; i < N; ++i) {
-        const auto [x1, y1, q1] = locations[i];
-        for (size_t j = 0; j < N; ++j) {
-          const auto [x2, y2, q2] = locations[j];
-          int dist = static_cast<int>(
-              std::sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)));
-          objective += dist * a[v][t][i] * a[v][next_t][j];
-        }
-      }
-    }
-  }
-
-  auto f = objective + 100000 * (row_constraint + column_constraint + consecutive_constraint + capacity_constraint);
-
-  qbpp::MapList ml;
-  for (size_t v = 0; v < V; ++v) {
-    ml.push_back({a[v][0][0], 1});
-    for (size_t i = 1; i < N; ++i) {
-      ml.push_back({a[v][0][i], 0});
-    }
-  }
-
-  auto g = qbpp::replace(f, ml);
+  auto f = qbpp::sum(order_constraint) + qbpp::sum(bar_constraint);
   f.simplify_as_binary();
-  g.simplify_as_binary();
-  auto solver = qbpp::easy_solver::EasySolver(g);
 
+  auto solver = qbpp::easy_solver::EasySolver(f);
+  solver.time_limit(10.0);
+  solver.target_energy(0);
   auto sol = solver.search();
-
-  auto full_sol = qbpp::Sol(f);
-  full_sol.set(ml);
-  full_sol.set(sol);
-
-  std::cout << "row_constraint = " << row_constraint(full_sol) << std::endl;
-  std::cout << "column_constraint = " << column_constraint(full_sol) << std::endl;
-  std::cout << "consecutive_constraint = " << consecutive_constraint(full_sol) << std::endl;
-  std::cout << "capacity_constraint = " << capacity_constraint(full_sol) << std::endl;
-  std::cout << "objective = " << objective(full_sol) << std::endl;
-
-  auto tour = qbpp::onehot_to_int(full_sol(a));
-
-  for (size_t v = 0; v < V; ++v) {
-    std::cout << "Vehicle " << v << " : load = " << vehicle_load[v](full_sol)
-              << " / " << vehicle_capacity[v];
-    std::cout << " : 0 ";
-    for (size_t t = 1; t < N; ++t) {
-      auto node = tour[v][t];
-      if (node > 0) {
-        std::cout << "-> " << node << "("
-                  << std::get<2>(locations[static_cast<size_t>(node)]) << ") ";
-      }
+  for (size_t i = 0; i < M; i++) {
+    std::cout << "Bar " << i << ":  ";
+    for (size_t j = 0; j < N; j++) {
+      std::cout << sol(x[i][j]) << "  ";
     }
-    std::cout << "-> 0" << std::endl;
+    std::cout << " used = " << sol(bar_length_used[i])
+              << ", waste = " << L - sol(bar_length_used[i]) << std::endl;
   }
-
-  qbpp::graph::GraphDrawer graph;
-  for (size_t i = 0; i < locations.size(); ++i) {
-    const auto [x, y, q] = locations[i];
-    graph.add_node(qbpp::graph::Node(i).position(x, y).xlabel(
-        q != 0 ? std::to_string(q) : ""));
+  for (size_t j = 0; j < N; j++) {
+    std::cout << "Order " << j
+              << " fulfilled = " << sol(order_fulfilled_count[j])
+              << ", required = " << c[j] << std::endl;
   }
-
-  for (size_t v = 0; v < V; ++v) {
-    for (size_t i = 0; i < N; ++i) {
-      int from = tour[v][i];
-      int to = tour[v][(i + 1) % N];
-      if (from < 0 || to < 0 || from == to) continue;
-      graph.add_edge(qbpp::graph::Edge(from, to).color(v + 1).penwidth(2.0f));
-    }
-  }
-  graph.draw();
-  graph.write("cvrp.svg");
 }
 ```
 This program defines a $V\times N\times N$ array `a` of binary variables.
