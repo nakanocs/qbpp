@@ -5,7 +5,7 @@ title: "Interval Subset Sum Problem (ISSP)"
 
 # Interval Subset Sum Problem (ISSP)
 The **Interval Subset Sum Problem (ISSP)** is a generalization of the **Subset Sum Problem**.
-Given $n$ integer intervals $[l_i, u_i]$ $(0\leq i\leq n-1)$ and an upper bound $T$, the goal is to choose an integer value
+Given $n$ integer **intervals $[l_i, u_i]$** $(0\leq i\leq n-1)$ and an **upper bound $T$**, the goal is to choose an integer value
 
 $$
 \begin{aligned}
@@ -48,6 +48,7 @@ s_iv_i &= 0 && \text{if } s_i= 0\\
 $$
 
 Let
+
 $$
 \begin{aligned}
 \text{sum} &= \sum_{i=0}^{n-1} s_i v_i .
@@ -63,7 +64,7 @@ $$
 \end{aligned}
 $$
 
-Since $s_i v_i$ is quadratic in binary variables, $\text{sum}$ is quadratic and the constraint penalty becomes quartic.
+Since $s_i v_i$ is quadratic in binary variables, $\text{sum}$ is quadratic and $\text{constraint}$ becomes quartic.
 
 Because the ISSP maximizes the sum under the upper bound $T$, we minimize the negative sum:
 $$
