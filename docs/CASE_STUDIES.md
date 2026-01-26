@@ -30,13 +30,6 @@ This section provides examples of solving optimization, mathematical, and graph 
 12. [Capacitated Vehicle Routing Problem (CVRP)](CVRP) (Hard)
 13. [Traveling Salesman Problem](TSP) (Medium)
 
-## Puzzle
-1. [Magic Square](MAGIC) (Hard)
-2. [N-Queens Problem](QUEENS) (Medium)
-
-## Circuit simulation
-1. [Adder Simulation](ADDER) (Medium)
-2. [Multiplier Simulation and Factorization](MULTIPLIER) (Hard)
 
 ## Combinatorial optimization problems
 1. [Knapsack Problem](KNAPSACK) (Medium)
@@ -44,3 +37,13 @@ This section provides examples of solving optimization, mathematical, and graph 
 3. [LABS problem](LABS) (Medium)
 4. [Bar Cutting Problem](BAR_CUTTING) (Hard)
 5. [Integer Linear Programming](ILP) (Easy)
+6. [Interval Subset Sum Problem (ISSP)](ISSP) (Hard)
+
+
+## Puzzle
+1. [Magic Square](MAGIC) (Hard)
+2. [N-Queens Problem](QUEENS) (Medium)
+
+## Circuit simulation
+1. [Adder Simulation](ADDER) (Medium)
+2. [Multiplier Simulation and Factorization](MULTIPLIER) (Hard)
