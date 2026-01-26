@@ -32,7 +32,7 @@ $$
 ## HUBO formulation of the ISPP
 An integer variable can be represented by multiple binary variables using a binary encoding.
 In QUBO++, such integer variables can be defined easily as shown in
-[Integer Variables and Solving Simultaneous Equations](Integer.md).
+[Integer Variables and Solving Simultaneous Equations](INTEGER).
 
 Let $v_i$ $(0\leq i\leq n-1)$ be an integer variable that can take a value in $[l_i, u_i]$.
 We also introduce a binary variable $s_i$  $(0\leq i\leq n-1)$ such that $s_i=1$ if and only if
