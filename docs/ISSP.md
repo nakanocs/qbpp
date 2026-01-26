@@ -67,6 +67,7 @@ $$
 Since $s_i v_i$ is quadratic in binary variables, $\text{sum}$ is quadratic and $\text{constraint}$ becomes quartic.
 
 Because the ISSP maximizes the sum under the upper bound $T$, we minimize the negative sum:
+
 $$
 \begin{aligned}
  \text{objective} &= -\sum_{i=0}^{n-1} s_iv_i 
@@ -198,6 +199,7 @@ $$
 $$
 
 Finally, since ISSP maximizes $\text{sum}$ under the upper bound $T$, we minimize
+
 $$
 \begin{aligned}
  \text{objective} &= -\sum_{i=0}^{n-1} v_i 
@@ -234,6 +236,7 @@ int main() {
   auto constraint2 = 0 <= sum <= T;
   auto f = -sum + 1000 * (constraint1 + constraint2);
   f.simplify_as_binary();
+  
   auto solver = qbpp::easy_solver::EasySolver(f);
   solver.target_energy(-T);
   auto sol = solver.search();
