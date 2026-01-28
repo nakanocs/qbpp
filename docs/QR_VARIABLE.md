@@ -125,6 +125,15 @@ The following functions are provided to create integer variables:
   The resulting type is `qbpp::Vector<qbpp::VarInt>`.  
   Higher-dimensional arrays of `qbpp::VarInt` objects can be created in the same way as `qbpp::Var` objects.
 
+- **`qbpp::var_int("name") == k`**:
+  Creates a `qbpp::VarInt` object named `"name"` that represents the constant integer value `k`.
+  Typically, `k` is set to 0, and the variable is later updated to a desired range.
+
+- **`qbpp::var_int("name", s1) == k`**:
+  Creates a one-dimensional array (vector) of `qbpp::VarInt` objects with the base name `"name"`,
+  each representing the constant integer value `k`.
+  Higher-dimensional arrays are also supported.
+
 ### Integer variable member functions
 For a `qbpp::VarInt` instance `x`, the following member functions are available:
 
