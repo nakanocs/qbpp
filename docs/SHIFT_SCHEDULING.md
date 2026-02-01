@@ -148,6 +148,7 @@ int main() {
     ml.push_back({x[i][0], 0});
     ml.push_back({x[i][days + 1], 0});
   }
+  f.simplify_as_binary();
 
   auto g = qbpp::replace(f, ml);
   g.simplify_as_binary();
@@ -171,9 +172,7 @@ int main() {
   }
   std::cout << std::endl;
 
-  auto sol_f = qbpp::Sol(f);
-  sol_f.set(ml);
-  sol_f.set(sol);
+  auto sol_f = qbpp::Sol(f).set(ml).set(sol);
 
   std::cout << "Total worker cost: " << sol_f(total_worker_cost) << std::endl;
   std::cout << "Constraints violations: " << sol_f(constraints) << std::endl;

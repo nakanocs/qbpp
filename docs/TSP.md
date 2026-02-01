@@ -10,7 +10,7 @@ We assume that the nodes are placed on a plane and that the tour length is measu
 In the figure below, an example of nine nodes and an optimal tour is shown:
 
 <p align="center">
-  <img src="images/tsp.svg" alt="An example of nodes and the TSP solution" width="50%">
+  <img src="images/tsp_solution.svg" alt="An example of nodes and the TSP solution" width="50%">
 </p>
 
 
@@ -22,7 +22,7 @@ Let $X=(x_{i,j})$ ($0\leq i,j\leq n-1$) is a matrix of $n\times n$ binary values
 The matrix $X$ is a **permutation matrix** each row and each column contains exactly one entry equal to 1, as illustrated below.
 
 <p align="center">
-  <img src="images/matrix.svg" alt="A permutation matrix of size 3x3" width="50%">
+  <img src="images/matrix.svg" alt="A permutation matrix of size 4x4" width="50%">
 </p>
 
 We interpret  $x_{k,i}$ as "the $k$-th position in the tour is node $i$".
@@ -51,14 +51,14 @@ $j$ is visited next (at position $(k+1)\bmod n$), so it equals the total length 
 Using the permutation-matrix formulation above, we can write a QUBO++ program for the TSP as follows:
 {% raw %}
 ```cpp
-
 #include "qbpp.hpp"
 #include "qbpp_easy_solver.hpp"
+#include "qbpp_graph.hpp"
 
 class Nodes {
-  std::vector<std::pair<int, int>> nodes{{0, 0},  {0, 10},  {0, 20},
-                                         {10, 0}, {10, 10}, {10, 20},
-                                         {20, 0}, {20, 10}, {20, 20}};
+  std::vector<std::pair<int, int>> nodes{{10, 12},  {33, 125},  {12, 226},
+                                         {121, 11}, {108, 142}, {111, 243},
+                                         {220, 4},  {210, 113}, {211, 233}};
 
  public:
   const std::pair<int, int>& operator[](std::size_t index) const {
@@ -81,8 +81,8 @@ int main() {
   auto nodes = Nodes{};
   auto x = qbpp::var("x", nodes.size(), nodes.size());
 
-  auto constraints = qbpp::sum(qbpp::vector_sum(x) == 1) +
-                     qbpp::sum(qbpp::vector_sum(qbpp::transpose(x)) == 1);
+  auto constraint = qbpp::sum(qbpp::vector_sum(x, 1) == 1) +
+                    qbpp::sum(qbpp::vector_sum(x, 0) == 1);
 
   auto objective = qbpp::expr();
   for (size_t i = 0; i < nodes.size(); ++i) {
@@ -102,20 +102,34 @@ int main() {
   auto solver = qbpp::easy_solver::EasySolver(f);
   solver.time_limit(1.0);
   auto sol = solver.search();
-  auto result = qbpp::onehot_to_int(sol(x));
-  std::cout << "Result: " << result << std::endl;
+  auto tour = qbpp::onehot_to_int(sol(x));
+
+  std::cout << "Tour: " << tour << "\n";
+  auto graph = qbpp::graph::GraphDrawer();
+  for (size_t i = 0; i < nodes.size(); ++i) {
+    graph.add(qbpp::graph::Node(i).position(nodes[i].first, nodes[i].second));
+  }
+  for (size_t i = 0; i < nodes.size(); ++i) {
+    auto from = tour[i];
+    auto to = tour[(i + 1) % nodes.size()];
+    graph.add(qbpp::graph::Edge(from, to).color("red").penwidth(2).directed());
+  }
+  graph.write("tsp_solution.svg");
 }
 ```
 {% endraw %}
-In this program, the coordinates of nodes 0 through 8 are stored in a `Nodes` object `nodes`.
-We create a 2D array `x` of binary variables and build the one-hot constraints and the tour-length objective.
-They are combined into a single QUBO expression `f` by adding the constraints with a penalty weight (here, 1000) to prioritize feasibility.
+In this program, the coordinates of nodes `0` through `8` are stored in a `Nodes` object named `nodes`.
+We create a 2D array `x` of binary variables and construct the one-hot constraints together with the tour-length objective.
+These terms are combined into a single QUBO expression `f` by adding the constraints with a penalty weight (here, `1000`) to prioritize feasibility.
+
 We then solve `f` using EasySolver with a 1.0-second time limit.
-The resulting assignment `sol(x)` is a permutation matrix, which is converted to a list of integers (a permutation) by `qbpp::onehot_to_int()`, and printed.
+The resulting assignment `sol(x)` forms a permutation matrix.
+This matrix is converted into a list of integers (a permutation) called `tour` using `qbpp::onehot_to_int()`, and then printed.
+Finally, the computed `tour` is rendered as a directed graph and saved to the file `tsp_solution.svg`.
 
 This program produces the following output:
 ```
-Result: {7,8,5,2,1,0,3,4,6}
+Tour: {7,8,5,2,4,1,0,3,6}
 ```
 
 ## Fixing the first node

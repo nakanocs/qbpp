@@ -91,10 +91,10 @@ int main() {
 
   qbpp::graph::GraphDrawer graph;
   for (size_t i = 0; i < N; ++i) {
-    graph.add_node(qbpp::graph::Node(i).color(sol(x[i])));
+    graph.add(qbpp::graph::Node(i).color(sol(x[i])));
   }
   for (const auto& e : edges) {
-    graph.add_edge(qbpp::graph::Edge(e.first, e.second));
+    graph.add(qbpp::graph::Edge(e.first, e.second));
   }
   graph.write("mis.svg");
 }
@@ -114,7 +114,7 @@ constraint = 0
 This implies that the obtained solution selects 7 nodes and satisfies all constraints. The rendered image is saved as `mis.svg`:
 
 <p align="center">
-  <img src="images/mis.svg" alt="The solution of the MIS problem." width="80%">
+  <img src="images/mis.svg" alt="The solution of the MIS problem." width="50%">
 </p>
 
 ## API of the QUBO++ Simple Graph Drawing Library
@@ -157,9 +157,9 @@ Sets the pen width to `f` for drawing the edge.
 
 ### `qbpp::graph::GraphDrawing`
 The following member functions are supported:
-- **`add_node(const Node& node)`**:
+- **`add(const Node& node)`**:
 Appends node to the graph.
-- **`add_edge(const Edge& edge)`**:
+- **`add(const Edge& edge)`**:
 Appends edge to the graph.
 - **`write(std::string file_name)`**:
 Renders the graph and writes it to `file_name`.
