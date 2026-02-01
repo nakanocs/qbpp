@@ -43,6 +43,7 @@ sections by providing a deeper understanding of QUBO++.
 3. [Basic Operators and Functions for Vectors](OPVECTOR)
 4. [Multi-dimensional Variables and Expressions](MULTIDIM)
 5. [Integer Variables](QBPP_VARINT)
+6. [Integers with Vector Operations and Functions](INT_VECTOR)
 6. [Comparison Operators](COMPARISON)
 7. [Expression Classes](EXPRESSION)
 8. [Evaluating Expressions](EVAL)
@@ -52,8 +53,6 @@ sections by providing a deeper understanding of QUBO++.
 12. [Exhaustive Solver Usage](EXHAUSTIVE)
 13. [ABS3 Solver Usage](ABS3)
 14. [Gurobi Solver Usage](GUROBI)
-
-
 
 ## Quick References
 1. [Variables and Expressions](QR_VARIABLE)
