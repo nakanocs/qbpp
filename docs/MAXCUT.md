@@ -62,14 +62,14 @@ int main() {
   std::cout << "objective = " << objective(sol) << std::endl;
   qbpp::graph::GraphDrawer graph;
   for (size_t i = 0; i < N; ++i) {
-    graph.add_node(qbpp::graph::Node(i).color(sol(x[i])));
+    graph.add(qbpp::graph::Node(i).color(sol(x[i])));
   }
   for (const auto& e : edges) {
     auto edge = qbpp::graph::Edge(e.first, e.second);
     if (sol(x[e.first]) != sol(x[e.second])) {
       edge.color(1).penwidth(2.0);
     }
-    graph.add_edge(edge);
+    graph.add(edge);
   }
   graph.write("maxcut.svg");
 }

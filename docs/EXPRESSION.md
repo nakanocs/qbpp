@@ -11,7 +11,7 @@ The following three classes are used for this purpose:
 |------|-----|-----|
 | `qbpp::Var` | A variable  |  a 32-bit ID and a string to display |
 | `qbpp::Term` | A product term | Zero or more variables and an integer coefficient |
-| `qbpp::Expr` | An expression | Zero ore moter terms and an integer constant term |
+| `qbpp::Expr` | An expression | Zero ore mote terms and an integer constant term |
 
 ## `qbpp::Var` class
 An instance of this class represents **a variable symbolically**.

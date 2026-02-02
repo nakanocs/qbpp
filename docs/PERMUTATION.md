@@ -119,7 +119,7 @@ Using `qbpp::vector_sum()`, we can compute the row-wise and column-wise sums of 
 
 A scalar–vector operation can be used to subtract 1 from each element:
 - **`qbpp::vector_sum(x, 1) - 1`**: subtracts 1 from each row-wise sum.
-- **`qbpp::vector_sum(x, 0) - 1`: subtracts 1 from each column-wise sum.
+- **`qbpp::vector_sum(x, 0) - 1`**: subtracts 1 from each column-wise sum.
 
 For these two vectors of size `n`, `qbpp::sqr()` squares each element, and `qbpp::sum()` computes the sum of all elements.
 

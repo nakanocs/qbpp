@@ -34,6 +34,7 @@ int main() {
   auto p = qbpp::sum(w * x);
   auto q = qbpp::sum(w * (1 - x));
   auto f = qbpp::sqr(p - q);
+  f.simplify_as_binary();
 
   qbpp::MapList ml({{x[0], 1}, {x[1], 0}});
   auto g = qbpp::replace(f, ml);
@@ -41,9 +42,7 @@ int main() {
   auto solver = qbpp::exhaustive_solver::ExhaustiveSolver(g);
   auto sol = solver.search();
 
-  qbpp::Sol full_sol(f);
-  full_sol.set(sol);
-  full_sol.set(ml);
+  auto full_sol = qbpp::Sol(f).set(sol, ml);
 
   std::cout << "sol = " << sol << std::endl;
   std::cout << "ml = " << ml << std::endl;
@@ -76,12 +75,8 @@ The resulting expression is stored in **`g`**.
 The Exhaustive Solver is then applied to `g` to find an optimal solution, which is stored in `sol`.
 Note that the expression `g` no longer contains the variables `x[0]` and `x[1]`, and consequently, `sol` also does not include assignments for these variables.
 
-To construct a complete solution that includes all variables, we create a `qbpp::Sol` object **`full_sol`** from the original expression `f`.
-Initially, `full_sol` represents an all-zero solution.
-We then use the `set()` member function to incorporate both:
-- the solution **`sol`** obtained from the reduced problem, and
-- the fixed assignments specified in **`ml`**.
-These assignments are combined and stored in `full_sol`.
+To construct a complete solution `full_sol` for the original expression `f`,
+a `qbpp::Sol` object is created for `f`, and both `sol` and `ml` are applied to it.
 
 From the output below, we can confirm that 64 is placed in $P$ and 27 is placed in $Q$, as intended:
 {% raw %}
@@ -112,9 +107,7 @@ The following C++ program implements this idea:
   auto solver = qbpp::exhaustive_solver::ExhaustiveSolver(g);
   auto sol = solver.search();
 
-  qbpp::Sol full_sol(f);
-  full_sol.set(sol);
-  full_sol.set({{x[0], sol(1 - x[1])}});
+  auto full_sol = qbpp::Sol(f).set(sol, ml);
 ```
 {% endraw %}
 In this program, a qbpp::MapList object ml is defined so that the variable `x[0]` is replaced by the expression `1 - x[1]`.
@@ -125,15 +118,11 @@ As a result, `g` no longer contains the variable `x[0]`; instead, all occurrence
 The Exhaustive Solver is then used to find an optimal solution for `g`, which is stored in `sol`.
 Since `x[0]` does not appear in `g`, the solution sol also does not include an assignment for `x[0]`.
 
-To construct a complete solution for the original expression `f`, a `qbpp::Sol` object `full_sol` is created.
-First, the assignments in `sol` are copied into `full_sol`.
-Then, the value of `x[0]` is explicitly set using the expression `1 - x[1]`, evaluated under `sol`, by calling:
-{% raw %}
-```cpp
-  full_sol.set({{x[0], sol(1 - x[1])}});
-```
-{% endraw %}
-This ensures that the constraint `x[0] = 1 - x[1]` is consistently enforced in the final solution.
+To construct a complete solution `full_sol` for the original expression `f`,
+a `qbpp::Sol` object is created for `f`, and both `sol` and `ml` are applied to it.
+When the values in `ml` involve variables (e.g., `1 - x[1]`),
+`sol` and `ml` must be set using a single `set(sol, ml)` call,
+so that the expressions in `ml` are evaluated using `sol`.
 
 This program produces the following output:
 {% raw %}
@@ -177,7 +166,6 @@ We demonstrate QUBO++ programs that solve these problems using `qbpp::replace()`
 The folloing program fixes $p=5$ and $q=7$ and finds the product $r=35$:
 {% raw %}
 ```cpp
-
 #include "qbpp.hpp"
 #include "qbpp_easy_solver.hpp"
 
@@ -186,19 +174,19 @@ int main() {
   auto q = 2 <= qbpp::var_int("q") <= 8;
   auto r = 2 <= qbpp::var_int("r") <= 40;
   auto f = p * q - r == 0;
+  f.simplify_as_binary();
 
   qbpp::MapList ml({{p, 5}, {q, 7}});
   auto g = qbpp::replace(f, ml);
   g.simplify_as_binary();
   std::cout << "g = " << g << std::endl;
-  
+
   auto solver = qbpp::easy_solver::EasySolver(g);
   solver.target_energy(0);
   auto sol = solver.search();
-  
-  qbpp::Sol full_sol(f);
-  full_sol.set(sol);
-  full_sol.set(ml);
+
+  auto full_sol = qbpp::Sol(f).set(sol).set(ml);
+
   std::cout << "p= " << full_sol(p) << ", q= " << full_sol(q)
             << ", r= " << full_sol(r) << std::endl;
 }
@@ -209,9 +197,9 @@ In this program, a `qbpp::MapList` object `ml` is used to fix the values of the 
 By applying `qbpp::replace(f, ml)`, the variables `p` and `q` in `f` are replaced with the constants 5 and 7, respectively.
 The resulting expression is stored in `g`, which now contains only the variable `r`.
 The Easy Solver is then applied to `g`, and the resulting solution is stored in `sol`.
-To construct a complete solution for the original expression `f`, a `qbpp::Sol` object `full_sol` is created.
-The assignments obtained from sol and the fixed values specified by `ml` are combined and stored in `full_sol`.
-Finally, the values of $p$, $q$, and $r$ are printed.
+To construct a complete solution `full_sol` for the original expression `f`,
+a `qbpp::Sol` object is created for `f`, and both `sol` and `ml` are applied to it.
+Finally, the values of `p`, `q`, and `r` are printed.
 
 This program produces the following output, confirming that the multiplication result is obtained correctly:
 ```

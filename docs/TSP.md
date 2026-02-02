@@ -168,12 +168,9 @@ In QUBO++, fixed variable assignments can be applied using the `qbpp::replace()`
   solver.time_limit(1.0);
   auto sol = solver.search();
 
-  qbpp::Sol full_sol(f);
-  full_sol.set(sol);
-  full_sol.set(ml);
-
-  auto result = qbpp::onehot_to_int(full_sol(x));
-  std::cout << "Result: " << result << std::endl;
+  auto full_sol = qbpp::Sol(f).set(sol).set(ml);
+  auto tour = qbpp::onehot_to_int(full_sol(x));
+  std::cout << "Tour: " << tour << "\n";
 ```
 First, we create a `qbpp::MapList` object `ml`, which stores fixed assignments of variables.
 Each assignment is added using the `push_back()` member function.
@@ -182,12 +179,12 @@ Next, we call `qbpp::replace(f, ml)`, which returns a new expression obtained by
 The resulting expression is stored in `g` and simplified.
 
 We then create a solver for `g` and obtain a solution `sol`.
-Since `sol` corresponds to the reduced problem, we reconstruct a solution for the original expression `f` by creating a `qbpp::Sol` object `full_sol`.
-Both the solver result sol and the fixed assignments ml are applied to `full_sol`.
+Since `sol` corresponds to the reduced problem, we create a `qbpp::Sol` object for `f` and set both the solver output `sol` and the fixed assignments `ml`.
+The resulting `full_sol` stores the complete assignment for all variables in `x`.
 
 Finally, the permutation matrix represented by `full_sol(x)` is converted into a permutation using `qbpp::onehot_to_int()` and printed.
 
 This program produces the following tour starting from node 0:
 ```
-Result: {0,3,6,7,8,5,2,1,4}
+Tour: {0,3,6,7,8,5,2,1,4}
 ```

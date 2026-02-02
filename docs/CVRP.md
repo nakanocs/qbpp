@@ -304,7 +304,7 @@ int main() {
   qbpp::graph::GraphDrawer graph;
   for (size_t i = 0; i < locations.size(); ++i) {
     const auto [x, y, q] = locations[i];
-    graph.add_node(qbpp::graph::Node(i).position(x, y).xlabel(
+    graph.add(qbpp::graph::Node(i).position(x, y).xlabel(
         q != 0 ? std::to_string(q) : ""));
   }
 
@@ -313,7 +313,7 @@ int main() {
       int from = tour[v][i];
       int to = tour[v][(i + 1) % N];
       if (from < 0 || to < 0 || from == to) continue;
-      graph.add_edge(qbpp::graph::Edge(from, to).color(v + 1).penwidth(2.0f));
+      graph.add(qbpp::graph::Edge(from, to).color(v + 1).penwidth(2.0f));
     }
   }
   graph.draw();

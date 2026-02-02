@@ -154,25 +154,25 @@ int main() {
 
   qbpp::graph::GraphDrawer guest_graph;
   for (size_t i = 0; i < M; ++i) {
-    guest_graph.add_node(qbpp::graph::Node(i));
+    guest_graph.add(qbpp::graph::Node(i));
   }
   for (const auto& e : guest) {
-    guest_graph.add_edge(qbpp::graph::Edge(e.first, e.second));
+    guest_graph.add(qbpp::graph::Edge(e.first, e.second));
   }
   guest_graph.write("guest_graph.svg");
 
   qbpp::graph::GraphDrawer host_graph;
   for (size_t i = 0; i < N; ++i) {
-    host_graph.add_node(qbpp::graph::Node(i));
+    host_graph.add(qbpp::graph::Node(i));
   }
   for (const auto& e : host) {
-    host_graph.add_edge(qbpp::graph::Edge(e.first, e.second));
+    host_graph.add(qbpp::graph::Edge(e.first, e.second));
   }
   host_graph.write("host_graph.svg");
 
   qbpp::graph::GraphDrawer graph;
   for (size_t i = 0; i < N; ++i) {
-    graph.add_node(qbpp::graph::Node(i).color(sol(host_assigned[i])));
+    graph.add(qbpp::graph::Node(i).color(sol(host_assigned[i])));
   }
 
   std::vector<std::vector<bool>> guest_adj(N, std::vector<bool>(N, false));
@@ -184,10 +184,10 @@ int main() {
     auto v = host_to_guest[e_h.second];
     if (u != -1 && v != -1 &&
         guest_adj[static_cast<size_t>(u)][static_cast<size_t>(v)]) {
-      graph.add_edge(
+      graph.add(
           qbpp::graph::Edge(e_h.first, e_h.second).color(1).penwidth(2.0f));
     } else {
-      graph.add_edge(qbpp::graph::Edge(e_h.first, e_h.second));
+      graph.add(qbpp::graph::Edge(e_h.first, e_h.second));
     }
   }
 
