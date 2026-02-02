@@ -178,8 +178,7 @@ We modify the program above as follows:
   auto solver = qbpp::easy_solver::EasySolver(f);
   solver.target_energy(0);
   auto sol = solver.search();
-  full_sol.set(sol);
-  full_sol.set(ml);
+  full_sol.set(sol).set(ml);
   auto result = qbpp::onehot_to_int(full_sol(x));
   for (size_t i = 0; i < 3; ++i) {
     for (size_t j = 0; j < 3; ++j) {

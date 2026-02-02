@@ -42,7 +42,7 @@ int main() {
   auto solver = qbpp::exhaustive_solver::ExhaustiveSolver(g);
   auto sol = solver.search();
 
-  auto full_sol = qbpp::Sol(f).set(sol, ml);
+  auto full_sol = qbpp::Sol(f).set(sol).set(ml);
 
   std::cout << "sol = " << sol << std::endl;
   std::cout << "ml = " << ml << std::endl;
@@ -120,8 +120,8 @@ Since `x[0]` does not appear in `g`, the solution sol also does not include an a
 
 To construct a complete solution `full_sol` for the original expression `f`,
 a `qbpp::Sol` object is created for `f`, and both `sol` and `ml` are applied to it.
-When the values in `ml` involve variables (e.g., `1 - x[1]`),
-`sol` and `ml` must be set using a single `set(sol, ml)` call,
+Note that `set(ml)` alone cannot be used when the values in `ml` involve variables (e.g., `1 - x[1]`).
+In such cases, `sol` and `ml` must be set using a single `set(sol, ml)` call,
 so that the expressions in `ml` are evaluated using `sol`.
 
 This program produces the following output:

@@ -272,9 +272,7 @@ int main() {
 
   auto sol = solver.search();
 
-  auto full_sol = qbpp::Sol(f);
-  full_sol.set(ml);
-  full_sol.set(sol);
+  auto full_sol = qbpp::Sol(f).set(sol).set(ml);
 
   std::cout << "row_constraint = " << row_constraint(full_sol) << std::endl;
   std::cout << "column_constraint = " << column_constraint(full_sol)
