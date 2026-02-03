@@ -44,6 +44,7 @@ $M=6$ bars of length $L=60$ and the following $N=4$ orders:
 
 The QUBO++ program for this bar cutting problem is as follows:
 ```cpp
+
 #include "qbpp.hpp"
 #include "qbpp_easy_solver.hpp"
 
@@ -52,19 +53,17 @@ int main() {
   const qbpp::Vector<int> l = {13, 23, 8, 11};
   const qbpp::Vector<int> c = {10, 4, 8, 6};
   const size_t N = l.size();
-  const size_t M = 5;
+  const size_t M = 6;
 
   auto x = qbpp::var_int("x", M, N) == 0;
-  std::cout << x << std::endl;
   for (size_t i = 0; i < M; i++) {
     for (size_t j = 0; j < N; j++) {
       x[i][j] = 0 <= qbpp::var_int() <= c[j];
     }
   }
 
-
-  auto order_fulfilled_count = qbpp::vector_sum(qbpp::transpose(x));
-  auto order_constraint = order_fulfilled_count - c == 0;
+  auto order_fulfilled_count = qbpp::vector_sum(x, 0);
+  auto order_constraint = order_fulfilled_count == c;
 
   auto bar_length_used = qbpp::expr(M);
   for (size_t i = 0; i < M; i++) {

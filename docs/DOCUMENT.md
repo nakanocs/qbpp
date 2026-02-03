@@ -49,10 +49,11 @@ sections by providing a deeper understanding of QUBO++.
 8. [Evaluating Expressions](EVAL)
 9. [Replace functions](REPLACE)
 10. [Sum Functions for Multi-dimensional Arrays](SUM)
-11. [Easy Solver Usage](EASYSOLVER)
-12. [Exhaustive Solver Usage](EXHAUSTIVE)
-13. [ABS3 Solver Usage](ABS3)
-14. [Gurobi Solver Usage](GUROBI)
+11. [One-hot Function](ONEHOT)
+12. [Easy Solver Usage](EASYSOLVER)
+13. [Exhaustive Solver Usage](EXHAUSTIVE)
+14. [ABS3 Solver Usage](ABS3)
+15. [Gurobi Solver Usage](GUROBI)
 
 ## Quick References
 1. [Variables and Expressions](QR_VARIABLE)

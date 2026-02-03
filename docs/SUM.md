@@ -201,3 +201,4 @@ This program produces the following output:
 ```
 {% endraw %}
 The output confirms that all six optimal solutions are obtained.
+

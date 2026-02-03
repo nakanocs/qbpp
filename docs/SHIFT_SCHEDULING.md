@@ -100,7 +100,7 @@ int main() {
 
   auto x = qbpp::var("x", workers, days + 2);
 
-  auto workers_each_day = qbpp::vector_sum(qbpp::transpose(x));
+  auto workers_each_day = qbpp::vector_sum(x, 0);
   auto each_day_4_workers = qbpp::toExpr(0);
   for (size_t j = 1; j <= days; ++j) {
     each_day_4_workers += workers_each_day[j] == 4;

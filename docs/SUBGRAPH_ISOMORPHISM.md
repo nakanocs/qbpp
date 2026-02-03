@@ -13,12 +13,12 @@ such that, for every edge $(u,v)\in E_G$, the pair $(\sigma(u),\sigma(v))$ is al
 
 For example, consider the following host and guest graphs:
 <p align="center">
-  <img src="images/host_graph.svg" alt="Host Graph" width="80%"><br>
+  <img src="images/host_graph.svg" alt="Host Graph" width="50%"><br>
   An example of the host graph $G_H=(V_H,E_H)$ with 10 nodes
 </p>
 
 <p align="center">
-  <img src="images/guest_graph.svg" alt="Guest Graph" width="40%"><br>
+  <img src="images/guest_graph.svg" alt="Guest Graph" width="30%"><br>
   An example of the guest graph $G_G=(V_G,E_G)$ with 6 nodes
 </p>
 
@@ -32,7 +32,7 @@ One solution $\sigma$ is:
 This solution is visualized as follows:
 
 <p align="center">
-  <img src="images/subgraph_isomorphism.svg" alt="The solution of the subgraph isomorphism problem" width="80%"><br>
+  <img src="images/subgraph_isomorphism.svg" alt="The solution of the subgraph isomorphism problem" width="50%"><br>
   A solution to the subgraph isomorphism problem
 </p>
 
@@ -119,10 +119,10 @@ int main() {
 
   auto x = qbpp::var("x", M, N);
 
-  auto host_assigned = qbpp::vector_sum(qbpp::transpose(x));
+  auto host_assigned = qbpp::vector_sum(x, 0);
 
-  auto constraint =
-      qbpp::sum(qbpp::vector_sum(x) == 1) + qbpp::sum(0 <= host_assigned <= 1);
+  auto constraint = qbpp::sum(qbpp::vector_sum(x, 1) == 1) +
+                    qbpp::sum(0 <= host_assigned <= 1);
 
   auto objective = qbpp::toExpr(0);
 
@@ -146,10 +146,10 @@ int main() {
   std::cout << "sol(objective) = " << sol(objective) << std::endl;
   std::cout << "sol(constraint) = " << sol(constraint) << std::endl;
 
-  auto guest_to_host = qbpp::onehot_to_int(sol(x));
+  auto guest_to_host = qbpp::onehot_to_int(sol(x), 1);
   std::cout << "guest_to_host = " << guest_to_host << std::endl;
 
-  auto host_to_guest = qbpp::onehot_to_int(sol(qbpp::transpose(x)));
+  auto host_to_guest = qbpp::onehot_to_int(sol(x), 0);
   std::cout << "host_to_guest = " << host_to_guest << std::endl;
 
   qbpp::graph::GraphDrawer guest_graph;
