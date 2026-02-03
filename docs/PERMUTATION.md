@@ -1,9 +1,9 @@
 ---
 layout: default
-title: "Permutation matrix genration"
+title: "Permutation matrix generation"
 ---
 
-# Permutation matrix genration
+# Permutation matrix generation
 
 Many combinatorial optimization problems are permutation-based in the sense that the objective is to find an optimal permutation.
 As a fundamental technique for formulating such optimization problems, a matrix of binary variables is used in their QUBO formulation.
@@ -31,7 +31,7 @@ f(X) &= \sum_{i=0}^{n-1}\left(1-\sum_{j=0}^{n-1}x_{i,j}\right)^2+\sum_{j=0}^{n-1
 $$
 
 ## QUBO++ program for generating permutation matrices
-We can desgin a QUBO++ program based on the formula $f(X)$ above as follows:
+We can design a QUBO++ program based on the formula $f(X)$ above as follows:
 ```cpp
 #include "qbpp.hpp"
 #include "qbpp_exhaustive_solver.hpp"
@@ -66,13 +66,13 @@ int main() {
 }
 ```
 
-In this program, **`qbpp::var("x",4,4)`** returns a `qbpp::Var` object
-of size $4\times 4$ with **`x`**.
+In this program, **`qbpp::var("x",4,4)`** returns a `qbpp::Vector<qbpp::Vector<qbpp::Var>>` object
+of size $4\times 4$ named **`x`**.
 For a `qbpp::Expr` object **`f`**, two double for-loops adds
 formulas for $f(X)$.
 Using the Exhaustive Solver, all optimal solutions are computed and stored in **`sols`**.
 All solutions in `sols` are displayed one-by-one.
-Heare, `sol(x)` returns a matrix of values of `x` in `sol`.
+Here, `sol(x)` returns a matrix of values of `x` in `sol`.
 This program outputs all 24 permutations as follows:
 {% raw %}
 ```cpp
@@ -104,7 +104,7 @@ Solution 23 : {{1,0,0,0},{0,1,0,0},{0,0,1,0},{0,0,0,1}}
 {% endraw %}
 > **NOTE**
 > A matrix of binary variables is implemented as a nested vector using `qbpp::Vector` class.
-> For example, `qbpp::var("x",4,4)` returns a `qbpp::Vector<qbpp::Vector<qbpp::Var>>` objects.
+> For example, `qbpp::var("x",4,4)` returns a `qbpp::Vector<qbpp::Vector<qbpp::Var>>` object.
 > Each `qbpp::Var` object is represented as `x[i][j]` and the value of `x[i][j]` for `sol` can be obtained by either `sol(x[i][j])` or `x[i][j](sol)`.
 
 
@@ -145,9 +145,9 @@ int main() {
 ```
 In this program, `x(sol)` returns a matrix of assigned values to `x` in `sol`, which is a matrix of integers of size 
 . 
-`qbpp::onehot_to_int()` covert one-hot vectors along the axis to the corresponding integers.
+`qbpp::onehot_to_int()` converts one-hot vectors along the axis to the corresponding integers.
 - **`qbpp::onehot_to_int(x(sol), 1)`**: Computes the integer corresponding to each row and returns them as a vector of 4 integers, which represents the permutation.
-- **`qbpp::onehot_to_int(x(sol), 0)`**: returns the integer corresoidng to each column and returns them as a vector of 4 integers, which represents the inverse of the permutation.
+- **`qbpp::onehot_to_int(x(sol), 0)`**: returns the integer corresponding to each column and returns them as a vector of 4 integers, which represents the inverse of the permutation.
 This program outputs all permutations and their inverse as integer vectors as follows:
 ```txt
 Solution 0: {3,2,1,0}, {3,2,1,0}

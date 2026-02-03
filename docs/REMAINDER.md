@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "Reminder Problem"
+title: "Remainder Problem"
 ---
 
 # Remainder Problem
@@ -38,7 +38,7 @@ $$
 \end{aligned}
 $$
 
-## QUBO++ praogram
+## QUBO++ program
 The following program finds a solution $x$ for this remainder problem:
 ```cpp
 #include "qbpp.hpp"

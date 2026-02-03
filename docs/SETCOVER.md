@@ -4,7 +4,7 @@ title: "Minimum Set Cover Problem"
 ---
 
 # Minimum Set Cover Problem
-Let $U$ be a universe set, and let ${\cal 𝐹}=\{S_0, S_1, \ldots S_{m-1}\}$ be a family of subsets of $U$.
+Let $U$ be a universe set, and let ${\cal 𝐹}=\{S_0, S_1, \ldots, S_{m-1}\}$ be a family of subsets of $U$.
 A subfamily $\cal S\subseteq \cal F$ is called a **set cover** if it covers all elements of $U$, i.e.,
 
 $$
@@ -35,7 +35,7 @@ $$
 If none of the selected subsets contains $i$, then $i$ is not covered.
 In that case, $x_j=0$ holds for all $j$ such that $i\in S_j$
 and hence $c_i=1$.
-On the other hand, if at least one selected subset contains $i$, then $x_j$=1 for some $j$ with $i\in S$, and the factor $(1−x_j)$ becomes 0, so $c_i=1$.
+On the other hand, if at least one selected subset contains $i$, then $x_j=1$ for some $j$ with $i\in S_j$, and the factor $(1-x_j)$ becomes 0, so $c_i=0$.
 Therefore, the following **constraint** becomes 0 if and only if all elements are covered:
 
 $$
@@ -180,7 +180,7 @@ In this program, the expressions `1 <= c[j] <= +qbpp::inf` are created for all
 `j`, and their sum is stored in `constraint`.
 
 > **Remark**.
-> The term `1 <= c[j] <= +qbpp::inf` may introducing auxiliary binary variables
+> The term `1 <= c[j] <= +qbpp::inf` may introduce auxiliary binary variables
 > internally. As a result, the final expression can be handled by a QUBO solver, 
 > while preserving the intended meaning of the coverage constraint.
 

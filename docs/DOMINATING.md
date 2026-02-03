@@ -21,11 +21,11 @@ The minimum dominating set problem aims to find the dominating set with the mini
 on an $n$-node graph $G=(V,E)$ with nodes labeled $0,1,\ldots,n−1$, we introduce $n$ binary variables $x_0, x_1, \ldots, x_{n-1}$ where $x_i=1$ if and only if node $i$ is included in the dominating set $S$.
 
 We will show two formulations:
-- **HUBO formulation**: the expresion may includes higher-dgree terms.
-- **QUBO formulation**: the expression is quadratic, but auxiary variables are used.
+- **HUBO formulation**: the expression may include higher-degree terms.
+- **QUBO formulation**: the expression is quadratic, but auxiliary variables are used.
 
 
-## HUBO formutlation of the minimum dominating set problem
+## HUBO formulation of the minimum dominating set problem
 For each node $i\in V$, the following condition must be satisfied for all node $i$:
 - $x_j=1$ for some $j\in N[i]$ (i.e., node $i$ is dominated).
 Thus, we define the constraint as:
@@ -42,7 +42,7 @@ The objective is to minimize the number of selected nodes:
 
 $$
 \begin{aligned}
-\text{constraint} = \sum_{i-0}^{n-1} x_i
+\text{objective} = \sum_{i=0}^{n-1} x_i
 \end{aligned}
 $$
 
@@ -55,7 +55,7 @@ f &= \text{objective} + (n+1)\times \text{constraint}
 \end{aligned}
 $$
 
-The penalty coefficient $n+1$ isis a safe choice to prioritize satisfying the dominating-set constraints over minimizing the objective.
+The penalty coefficient $n+1$ is a safe choice to prioritize satisfying the dominating-set constraints over minimizing the objective.
 
 ## QUBO++ program for the HUBO formulation
 The following QUBO++ program finds a solution for a graph with $N=16$ nodes:

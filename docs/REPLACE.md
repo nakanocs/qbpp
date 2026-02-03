@@ -163,7 +163,7 @@ Using the **`qbpp::replace()`** function, integer variables can be fixed to cons
 We demonstrate QUBO++ programs that solve these problems using `qbpp::replace()`.
 
 ### Multiplication
-The folloing program fixes $p=5$ and $q=7$ and finds the product $r=35$:
+The following program fixes $p=5$ and $q=7$ and finds the product $r=35$:
 {% raw %}
 ```cpp
 #include "qbpp.hpp"

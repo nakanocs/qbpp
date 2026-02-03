@@ -5,7 +5,7 @@ title: "LABS Problem"
 
 # Low-Autocorrelation Binary Sequence (LABS) Problem
 
-The **Low Autocorrelation Binary Sequence (LABS)** problem aims to find a spin sequence$S=(s_i)$ ($s_i=\pm, 0\leq i\leq n-1$) 
+The **Low Autocorrelation Binary Sequence (LABS)** problem aims to find a spin sequence $S=(s_i)$ ($s_i=\pm 1, 0\leq i\leq n-1$) 
 that minimizes its autocorrelation.
 The autocorrelation of $S$ with alignment $d$ is defined as
 

@@ -183,7 +183,7 @@ int main() {
   }
 }
 ```
-This program desiplays the following output:
+This program displays the following output:
 ```
 26: -----+-+++-+--+++--+
 26: +--+++--+-+++-+-----

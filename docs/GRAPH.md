@@ -125,7 +125,7 @@ The QUBO++ Simple Graph Drawing Library provides the following classes:
 Stores node information such as the label, color, pen width, and position.
 - **`qbpp::graph::Edge`**:
 Stores edge information such as the two endpoint nodes, whether the edge is directed or undirected, its color, and pen width.
-- **`qbpp::graph::GraphDrawing`**:
+- **`qbpp::graph::GraphDrawer`**:
 Stores vectors of `qbpp::graph::Node` and `qbpp::graph::Edge` that together constitute a graph.
 
 ### **`qbpp::graph::Node`**
@@ -157,7 +157,7 @@ Sets the edge color to the i-th entry in the color palette. The default color 0 
 - **`penwidth(float f)`**:
 Sets the pen width to `f` for drawing the edge.
 
-### **`qbpp::graph::GraphDrawing`**
+### **`qbpp::graph::GraphDrawer`**
 The following member functions are supported:
 - **`add(const Node& node)`**:
 Appends node to the graph.

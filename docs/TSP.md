@@ -18,7 +18,7 @@ In the figure below, an example of nine nodes and an optimal tour is shown:
 A tour can be represented by a permutation of the nodes.
 Accordingly, we use a [permutation matrix](PERMUTATION) to encode a TSP solution.
 
-Let $X=(x_{i,j})$ ($0\leq i,j\leq n-1$) is a matrix of $n\times n$ binary values.
+Let $X=(x_{i,j})$ ($0\leq i,j\leq n-1$) be a matrix of $n\times n$ binary values.
 The matrix $X$ is a **permutation matrix** each row and each column contains exactly one entry equal to 1, as illustrated below.
 
 <p align="center">
@@ -35,7 +35,7 @@ $$
 \end{aligned}
 $$
 
-Let $d_{i,j}$ is denote the distance between nodes $i$ and $j$.
+Let $d_{i,j}$ denote the distance between nodes $i$ and $j$.
 Then the tour length for a permutation matrix $X$ can be written as:
 
 $$

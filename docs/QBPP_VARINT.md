@@ -34,8 +34,9 @@ This is useful when you want to declare an integer variable first and decide its
 
 int main() {
   auto x = qbpp::var_int("x") == 0;
-  std::cout << "x = " << x << std::endl;
+  std::cout << "(1) x = " << x << std::endl;
   x = 1 <= qbpp::var_int() <= 10;
+  std::cout << "(2) x = " << x << std::endl;
 }
 ```
 This program first defines an integer variable `x` with the fixed value `0`.

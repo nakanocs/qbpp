@@ -18,7 +18,7 @@ $$
 \end{aligned}
 $$
 
-Since the QUBO problems aims to **minimize** an objective function, we obtain a QUBO expression $f$ by **negating** the objective:
+Since the QUBO problem aims to **minimize** an objective function, we obtain a QUBO expression $f$ by **negating** the objective:
 
 $$
 \begin{aligned}

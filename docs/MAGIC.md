@@ -62,7 +62,7 @@ $$
 
 When all constraints are satisfied, the assignment $X=(x_{i,j,k})$ represents a valid 3-by-3 magic square.
 
-## QUBO++ prgram for the magic square
+## QUBO++ program for the magic square
 The following QUBO++ program implements these constraints and finds a magic square:
 ```cpp
 #include "qbpp.hpp"

@@ -9,7 +9,7 @@ The **N-Queens problem** generalizes this: place
 $N$ queens on an $N\times N$ chessboard under the same conditions.
 
 To formulate this problem using QUBO++, we use an $N\times N$ matrix $X=(x_{i,j})$ of binary variables, where 
-$x_{i,j}=1 if a queen is placed at row $i$ and column $j$, and $x_{i,j}=0$ otherwise.
+$x_{i,j}=1$ if a queen is placed at row $i$ and column $j$, and $x_{i,j}=0$ otherwise.
 We impose the following constraints:
 - Exactly one queen in each row:
 
@@ -23,7 +23,7 @@ $$
 
 $$
 \begin{aligned}
-\sum_{i=0}^{N-1} x_{i,j}&=1 && (0\leq j\leq N)
+\sum_{i=0}^{N-1} x_{i,j}&=1 && (0\leq j\leq N-1)
 \end{aligned}
 $$
 

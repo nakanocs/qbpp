@@ -32,7 +32,7 @@ int main() {
 In this program, `qbpp::MapList` object `ml` is defined,
 and an assignment `{x, 0}`, `{y, 1}` and `{z, 1}` is appended to `ml`.
 Then `f(ml)` returns the value of $f(0,1,1)$.
-This program displays the follwing output:
+This program displays the following output:
 
 {% raw %}
 ```
@@ -41,7 +41,7 @@ f(0,1,1) = 4
 ```
 {% endraw %}
 
-Alternratively, we can provide an assignemt directly as follows:
+Alternatively, we can provide an assignment directly as follows:
 {% raw %}
 ```cpp
 #include "qbpp.hpp"

@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "RANGE"
+title: "Square Root"
 ---
 
 # Square Root
@@ -40,7 +40,7 @@ we obtain an approximation of the square root of $c$ with
 10 decimal-digit precision.
 Since $x$ is internally represented as a linear expression of binary variables, this objective function becomes quartic in those binary variables.
 
-## QUBO++ parogram
+## QUBO++ program
 The following QUBO++ program constructs a HUBO expression based on the above idea and solves it using the Easy Solver:
 ```cpp
 #define COEFF_TYPE qbpp::cpp_int

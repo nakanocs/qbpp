@@ -52,4 +52,4 @@ x0 = 2, x1 = 3, x2 = 1
 objective = 24
 *c1 = 12, *c2 = 4, *c3 = 4
 ```
-We observe that a obtained solution with the objective 24 satisfies all constraints.
+We observe that the obtained solution with the objective 24 satisfies all constraints.

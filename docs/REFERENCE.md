@@ -37,7 +37,7 @@ The resulting HUBO expression has:
 
 In this document, we refer to $(a+b+c)(a+2b+3c-3)^2$ as **a formula**  (or HUBO formula) and
 to the expanded, simplified polynomial $4a +b -5ab -2ac +7bc +22abc$ as **an expression** (or HUBO expression).
-The resulting value of an expressoin, borrowing the terminology of quantum mechanics, is called **the energy**.
+The resulting value of an expression, borrowing the terminology of quantum mechanics, is called **the energy**.
 A HUBO problem aims to find a binary assignment of variables that minimizes this energy.
 It should be clear that $f(a,b,c)$ achieves optimal energy 0 when $a+b+c=0$ or $a+2b+3c=3$.
 Hence, it has three optimal solutions: $(a,b,c)=(0,0,0),(1,1,0),(0,0,1)$.
@@ -67,8 +67,8 @@ The header `qbpp.hpp` enables use of the QUBO++ library, and `qbpp_exhaustive_so
 In this program, three variables, $a$, $b$, and $c$, are defined, along with the formula $f$.
 The formula $f$ is automatically expanded, and the member function `simplify_as_binary()` 
 applies the binary identity $x^2=x$ and merges equivalent terms to yield the simplified HUBO expression.
-**Ehaustive Solver** then evaluates the energy of $f$ for all $2^3$ possible assignments, and outputs the optimal ones.
-The output below confirms the HUBO expression and the four optimal solutions:
+**Exhaustive Solver** then evaluates the energy of $f$ for all $2^3$ possible assignments, and outputs the optimal ones.
+The output below confirms the HUBO expression and the three optimal solutions:
 
 {% raw %}
 ```text
@@ -242,7 +242,7 @@ This program assigns expressions to `g[0]` and `g[1]` and then prints:
 A qbpp::Sol object stores a solution to a HUBO problem—that is, an assignment of binary values to variables.
 Below we illustrate it with the partition problem.
 
-## Partitioning problem and the QUBO formutation.
+## Partitioning problem and the QUBO formulation.
 Let $N_0, N_1, \ldots, N_{n-1}$ be $n$ integers.
 The goal is to split them into two subsets $L$ and $\overline{L}$ so that the two subset sums are as equal as possible.
 Equivalently, we minimize
@@ -327,7 +327,7 @@ Since the energy of `sol` is 0, the instance is partitioned into two subsets wit
 ## Creating qbpp::Sol objects and updating assigned binary values
 A `qbpp::Sol` object is created associated with a fixed `qbpp::Expr` object, which cannot be changed.
 It stores a solution: a mapping from `qbpp::Var` objects in the `qbpp::Expr` object to binary values (0/1).
-Note that it is not necessary that a solution is not an optimal one.
+Note that a solution does not have to be an optimal one.
 The stored solution can be updated.
 
 The following QUBO++ program creates an expression $f(a,b,c) = (a+2b+3c)^3$ and an associated solution using the `qbpp::Sol` constructor, which creates a zero-initialized `qbpp::Sol` object.

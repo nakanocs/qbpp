@@ -36,7 +36,7 @@ export PATH=$QBPP_PATH/bin:$PATH
 export QBPP_LICENSE_KEY=[Your QUBO++ license key]
 ```
 
-## Lincense Management
+## License Management
 The license is activated using the **`qbpp-license`** command as follows:
 ```bash
 $ qbpp-license -a

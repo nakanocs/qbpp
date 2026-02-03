@@ -17,7 +17,7 @@ For simplicity, we assume that all workers are off on day 0 and day 32.
 
 
 ## QUBO formulation for the shift scheduling problem
-The QUBO formulation uses a $6\times 33$ matrix of binary variables $X=(x_{i,j})$ ($0\leq i\leq 5, 0\leq i\leq 32$) where worker $i$ works on day $j$ if and only if $x_{i,j}=1$.
+The QUBO formulation uses a $6\times 33$ matrix of binary variables $X=(x_{i,j})$ ($0\leq i\leq 5, 0\leq j\leq 32$) where worker $i$ works on day $j$ if and only if $x_{i,j}=1$.
 
 Since all workers are off on day 0 and day 32, we fix 
 

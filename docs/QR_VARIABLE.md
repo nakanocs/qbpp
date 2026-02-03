@@ -32,7 +32,7 @@ In most cases, it is not necessary to change this data type.
 `int8_t`, `int16_t`, `int32_t`, `int64_t`
 
 - **Multiprecision integer types** (implemented using the Boost.Multiprecision library):  
-`qbpp::int128_t`, `qbpp::int256_t`, `qbpp::int612_t`, `qbpp::int1024_t`, `qbpp::cpp_int`
+`qbpp::int128_t`, `qbpp::int256_t`, `qbpp::int512_t`, `qbpp::int1024_t`, `qbpp::cpp_int`
 
 - **`qbpp::cpp_int`**:  
 An integer type with unlimited precision.
