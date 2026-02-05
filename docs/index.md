@@ -7,7 +7,7 @@ title: "QUBO++ documentation"
 # QUBO++: A model-and-solve framework for combinatorial optimization via QUBO/HUBO
 * A **C++ library** for constructing polynomials of binary variables to solve combinatorial optimization problems.
 * Currently built for **amd64** (**x86_64**) and **arm64** Linux systems.
-* Bundled with two CPU solvers: **Easy Solver** (heuristic) and **Exhaustive Solver** (complete search).
+* Bundled with two CPU solvers: **Easy Solver** (heuristic) and **Exhaustive Solver** (complete search)  .
 * Bundled with a GPU solver: **ABS3**.
 * Supports **High-Order Unconstrained Binary Optimization (HUBO)** of degree up to **16**.
 * **Multithreading acceleration** is applied using oneTBB wherever possible.
@@ -75,7 +75,7 @@ library itself does not require linking against TBB for the default use cases.
   - `qbpp_easy_solver.hpp`: Easy Solver implementation  
   - `qbpp_exhaustive_solver.hpp`: Exhaustive Solver implementation  
   - `qbpp_grb.hpp`: Gurobi Optimizer interface
-  - `qbpp_misc.hpp`: Miscellaneous library
+  - `qbpp_misc.hpp`: Miscelleneous library
 
 - `lib/` — QUBO++ shared libraries  
   - `libqbpp.so`: Shared library for the QUBO++ core  
@@ -91,7 +91,7 @@ library itself does not require linking against TBB for the default use cases.
   - `labs.cpp`: Low Autocorrelation Binary Sequences problem  
   - `nqueen_easy.cpp`: Solving N-Queens problem using Easy Solver 
   - `qbpp_nqueen.hpp`: Generates QUBO expression for the N-Queens problem
-  - `shift_scheduling.cpp`: Shift scheduling problem
+  - `shift_scheduling`: Shift scheduling problem
   - `factorization_abs3.cpp`: Integer factorization using ABS3
   - `labs_abs3.cpp`: Low Autocorrelation Binary Sequences problem using ABS3 GPU solver
   - `ilp_grb.cpp`: Integer Linear Programming example using Gurobi Optimizer
@@ -172,7 +172,7 @@ You can specify the license key either by environment variable or by command-lin
 - **Deactivation** will increase the **deactivation count** and free up an activation slot so that the license can be activated again on this or another machine.
 
 
-## Executing QUBO++ with a license key
+## Executing QUBO++ with license key.
 - For **Anonymous Trial**, there is no license key to set.
 - If you have a license key, specify it in one of the following ways before running your program:
   - **Via Code**:

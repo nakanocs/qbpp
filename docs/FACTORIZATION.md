@@ -9,7 +9,7 @@ title: "Factorization Through HUBO Expression"
 We consider the **factorization of integers** that are products of two prime numbers.
 For example, when the product $pq = 35$ is given, the goal is to recover the two prime factors $p=5$ and $q=7$.
 
-Since $\sqrt{35}=5.91$ and $35/2=17.5$, we can restrict the search ranges $p$ and $q$ as follows:
+Since $\sqrt{15}=5.91$ and $35/2=17.5$, we can restrict the search ranges $p$ and $q$ as follows:
 
 $$
 \begin{aligned}

@@ -3,7 +3,7 @@ layout: default
 title: "Math Problem: Find Three Integers"
 ---
 
-# Math Problem: Find Three Integers
+# Math Problem: Find Three Intgers
 
 The following math problem can be solved using QUBO++.
 
@@ -32,8 +32,8 @@ The strict inequalities $x<y<z$ can be encoded as
 
 $$
 \begin{aligned}
-1 &\leq y-x \\
-1 &\leq z-y
+1 &\leq y-z \\
+1 &\leq z-y 
 \end{aligned}
 $$
 

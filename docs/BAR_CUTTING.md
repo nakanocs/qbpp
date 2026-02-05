@@ -44,7 +44,6 @@ $M=6$ bars of length $L=60$ and the following $N=4$ orders:
 
 The QUBO++ program for this bar cutting problem is as follows:
 ```cpp
-
 #include "qbpp.hpp"
 #include "qbpp_easy_solver.hpp"
 
@@ -53,17 +52,18 @@ int main() {
   const qbpp::Vector<int> l = {13, 23, 8, 11};
   const qbpp::Vector<int> c = {10, 4, 8, 6};
   const size_t N = l.size();
-  const size_t M = 6;
+  const size_t M = 5;
 
-  auto x = qbpp::var_int("x", M, N) == 0;
+  qbpp::Vector<qbpp::Vector<qbpp::VarInt>> x(M);
   for (size_t i = 0; i < M; i++) {
     for (size_t j = 0; j < N; j++) {
-      x[i][j] = 0 <= qbpp::var_int() <= c[j];
+      x[i].push_back(0 <= qbpp::var_int("x[" + qbpp::str(i) + "][" +
+                                        qbpp::str(j) + "]") <= c[j]);
     }
   }
 
-  auto order_fulfilled_count = qbpp::vector_sum(x, 0);
-  auto order_constraint = order_fulfilled_count == c;
+  auto order_fulfilled_count = qbpp::vector_sum(qbpp::transpose(x));
+  auto order_constraint = order_fulfilled_count - c == 0;
 
   auto bar_length_used = qbpp::expr(M);
   for (size_t i = 0; i < M; i++) {
@@ -93,8 +93,10 @@ int main() {
   }
 }
 ```
-The program creates an `M`$\times$`N` matrix `x` of integer variables, initialized to the constant value 0.
-The nested for loops assign to each entry `x[i][j]` a bounded integer variable, `0 <= qbpp::var_int(...) <= c[j]`, so that `x[i][j]` takes a non-negative integer value no greater than `c[j]`.
+The program uses an $M×N$ matrix `x` of nonnegative integer variables, where `x[i][j]` corresponds to 
+$x_{i,j}$, i.e., the number of pieces of order $j$ cut from bar $i$.
+We implement `x` as a nested `qbpp::Vector` of `qbpp::VarInt` objects, and each variable is bounded by 
+$0\leq x_{i,j} \leq c_j$.
 
 The constraints are defined as follows:
 - `order_fulfilled_count`: a vector of $N$ expressions where `order_fulfilled_count[j]` represents the total number of pieces produced for order $j$.

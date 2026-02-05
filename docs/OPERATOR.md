@@ -39,10 +39,10 @@ g = 2 -2*x*y +2*x -2*y
 
 ## Compound operators
 Also the following compound operators to update qbpp::Expr objects are supported.
-- **`+=`** : Adds the right-hand side operand to the left-hand side.
-- **`-=`** : Subtracts the right-hand side operand from the left-hand side.
-- **`*=`** : Multiplies the left-hand side operand by the right-hand side.
-- **`/=`** : Divides the left-hand side operand by the right-hand side. The right-hand side operand must be an integer, and the constant term and all coefficients of the left-hand side must be divisible.
+- **`+=`** : Adds the righthand size operand to the lefthand side. 
+- **`-=`** : Subtract the righthand size operand from the lefthand side. 
+- **`*=`** : Multiply the righthand side operand to the lefthand side.
+- **`/=`** : Divides the lefthand side operand by the righthand side. The righthand side operand must be an integer and the constant term integer and all coefficiets of the lefthand side must be divisible.
 
 The following program demonstrates how to construct expressions using these compound operators:
 ```cpp

@@ -118,11 +118,11 @@ int main() {
 
   qbpp::graph::GraphDrawer graph;
   for (size_t i = 0; i < n; ++i) {
-    graph.add(qbpp::graph::Node(i));
+    graph.add_node(qbpp::graph::Node(i));
   }
   for (size_t i = 0; i < edges.size(); ++i) {
     const auto& e = edges[i];
-    graph.add(qbpp::graph::Edge(e.first, e.second)
+    graph.add_edge(qbpp::graph::Edge(e.first, e.second)
                        .color(edge_color[i] + 1)
                        .penwidth(2.0f));
   }

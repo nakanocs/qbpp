@@ -5,7 +5,7 @@ title: "VECTOR"
 
 # Vector of variables and vector functions
 
-QUBO++ supports vector of variables and vector operations.
+QUBO++ supports vector of variables and vector oparations.
 
 ## Defining vector of variables
 A vector of binary variables can be created using the **`qbpp::var()`** function.

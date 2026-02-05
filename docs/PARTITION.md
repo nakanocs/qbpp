@@ -32,7 +32,7 @@ f(x)    &= \left( P(x)-Q(x) \right)^2
 \end{aligned}
 $$
 
-Clearly, $f(x)=f(L)^2$ holds.
+Clealy, $f(x)=f(L)^2$ holds.
 The function $f(x)$ is a quadratic expression of $x$, and an optimal solution that minimizes $f(x)$ also gives an optimal solution to the original partitioning problem.
 
 ## QUBO++ program for the partitioning problem
@@ -115,7 +115,7 @@ Q : 64 27 74 40
 
 ## QUBO++ program using vector operations
 QUBO++ has rich vector operations that can simplify the code.
-For this purpose, **`qbpp::Vector`** class, which is similar to `std::vector` class, should be used.
+For this purpose, **`qbpp::Vector`** class, which is similar to `std::vector` class shoud be used.
 In the following code, **`w`** is defined as an object of **`qbpp::Vector<uint32_t>`** class.
 Also, **`x`** is defined as an object of **`qbpp::Vector<qbpp::Var>`** class.
 Since the overloaded operator `*` for `qbpp::Vector` class returns the element-wise product of two

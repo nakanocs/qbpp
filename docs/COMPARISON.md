@@ -105,7 +105,7 @@ $$
 \end{aligned}
 $$
 
-This expression evaluates as follows for $f=l$, $l+1$, and $l+2$
+This expression evaluates as follows for for $f=l$, $l+1$, and $l+2$
 
 $$
 \begin{aligned}
@@ -119,7 +119,7 @@ In all cases, the minimum value 0 is attainable by an appropriate choice of $a$.
 Therefore, the expression takes the minimum value of 0 if $l\leq f\leq u$ is satisfied.
 
 Let $g = f-l-a$.
-Then we have
+Then We have,
 
 $$
 \begin{aligned}
@@ -265,7 +265,7 @@ this program searches for solutions satisfying the constraint
 
 $$
 \begin{aligned}
-5\leq 4a+9b+15c \leq 14
+5\leq 4a+9b+15c \leq 15
 \end{aligned}
 $$
 

@@ -94,5 +94,5 @@ P : 64 27 74 40
 Q : 47 12 83 63
 ```
 {% endraw %}
-Since the solution value and the bound both equal 0,
+Since the solution value and the bound have the same energy 0
 the obtained solution is guaranteed to be optimal.

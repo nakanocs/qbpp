@@ -30,7 +30,7 @@ We use the following expression $f(a,b,c,d)$ as an example:
 
 $$
 \begin{aligned}
-f(a,b,c,d) &= (a+2b+3c+4d-5)^2
+f(a,b,c,d,e) &= (a+2b+3c+4d-5)^2
 \end{aligned}
 $$
 

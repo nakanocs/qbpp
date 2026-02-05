@@ -119,7 +119,7 @@ g[1] = 2 -2*x[1]*y[1] +2*x[1] -2*y[1]
 g[2] = 2 -2*x[2]*y[2] +2*x[2] -2*y[2]
 ```
 
-## Compound operators for vectors
+## Compound opertors for vectors
 Similarly, the compound operators **`+=`**, **`-=`**, **`*=`**, and **`/=`** work for vectors of variables and expressions.
 The following example demonstrates how these operators work for a vector of size 3:
 ```cpp
@@ -170,7 +170,7 @@ f = {1 +x[0],1 +x[1],1 +x[2]}
 f = {1 +x[0]*x[0] +x[0] +x[0],1 +x[1]*x[1] +x[1] +x[1],1 +x[2]*x[2] +x[2] +x[2]}
 ```
 
-## Simplify functions for vectors
+## Simplfy functions for vectors
 Simplify functions also work for vectors, as demonstrated below:
 ```cpp
 #include "qbpp.hpp"

@@ -118,14 +118,14 @@ int main() {
     }
   }
   for (size_t i = 0; i < N; ++i) {
-    graph.add(qbpp::graph::Node(i).color(selected_nodes[i]));
+    graph.add_node(qbpp::graph::Node(i).color(selected_nodes[i]));
   }
   for (size_t i = 0; i < M; ++i) {
     auto edge = qbpp::graph::Edge(edges[i].first, edges[i].second);
     if (sol(x[i])) {
       edge.color(1).penwidth(2.0);
     }
-    graph.add(edge);
+    graph.add_edge(edge);
   }
   graph.write("minmaxmatching.svg");
 }
