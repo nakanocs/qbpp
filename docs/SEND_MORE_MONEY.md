@@ -71,13 +71,14 @@ $$
 $$
 
 ### Combined objective
-All constraints are combined into a single HUBO objective:
+All constraints are combined into a single objective:
 
 $$
 \begin{aligned}
 f & = P\cdot (\text{onehot}+\text{different})+\text{equal}
 \end{aligned}
 $$
+
 where
 `P` is a sufficiently large constant to prioritize feasibility (`onehot` and `different`).
 In principle, if all terms are nonnegative and each becomes 0 exactly when its constraint holds, then any solution with $f=0$ satisfies all constraints.
@@ -95,7 +96,7 @@ x_{I(S),0} = x_{I(M),0}= 0
 $$
 
 ## QUBO++ program for SEND+MORE=MONEY
-The following QUBO++ program implements the HUBO formulation above and finds a solution using EasySolver:
+The following QUBO++ program implements the QUBO formulation above and finds a solution using EasySolver:
 {% raw %}
 ```cpp
 #define COEFF_TYPE qbpp::int128_t
