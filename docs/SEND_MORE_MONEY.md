@@ -96,6 +96,7 @@ $$
 
 ## QUBO++ program for SEND+MORE=MONEY
 The following QUBO++ program implements the HUBO formulation above and finds a solution using EasySolver:
+{% raw %}
 ```cpp
 #define COEFF_TYPE qbpp::int128_t
 #define ENERGY_TYPE qbpp::int128_t
@@ -171,6 +172,7 @@ int main() {
             << str(val[I('Y')]) << std::endl;
 }
 ```
+{% endraw %}
 In this program, `LETTERS` assigns an integer index to each letter in `"SENDMORY"`, which is used to implement $I(\alpha)$.
 We define an `L`$\times$`10` matrix `x` of binary variables (here $L=8$).
 The expressions `onehot`, `different`, and `equal` are computed according to the formulation and combined into a single objective `f` with a penalty weight `P`.
