@@ -119,7 +119,7 @@ constexpr size_t I(char c) {
 const qbpp::Vector<int> K = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
 
 int main() {
-  auto x = qbpp::var("x", static_cast<size_t>(L), 10);
+  auto x = qbpp::var("x", L, 10);
 
 
   auto onehot = qbpp::sum(qbpp::vector_sum(x) == 1);
