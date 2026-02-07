@@ -17,6 +17,9 @@ This equation has three integer solutions: $x = -13, 2, 11$.
 ## QUBO++ program for solving the cubic equations
 In the following QUBO++ program, we define an integer variable x that takes values in $[-100, 100]$, and we enumerate all optimal solutions using the Exhaustive Solver:
 ```cpp
+#define COEFF_TYPE cpp_int
+#define ENERGY_TYPE cpp_int
+
 #include "qbpp.hpp"
 #include "qbpp_exhaustive_solver.hpp"
 
@@ -45,7 +48,6 @@ Since the integer variable `x` is implemented as a linear expression of binary v
 This program produces the following output:
 {% raw %}
 ```
-x = -100 +x[0] +2*x[1] +4*x[2] +8*x[3] +16*x[4] +32*x[5] +64*x[6] +73*x[7]
 x = 11 sol = 0:{{x[0],0},{x[1],1},{x[2],1},{x[3],0},{x[4],0},{x[5],1},{x[6],0},{x[7],1}}
 x = 2 sol = 0:{{x[0],0},{x[1],1},{x[2],1},{x[3],0},{x[4],0},{x[5],1},{x[6],1},{x[7],0}}
 x = -13 sol = 0:{{x[0],0},{x[1],1},{x[2],1},{x[3],1},{x[4],0},{x[5],0},{x[6],0},{x[7],1}}
