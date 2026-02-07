@@ -17,7 +17,7 @@ For simplicity, we assume that all workers are off on day 0 and day 32.
 
 
 ## QUBO formulation for the shift scheduling problem
-The QUBO formulation uses a $6\times 33$ matrix of binary variables $X=(x_{i,j})$ ($0\leq i\leq 5, 0\leq i\leq 32$) where worker $i$ works on day $j$ if and only if $x_{i,j}=1$.
+The QUBO formulation uses a $6\times 33$ matrix of binary variables $X=(x_{i,j})$ ($0\leq i\leq 5, 0\leq j\leq 32$) where worker $i$ works on day $j$ if and only if $x_{i,j}=1$.
 
 Since all workers are off on day 0 and day 32, we fix 
 
@@ -100,7 +100,7 @@ int main() {
 
   auto x = qbpp::var("x", workers, days + 2);
 
-  auto workers_each_day = qbpp::vector_sum(qbpp::transpose(x));
+  auto workers_each_day = qbpp::vector_sum(x, 0);
   auto each_day_4_workers = qbpp::toExpr(0);
   for (size_t j = 1; j <= days; ++j) {
     each_day_4_workers += workers_each_day[j] == 4;
@@ -148,6 +148,7 @@ int main() {
     ml.push_back({x[i][0], 0});
     ml.push_back({x[i][days + 1], 0});
   }
+  f.simplify_as_binary();
 
   auto g = qbpp::replace(f, ml);
   g.simplify_as_binary();
@@ -171,9 +172,7 @@ int main() {
   }
   std::cout << std::endl;
 
-  auto sol_f = qbpp::Sol(f);
-  sol_f.set(ml);
-  sol_f.set(sol);
+  auto sol_f = qbpp::Sol(f).set(ml).set(sol);
 
   std::cout << "Total worker cost: " << sol_f(total_worker_cost) << std::endl;
   std::cout << "Constraints violations: " << sol_f(constraints) << std::endl;

@@ -9,7 +9,7 @@ The **N-Queens problem** generalizes this: place
 $N$ queens on an $N\times N$ chessboard under the same conditions.
 
 To formulate this problem using QUBO++, we use an $N\times N$ matrix $X=(x_{i,j})$ of binary variables, where 
-$x_{i,j}=1 if a queen is placed at row $i$ and column $j$, and $x_{i,j}=0$ otherwise.
+$x_{i,j}=1$ if a queen is placed at row $i$ and column $j$, and $x_{i,j}=0$ otherwise.
 We impose the following constraints:
 - Exactly one queen in each row:
 
@@ -23,7 +23,7 @@ $$
 
 $$
 \begin{aligned}
-\sum_{i=0}^{N-1} x_{i,j}&=1 && (0\leq j\leq N)
+\sum_{i=0}^{N-1} x_{i,j}&=1 && (0\leq j\leq N-1)
 \end{aligned}
 $$
 
@@ -59,8 +59,8 @@ int main() {
   const int n = 8;
   auto x = qbpp::var("x", n, n);
 
-  auto f = qbpp::sum(qbpp::vector_sum(x) == 1);
-  f += qbpp::sum(qbpp::vector_sum(qbpp::transpose(x)) == 1);
+  auto f = qbpp::sum(qbpp::vector_sum(x, 0) == 1) +
+           qbpp::sum(qbpp::vector_sum(x, 1) == 1);
 
   const int m = 2 * n - 3;
   auto a = qbpp::expr(m);
@@ -102,11 +102,10 @@ int main() {
   }
 }
 ```
-An `n`$\times$`n` matrix `x` of binary variables is introduced, where `x[i]\[j] = 1` indicates that a queen is placed at row `i` and column `j`.
-The row-wise sums are computed by `qbpp::vector_sum(x)`, which returns a vector of `n` expressions (one per row).
-The operator `==` is applied element-wise and produces a vector of penalty expressions; each expression becomes 0 if and only if the corresponding row sum equals 1.
-Finally, `qbpp::sum()` aggregates these penalties into a single expression that attains its minimum value 0 if and only if every row contains exactly one queen.
-The column constraints are constructed in the same way by applying `qbpp::transpose(x)`.
+An `n`$\times$`n` matrix `x` of binary variables is introduced, where `x[i][j] = 1` indicates that a queen is placed at row `i` and column `j`.
+The column-wise sums are computed using `qbpp::vector_sum(x, 0)`, which returns a vector of `n` expressions (one per column).
+Applying the `==` operator element-wise produces a vector of penalty expressions; each expression evaluates to 0 if and only if the corresponding column sum equals 1.
+Similarly, we can enforce the row-wise one-hot constraints using `qbpp::vector_sum(x, 1)`.
 
 To enforce diagonal constraints, we build two vectors of expressions, a and b, each of length `m = 2*n - 3`.
 For each index `i`, `a[i]` accumulates variables on a diagonal with a fixed value of `r + c` (diagonals from top-left to bottom-right), excluding diagonals of length 1.

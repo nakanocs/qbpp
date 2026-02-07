@@ -13,12 +13,12 @@ such that, for every edge $(u,v)\in E_G$, the pair $(\sigma(u),\sigma(v))$ is al
 
 For example, consider the following host and guest graphs:
 <p align="center">
-  <img src="images/host_graph.svg" alt="Host Graph" width="80%"><br>
+  <img src="images/host_graph.svg" alt="Host Graph" width="50%"><br>
   An example of the host graph $G_H=(V_H,E_H)$ with 10 nodes
 </p>
 
 <p align="center">
-  <img src="images/guest_graph.svg" alt="Guest Graph" width="40%"><br>
+  <img src="images/guest_graph.svg" alt="Guest Graph" width="30%"><br>
   An example of the guest graph $G_G=(V_G,E_G)$ with 6 nodes
 </p>
 
@@ -32,7 +32,7 @@ One solution $\sigma$ is:
 This solution is visualized as follows:
 
 <p align="center">
-  <img src="images/subgraph_isomorphism.svg" alt="The solution of the subgraph isomorphism problem" width="80%"><br>
+  <img src="images/subgraph_isomorphism.svg" alt="The solution of the subgraph isomorphism problem" width="50%"><br>
   A solution to the subgraph isomorphism problem
 </p>
 
@@ -119,10 +119,10 @@ int main() {
 
   auto x = qbpp::var("x", M, N);
 
-  auto host_assigned = qbpp::vector_sum(qbpp::transpose(x));
+  auto host_assigned = qbpp::vector_sum(x, 0);
 
-  auto constraint =
-      qbpp::sum(qbpp::vector_sum(x) == 1) + qbpp::sum(0 <= host_assigned <= 1);
+  auto constraint = qbpp::sum(qbpp::vector_sum(x, 1) == 1) +
+                    qbpp::sum(0 <= host_assigned <= 1);
 
   auto objective = qbpp::toExpr(0);
 
@@ -146,33 +146,33 @@ int main() {
   std::cout << "sol(objective) = " << sol(objective) << std::endl;
   std::cout << "sol(constraint) = " << sol(constraint) << std::endl;
 
-  auto guest_to_host = qbpp::onehot_to_int(sol(x));
+  auto guest_to_host = qbpp::onehot_to_int(sol(x), 1);
   std::cout << "guest_to_host = " << guest_to_host << std::endl;
 
-  auto host_to_guest = qbpp::onehot_to_int(sol(qbpp::transpose(x)));
+  auto host_to_guest = qbpp::onehot_to_int(sol(x), 0);
   std::cout << "host_to_guest = " << host_to_guest << std::endl;
 
   qbpp::graph::GraphDrawer guest_graph;
   for (size_t i = 0; i < M; ++i) {
-    guest_graph.add_node(qbpp::graph::Node(i));
+    guest_graph.add(qbpp::graph::Node(i));
   }
   for (const auto& e : guest) {
-    guest_graph.add_edge(qbpp::graph::Edge(e.first, e.second));
+    guest_graph.add(qbpp::graph::Edge(e.first, e.second));
   }
   guest_graph.write("guest_graph.svg");
 
   qbpp::graph::GraphDrawer host_graph;
   for (size_t i = 0; i < N; ++i) {
-    host_graph.add_node(qbpp::graph::Node(i));
+    host_graph.add(qbpp::graph::Node(i));
   }
   for (const auto& e : host) {
-    host_graph.add_edge(qbpp::graph::Edge(e.first, e.second));
+    host_graph.add(qbpp::graph::Edge(e.first, e.second));
   }
   host_graph.write("host_graph.svg");
 
   qbpp::graph::GraphDrawer graph;
   for (size_t i = 0; i < N; ++i) {
-    graph.add_node(qbpp::graph::Node(i).color(sol(host_assigned[i])));
+    graph.add(qbpp::graph::Node(i).color(sol(host_assigned[i])));
   }
 
   std::vector<std::vector<bool>> guest_adj(N, std::vector<bool>(N, false));
@@ -184,10 +184,10 @@ int main() {
     auto v = host_to_guest[e_h.second];
     if (u != -1 && v != -1 &&
         guest_adj[static_cast<size_t>(u)][static_cast<size_t>(v)]) {
-      graph.add_edge(
+      graph.add(
           qbpp::graph::Edge(e_h.first, e_h.second).color(1).penwidth(2.0f));
     } else {
-      graph.add_edge(qbpp::graph::Edge(e_h.first, e_h.second));
+      graph.add(qbpp::graph::Edge(e_h.first, e_h.second));
     }
   }
 
