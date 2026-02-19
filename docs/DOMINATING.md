@@ -18,7 +18,8 @@ V = \bigcup_{u\in V} N[u].
 $$
 
 The minimum dominating set problem aims to find the dominating set with the minimum cardinality.
-on an $n$-node graph $G=(V,E)$ with nodes labeled $0,1,\ldots,n−1$, we introduce $n$ binary variables $x_0, x_1, \ldots, x_{n-1}$ where $x_i=1$ if and only if node $i$ is included in the dominating set $S$.
+On an $n$-node graph $G=(V,E)$ with nodes labeled $0,1,\ldots,n−1$, we introduce $n$ binary variables $x_0, x_1, \ldots, x_{n-1}$ where $x_i=0$ if and only if node $i$ is included in the dominating set $S$.
+This encoding simplifies the HUBO constraint formulation, as shown below.
 
 We will show two formulations:
 - **HUBO formulation**: the expression may include higher-degree terms.
@@ -26,23 +27,25 @@ We will show two formulations:
 
 
 ## HUBO formulation of the minimum dominating set problem
-For each node $i\in V$, the following condition must be satisfied for all node $i$:
-- $x_j=1$ for some $j\in N[i]$ (i.e., node $i$ is dominated).
+For each node $i\in V$, the following condition must be satisfied:
+- $x_j=0$ for some $j\in N[i]$ (i.e., node $i$ is dominated).
+
+Node $i$ is NOT dominated only when $x_j=1$ for all $j\in N[i]$, i.e., $\prod_{j\in N[i]}x_j=1$.
 Thus, we define the constraint as:
 
 $$
 \begin{aligned}
-\text{constraint} = \sum_{i=0}^{n-1} \prod_{j\in N[i]}(1-x_j)
+\text{constraint} = \sum_{i=0}^{n-1} \prod_{j\in N[i]}x_j
 \end{aligned}
 $$
 
-The degree of the term for node $i$ is $∣N[i]∣$, so the constraint may not be quadratic.
+The degree of the term for node $i$ is $|N[i]|$, so the constraint may not be quadratic.
 
 The objective is to minimize the number of selected nodes:
 
 $$
 \begin{aligned}
-\text{objective} = \sum_{i=0}^{n-1} x_i
+\text{objective} = \sum_{i=0}^{n-1} (1-x_i) = n - \sum_{i=0}^{n-1} x_i
 \end{aligned}
 $$
 
@@ -80,13 +83,13 @@ int main() {
 
   auto x = qbpp::var("x", N);
 
-  auto objective = qbpp::sum(x);
+  auto objective = N - qbpp::sum(x);
 
   auto constraint = qbpp::toExpr(0);
   for (size_t i = 0; i < N; ++i) {
-    auto t = (1 - x[i]);
+    auto t = qbpp::toExpr(x[i]);
     for (size_t j : adj[i]) {
-      t *= (1 - x[j]);
+      t *= x[j];
     }
     constraint += t;
   }
@@ -103,7 +106,7 @@ int main() {
 
   qbpp::graph::GraphDrawer graph;
   for (size_t i = 0; i < N; ++i) {
-    graph.add(qbpp::graph::Node(i).color(sol(x[i])));
+    graph.add(qbpp::graph::Node(i).color(1 - sol(x[i])));
   }
   for (const auto& e : edges) {
     graph.add(qbpp::graph::Edge(e.first, e.second));
@@ -129,11 +132,11 @@ The image file stores the following image:
 
 ## QUBO formulation and the QUBO++ program
 A node $i$ is dominated if $N[i]\cap S$ is not empty.
-Using binary variables $x_i$, this condition is equivalent to the following inequality:
+Using binary variables $x_i$ (where $x_j=0$ means node $j$ is in $S$), this condition is equivalent to the following inequality:
 
 $$
 \begin{aligned}
-\sum_{j\in N[i]}x_j &\geq 1
+\sum_{j\in N[i]}(1-x_j) &\geq 1
 \end{aligned}
 $$
 
@@ -141,19 +144,19 @@ In QUBO++ notation, we can express the dominating-set constraints by summing the
 
 $$
 \begin{aligned}
-\text{constraint} &= \sum_{i=0}^{n-1} \bigl(\sum_{j\in N[i]}x_j \geq 1\bigr)
+\text{constraint} &= \sum_{i=0}^{n-1} \bigl(\sum_{j\in N[i]}(1-x_j) \geq 1\bigr)
 \end{aligned}
 $$
 
-The objective and f can be defined in the same way as the QUBO formulation.
+The objective and f can be defined in the same way as the HUBO formulation.
 
 The constraint above can be described as a QUBO++ program as follows:
 ```cpp
   auto constraint = qbpp::toExpr(0);
   for (size_t i = 0; i < N; ++i) {
-    auto t = qbpp::toExpr(x[i]);
+    auto t = (1 - x[i]);
     for (size_t j : adj[i]) {
-      t += x[j];
+      t += (1 - x[j]);
     }
     constraint += 1 <= t <= +qbpp::inf;
   }
@@ -161,13 +164,13 @@ The constraint above can be described as a QUBO++ program as follows:
 In this code, `t` stores the expression
 
 $$
-\sum_{j\in N[i]}x_j
+\sum_{j\in N[i]}(1-x_j)
 $$
 
 and the range operator creates a penalty expression for
 
 $$
-1\leq \sum_{j\in N[i]}x_j \leq +\infty,
+1\leq \sum_{j\in N[i]}(1-x_j) \leq +\infty,
 $$
 
 which takes the minimum value 0 if and only if the inequality is satisfied.
