@@ -75,17 +75,17 @@ In the example above:
 - **`params("enable_callback", "1")`**: Enables the callback function, which reports the energy of newly obtained solutions.
 
 ## ABS3 Parameters
-A parameter (or `qbpp::abs3::Params()`) object stores parameter options used when the ABS3 Solver searches a solution.
-Options consist of the key and the value as strings.
-In the program above, `params("time_limit", "10.0")` sets the time limit to 10.0 seconds
-and `params("enable_callback", "1")` enables the callback function, which displays the energy of newly obtained solutions.
+A parameter (or `qbpp::abs3::Param()`) object stores parameter options used when the ABS3 Solver searches a solution.
+Options consists of the key and the value as strings.
+In the program above, `params("time_limit", "10.0")` set the time limit to 10.0 seconds
+and `params("enable_callback", "1")` enables the callback function, which displays the energy of newly obtained solution.
 
 ### Basic Options
 
 | Key | Value | Description |
 |----|----|----|
 | **`time_limit`** | time limit in seconds | Terminates the search when the time limit is reached |
-| **`target_energy`** | target energy value | Terminates the search when the target energy is achieved |
+| **`target_energy`** | target enagy value | Terminates the search when the target energy is achieved |
 
 ### Advanced Options
 

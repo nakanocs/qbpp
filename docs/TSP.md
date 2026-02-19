@@ -44,7 +44,7 @@ $$
 \end{aligned}
 $$
 
-This expression adds $d_{i,j}$ exactly when node $i$ is visited at position $k$ and node 
+This expression adds $d_{i,j}$ exactly when node $i$ is visited at position $k$ and node
 $j$ is visited next (at position $(k+1)\bmod n$), so it equals the total length of the tour.
 
 ## QUBO++ program for TSP

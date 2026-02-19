@@ -81,10 +81,10 @@ int main() {
 
   qbpp::graph::GraphDrawer graph;
   for (size_t i = 0; i < n; ++i) {
-    graph.add(qbpp::graph::Node(i).color(node_color[i] + 1));
+    graph.add_node(qbpp::graph::Node(i).color(node_color[i] + 1));
   }
   for (const auto& e : edges) {
-    graph.add(qbpp::graph::Edge(e.first, e.second));
+    graph.add_edge(qbpp::graph::Edge(e.first, e.second));
   }
 
   graph.write("graph_color.svg");

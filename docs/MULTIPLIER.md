@@ -6,7 +6,7 @@ title: "Multiplier Simulation and Factorization"
 # Multiplier Simulation and Factorization
 Multiplication of two integers can be performed using additions.
 In this section, we design a multiplier for two 4-bit integers using full adders.
-The figure below shows how two 4-bit integers $x_3x_2x_1x_0$ and $y_3y_2y_1y_0$ are multiplied to obtain an 8-bit integer $z_7z_6z_5z_4z_3z_2z_1z_0$.
+The figure below shows how two　$x_3x_2x_1x_0$ and　$y_3y_2y_1y_0$ are multiplied to obtain an 8-bit integer $z_7z_6z_5z_4z_3z_2z_1z_0$.
 In this figure, $p_{i,j}=x_iy_j$ ($0\leq i,j\leq 3$) and these partial products are summed to compute the final 8-bit result.
 
 <p align="center">

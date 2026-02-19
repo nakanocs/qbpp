@@ -16,7 +16,7 @@ Solving a problem with the Exhaustive Solver consists of the following three ste
 ## Creating Exhaustive Solver object
 To use the Exhaustive Solver, an Exhaustive Solver object (or
 `qbpp::exhaustive_solver::ExhaustiveSolver`) is constructed with an expression
-(or `qbpp::Expr`) object as follows:
+(`or qbpp::Expr`) object as follows:
 - **`qbpp::exhaustive_solver::ExhaustiveSolver(const qbpp::Expr& f)`**:
 Here, `f` is the expression to be solved.
 It must be simplified as a binary expression in advance by calling the
@@ -116,7 +116,8 @@ Furthermore, all solutions, including non-optimal ones, can be obtained by calli
 the **`search_all_solutions()`** member function as follows:
 ```cpp
   auto solver = qbpp::exhaustive_solver::ExhaustiveSolver(f);
-  auto sols = solver.search_all_solutions();
+  solver.enable_default_callback();
+  auto sols = solver.search_optimal_solutions();
   for (const auto& sol : sols) {
     std::cout << sol.energy() << ": ";
     for (auto val : sol(x)) {

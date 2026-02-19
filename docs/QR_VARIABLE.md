@@ -32,7 +32,7 @@ In most cases, it is not necessary to change this data type.
 `int8_t`, `int16_t`, `int32_t`, `int64_t`
 
 - **Multiprecision integer types** (implemented using the Boost.Multiprecision library):  
-`qbpp::int128_t`, `qbpp::int256_t`, `qbpp::int512_t`, `qbpp::int1024_t`, `qbpp::cpp_int`
+`qbpp::int128_t`, `qbpp::int256_t`, `qbpp::int612_t`, `qbpp::int1024_t`, `qbpp::cpp_int`
 
 - **`qbpp::cpp_int`**:  
 An integer type with unlimited precision.
@@ -124,15 +124,6 @@ The following functions are provided to create integer variables:
   Each element is represented as `name[i]`.  
   The resulting type is `qbpp::Vector<qbpp::VarInt>`.  
   Higher-dimensional arrays of `qbpp::VarInt` objects can be created in the same way as `qbpp::Var` objects.
-
-- **`qbpp::var_int("name") == k`**:
-  Creates a `qbpp::VarInt` object named `"name"` that represents the constant integer value `k`.
-  Typically, `k` is set to 0, and the variable is later updated to a desired range.
-
-- **`qbpp::var_int("name", s1) == k`**:
-  Creates a one-dimensional array (vector) of `qbpp::VarInt` objects with the base name `"name"`,
-  each representing the constant integer value `k`.
-  Higher-dimensional arrays are also supported.
 
 ### Integer variable member functions
 For a `qbpp::VarInt` instance `x`, the following member functions are available:

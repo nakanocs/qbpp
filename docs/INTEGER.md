@@ -47,7 +47,7 @@ int main() {
 ```
 
 An integer variable is defined using the **range operator** **`<= <=`**, which specifies the integer range that the variable can take.
-The function **`qbpp::var_int("name")`** creates a **`qbpp::VarInt`** object with the given `name`, representing the linear expression encoded by binary variables.
+The function **`qbpp::var_int("name")`** creates a **`qbpp::VarInt`** object object with the given `name`, representing the linear expression encoded by binary variables.
 The program outputs the following expressions:
 ```txt
 x = 1 +x[0] +2*x[1] +4*x[2] uses 3 variables.
@@ -60,7 +60,7 @@ y = -10 +y[0] +2*y[1] +4*y[2] +8*y[3] +5*y[4] uses 5 variables.
 
 ## QUBO formulation for solving simultaneous equations
 QUBO++ can solve systems of simultaneous equations by representing the variables as integer variables.
-As an example, we construct a QUBO formulation for the following equations, whose solution is $x=6$ and $y=4$:
+As an example, we construct a QUBO formulation for the following equations, whose solution is $x=4$ and $y=6$:
 
 $$
 \begin{aligned}

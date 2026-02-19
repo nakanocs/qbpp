@@ -29,7 +29,7 @@ $$
 \end{aligned}
 $$
 
-## HUBO formulation of the ISSP
+## HUBO formulation of the ISPP
 An integer variable can be represented by multiple binary variables using a binary encoding.
 In QUBO++, such integer variables can be defined easily as shown in
 [Integer Variables and Solving Simultaneous Equations](INTEGER).
@@ -160,7 +160,7 @@ $$
 \end{aligned}
 $$
 
-To ensure that $v_i$ becomes 0 when $s_i=0$, we add the following penalty term:
+To ensure that $x_i$ becomes 0 when $s_i=0$, we add the following penalty term:
 
 $$
 \begin{aligned}
@@ -251,7 +251,7 @@ int main() {
 First, we define a vector `a` of integer variables, where each `a[i]` takes an integer value in
 `[0, upper[i] - lower[i]]`.
 We also define a vector `s` of binary variables.
-Using `a` and `s`, we construct `v = s * lower + a`, which corresponds to 
+Using `a` and `s`, we construct `x = s * lower + a`, which corresponds to 
 $v_i = s_i * l_i+a_i$.
 The expression `constraint1 = sum((1 - s) * a)` penalizes any solution with `a[i] > 0` when `s[i] = 0`,
 thereby enforcing `v[i] = 0` for unselected intervals.

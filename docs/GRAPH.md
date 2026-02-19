@@ -91,10 +91,10 @@ int main() {
 
   qbpp::graph::GraphDrawer graph;
   for (size_t i = 0; i < N; ++i) {
-    graph.add(qbpp::graph::Node(i).color(sol(x[i])));
+    graph.add_node(qbpp::graph::Node(i).color(sol(x[i])));
   }
   for (const auto& e : edges) {
-    graph.add(qbpp::graph::Edge(e.first, e.second));
+    graph.add_edge(qbpp::graph::Edge(e.first, e.second));
   }
   graph.write("mis.svg");
 }
@@ -102,11 +102,9 @@ int main() {
 For a vector `x` of `N = 16` binary variables, the expressions `objective`, `constraint`, and `f` are constructed according to the above QUBO formulation.
 The Exhaustive Solver is then used to find an optimal solution for `f`, which is stored in `sol`. The values of `objective` and `constraint` evaluated at `sol` are printed.
 
-A `qbpp::graph::GraphDrawer` object, `graph`, is created next. In the loop over `i`, a `qbpp::graph::Node` object is created with label `i`, and its color is set to 0 or 1 depending on the value of `x[i]` in `sol` via the `color()` member function.
-Each node is added to graph using `add()`.
+A `qbpp::graph::GraphDrawer` object, `graph`, is created next. In the loop over `i`, a `qbpp::graph::Node` object is created with label `i`, and its color is set to 0 or 1 depending on the value of `x[i]` in `sol` via the `color()` member function. Each node is added to graph using `add_node()`.
 
-Similarly, in the loop over edges, an `qbpp::graph::Edge(e.first, e.second)` object is created for each edge and added to graph using `add()`.
-Finally, `graph.write("mis.svg")` renders the graph and writes the resulting image to `mis.svg`.
+Similarly, in the loop over edges, an `qbpp::graph::Edge(e.first, e.second)` object is created for each edge and added to graph using `add_edge()`. Finally, `graph.write("mis.svg")` renders the graph and writes the resulting image to `mis.svg`.
 
 This program produces the following output:
 ```
@@ -116,7 +114,7 @@ constraint = 0
 This implies that the obtained solution selects 7 nodes and satisfies all constraints. The rendered image is saved as `mis.svg`:
 
 <p align="center">
-  <img src="images/mis.svg" alt="The solution of the MIS problem." width="50%">
+  <img src="images/mis.svg" alt="The solution of the MIS problem." width="80%">
 </p>
 
 ## API of the QUBO++ Simple Graph Drawing Library
@@ -125,10 +123,10 @@ The QUBO++ Simple Graph Drawing Library provides the following classes:
 Stores node information such as the label, color, pen width, and position.
 - **`qbpp::graph::Edge`**:
 Stores edge information such as the two endpoint nodes, whether the edge is directed or undirected, its color, and pen width.
-- **`qbpp::graph::GraphDrawer`**:
+- **`qbpp::graph::GraphDrawing`**:
 Stores vectors of `qbpp::graph::Node` and `qbpp::graph::Edge` that together constitute a graph.
 
-### **`qbpp::graph::Node`**
+### `qbpp::graph::Node`
 - **`Node(std::string s)`**:
 Constructs a node whose label is s.
 - **`Node(size_t i)`**
@@ -142,7 +140,7 @@ Sets the pen width to `f` for drawing the node outline.
 - **`position(float x, float y)`**:
 Sets the node position to `(x, y)`.
 
-### **`qbpp::graph::Edge`**
+### `qbpp::graph::Edge`
 The following constructors and member functions are supported:
 - **`Edge(std::string from, std::string to)`**:
 Constructs an edge connecting the nodes labeled from and to.
@@ -157,11 +155,11 @@ Sets the edge color to the i-th entry in the color palette. The default color 0 
 - **`penwidth(float f)`**:
 Sets the pen width to `f` for drawing the edge.
 
-### **`qbpp::graph::GraphDrawer`**
+### `qbpp::graph::GraphDrawing`
 The following member functions are supported:
-- **`add(const Node& node)`**:
+- **`add_node(const Node& node)`**:
 Appends node to the graph.
-- **`add(const Edge& edge)`**:
+- **`add_edge(const Edge& edge)`**:
 Appends edge to the graph.
 - **`write(std::string file_name)`**:
 Renders the graph and writes it to `file_name`.

@@ -106,10 +106,10 @@ int main() {
 
   qbpp::graph::GraphDrawer graph;
   for (size_t i = 0; i < N; ++i) {
-    graph.add(qbpp::graph::Node(i).color(1 - sol(x[i])));
+    graph.add_node(qbpp::graph::Node(i).color(1 - sol(x[i])));
   }
   for (const auto& e : edges) {
-    graph.add(qbpp::graph::Edge(e.first, e.second));
+    graph.add_edge(qbpp::graph::Edge(e.first, e.second));
   }
   graph.write("dominatingset.svg");
 }

@@ -43,6 +43,7 @@ This section provides examples of solving optimization, mathematical, and graph 
 ## Puzzle
 1. [Magic Square](MAGIC) (Hard)
 2. [N-Queens Problem](QUEENS) (Medium)
+3. [SEND + MORE = MONEY Problem](SEND_MORE_MONEY) (Hard)
 
 ## Circuit simulation
 1. [Adder Simulation](ADDER) (Medium)

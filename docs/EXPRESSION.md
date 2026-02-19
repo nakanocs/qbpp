@@ -11,7 +11,7 @@ The following three classes are used for this purpose:
 |------|-----|-----|
 | `qbpp::Var` | A variable  |  a 32-bit ID and a string to display |
 | `qbpp::Term` | A product term | Zero or more variables and an integer coefficient |
-| `qbpp::Expr` | An expression | Zero or more terms and an integer constant term |
+| `qbpp::Expr` | An expression | Zero ore moter terms and an integer constant term |
 
 ## `qbpp::Var` class
 An instance of this class represents **a variable symbolically**.
@@ -28,7 +28,7 @@ which is assigned an automatically generated ID and uses the string `"x"` for di
   auto x = qbpp::var("x");
   std::cout << x << std::endl;
 ```
-This simply prints `x`.
+This simpliy prints `x`.
 It is recommended to use the same string as the variable symbol,
 but a different display string can also be used:
 ```cpp
@@ -148,7 +148,7 @@ If `qbpp::toExpr()` is not used, they would instead be of type `int`,
 `qbpp::Var`, and `qbpp::Term`, respectively.
 
 For example, the following program incrementally builds an expression
-using a `qbpp::Expr` object **`f`**:
+using a `qbpp::Expr` object **`f**:
 ```cpp
   auto x = qbpp::var("x", 4);
   auto f = qbpp::toExpr(-1);

@@ -20,7 +20,7 @@ For each order $j$, the total number of pieces assigned across all bars must equ
 
 $$
 \begin{aligned}
- \sum_{i=0}^{M-1}x_{i,j} &= c_j & &(0\leq j\leq N-1) 
+ \sum_{i=0}^{M-1}x_{i,j} &= c_j & &(0\leq j\leq N-1)
 \end{aligned}
 $$
 
@@ -29,12 +29,12 @@ For each bar $i$, the total length of the assigned pieces must not exceed $L$:
 
 $$
 \begin{aligned}
- \sum_{j=0}^{N-1}l_jx_{i,j} &\leq  L & &(0\leq i\leq M-1) 
+ \sum_{j=0}^{N-1}l_jx_{i,j} &\leq  L & &(0\leq i\leq M-1)
 \end{aligned}
 $$
 
 ## QUBO++ program
-The following QUBO++ program finds a feasible cutting plan using 
+The following QUBO++ program finds a feasible cutting plan using
 $M=6$ bars of length $L=60$ and the following $N=4$ orders:
 
 | Order $j$ | 0 | 1 | 2 | 3|
@@ -107,7 +107,7 @@ The following output is an example feasible solution:
 ```
 Bar 0:  2  0  0  3   used = 59, waste = 1
 Bar 1:  4  0  1  0   used = 60, waste = 0
-Bar 2:  1  1  3  0   used = 60, waste = 0
+Bar 2:1  1  3  0   used = 60, waste = 0
 Bar 3:  0  0  4  2   used = 54, waste = 6
 Bar 4:  2  1  0  1   used = 60, waste = 0
 Bar 5:  1  2  0  0   used = 59, waste = 1

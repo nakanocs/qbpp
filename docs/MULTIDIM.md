@@ -116,67 +116,25 @@ f[1][1] = -1 +2*x[1][1]
 f[1][2] = -1 +2*x[1][2]
 ```
 
-## Implementation of Vectors and Arrays
-
+## Implementation of vecvtors and arrays
 QUBO++ implements vectors (i.e., one-dimensional arrays) as **`qbpp::Vector<T>`** objects, which are largely compatible with `std::vector<T>`.
 The template parameter `T` can be `qbpp::Expr`, `qbpp::Var`, or an integer type.
 
-The `qbpp::Vector<T>` class provides the following member functions for compatibility with `std::vector<T>`.
-For details, please refer to the documentation for `std::vector<T>`.
+The class `qbpp::Vector<T>` provides the following member functions for compatibility with `std::vector<T>`:
+- **`size()`**: Returns the number of elements in the vector.
+- **`resize()`**: Changes the number of elements in the vector.
+- **`reserve()`**: Reserves memory space for the vector.
+- **`push_back()`**: Appends an element to the end of the vector.
+- **`emplace_back()`**: Constructs and appends an element to the end of the vector.
+- **`empty()`**: Returns true if the vector contains no elements.
+- **`operator[]`**: Returns the element at the specified index.
+- **`begin()`**, **`end()`**: Iterators for accessing and manipulating elements.
 
-### Element Access
-
-| function | description |
-|:---|:---|
-| `operator[]` | Returns the element at the specified index. |
-| `at()` | Returns the element at the specified index with bounds checking. |
-| `front()` | Returns a reference to the first element. |
-| `back()` | Returns a reference to the last element. |
-| `data()` | Returns a pointer to the underlying array. |
-
-### Capacity
-
-| function | description |
-|:---|:---|
-| `size()` | Returns the number of elements. |
-| `empty()` | Returns `true` if the vector contains no elements. |
-| `capacity()` | Returns the number of elements that can be held in the currently allocated storage. |
-| `reserve()` | Reserves storage for at least the specified number of elements. |
-| `shrink_to_fit()` | Requests the removal of unused capacity to reduce memory usage. |
-
-### Modifiers
-
-| function | description |
-|:---|:---|
-| `clear()` | Removes all elements. |
-| `resize()` | Changes the number of elements. |
-| `push_back()` | Appends an element to the end. |
-| `emplace_back()` | Constructs an element in place at the end. |
-| `pop_back()` | Removes the last element. |
-| `insert()` | Inserts elements at the specified position. |
-| `emplace()` | Constructs an element in place at the specified position. |
-| `erase()` | Removes elements at the specified position or in the specified range. |
-| `swap()` | Swaps the contents with another vector. |
-| `assign()` | Replaces the contents with the specified elements. |
-
-### Iterators
-
-| function | description |
-|:---|:---|
-| `begin()`, `end()` | Returns iterators to the beginning/end. |
-| `cbegin()`, `cend()` | Returns const iterators to the beginning/end. |
-| `rbegin()`, `rend()` | Returns reverse iterators to the beginning/end. |
-| `crbegin()`, `crend()` | Returns const reverse iterators to the beginning/end. |
-
-### Additional operators
 In addition, unlike `std::vector<T>`, **`qbpp::Vector<T>`** supports the following operators for element-wise operations:
-
-| operator | description |
-|:---|:---|
-| **`+`** | Performs element-wise addition between two vectors, or between a vector and a scalar. |
-| **`-`** | Performs element-wise subtraction between two vectors, or between a vector and a scalar. |
-| **`*`** | Performs element-wise multiplication between two vectors, or between a vector and a scalar. |
-| unary **`-`** | Negates all elements of the vector. |
+- **`+`**: Element-wise addition of two vectors, or a vector and a scalar.
+- **`-`**: Element-wise subtraction of two vectors, or a vector and a scalar.
+- **`*`**: Element-wise multiplication of two vectors, or a vector and a scalar.
+- unary **`-`**: Negates all elements in the vector.
 
 Furthermore, multi-dimensional arrays are implemented as nested instances of `qbpp::Vector<T>`.
 For example, the data type of `x` in the following code is **`qbpp::Vector<qbpp::Vector<qbpp::Var>>`**:
@@ -210,9 +168,3 @@ This program outputs:
 (-1 +2*x[0][0])(-1 +2*x[0][1])(-1 +2*x[0][2])
 (-1 +2*x[1][0])(-1 +2*x[1][1])(-1 +2*x[1][2])
 ```
-
-### Additional Functions
-
-Most QUBO++ functions—such as `qbpp::sqr()` and `qbpp::simplify()`—that work on `qbpp::Expr`, `qbpp::Term`, and integer types also work on `qbpp::Vector` of these types.
-When a `qbpp::Vector` is passed, the function is applied element-wise to the vector.
-For details, please refer to the documentation for each function.

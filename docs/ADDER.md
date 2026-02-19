@@ -6,7 +6,8 @@ title: "Adder Simulation"
 # Adder Simulation
 
 ## Full adder and ripple carry adder 
-A full adder has three input bits: $a$, $b$, and $i$ (carry-in), and two output bits: $o$ (carry-out) and $s$ (sum).
+A full adder has three input bits: $a$, $b$, and $i$ (carry-in) and
+$o$ (carry-out) and $s$ (sum).
 The sum of the three input bits is represented using these two output bits.
 
 A ripple-carry adder computes the sum of two multi-bit integers by cascading multiple full adders, as illustrated below:
@@ -15,7 +16,7 @@ A ripple-carry adder computes the sum of two multi-bit integers by cascading mul
 </p>
 
 This ripple-carry adder computes the sum of two 4-bit integers $x_3x_2x_1x_0$ and $y_3y_2y_1y_0$
-and outputs the 4-bit sum $z_3z_2z_1z_0$ using four full adders.
+and outputs the 4-bit sum$z_3z_2z_1z_0$ using four full adders.
 The corresponding 5-bit carry signals $c_4c_3c_2c_1c_0$ are also shown.
 
 ## QUBO formulation for full adder
@@ -23,7 +24,7 @@ A full adder can be formulated using the following expression:
 
 $$
 \begin{aligned}
-fa(a,b,i,o,s) &=((a+b+i)-(2o+s))^2
+fa(a,b,i,c,s) &=((a+b+i)-(2o+s))^2
 \end{aligned}
 $$
 
