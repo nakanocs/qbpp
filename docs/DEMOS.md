@@ -12,7 +12,7 @@ title: "Demos"
   <button class="demo-btn" onclick="loadDemo('https://pwnweogwdi7ykfx2dzxwewa4li0kdslm.lambda-url.ap-northeast-1.on.aws/', this)">Graph Problems</button>
 </div>
 
-<iframe id="demo-frame" style="width:100%; height:85vh; border:1px solid #ccc; border-radius:6px; display:none;" allow="file-system-access"></iframe>
+<iframe id="demo-frame" style="width:100%; height:85vh; border:1px solid #ccc; border-radius:6px; display:none;"></iframe>
 <p id="demo-placeholder" style="color:#888;">Select a demo above to load it here.</p>
 
 <style>
@@ -45,4 +45,32 @@ function loadDemo(url, btn) {
   for (var i = 0; i < btns.length; i++) btns[i].classList.remove('active');
   btn.classList.add('active');
 }
+
+// Handle save-file requests from demo iframes (showSaveFilePicker blocked in cross-origin iframes)
+window.addEventListener('message', async function(e) {
+  if (!e.data || e.data.type !== 'save-file') return;
+  var frame = document.getElementById('demo-frame');
+  if (!frame || !frame.contentWindow) return;
+  if (e.source !== frame.contentWindow) return;
+  if (!window.showSaveFilePicker) {
+    frame.contentWindow.postMessage({type: 'save-file-result', error: 'unsupported'}, '*');
+    return;
+  }
+  try {
+    var handle = await window.showSaveFilePicker({
+      suggestedName: e.data.name || 'source.cpp',
+      types: [{description: 'C++ Source', accept: {'text/plain': ['.cpp','.hpp','.h','.cc','.cxx']}}]
+    });
+    var writable = await handle.createWritable();
+    await writable.write(e.data.content);
+    await writable.close();
+    frame.contentWindow.postMessage({type: 'save-file-result', ok: true, name: handle.name}, '*');
+  } catch (err) {
+    if (err.name === 'AbortError') {
+      frame.contentWindow.postMessage({type: 'save-file-result', cancelled: true}, '*');
+    } else {
+      frame.contentWindow.postMessage({type: 'save-file-result', error: err.message}, '*');
+    }
+  }
+});
 </script>
