@@ -12,7 +12,7 @@ title: "Demos"
   <button class="demo-btn" onclick="loadDemo('https://pwnweogwdi7ykfx2dzxwewa4li0kdslm.lambda-url.ap-northeast-1.on.aws/', this)">Graph Problems</button>
 </div>
 
-<iframe id="demo-frame" style="width:100%; height:85vh; border:1px solid #ccc; border-radius:6px; display:none;"></iframe>
+<iframe id="demo-frame" style="width:100%; height:85vh; border:1px solid #ccc; border-radius:6px; display:none;" allow="file-system-access"></iframe>
 <p id="demo-placeholder" style="color:#888;">Select a demo above to load it here.</p>
 
 <style>
