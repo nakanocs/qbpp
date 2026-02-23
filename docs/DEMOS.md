@@ -6,6 +6,7 @@ title: "Demos"
 # Demos
 
 <div id="demo-tabs" style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:0.8rem;">
+  <button class="demo-btn" onclick="loadDemo('https://uzfftqxjkl26ncncbfz42smpmy0zeygz.lambda-url.ap-northeast-1.on.aws/', this)">QUBO++ IDE</button>
   <button class="demo-btn" onclick="loadDemo('https://lsuxxbj2xmy5nrdnw7i53hxtiu0hazyg.lambda-url.ap-northeast-1.on.aws/', this)">N-Queens Problem</button>
   <button class="demo-btn" onclick="loadDemo('https://vk2x4g4ctfs3rpc2rhr6f5jnfy0meufu.lambda-url.ap-northeast-1.on.aws/', this)">Traveling Salesman Problem</button>
   <button class="demo-btn" onclick="loadDemo('https://pwnweogwdi7ykfx2dzxwewa4li0kdslm.lambda-url.ap-northeast-1.on.aws/', this)">Graph Problems</button>
