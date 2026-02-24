@@ -31,13 +31,16 @@
   <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
 
     <!-- 左ナビ（全ページ共通） -->
-    <nav style="min-width:220px; position:sticky; top:1rem; padding-right:1rem; border-right:1px solid #ddd;">
-      <h2>QUBO++<br> Information</h2>
-      <ul class="nav-large" style="list-style:none; padding-left:0;">
+    <nav style="width:max-content; position:sticky; top:1rem; padding:0 1rem 0 0; border-right:1px solid #ddd;">
+      <h2 style="margin-left:0;">QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
         <li><a href="/"><strong>Introduction</strong></a> </li>
         <li><a href="/HUBO_QUBO"><strong>HUBO and QUBO</strong></a> </li>
-        <li><a href="/QUICK"><strong>Quick Start</strong></a> </li>
-        <li><a href="/WSL"><strong>Quick Start for Windows</strong></a> </li>
+        <li><a href="/QUICK"><strong>Quick Start</strong></a>
+          <ul style="list-style:none; padding-left:1.2em; margin:0.2em 0 0.2em;">
+            <li><a href="/WSL"><strong>for Windows</strong></a></li>
+          </ul>
+        </li>
         <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
         <li><a href="/CASE_STUDIES"><strong>Case Studies</strong></a></li>
         <li><a href="/DEMOS"><strong>Demos</strong></a></li>
