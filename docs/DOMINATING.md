@@ -39,7 +39,7 @@ $$
 \end{aligned}
 $$
 
-The degree of the term for node $i$ is $|N[i]|$, so the constraint may not be quadratic.
+The degree of the term for node $i$ is $\lvert N[i] \rvert$, so the constraint may not be quadratic.
 
 The objective is to minimize the number of selected nodes:
 
