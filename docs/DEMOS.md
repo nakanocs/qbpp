@@ -9,6 +9,9 @@ title: "Demos"
 > Performance is typically **several times slower** than a standard PC.
 > On a modern desktop, QUBO++ runs significantly faster.
 
+> **Note:** PyQUBO++ is a Python frontend powered by the QUBO++ C++ engine.
+> It is currently under active development and its API may change without notice.
+
 
 
 <div id="demo-tabs" style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:0.8rem;">
