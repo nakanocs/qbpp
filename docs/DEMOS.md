@@ -16,7 +16,7 @@ title: "Demos"
   <button class="demo-btn" onclick="loadDemo('https://lsuxxbj2xmy5nrdnw7i53hxtiu0hazyg.lambda-url.ap-northeast-1.on.aws/', this)">N-Queens Problem</button>
   <button class="demo-btn" onclick="loadDemo('https://vk2x4g4ctfs3rpc2rhr6f5jnfy0meufu.lambda-url.ap-northeast-1.on.aws/', this)">Traveling Salesman Problem</button>
   <button class="demo-btn" onclick="loadDemo('https://pwnweogwdi7ykfx2dzxwewa4li0kdslm.lambda-url.ap-northeast-1.on.aws/', this)">Graph Problems</button>
-  <button class="demo-btn" onclick="loadDemo('hhttps://3nsgxoub3dgwgfb3dk27oc7yqu0zmmog.lambda-url.ap-northeast-1.on.aws/', this)">PyQUBO++ Playground</button>
+  <button class="demo-btn" onclick="loadDemo('https://3nsgxoub3dgwgfb3dk27oc7yqu0zmmog.lambda-url.ap-northeast-1.on.aws/', this)">PyQUBO++ Playground</button>
 </div>
 
 <iframe id="demo-frame" style="width:100%; height:85vh; border:1px solid #ccc; border-radius:6px; display:none;"></iframe>
