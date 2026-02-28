@@ -67,9 +67,14 @@ window.addEventListener('message', async function(e) {
     return;
   }
   try {
+    var name = e.data.name || 'source.cpp';
+    var ext = name.split('.').pop() || '';
+    var types = ext === 'py'
+      ? [{description: 'Python Source', accept: {'text/plain': ['.py']}}]
+      : [{description: 'C++ Source', accept: {'text/plain': ['.cpp','.hpp','.h','.cc','.cxx']}}];
     var handle = await window.showSaveFilePicker({
-      suggestedName: e.data.name || 'source.cpp',
-      types: [{description: 'C++ Source', accept: {'text/plain': ['.cpp','.hpp','.h','.cc','.cxx']}}]
+      suggestedName: name,
+      types: types
     });
     var writable = await handle.createWritable();
     await writable.write(e.data.content);
