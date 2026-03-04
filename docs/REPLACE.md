@@ -163,7 +163,7 @@ We demonstrate QUBO++ programs that solve these problems using `qbpp::replace()`
 The folloing program fixes $p=5$ and $q=7$ and finds the product $r=35$:
 {% raw %}
 ```cpp
-
+#define MAXDEG 4
 #include "qbpp.hpp"
 #include "qbpp_easy_solver.hpp"
 
@@ -172,19 +172,18 @@ int main() {
   auto q = 2 <= qbpp::var_int("q") <= 8;
   auto r = 2 <= qbpp::var_int("r") <= 40;
   auto f = p * q - r == 0;
+  f.simplify_as_binary();
 
   qbpp::MapList ml({{p, 5}, {q, 7}});
   auto g = qbpp::replace(f, ml);
   g.simplify_as_binary();
   std::cout << "g = " << g << std::endl;
-  
+
   auto solver = qbpp::easy_solver::EasySolver(g);
   solver.target_energy(0);
   auto sol = solver.search();
-  
-  qbpp::Sol full_sol(f);
-  full_sol.set(sol);
-  full_sol.set(ml);
+
+  auto full_sol = qbpp::Sol(f).set(sol).set(ml);
   std::cout << "p= " << full_sol(p) << ", q= " << full_sol(q)
             << ", r= " << full_sol(r) << std::endl;
 }
@@ -195,8 +194,7 @@ In this program, a `qbpp::MapList` object `ml` is used to fix the values of the 
 By applying `qbpp::replace(f, ml)`, the variables `p` and `q` in `f` are replaced with the constants 5 and 7, respectively.
 The resulting expression is stored in `g`, which now contains only the variable `r`.
 The Easy Solver is then applied to `g`, and the resulting solution is stored in `sol`.
-To construct a complete solution for the original expression `f`, a `qbpp::Sol` object `full_sol` is created.
-The assignments obtained from sol and the fixed values specified by `ml` are combined and stored in `full_sol`.
+To construct a complete solution that includes all variables, we create a zero-initialized `qbpp::Sol` object for `f` and then set the binary values using `set()` with `sol` and `ml`.
 Finally, the values of $p$, $q$, and $r$ are printed.
 
 This program produces the following output, confirming that the multiplication result is obtained correctly:
