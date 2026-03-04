@@ -25,6 +25,7 @@ The complete QUBO++ program is shown below:
 
 {% raw %}
 ```cpp
+#define MAXDEG 2
 #include "qbpp.hpp"
 #include "qbpp_exhaustive_solver.hpp"
 
@@ -34,6 +35,7 @@ int main() {
   auto p = qbpp::sum(w * x);
   auto q = qbpp::sum(w * (1 - x));
   auto f = qbpp::sqr(p - q);
+  f.simplify_as_binary();
 
   qbpp::MapList ml({{x[0], 1}, {x[1], 0}});
   auto g = qbpp::replace(f, ml);
@@ -41,9 +43,7 @@ int main() {
   auto solver = qbpp::exhaustive_solver::ExhaustiveSolver(g);
   auto sol = solver.search();
 
-  qbpp::Sol full_sol(f);
-  full_sol.set(sol);
-  full_sol.set(ml);
+  auto full_sol = qbpp::Sol(f).set(sol).set(ml);
 
   std::cout << "sol = " << sol << std::endl;
   std::cout << "ml = " << ml << std::endl;
@@ -76,12 +76,7 @@ The resulting expression is stored in **`g`**.
 The Exhaustive Solver is then applied to `g` to find an optimal solution, which is stored in `sol`.
 Note that the expression `g` no longer contains the variables `x[0]` and `x[1]`, and consequently, `sol` also does not include assignments for these variables.
 
-To construct a complete solution that includes all variables, we create a `qbpp::Sol` object **`full_sol`** from the original expression `f`.
-Initially, `full_sol` represents an all-zero solution.
-We then use the `set()` member function to incorporate both:
-- the solution **`sol`** obtained from the reduced problem, and
-- the fixed assignments specified in **`ml`**.
-These assignments are combined and stored in `full_sol`.
+To construct a complete solution that includes all variables, we create a zero-initialized `qbpp::Sol` object for `f` and then set the binary values using `set()` with `sol` and `ml`.
 
 From the output below, we can confirm that 64 is placed in $P$ and 27 is placed in $Q$, as intended:
 {% raw %}
@@ -112,9 +107,7 @@ The following C++ program implements this idea:
   auto solver = qbpp::exhaustive_solver::ExhaustiveSolver(g);
   auto sol = solver.search();
 
-  qbpp::Sol full_sol(f);
-  full_sol.set(sol);
-  full_sol.set({{x[0], sol(1 - x[1])}});
+  auto full_sol = qbpp::Sol(f).set(sol, ml);
 ```
 {% endraw %}
 In this program, a qbpp::MapList object ml is defined so that the variable `x[0]` is replaced by the expression `1 - x[1]`.
@@ -125,15 +118,8 @@ As a result, `g` no longer contains the variable `x[0]`; instead, all occurrence
 The Exhaustive Solver is then used to find an optimal solution for `g`, which is stored in `sol`.
 Since `x[0]` does not appear in `g`, the solution sol also does not include an assignment for `x[0]`.
 
-To construct a complete solution for the original expression `f`, a `qbpp::Sol` object `full_sol` is created.
-First, the assignments in `sol` are copied into `full_sol`.
-Then, the value of `x[0]` is explicitly set using the expression `1 - x[1]`, evaluated under `sol`, by calling:
-{% raw %}
-```cpp
-  full_sol.set({{x[0], sol(1 - x[1])}});
-```
-{% endraw %}
-This ensures that the constraint `x[0] = 1 - x[1]` is consistently enforced in the final solution.
+To construct a complete solution over the original variables in `f`, we start with a zero-initialized `qbpp::Sol(f)` and then populate it by calling `set(sol, ml)`.
+Note that `sol` and `ml` must be passed to `set()` together, because the mapping in `ml` (e.g., `x[0] = 1 - x[1]`) may depend on variable values contained in `sol`.
 
 This program produces the following output:
 {% raw %}
