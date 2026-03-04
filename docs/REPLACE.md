@@ -195,7 +195,7 @@ By applying `qbpp::replace(f, ml)`, the variables `p` and `q` in `f` are replace
 The resulting expression is stored in `g`, which now contains only the variable `r`.
 The Easy Solver is then applied to `g`, and the resulting solution is stored in `sol`.
 To construct a complete solution that includes all variables, we create a zero-initialized `qbpp::Sol` object for `f` and then set the binary values using `set()` with `sol` and `ml`.
-Finally, the values of $p$, $q$, and $r$ are printed.
+Finally, the values of `p`, `q`, and `r` are printed.
 
 This program produces the following output, confirming that the multiplication result is obtained correctly:
 ```
