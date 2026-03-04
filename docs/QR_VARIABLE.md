@@ -32,7 +32,7 @@ In most cases, it is not necessary to change this data type.
 `int8_t`, `int16_t`, `int32_t`, `int64_t`
 
 - **Multiprecision integer types** (implemented using the Boost.Multiprecision library):  
-`qbpp::int128_t`, `qbpp::int256_t`, `qbpp::int612_t`, `qbpp::int1024_t`, `qbpp::cpp_int`
+`qbpp::int128_t`, `qbpp::int256_t`, `qbpp::int512_t`, `qbpp::int1024_t`, `qbpp::cpp_int`
 
 - **`qbpp::cpp_int`**:  
 An integer type with unlimited precision.
@@ -58,7 +58,8 @@ This design allows easy inspection of internal states without relying on a debug
 
 ## Variable classes
 - **`qbpp::Var`**:
-  A class that holds a unique 32-bit integer ID and a string representing the variable name.
+  A class that holds a unique 32-bit integer ID.
+  The variable name is stored in a global registry and can be retrieved via `x.str()`.
 
 
 > **NOTE**  
@@ -143,8 +144,8 @@ For a `qbpp::VarInt` instance `x`, the following member functions are available:
 - **`const qbpp::Vector<qbpp::Var>& x.vars()`**:  
   Returns the const reference of the `qbpp::Var` object vector used to represent the integer variable.
 
-- **`const qbpp::Vector<energy_t>& x.coeffs()`**:  
-  Returns the const reference of the integer coefficient vector.  
+- **`qbpp::Vector<coeff_t> x.coeffs()`**:
+  Returns a copy of the integer coefficient vector.
   
 The following expression is equivalent to the expression stored in `x`:
 ```cpp
