@@ -49,6 +49,7 @@ Calling the **`search()`** member function on `solver` returns a solution instan
 class **`qbpp::Sol`**, which is printed using `std::cout`.
 
 ```cpp
+#define MAXDEG 2
 #include "qbpp.hpp"
 #include "qbpp_easy_solver.hpp"
 
@@ -87,6 +88,7 @@ Since the Exhaustive Solver explores all possible assignments, it is guaranteed 
 stores an optimal solution.
 
 ```cpp
+#define MAXDEG 2
 #include "qbpp.hpp"
 #include "qbpp_exhaustive_solver.hpp"
 

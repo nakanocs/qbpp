@@ -90,6 +90,7 @@ This objective function is minimized subject to the constraints described above.
 ## QUBO++ program for the shift scheduling
 The shift scheduling problem defined above can be formulated and solved using QUBO++ as follows:
 ```cpp
+#define MAXDEG 0
 #include "qbpp.hpp"
 #include "qbpp_easy_solver.hpp"
 

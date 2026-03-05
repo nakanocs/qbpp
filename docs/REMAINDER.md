@@ -41,6 +41,7 @@ $$
 ## QUBO++ praogram
 The following program finds a solution $x$ for this remainder problem:
 ```cpp
+#define MAXDEG 2
 #include "qbpp.hpp"
 #include "qbpp_easy_solver.hpp"
 

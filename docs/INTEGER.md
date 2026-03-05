@@ -36,6 +36,7 @@ $$
 
 The following QUBO++ program demonstrates how integer variables are defined:
 ```cpp
+#define MAXDEG 2
 #include "qbpp.hpp"
 
 int main() {
@@ -104,6 +105,7 @@ achieves its minimum value 0 precisely when both equations are satisfied simulta
 The following QUBO++ program constructs the QUBO expression $h(x,y)$, solves it, and decodes the resulting values of
 $x$ and $y$:
 ```cpp
+#define MAXDEG 2
 #include "qbpp.hpp"
 #include "qbpp_easy_solver.hpp"
 

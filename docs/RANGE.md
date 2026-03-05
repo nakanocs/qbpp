@@ -48,6 +48,7 @@ The optimal solution of this problem is $x=4$, $y=5$, with the objective value $
 
 The following QUBO++ program finds this optimal solution using the Easy Solver:
 ```cpp
+#define MAXDEG 2
 #include "qbpp.hpp"
 #include "qbpp_easy_solver.hpp"
 

@@ -219,6 +219,7 @@ where $P$ is a sufficiently large constant to prioritize feasibility.
 ## QUBO++ program of the QUBO formulation
 The following QUBO++ program solves the same ISSP instance using the QUBO formulation:
 ```cpp
+#define MAXDEG 2
 #include "qbpp.hpp"
 #include "qbpp_easy_solver.hpp"
 

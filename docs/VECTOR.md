@@ -17,6 +17,7 @@ Next, using the **`qbpp::expr()`** function with type deduction, we create a **`
 In the for-loop from `i = 0` to `4`, each variable `x[i]` is added to `f` using the compound operator **`+=`**.
 Finally, `f` is simplified and printed using `std::cout`.
 ```cpp
+#define MAXDEG 2
 #include "qbpp.hpp"
 
 int main() {
@@ -44,6 +45,7 @@ f = x[0] +x[1] +x[2] +x[3] +x[4]
 Using the vector utility function **`qbpp::sum()`**, you can obtain the sum of a vector of binary variables.
 The following program uses `qbpp::sum()` to compute the sum of all variables in the vector `x`:
 ```cpp
+#define MAXDEG 2
 #include "qbpp.hpp"
 
 int main() {
@@ -68,6 +70,7 @@ $$
 
 The following program creates the expression $f$ and finds all optimal solutions:
 ```cpp
+#define MAXDEG 2
 #include "qbpp.hpp"
 #include "qbpp_exhaustive_solver.hpp"
 

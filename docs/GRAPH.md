@@ -61,6 +61,7 @@ The penalty coefficient $2$ is sufficient to prioritize feasibility over increas
 ## QUBO++ Program for the MIS Problem
 Based on the QUBO formulation of the MIS problem described above, the following QUBO++ program solves an instance with 16 nodes. The edges are stored in `edges`, and the obtained solution is visualized using the QUBO++ graph drawing library:
 ```cpp
+#define MAXDEG 2
 #include "qbpp.hpp"
 #include "qbpp_exhaustive_solver.hpp"
 #include "qbpp_graph.hpp"

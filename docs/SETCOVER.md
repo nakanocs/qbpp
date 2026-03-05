@@ -67,6 +67,7 @@ The following QUBO++ program constructs a HUBO expression for a weighted minimum
 ```cpp
 #include <set>
 
+#define MAXDEG 6
 #include "qbpp.hpp"
 #include "qbpp_exhaustive_solver.hpp"
 

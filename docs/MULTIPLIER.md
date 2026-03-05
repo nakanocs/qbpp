@@ -122,6 +122,7 @@ The following program constructs a 4-bit multiplier with
 - `z`: a vector of constants `{1, 1, 1, 1, 0, 0, 0, 1}`, representing the 8-bit integer `10001111` `(143)`, and stores the resulting expression in `f`:
 {% raw %}
 ```cpp
+#define MAXDEG 2
 #include "qbpp.hpp"
 #include "qbpp_easy_solver.hpp"
 

@@ -104,6 +104,7 @@ The following QUBO++ program implements the QUBO formulation above and finds a s
 
 #include <string_view>
 
+#define MAXDEG 2
 #include "qbpp.hpp"
 #include "qbpp_easy_solver.hpp"
 

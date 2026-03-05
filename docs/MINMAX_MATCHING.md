@@ -62,6 +62,7 @@ $$
 ## QUBO++ program
 The following QUBO++ program finds a minimum maximal matching of a fixed undirected graph with $N=16$ nodes and $M=27$ edges:
 ```cpp
+#define MAXDEG 2
 #include "qbpp.hpp"
 #include "qbpp_exhaustive_solver.hpp"
 #include "qbpp_graph.hpp"

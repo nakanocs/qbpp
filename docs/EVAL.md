@@ -11,6 +11,7 @@ as a list of pairs of a variable and its value.
 A list can be defined as a **`qbpp::MapList`** object.
 For example, the following program computes the function $f(x,y,z)$ for $(x,y,z)=(0,1,1)$.
 ```cpp
+#define MAXDEG 2
 #include "qbpp.hpp"
 
 int main() {
@@ -44,6 +45,7 @@ f(0,1,1) = 4
 Alternratively, we can provide an assignemt directly as follows:
 {% raw %}
 ```cpp
+#define MAXDEG 2
 #include "qbpp.hpp"
 
 int main() {
@@ -69,6 +71,7 @@ Furthermore, the **`comp_energy()`** member function computes and returns the sa
 
 
 ```cpp
+#define MAXDEG 2
 #include "qbpp.hpp"
 
 int main() {
@@ -91,6 +94,7 @@ Note that the member function **`comp_energy()`** of a solution object `sol` com
 In addition, a solution object returned by a solver already has its energy value computed and cached.
 To retrieve the energy without recomputing it, you can use the member function **`energy()`**, as shown below:
 ```cpp
+#define MAXDEG 2
 #include "qbpp.hpp"
 #include "qbpp_easy_solver.hpp"
 

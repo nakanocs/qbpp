@@ -218,6 +218,7 @@ Alternatively, declare the type explicitly:
 Arrays of `qbpp::Expr` can be defined in the same way as arrays of `qbpp::Var`.
 The following QUBO++ program creates arrays `f` and `g`, each holding `qbpp::Expr` objects:
 ```cpp
+#define MAXDEG 2
 #include "qbpp.hpp"
 
 int main() {
@@ -275,6 +276,7 @@ $$
 Thus, minimizing this quadratic function over binary variables yields an optimal partition, i.e., a QUBO instance.
 The following QUBO++ program builds the expression for $f(L)$ and finds a solution using the Easy Solver.
 ```cpp
+#define MAXDEG 2
 #include "qbpp.hpp"
 #include "qbpp_easy_solver.hpp"
 
@@ -388,6 +390,7 @@ $f = (a + b + c − 1)^2$ and $g = (a + 2b + 3c − 2)^2$, and combines them as 
 It then runs a simple solver to find a solution (targeting energy 0), prints the variable values and energies, flips a to 1 using `set()`, and demonstrates that the energy cache is invalidated and recomputed via `comp_energy()`.
 
 ```cpp
+#define MAXDEG 2
 #include "qbpp.hpp"
 #include "qbpp_easy_solver.hpp"
 
@@ -558,6 +561,7 @@ Therefore, after applying either `simplify_as_binary()` or `simplify_as_spin()`,
 The following example demonstrates how these functions are used and the differences in their outputs:
 
 ```cpp
+#define MAXDEG 2
 #include "qbpp.hpp"
 
 int main() {
@@ -610,6 +614,7 @@ $$
 
 The following code demonstrates how to solve these linear equations using the Exhaustive Solver:
 ```cpp
+#define MAXDEG 2
 #include "qbpp.hpp"
 #include "qbpp_exhaustive_solver.hpp"
 
@@ -658,6 +663,7 @@ $
 is satisfied and finds all optimal solutions:
 
 ```cpp
+#define MAXDEG 2
 #include "qbpp.hpp"
 #include "qbpp_exhaustive_solver.hpp"
 
@@ -705,6 +711,7 @@ $
 is satisfied and finds all optimal solutions:
 
 ```cpp
+#define MAXDEG 2
 #include "qbpp.hpp"
 #include "qbpp_exhaustive_solver.hpp"
 
@@ -751,6 +758,7 @@ The following code demonstrates how to use the evaluation functions with a qbpp:
 
 {% raw %}
 ```cpp
+#define MAXDEG 2
 #include "qbpp.hpp"
 
 int main() {
@@ -787,6 +795,7 @@ The following code demonstrates how to use replacement functions to replace vari
 
 {% raw %}
 ```cpp
+#define MAXDEG 2
 #include "qbpp.hpp"
 
 int main() {

@@ -39,6 +39,7 @@ The function $f(x)$ is a quadratic expression of $x$, and an optimal solution th
 The following QUBO++ program creates the QUBO formulation of the partitioning problem for a fixed set of 8 numbers and finds a solution using the Exhaustive Solver.
 
 ```cpp
+#define MAXDEG 2
 #include "qbpp.hpp"
 #include "qbpp_exhaustive_solver.hpp"
 

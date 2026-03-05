@@ -19,6 +19,7 @@ $$
 ## QUBO++ program
 The following QUBO++ program formulates this ILP as a QUBO expression and solves it using the Easy Solver:
 ```cpp
+#define MAXDEG 2
 #include "qbpp.hpp"
 #include "qbpp_easy_solver.hpp"
 

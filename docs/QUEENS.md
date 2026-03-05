@@ -52,6 +52,7 @@ $$
 ## QUBO++ program
 The following QUBO++ program constructs an expression representing the constraints above and then finds a feasible solution using the Easy Solver:
 ```cpp
+#define MAXDEG 2
 #include "qbpp.hpp"
 #include "qbpp_easy_solver.hpp"
 

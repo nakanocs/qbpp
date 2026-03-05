@@ -16,6 +16,7 @@ Expressions are constructed using standard arithmetic operators such as **`+`**,
 
 The following sample program defines three variables `a`, `b`, and `c`, and an expression `f`, which is printed using `std::cout`:
 ```cpp
+#define MAXDEG 2
 #include "qbpp.hpp"
 
 int main() {

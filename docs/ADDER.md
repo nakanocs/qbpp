@@ -31,6 +31,7 @@ $$
 This expression attains its minimum value of 0 if and only if the five variables take values consistent with a valid full-adder operation.
 The following QUBO++ program verifies this formulation using the exhaustive solver:
 ```cpp
+#define MAXDEG 2
 #include "qbpp.hpp"
 #include "qbpp_exhaustive_solver.hpp"
 
@@ -100,6 +101,7 @@ Using the QUBO expression for a full adder, we can construct a QUBO expression t
 The following QUBO++ program creates a QUBO expression for simulating a 4-bit adder by combining four full adders:
 {% raw %}
 ```cpp
+#define MAXDEG 2
 #include "qbpp.hpp"
 #include "qbpp_exhaustive_solver.hpp"
 
@@ -148,6 +150,7 @@ This program produces 512 valid solutions, corresponding to all possible input c
 {% endraw %}
 Alternatively, we can define a C++ function `fa` to construct full-adder constraints in a more concise and readable manner:
 ```cpp
+#define MAXDEG 2
 #include "qbpp.hpp"
 #include "qbpp_exhaustive_solver.hpp"
 

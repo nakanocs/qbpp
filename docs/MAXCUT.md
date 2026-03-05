@@ -33,6 +33,7 @@ Moreover, the value of $\text{objective}$ equals the number of edges crossing be
 Based on the formulation above, the following QUBO++ program constructs the QUBO expression $f$ for a 16-node graph and solves it using the Exhaustive Solver:
 
 ```cpp
+#define MAXDEG 2
 #include "qbpp.hpp"
 #include "qbpp_exhaustive_solver.hpp"
 #include "qbpp_graph.hpp"

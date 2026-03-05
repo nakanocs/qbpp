@@ -51,6 +51,7 @@ $j$ is visited next (at position $(k+1)\bmod n$), so it equals the total length 
 Using the permutation-matrix formulation above, we can write a QUBO++ program for the TSP as follows:
 {% raw %}
 ```cpp
+#define MAXDEG 2
 #include "qbpp.hpp"
 #include "qbpp_easy_solver.hpp"
 #include "qbpp_graph.hpp"
