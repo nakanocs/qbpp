@@ -43,6 +43,7 @@ The following program searches for a solution to the
 **Low Autocorrelation Binary Sequences (LABS)** problem using the Exhaustive
 Solver:
 ```cpp
+#define MAXDEG 4
 #include "qbpp.hpp"
 #include "qbpp_exhaustive_solver.hpp"
 

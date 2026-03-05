@@ -20,6 +20,7 @@ In the following QUBO++ program, we define an integer variable x that takes valu
 #define COEFF_TYPE cpp_int
 #define ENERGY_TYPE cpp_int
 
+#define MAXDEG 6
 #include "qbpp.hpp"
 #include "qbpp_exhaustive_solver.hpp"
 

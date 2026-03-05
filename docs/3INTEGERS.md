@@ -40,6 +40,7 @@ $$
 The following QUBO++ program formulates these constraints as a HUBO expression and solves it using the Exhaustive Solver:
 
 ```cpp
+#define MAXDEG 6
 #include "qbpp.hpp"
 #include "qbpp_exhaustive_solver.hpp"
 

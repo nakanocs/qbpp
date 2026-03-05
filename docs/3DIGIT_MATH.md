@@ -39,6 +39,7 @@ The following QUBO++ program finds all solutions:
 ```cpp
 #include <set>
 
+#define MAXDEG 6
 #include "qbpp.hpp"
 #include "qbpp_exhaustive_solver.hpp"
 

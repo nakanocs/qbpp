@@ -39,6 +39,7 @@ The Easy Solver searches for solutions by simply calling the **`search()`** memb
 ## Program Example
 The following program searches for a solution to the Low Autocorrelation Binary Sequences (LABS) problem using the Easy Solver:
 ```cpp
+#define MAXDEG 4
 #include "qbpp.hpp"
 #include "qbpp_easy_solver.hpp"
 
@@ -153,6 +154,7 @@ The following program solves the Low Autocorrelation Binary Sequence (LABS) prob
 Since **`enable_topk_sols(20)`** is called, the solver keeps **up to 20 top-k solutions**.
 The program prints each stored solution using a range-based for loop.
 ```cpp
+#define MAXDEG 4
 #include "qbpp.hpp"
 #include "qbpp_easy_solver.hpp"
 

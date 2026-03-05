@@ -34,6 +34,7 @@ Clearly, $f(p,q)$ attains the minimum value 0 exactly when $p$ and $q$ are the c
 ## QUBO++ program for factorization
 The following QUBO++ program constructs the HUBO expression $f(p,q)$, and solves the optimization problem using the Easy Solver:
 ```cpp
+#define MAXDEG 4
 #include "qbpp.hpp"
 #include "qbpp_easy_solver.hpp"
 
@@ -79,6 +80,7 @@ The following QUBO++ program factorizes the product of two large prime numbers:
 #define COEFF_TYPE qbpp::cpp_int
 #define ENERGY_TYPE qbpp::cpp_int
 
+#define MAXDEG 4
 #include "qbpp.hpp"
 #include "qbpp_easy_solver.hpp"
 
