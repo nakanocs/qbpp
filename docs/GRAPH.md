@@ -13,9 +13,9 @@ It is a wrapper around Graphviz, which you can install on Ubuntu as follows:
 $ sudo apt install graphviz
 ```
 
-To use this library, include `qbpp_graph.hpp`:
+To use this library, include `qbpp/graph.hpp`:
 ```cpp
-#include "qbpp_graph.hpp"
+#include <qbpp/graph.hpp>
 ```
 
 The library generates DOT input and invokes `neato` to render graphs.
@@ -62,9 +62,9 @@ The penalty coefficient $2$ is sufficient to prioritize feasibility over increas
 Based on the QUBO formulation of the MIS problem described above, the following QUBO++ program solves an instance with 16 nodes. The edges are stored in `edges`, and the obtained solution is visualized using the QUBO++ graph drawing library:
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
-#include "qbpp_exhaustive_solver.hpp"
-#include "qbpp_graph.hpp"
+#include <qbpp/qbpp.hpp>
+#include <qbpp/exhaustive_solver.hpp>
+#include <qbpp/graph.hpp>
 
 int main() {
   const size_t N = 16;

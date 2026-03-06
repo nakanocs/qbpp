@@ -40,8 +40,8 @@ The following QUBO++ program finds all solutions:
 #include <set>
 
 #define MAXDEG 6
-#include "qbpp.hpp"
-#include "qbpp_exhaustive_solver.hpp"
+#include <qbpp/qbpp.hpp>
+#include <qbpp/exhaustive_solver.hpp>
 
 int main() {
   auto x = 1 <= qbpp::var_int("x") <= 9;

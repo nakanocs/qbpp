@@ -25,8 +25,8 @@ Based on the idea above, the following QUBO++ program computes the GCD of two in
 `P = 858` and `Q = 693`:
 ```cpp
 #define MAXDEG 4
-#include "qbpp.hpp"
-#include "qbpp_easy_solver.hpp"
+#include <qbpp/qbpp.hpp>
+#include <qbpp/easy_solver.hpp>
 
 int main() {
   const int P = 858;

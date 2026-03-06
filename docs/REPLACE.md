@@ -26,8 +26,8 @@ The complete QUBO++ program is shown below:
 {% raw %}
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
-#include "qbpp_exhaustive_solver.hpp"
+#include <qbpp/qbpp.hpp>
+#include <qbpp/exhaustive_solver.hpp>
 
 int main() {
   qbpp::Vector<uint32_t> w = {64, 27, 47, 74, 12, 83, 63, 40};
@@ -164,8 +164,8 @@ The folloing program fixes $p=5$ and $q=7$ and finds the product $r=35$:
 {% raw %}
 ```cpp
 #define MAXDEG 4
-#include "qbpp.hpp"
-#include "qbpp_easy_solver.hpp"
+#include <qbpp/qbpp.hpp>
+#include <qbpp/easy_solver.hpp>
 
 int main() {
   auto p = 2 <= qbpp::var_int("p") <= 8;

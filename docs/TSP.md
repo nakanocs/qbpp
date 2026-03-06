@@ -52,9 +52,9 @@ Using the permutation-matrix formulation above, we can write a QUBO++ program fo
 {% raw %}
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
-#include "qbpp_easy_solver.hpp"
-#include "qbpp_graph.hpp"
+#include <qbpp/qbpp.hpp>
+#include <qbpp/easy_solver.hpp>
+#include <qbpp/graph.hpp>
 
 class Nodes {
   std::vector<std::pair<int, int>> nodes{{10, 12},  {33, 125},  {12, 226},

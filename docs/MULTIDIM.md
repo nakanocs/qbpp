@@ -14,7 +14,7 @@ Their basic usage is as follows:
 The following QUBO++ program creates a binary variable and an integer variable, each with dimension $2\times 3\times 4$.
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
+#include <qbpp/qbpp.hpp>
 
 int main() {
   auto x = qbpp::var("x", 2, 3, 4);
@@ -48,7 +48,7 @@ a 2-dimensional array `f` of  size $2\times 3$.
 Then, using a triple for-loop, each `f[i][j]` accumulates the sum of `x[i][j][0]`, `x[i][j][1]`, `x[i][j][2]`, and `x[i][j][3]`:
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
+#include <qbpp/qbpp.hpp>
 
 int main() {
   auto x = qbpp::var("x", 2, 3, 4);
@@ -91,7 +91,7 @@ When a function call or an arithmetic operation yields an array-shaped result, a
 The following QUBO++ program creates an array **`f`** of `qbpp::Expr` objects with the same dimensions as an array **`x`** of `qbpp::Var` objects:
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
+#include <qbpp/qbpp.hpp>
 
 int main() {
   auto x = qbpp::var("x", 2, 3);
@@ -149,7 +149,7 @@ The element-wise operations described above are supported for multi-dimensional 
 Since `qbpp::Vector<T>` supports iterators, range-based `for` loops with `auto` type deduction can be used as follows:
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
+#include <qbpp/qbpp.hpp>
 
 int main() {
   auto x = qbpp::var("x", 2, 3);

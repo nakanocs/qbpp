@@ -34,8 +34,8 @@ $$
 We can design a QUBO++ program based on the formula $f(X)$ above as follows:
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
-#include "qbpp_exhaustive_solver.hpp"
+#include <qbpp/qbpp.hpp>
+#include <qbpp/exhaustive_solver.hpp>
 
 int main() {
   auto x = qbpp::var("x", 4, 4);
@@ -127,8 +127,8 @@ For these two vectors of size `n`, `qbpp::sqr()` squares each element, and `qbpp
 The following QUBO++ program implements a QUBO formulation using these vector functions and operations:
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
-#include "qbpp_exhaustive_solver.hpp"
+#include <qbpp/qbpp.hpp>
+#include <qbpp/exhaustive_solver.hpp>
 
 int main() {
   auto x = qbpp::var("x", 4, 4);
@@ -222,8 +222,8 @@ and therefore `qbpp::sum(c * x)` returns `g(X)`.
 
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
-#include "qbpp_easy_solver.hpp"
+#include <qbpp/qbpp.hpp>
+#include <qbpp/easy_solver.hpp>
 
 int main() {
   qbpp::Vector<qbpp::Vector<uint32_t>> c = {

@@ -46,8 +46,8 @@ The QUBO++ program for this bar cutting problem is as follows:
 ```cpp
 
 #define MAXDEG 2
-#include "qbpp.hpp"
-#include "qbpp_easy_solver.hpp"
+#include <qbpp/qbpp.hpp>
+#include <qbpp/easy_solver.hpp>
 
 int main() {
   const int L = 60;

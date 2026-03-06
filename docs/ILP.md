@@ -20,8 +20,8 @@ $$
 The following QUBO++ program formulates this ILP as a QUBO expression and solves it using the Easy Solver:
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
-#include "qbpp_easy_solver.hpp"
+#include <qbpp/qbpp.hpp>
+#include <qbpp/easy_solver.hpp>
 
 int main() {
   auto x = 0 <= qbpp::var_int("x", 3) <= 5;

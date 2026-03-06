@@ -37,7 +37,7 @@ $$
 The following QUBO++ program demonstrates how integer variables are defined:
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
+#include <qbpp/qbpp.hpp>
 
 int main() {
   auto x = 1 <= qbpp::var_int("x") <= 8;
@@ -106,8 +106,8 @@ The following QUBO++ program constructs the QUBO expression $h(x,y)$, solves it,
 $x$ and $y$:
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
-#include "qbpp_easy_solver.hpp"
+#include <qbpp/qbpp.hpp>
+#include <qbpp/easy_solver.hpp>
 
 int main() {
   auto x = 0 <= qbpp::var_int("x") <= 10;

@@ -41,8 +41,8 @@ The member function **`bound()`** returns the best bound obtained during optimiz
 The following program searches for a solution to the partitioning problem using the Gurobi Optimizer:
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
-#include "qbpp_grb.hpp"
+#include <qbpp/qbpp.hpp>
+#include <qbpp/grb.hpp>
 
 int main() {
   std::vector<uint32_t> w = {64, 27, 47, 74, 12, 83, 63, 40};

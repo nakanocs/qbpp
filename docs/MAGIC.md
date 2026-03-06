@@ -66,8 +66,8 @@ When all constraints are satisfied, the assignment $X=(x_{i,j,k})$ represents a 
 The following QUBO++ program implements these constraints and finds a magic square:
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
-#include "qbpp_easy_solver.hpp"
+#include <qbpp/qbpp.hpp>
+#include <qbpp/easy_solver.hpp>
 
 int main() {
   auto x = qbpp::var("x", 3, 3, 9);

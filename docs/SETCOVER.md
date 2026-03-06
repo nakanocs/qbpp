@@ -68,8 +68,8 @@ The following QUBO++ program constructs a HUBO expression for a weighted minimum
 #include <set>
 
 #define MAXDEG 6
-#include "qbpp.hpp"
-#include "qbpp_exhaustive_solver.hpp"
+#include <qbpp/qbpp.hpp>
+#include <qbpp/exhaustive_solver.hpp>
 
 int main() {
   const size_t n = 10;

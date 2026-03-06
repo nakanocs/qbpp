@@ -19,7 +19,7 @@ The data type of the integer constant term is defined by the `ENERGY_TYPE` macro
 In the following program, **`x`** and **`y`** are `qbpp::Var` objects, **`t`** is a `qbpp::Term` object, and **`f`** is a `qbpp::Expr` object:
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
+#include <qbpp/qbpp.hpp>
 
 int main() {
   auto x = qbpp::var("x");
@@ -43,7 +43,7 @@ f = 1 -x +2*x*y
 If the data types are to be explicitly specified, the program can be rewritten as follows:
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
+#include <qbpp/qbpp.hpp>
 
 int main() {
   qbpp::Var x = qbpp::var("x");
@@ -63,7 +63,7 @@ In contrast, `qbpp::Term` and `qbpp::Expr` objects are **mutable** and can be up
 For example, as shown in the following program, compound assignment operators can be used to update `qbpp::Term` and `qbpp::Expr` objects:
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
+#include <qbpp/qbpp.hpp>
 
 int main() {
   qbpp::Var x = qbpp::var("x");
@@ -95,7 +95,7 @@ However, note that `auto` type deduction may create a `qbpp::Term` object, which
 For example, the following program results in a compilation error because an expression is assigned to a `qbpp::Term` object:
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
+#include <qbpp/qbpp.hpp>
 
 int main() {
   auto x = qbpp::var("x");
@@ -108,7 +108,7 @@ int main() {
 If a `qbpp::Expr` object is intended, **`qbpp::toExpr()`** can be used to explicitly construct one, as shown below:
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
+#include <qbpp/qbpp.hpp>
 
 int main() {
   auto x = qbpp::var("x");
@@ -148,7 +148,7 @@ For example, the following program creates a `qbpp::Expr` object with very large
 #define ENERGY_TYPE qbpp::cpp_int
 
 #define MAXDEG 2
-#include "qbpp.hpp"
+#include <qbpp/qbpp.hpp>
 
 int main() {
   auto x = qbpp::var("x");

@@ -31,15 +31,59 @@ $ sudo apt update
 $ sudo apt upgrade -y
 ```
 
-## Install C++ compiler, Boost, and oneTBB
-QUBO++ requires a **C++ compiler**, **the Boost library**, and **oneTBB**.
+## Install C++ compiler
+QUBO++ requires a **C++ compiler**.
 
-Install them using the following command:
+Install it using the following command:
 ```bash
-$ sudo apt install -y build-essential libboost-all-dev libtbb-dev
+$ sudo apt install -y build-essential
 ```
 
 ## Install QUBO++
+
+There are two ways to install QUBO++:
+- **Method 1: apt (recommended)** — Simple installation with automatic path configuration
+- **Method 2: tar.gz** — Manual installation without requiring apt repository setup
+
+### Method 1: Install via apt (recommended)
+
+First, add the QUBO++ apt repository:
+```bash
+$ curl -fsSL https://nakanocs.github.io/qbpp-apt/KEY.gpg | sudo gpg --dearmor -o /usr/share/keyrings/qbpp.gpg
+$ echo "deb [signed-by=/usr/share/keyrings/qbpp.gpg] https://nakanocs.github.io/qbpp-apt stable main" | sudo tee /etc/apt/sources.list.d/qbpp.list
+```
+
+Then install QUBO++:
+```bash
+$ sudo apt update
+$ sudo apt install qbpp
+```
+
+This automatically installs headers to `/usr/local/include/qbpp/`, shared libraries to `/usr/local/lib/`, and the `qbpp-license` command to `/usr/local/bin/`.
+No environment variable configuration is needed.
+
+The sample programs are installed to `/usr/local/share/qbpp/samples/`.
+To compile and run them:
+```bash
+$ cp -r /usr/local/share/qbpp/samples ~/qbpp_samples
+$ cd ~/qbpp_samples
+$ make
+$ ./nqueen_easy
+```
+
+To upgrade to a new version:
+```bash
+$ sudo apt update
+$ sudo apt install --only-upgrade qbpp
+```
+
+To uninstall:
+```bash
+$ sudo apt remove qbpp
+```
+
+### Method 2: Install via tar.gz
+
 Download the `.tar.gz` file of the latest QUBO++ release from the [**Latest Release**](https://github.com/nakanocs/qbpp/releases/latest) page.
 
 Download one of the following files, depending on your Windows PC architecture:
@@ -61,8 +105,7 @@ $ ln -s qbpp_<arch>_<version> qbpp
 ```
 This creates a symbolic link named **`qbpp`**, which simplifies access to the installation directory.
 
-
-## Set environment variables
+#### Set environment variables
 Execute the following commands to set the **environment variables** required to compile and run QUBO++ programs:
 ```bash
 $ export QBPP_PATH=$HOME/qbpp
@@ -71,30 +114,36 @@ $ export LIBRARY_PATH=$QBPP_PATH/lib:$LIBRARY_PATH
 $ export LD_LIBRARY_PATH=$QBPP_PATH/lib:$LD_LIBRARY_PATH
 $ export PATH=$QBPP_PATH/bin:$PATH
 ```
+It is recommended to append these commands to the end of the **`~/.bashrc`** file so that they are automatically executed when the WSL shell starts.
+
+#### Compile and run sample programs
+```bash
+$ cd qbpp/samples
+$ make
+$ ./nqueen_easy
+```
+
+#### Upgrading to a new version
+Download and extract the new QUBO++ release using `tar`, as described above.
+Then update the qbpp symbolic link to point to the new version as follows:
+```bash
+$ ln -sfn qbpp_<arch>_<new version> qbpp
+```
+This command overwrites the existing qbpp symbolic link so that it refers to the newly installed version.
+
+## Activate license
 If you have a **QUBO++ license key**, set it using:
 ```bash
 $ export QBPP_LICENSE_KEY=[Your QUBO++ license key]
 ```
-It is recommended to append these commands to the end of the **`~/.bashrc`** file so that they are automatically executed when the WSL shell starts.
+It is recommended to append this command to the end of the **`~/.bashrc`** file.
 
-## Activate license
-You can now **activate the QUBO++ license** by executing:
+You can then **activate the QUBO++ license** by executing:
 ```bash
-$  qbpp-license -a
+$ qbpp-license -a
 ```
 If a QUBO++ license key has been set, the corresponding license will be activated.
 Otherwise, an anonymous license will be activated.
-
-## Compile and execute the sample programs
-Compile the QUBO++ sample programs using the following commands:
-```bash
-$ cd qbpp/samples
-$ make
-```
-For example, you can run the QUBO++ program that solves the N-Queens problem as follows:
-```bash
-$ ./nqueen_easy
-```
 
 ## Execute ABS3 GPU Solver
 If your system has a **CUDA-enabled GPU**, the ABS3 GPU Solver can be executed from WSL.
@@ -117,11 +166,3 @@ You can then execute a sample program using the ABS3 GPU Solver as follows:
 ```bash
 $ ./labs_abs3
 ```
-
-## Upgrading to a new version of QUBO++
-Download and extract the new QUBO++ release using `tar`, as described above.
-Then update the qbpp symbolic link to point to the new version as follows:
-```bash
-$ ln -sfn qbpp_<arch>_<new version> qbpp
-```
-This command overwrites the existing qbpp symbolic link so that it refers to the newly installed version.

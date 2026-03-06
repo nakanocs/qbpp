@@ -123,8 +123,8 @@ The following program constructs a 4-bit multiplier with
 {% raw %}
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
-#include "qbpp_easy_solver.hpp"
+#include <qbpp/qbpp.hpp>
+#include <qbpp/easy_solver.hpp>
 
 qbpp::Expr fa(const qbpp::Expr& a, const qbpp::Expr& b, const qbpp::Expr& i,
               const qbpp::Expr& o, const qbpp::Expr& s) {

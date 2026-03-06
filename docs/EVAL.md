@@ -12,7 +12,7 @@ A list can be defined as a **`qbpp::MapList`** object.
 For example, the following program computes the function $f(x,y,z)$ for $(x,y,z)=(0,1,1)$.
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
+#include <qbpp/qbpp.hpp>
 
 int main() {
   auto x = qbpp::var("x");
@@ -46,7 +46,7 @@ Alternratively, we can provide an assignemt directly as follows:
 {% raw %}
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
+#include <qbpp/qbpp.hpp>
 
 int main() {
   auto x = qbpp::var("x");
@@ -72,7 +72,7 @@ Furthermore, the **`comp_energy()`** member function computes and returns the sa
 
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
+#include <qbpp/qbpp.hpp>
 
 int main() {
   auto x = qbpp::var("x");
@@ -95,8 +95,8 @@ In addition, a solution object returned by a solver already has its energy value
 To retrieve the energy without recomputing it, you can use the member function **`energy()`**, as shown below:
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
-#include "qbpp_easy_solver.hpp"
+#include <qbpp/qbpp.hpp>
+#include <qbpp/easy_solver.hpp>
 
 int main() {
   auto x = qbpp::var("x");

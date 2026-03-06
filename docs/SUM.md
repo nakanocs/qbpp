@@ -14,7 +14,7 @@ The input array must have a dimension of 2 or greater.
 The following program demonstrates the difference between `qbpp::sum()` and `qbpp::vector_sum()`:
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
+#include <qbpp/qbpp.hpp>
 
 int main() {
   auto x = qbpp::var("x", 2, 3, 3);

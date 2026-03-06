@@ -64,9 +64,9 @@ The penalty coefficient $n+1$ is a safe choice to prioritize satisfying the domi
 The following QUBO++ program finds a solution for a graph with $N=16$ nodes:
 ```cpp
 #define MAXDEG 0
-#include "qbpp.hpp"
-#include "qbpp_easy_solver.hpp"
-#include "qbpp_graph.hpp"
+#include <qbpp/qbpp.hpp>
+#include <qbpp/easy_solver.hpp>
+#include <qbpp/graph.hpp>
 
 int main() {
   const size_t N = 16;

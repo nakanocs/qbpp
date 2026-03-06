@@ -38,7 +38,7 @@ Variables in each term are stored using a fixed-size array plus a variable-size 
 `BASEDEG` sets the size of the fixed array.
 A term can store an unlimited number of variables; when the number of variables in a term exceeds `BASEDEG`, the variable-size array is used.
 
-You can define these macros via compiler options (e.g., `-DMAXDEG=2`) or in your source code (e.g., `#define MAXDEG 2`) before `#include "qbpp.hpp"`.
+You can define these macros via compiler options (e.g., `-DMAXDEG=2`) or in your source code (e.g., `#define MAXDEG 2`) before `#include <qbpp/qbpp.hpp>`.
 
 ## Available integer data types
 - **Standard integer types**:  

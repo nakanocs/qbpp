@@ -44,8 +44,8 @@ The following program searches for a solution to the
 Solver:
 ```cpp
 #define MAXDEG 4
-#include "qbpp.hpp"
-#include "qbpp_exhaustive_solver.hpp"
+#include <qbpp/qbpp.hpp>
+#include <qbpp/exhaustive_solver.hpp>
 
 int main() {
   size_t size = 20;

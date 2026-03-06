@@ -40,8 +40,8 @@ The following QUBO++ program creates the QUBO formulation of the partitioning pr
 
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
-#include "qbpp_exhaustive_solver.hpp"
+#include <qbpp/qbpp.hpp>
+#include <qbpp/exhaustive_solver.hpp>
 
 int main() {
   std::vector<uint32_t> w = {64, 27, 47, 74, 12, 83, 63, 40};

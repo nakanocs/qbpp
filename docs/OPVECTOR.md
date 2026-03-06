@@ -21,7 +21,7 @@ For example, if `x` is a vector of size 3, then:
 The following program illustrates this behavior:
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
+#include <qbpp/qbpp.hpp>
 
 int main() {
   auto x = qbpp::var("x", 3);
@@ -50,7 +50,7 @@ When you combine two vectors of the same size, the operation is performed elemen
 The following example uses two vectors `x` and `y`, both of size 3:
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
+#include <qbpp/qbpp.hpp>
 
 int main() {
   auto x = qbpp::var("x", 3);
@@ -83,7 +83,7 @@ The next example demonstrates a more complex element-wise expression involving v
 
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
+#include <qbpp/qbpp.hpp>
 
 int main() {
   auto x = qbpp::var("x", 3);
@@ -127,7 +127,7 @@ Similarly, the compound operators **`+=`**, **`-=`**, **`*=`**, and **`/=`** wor
 The following example demonstrates how these operators work for a vector of size 3:
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
+#include <qbpp/qbpp.hpp>
 
 int main() {
   auto x = qbpp::var("x", 3);
@@ -156,7 +156,7 @@ f = {6*x[0]*y[0] +3*y[0]*y[0] -8*y[0],6*x[1]*y[1] +3*y[1]*y[1] -8*y[1],6*x[2]*y[
 Square functions also work for vectors, as demonstrated below:
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
+#include <qbpp/qbpp.hpp>
 
 int main() {
   auto x = qbpp::var("x", 3);
@@ -179,7 +179,7 @@ f = {1 +x[0]*x[0] +x[0] +x[0],1 +x[1]*x[1] +x[1] +x[1],1 +x[2]*x[2] +x[2] +x[2]}
 Simplify functions also work for vectors, as demonstrated below:
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
+#include <qbpp/qbpp.hpp>
 
 int main() {
   auto x = qbpp::var("x", 3);

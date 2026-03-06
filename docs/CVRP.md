@@ -191,9 +191,9 @@ In this example, it is set to `{100, 200, 300}`, so vehicles 0, 1, and 2 have sm
 
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
-#include "qbpp_easy_solver.hpp"
-#include "qbpp_graph.hpp"
+#include <qbpp/qbpp.hpp>
+#include <qbpp/easy_solver.hpp>
+#include <qbpp/graph.hpp>
 
 int main() {
   std::vector<std::tuple<float, float, int>> locations = {

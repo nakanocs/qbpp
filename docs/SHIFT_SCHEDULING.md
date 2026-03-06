@@ -91,8 +91,8 @@ This objective function is minimized subject to the constraints described above.
 The shift scheduling problem defined above can be formulated and solved using QUBO++ as follows:
 ```cpp
 #define MAXDEG 0
-#include "qbpp.hpp"
-#include "qbpp_easy_solver.hpp"
+#include <qbpp/qbpp.hpp>
+#include <qbpp/easy_solver.hpp>
 
 int main() {
   const size_t days = 31;

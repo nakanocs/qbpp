@@ -13,8 +13,8 @@ Solving an expression `f` using the ABS3 Solver involves the following three ste
 The following QUBO++ program solves the **Low Autocorrelation Binary Sequence (LABS)** problem using the ABS3 Solver:
 ```cpp
 #define MAXDEG 4
-#include "qbpp.hpp"
-#include "qbpp_abs3_solver.hpp"
+#include <qbpp/qbpp.hpp>
+#include <qbpp/abs3_solver.hpp>
 
 int main() {
   const size_t size = 100;

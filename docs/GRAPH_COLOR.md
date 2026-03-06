@@ -46,9 +46,9 @@ $m$-coloring of the graph exists.
 Since any planar graph can be colored with at most four colors, we use a planar graph with 16 nodes and $m=4$ colors as an example. The following QUBO++ program solves this instance:
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
-#include "qbpp_easy_solver.hpp"
-#include "qbpp_graph.hpp"
+#include <qbpp/qbpp.hpp>
+#include <qbpp/easy_solver.hpp>
+#include <qbpp/graph.hpp>
 
 int main() {
   const size_t n = 16;

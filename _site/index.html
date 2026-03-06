@@ -30,8 +30,9 @@
 
   <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
 
-    <!-- 左ナビ（全ページ共通） -->
+    <!-- 左ナビ -->
     <nav style="width:max-content; position:sticky; top:1rem; padding:0 1rem 0 0; border-right:1px solid #ddd;">
+      
       <h2 style="margin-left:0;">QUBO++<br> Information</h2>
       <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
         <li><a href="/"><strong>Introduction</strong></a> </li>
@@ -46,6 +47,11 @@
         <li><a href="/DEMOS"><strong>Demos</strong></a></li>
         <li><a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Release</strong></a></li>
       </ul>
+      <hr style="margin:1rem 0;">
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/python/"><strong>PyQUBO++ &rarr;</strong></a></li>
+      </ul>
+      
     </nav>
 
     <!-- 右側：ページごとの本文 -->
@@ -136,13 +142,13 @@ library itself does not require linking against TBB for the default use cases.</
   </li>
   <li><code class="language-plaintext highlighter-rouge">include/</code> — Header files
     <ul>
-      <li><code class="language-plaintext highlighter-rouge">qbpp.hpp</code>: Main QUBO++ BQ Edition toolkit</li>
-      <li><code class="language-plaintext highlighter-rouge">qbpp_abs3_solver.hpp</code>: ABS3 GPU Solver</li>
-      <li><code class="language-plaintext highlighter-rouge">qbpp_defs.hpp</code>: Common definitions and macros</li>
-      <li><code class="language-plaintext highlighter-rouge">qbpp_easy_solver.hpp</code>: Easy Solver implementation</li>
-      <li><code class="language-plaintext highlighter-rouge">qbpp_exhaustive_solver.hpp</code>: Exhaustive Solver implementation</li>
-      <li><code class="language-plaintext highlighter-rouge">qbpp_grb.hpp</code>: Gurobi Optimizer interface</li>
-      <li><code class="language-plaintext highlighter-rouge">qbpp_misc.hpp</code>: Miscelleneous library</li>
+      <li><code class="language-plaintext highlighter-rouge">qbpp/qbpp.hpp</code>: Main QUBO++ BQ Edition toolkit</li>
+      <li><code class="language-plaintext highlighter-rouge">qbpp/abs3_solver.hpp</code>: ABS3 GPU Solver</li>
+      <li><code class="language-plaintext highlighter-rouge">qbpp/defs.hpp</code>: Common definitions and macros</li>
+      <li><code class="language-plaintext highlighter-rouge">qbpp/easy_solver.hpp</code>: Easy Solver implementation</li>
+      <li><code class="language-plaintext highlighter-rouge">qbpp/exhaustive_solver.hpp</code>: Exhaustive Solver implementation</li>
+      <li><code class="language-plaintext highlighter-rouge">qbpp/grb.hpp</code>: Gurobi Optimizer interface</li>
+      <li><code class="language-plaintext highlighter-rouge">qbpp/misc.hpp</code>: Miscelleneous library</li>
     </ul>
   </li>
   <li><code class="language-plaintext highlighter-rouge">lib/</code> — QUBO++ shared libraries

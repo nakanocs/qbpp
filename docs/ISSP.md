@@ -89,8 +89,8 @@ The following QUBO++ program solves an ISSP instance with 8 intervals.
 The lower and upper bounds $[l_i,u_i]$ are stored in the vectors `lower` and `upper`, and $T=100$.
 
 ```cpp
-#include "qbpp.hpp"
-#include "qbpp_easy_solver.hpp"
+#include <qbpp/qbpp.hpp>
+#include <qbpp/easy_solver.hpp>
 
 int main() {
   qbpp::Vector<int> lower = {18, 17, 21, 18, 20, 14, 14, 23};
@@ -220,8 +220,8 @@ where $P$ is a sufficiently large constant to prioritize feasibility.
 The following QUBO++ program solves the same ISSP instance using the QUBO formulation:
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
-#include "qbpp_easy_solver.hpp"
+#include <qbpp/qbpp.hpp>
+#include <qbpp/easy_solver.hpp>
 
 int main() {
   qbpp::Vector<int> lower = {18, 17, 21, 18, 20, 14, 14, 23};

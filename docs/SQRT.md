@@ -47,8 +47,8 @@ The following QUBO++ program constructs a HUBO expression based on the above ide
 #define ENERGY_TYPE qbpp::cpp_int
 
 #define MAXDEG 4
-#include "qbpp.hpp"
-#include "qbpp_easy_solver.hpp"
+#include <qbpp/qbpp.hpp>
+#include <qbpp/easy_solver.hpp>
 
 int main() {
   const int c = 2;

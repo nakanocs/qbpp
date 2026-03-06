@@ -43,8 +43,8 @@ QUBO++ provides this conversion through the spin_to_binary() function.
 The following QUBO++ program formulates and solves the LABS problem:
 ```cpp
 #define MAXDEG 4
-#include "qbpp.hpp"
-#include "qbpp_easy_solver.hpp"
+#include <qbpp/qbpp.hpp>
+#include <qbpp/easy_solver.hpp>
 
 int main() {
   const int n = 30;

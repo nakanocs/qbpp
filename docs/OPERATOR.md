@@ -19,7 +19,7 @@ The precedence of these operators follows the standard C++ operator precedence r
 The following program demonstrates how to construct expressions using these operators:
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
+#include <qbpp/qbpp.hpp>
 
 int main() {
   auto x = qbpp::var("x");
@@ -48,7 +48,7 @@ Also the following compound operators to update qbpp::Expr objects are supported
 The following program demonstrates how to construct expressions using these compound operators:
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
+#include <qbpp/qbpp.hpp>
 
 int main() {
   auto x = qbpp::var("x");
@@ -84,7 +84,7 @@ whereas the member function **`f.sqr()`** updates `f` in place by replacing it w
 
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
+#include <qbpp/qbpp.hpp>
 
 int main() {
   auto x = qbpp::var("x");
@@ -120,7 +120,7 @@ Returns a simplified expression under the assumption that all variables take spi
 The following program demonstrates the behavior of these simplify functions:
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
+#include <qbpp/qbpp.hpp>
 
 int main() {
   auto x = qbpp::var("x");
@@ -145,7 +145,7 @@ simplified_as_spin(f) = 2 -2*x
 For example, the following program updates `f` by applying **`simplify()`**:
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
+#include <qbpp/qbpp.hpp>
 
 int main() {
   auto x = qbpp::var("x");

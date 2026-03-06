@@ -69,9 +69,9 @@ The following QUBO++ program solves the minimum vertex cover problem for a graph
 {% raw %}
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
-#include "qbpp_exhaustive_solver.hpp"
-#include "qbpp_graph.hpp"
+#include <qbpp/qbpp.hpp>
+#include <qbpp/exhaustive_solver.hpp>
+#include <qbpp/graph.hpp>
 
 int main() {
   const size_t N = 16;

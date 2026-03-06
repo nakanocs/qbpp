@@ -32,8 +32,8 @@ This expression attains its minimum value of 0 if and only if the five variables
 The following QUBO++ program verifies this formulation using the exhaustive solver:
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
-#include "qbpp_exhaustive_solver.hpp"
+#include <qbpp/qbpp.hpp>
+#include <qbpp/exhaustive_solver.hpp>
 
 int main() {
   auto a = qbpp::var("a");
@@ -102,8 +102,8 @@ The following QUBO++ program creates a QUBO expression for simulating a 4-bit ad
 {% raw %}
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
-#include "qbpp_exhaustive_solver.hpp"
+#include <qbpp/qbpp.hpp>
+#include <qbpp/exhaustive_solver.hpp>
 
 int main() {
   auto a = qbpp::var("a");
@@ -151,8 +151,8 @@ This program produces 512 valid solutions, corresponding to all possible input c
 Alternatively, we can define a C++ function `fa` to construct full-adder constraints in a more concise and readable manner:
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
-#include "qbpp_exhaustive_solver.hpp"
+#include <qbpp/qbpp.hpp>
+#include <qbpp/exhaustive_solver.hpp>
 
 qbpp::Expr fa(qbpp::Var a, qbpp::Var b, qbpp::Var i, qbpp::Var o, qbpp::Var s) {
   return (a + b + i) - (2 * o + s) == 0;

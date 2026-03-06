@@ -18,7 +18,7 @@ In the for-loop from `i = 0` to `4`, each variable `x[i]` is added to `f` using 
 Finally, `f` is simplified and printed using `std::cout`.
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
+#include <qbpp/qbpp.hpp>
 
 int main() {
   auto x = qbpp::var("x", 5);
@@ -46,7 +46,7 @@ Using the vector utility function **`qbpp::sum()`**, you can obtain the sum of a
 The following program uses `qbpp::sum()` to compute the sum of all variables in the vector `x`:
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
+#include <qbpp/qbpp.hpp>
 
 int main() {
   auto x = qbpp::var("x", 5);
@@ -71,8 +71,8 @@ $$
 The following program creates the expression $f$ and finds all optimal solutions:
 ```cpp
 #define MAXDEG 2
-#include "qbpp.hpp"
-#include "qbpp_exhaustive_solver.hpp"
+#include <qbpp/qbpp.hpp>
+#include <qbpp/exhaustive_solver.hpp>
 
 int main() {
   auto x = qbpp::var("x", 5);
