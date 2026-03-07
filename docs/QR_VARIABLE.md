@@ -29,14 +29,18 @@ In most cases, it is not necessary to change this data type.
 
 ## Degree of terms
 To specify the maximum degree of terms, define either `MAXDEG` or `BASEDEG`.
-- **`MAXDEG`**
+- **`MAXDEG=N`** (N > 0)
 Variables in each term are stored in a fixed-size array.
 `MAXDEG` sets the size of this array, and an error occurs if a term contains more variables than the array can hold.
 If you are working with QUBO, set `MAXDEG` to 2.
-- **`BASEDEG`**
+- **`BASEDEG=N`** (N > 0)
 Variables in each term are stored using a fixed-size array plus a variable-size array.
 `BASEDEG` sets the size of the fixed array.
 A term can store an unlimited number of variables; when the number of variables in a term exceeds `BASEDEG`, the variable-size array is used.
+- **`MAXDEG=0`** or **`BASEDEG=0`**:
+Equivalent to `BASEDEG=2`. The degree of terms is unlimited and no performance advisory message is displayed at program exit.
+
+If neither `MAXDEG` nor `BASEDEG` is defined, the behavior is the same as `BASEDEG=2`, but a performance advisory message is printed at program exit suggesting an appropriate value.
 
 You can define these macros via compiler options (e.g., `-DMAXDEG=2`) or in your source code (e.g., `#define MAXDEG 2`) before `#include <qbpp/qbpp.hpp>`.
 
