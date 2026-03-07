@@ -94,3 +94,36 @@ If you do not want to modify `f`, you can instead use the global functions
 
 > **NOTE**
 > In QUBO++, most **member functions** update the object in place when possible, whereas **global functions** return a new value without modifying the original object.
+
+## Negated literals
+QUBO++ natively supports **negated literals** using the `~` operator.
+For a binary variable `x`, the expression `~x` represents $1 - x$.
+
+```cpp
+#define MAXDEG 4
+#include <qbpp/qbpp.hpp>
+
+int main() {
+  auto a = qbpp::var("a");
+  auto b = qbpp::var("b");
+  auto c = qbpp::var("c");
+  auto d = qbpp::var("d");
+  auto f = ~a * ~b * ~c * ~d + a * b;
+  std::cout << "f = " << f << std::endl;
+  std::cout << "f = " << qbpp::simplify_as_binary(f) << std::endl;
+}
+```
+Output:
+```
+f = ~a*~b*~c*~d +a*b
+f = a*b +~a*~b*~c*~d
+```
+
+The negated literal `~x` is stored internally as a single variable with a negation flag, **not** expanded as `1 - x`.
+This is important for performance: if `~x` were naively expanded, a product of $k$ negated literals such as `~x1 * ~x2 * ... * ~xk` would produce up to $2^k$ terms after expanding $(1-x_1)(1-x_2)\cdots(1-x_k)$.
+For example, the term `~a*~b*~c*~d` above is stored as a single quartic term, whereas its expanded form $(1-a)(1-b)(1-c)(1-d)$ produces 16 terms:
+```
+1 -a -b -c -d +a*b +a*c +a*d +b*c +b*d +c*d -a*b*c -a*b*d -a*c*d -b*c*d +a*b*c*d
+```
+
+All solvers bundled with QUBO++ (EasySolver, ExhaustiveSolver, ABS3 GPU Solver) handle negated literals natively, so it is not necessary to expand them before solving.
