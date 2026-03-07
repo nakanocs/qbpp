@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "WSL"
+title: "Quick Start for Windows (WSL)"
 ---
 
 # Quick Start for Windows (WSL)
