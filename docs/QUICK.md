@@ -8,14 +8,37 @@ title: "Quick Start"
 This page provides an overview of the Quick Start procedure.
 More detailed instructions for installing QUBO++ on WSL on Windows 11 are available in [Quick Start for Windows (WSL)](WSL).
 
-## Download and Installation
+## Installation
+
+There are two ways to install QUBO++:
+- **Method 1: apt (recommended)** — Simple installation with automatic path configuration
+- **Method 2: tar.gz** — Manual installation without requiring apt repository setup
+
+### Method 1: Install via apt (recommended)
+
+First, add the QUBO++ apt repository:
+```bash
+$ curl -fsSL https://nakanocs.github.io/qbpp-apt/KEY.gpg | sudo gpg --dearmor -o /usr/share/keyrings/qbpp.gpg
+$ echo "deb [signed-by=/usr/share/keyrings/qbpp.gpg] https://nakanocs.github.io/qbpp-apt stable main" | sudo tee /etc/apt/sources.list.d/qbpp.list
+```
+
+Then install QUBO++:
+```bash
+$ sudo apt update
+$ sudo apt install qbpp
+```
+
+This automatically installs headers, shared libraries, and the `qbpp-license` command.
+No environment variable configuration is needed.
+
+### Method 2: Install via tar.gz
+
 Download the latest `tar.gz` from <a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Releases</strong></a> and extract it:
 ```bash
 $ tar xf qbpp_<arch>_<version>.tar.gz
 ```
 QUBO++ will be extracted into a directory such as **`qbpp_<arch>_<version>`**.
 
-## Set Environment Variable
 Set the environment variables as follows:
 ```bash
 $ export QBPP_PATH=[QUBO++ install directory]
