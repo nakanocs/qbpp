@@ -80,10 +80,3 @@ Example output:
 [0, 0, 0, 0, 0, 0, 0, 1]
 ```
 
-# PyQUBO++ Documentation
-- [Quick Reference: Variables and Expressions (PyQUBO++)](QR_VARIABLE)
-- [Quick Reference: Operators and Functions (PyQUBO++)](QR_OPERATION)
-
-More detailed documentation will be added soon.
-
-
