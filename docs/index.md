@@ -3,14 +3,16 @@ layout: default
 title: "QUBO++ documentation"
 ---
 
-
 # QUBO++: A model-and-solve framework for combinatorial optimization via QUBO/HUBO
+
 * A **C++ library** for constructing polynomials of binary variables to solve combinatorial optimization problems.
-* Currently built for **amd64** (**x86_64**) and **arm64** Linux systems.
-* Bundled with two CPU solvers: **Easy Solver** (heuristic) and **Exhaustive Solver** (complete search)  .
+* Currently available for **amd64** (**x86_64**) and **arm64** Linux systems.
+* Bundled with two CPU solvers: **Easy Solver** (heuristic) and **Exhaustive Solver** (complete search).
 * Bundled with a GPU solver: **ABS3**.
-* Supports **High-Order Unconstrained Binary Optimization (HUBO)** of degree up to **16**.
-* **Multithreading acceleration** is applied using oneTBB wherever possible.
+* Supports **High-Order Unconstrained Binary Optimization (HUBO)** with unlimited degree.
+* Natively supports variable complements ($\overline{x}$ or `~x`) without replacing them with $1-x$,
+  which avoids term explosion in high-order terms.
+* Applies **multithreading acceleration** using oneTBB wherever possible.
 * Includes APIs for calling the **Gurobi Optimizer** to solve Quadratic Unconstrained Binary Optimization (QUBO) problems.
 * Copyright: © 2026 Koji Nakano. All rights reserved.
 
@@ -29,7 +31,7 @@ title: "QUBO++ documentation"
 ## ABS3 Solver
 * **GPU-optimized heuristic solver**: Finds solutions to QUBO/HUBO instances on CUDA-enabled GPUs.
 * **Multi-GPU scaling**: Uses all detected GPUs on a Linux host.
-* **64-bit integer coefficients**: Supports coefficients representable in signed 64-bit integers.
+* **128-bit integer coefficients**: Supports coefficients representable in signed 128-bit integers.
 
 ### **ABS3 Supported GPU architectures**
   - **sm_80** : NVIDIA A100  (Ampere) 
@@ -63,38 +65,6 @@ To ensure compatibility, please use the same or newer versions of the listed com
 QUBO++ does not bundle TBB. We include TBB headers in public APIs, but the
 library itself does not require linking against TBB for the default use cases.
 - **Build & run verified on**: Ubuntu 20.04 (classic TBB 2020.1), 22.04 / 24.04 (oneTBB 2021+).
-
-## Directory Structure and Key Files
-- `bin/` - Executable
-  - `qbpp-license`: QUBO++ License manager
-
-- `include/` — Header files  
-  - `qbpp/qbpp.hpp`: Main QUBO++ BQ Edition toolkit 
-  - `qbpp/abs3_solver.hpp`: ABS3 GPU Solver 
-  - `qbpp/defs.hpp`: Common definitions and macros  
-  - `qbpp/easy_solver.hpp`: Easy Solver implementation  
-  - `qbpp/exhaustive_solver.hpp`: Exhaustive Solver implementation  
-  - `qbpp/grb.hpp`: Gurobi Optimizer interface
-  - `qbpp/misc.hpp`: Miscelleneous library
-
-- `lib/` — QUBO++ shared libraries  
-  - `libqbpp.so`: Shared library for the QUBO++ core  
-  - `libqbpp_abs3c32.so`: Shared library for the ABS3 GPU solver with 32-bit term coefficients  
-  - `libqbpp_abs3c64.so`: Shared library for the ABS3 GPU solver with 64-bit term coefficients
-
-- `samples/` — Sample programs
-  - `factorization.cpp`: Integer factorization
-  - `graph_color.cpp`: Graph coloring
-  - `tsp.cpp`: Solving Traveling Salesman Problem using Easy Solver
-  - `qbpp_tsp.hpp`: Creating QUBO model for the TSP
-  - `integer_poly.cpp`: Integer polynomial optimization  
-  - `labs.cpp`: Low Autocorrelation Binary Sequences problem  
-  - `nqueen_easy.cpp`: Solving N-Queens problem using Easy Solver 
-  - `qbpp_nqueen.hpp`: Generates QUBO expression for the N-Queens problem
-  - `shift_scheduling`: Shift scheduling problem
-  - `factorization_abs3.cpp`: Integer factorization using ABS3
-  - `labs_abs3.cpp`: Low Autocorrelation Binary Sequences problem using ABS3 GPU solver
-  - `ilp_grb.cpp`: Integer Linear Programming example using Gurobi Optimizer
 
 # QUBO++ Licensing
 
