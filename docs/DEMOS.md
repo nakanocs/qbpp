@@ -20,6 +20,7 @@ title: "Demos"
   <button class="demo-btn" onclick="loadDemo('https://lsuxxbj2xmy5nrdnw7i53hxtiu0hazyg.lambda-url.ap-northeast-1.on.aws/', this)">N-Queens Problem</button>
   <button class="demo-btn" onclick="loadDemo('https://vk2x4g4ctfs3rpc2rhr6f5jnfy0meufu.lambda-url.ap-northeast-1.on.aws/', this)">Traveling Salesman Problem</button>
   <button class="demo-btn" onclick="loadDemo('https://pwnweogwdi7ykfx2dzxwewa4li0kdslm.lambda-url.ap-northeast-1.on.aws/', this)">Graph Problems</button>
+  <button class="demo-btn" onclick="loadDemo('https://zslnqahcvlwn4evozwbc5pyqyq0xyjzv.lambda-url.ap-northeast-1.on.aws/', this)">SAT</button>
   <button class="demo-btn" onclick="loadDemo('https://lyooemld3a64tzvqeihjqz7pcq0pciyx.lambda-url.ap-northeast-1.on.aws/', this)">NAE-SAT</button>
 
 </div>
