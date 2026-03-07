@@ -24,8 +24,9 @@ To find such an $r$, we use $−r$ as the objective function in the HUBO formula
 Based on the idea above, the following QUBO++ program computes the GCD of two integers,
 `P = 858` and `Q = 693`:
 ```cpp
-#include "qbpp.hpp"
-#include "qbpp_easy_solver.hpp"
+#define MAXDEG 4
+#include <qbpp/qbpp.hpp>
+#include <qbpp/easy_solver.hpp>
 
 int main() {
   const int P = 858;

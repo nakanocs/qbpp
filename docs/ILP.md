@@ -19,8 +19,9 @@ $$
 ## QUBO++ program
 The following QUBO++ program formulates this ILP as a QUBO expression and solves it using the Easy Solver:
 ```cpp
-#include "qbpp.hpp"
-#include "qbpp_easy_solver.hpp"
+#define MAXDEG 2
+#include <qbpp/qbpp.hpp>
+#include <qbpp/easy_solver.hpp>
 
 int main() {
   auto x = 0 <= qbpp::var_int("x", 3) <= 5;

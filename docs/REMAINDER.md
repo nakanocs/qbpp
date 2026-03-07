@@ -41,8 +41,9 @@ $$
 ## QUBO++ praogram
 The following program finds a solution $x$ for this remainder problem:
 ```cpp
-#include "qbpp.hpp"
-#include "qbpp_easy_solver.hpp"
+#define MAXDEG 2
+#include <qbpp/qbpp.hpp>
+#include <qbpp/easy_solver.hpp>
 
 int main() {
   auto x = 0 <= qbpp::var_int("x") <= 3 * 5 * 7 - 1;

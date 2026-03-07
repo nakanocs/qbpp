@@ -29,8 +29,9 @@ These environment variables are used for license management and for compiling, l
 ### Create a QUBO++ sample program
 Create a QUBO++ sample program below and save as file **`test.cpp`**:
 ```cpp
-#include "qbpp.hpp"
-#include "qbpp_exhaustive_solver.hpp"
+#define MAXDEG 2
+#include <qbpp/qbpp.hpp>
+#include <qbpp/exhaustive_solver.hpp>
 
 int main() {
   auto x = 0 <= qbpp::var_int("x") <= 10;

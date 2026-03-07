@@ -24,8 +24,9 @@ This expression attains the minimum value of 0 if and only if the equality $f=n$
 The following QUBO++ program searches for all solutions satisfying
 $a+2b+3c=3$ using the Exhaustive Solver:
 ```cpp
-#include "qbpp.hpp"
-#include "qbpp_exhaustive_solver.hpp"
+#define MAXDEG 2
+#include <qbpp/qbpp.hpp>
+#include <qbpp/exhaustive_solver.hpp>
 
 int main() {
   auto a = qbpp::var("a");
@@ -207,7 +208,8 @@ $[l,u]$, which is sufficient for enforcing the range constraint.
 ### QUBO++ program for the four cases
 The following program demonstrates how the four cases are implemented in QUBO++:
 ```cpp
-#include "qbpp.hpp"
+#define MAXDEG 2
+#include <qbpp/qbpp.hpp>
 
 int main() {
   auto f = qbpp::toExpr(qbpp::var("f"));
@@ -242,8 +244,9 @@ $$
 ### QUBO++ program using the range operator
 The following program demonstrates the use of the range operator in QUBO++:
 ```cpp
-#include "qbpp.hpp"
-#include "qbpp_exhaustive_solver.hpp"
+#define MAXDEG 2
+#include <qbpp/qbpp.hpp>
+#include <qbpp/exhaustive_solver.hpp>
 
 int main() {
   auto a = qbpp::var("a");
@@ -317,8 +320,9 @@ In QUBO++, an infinite value is represented by **`qbpp::inf`**.
 
 The following program demonstrates **the lower-bound operator**:
 ```cpp
-#include "qbpp.hpp"
-#include "qbpp_exhaustive_solver.hpp"
+#define MAXDEG 2
+#include <qbpp/qbpp.hpp>
+#include <qbpp/exhaustive_solver.hpp>
 
 int main() {
   auto a = qbpp::var("a");

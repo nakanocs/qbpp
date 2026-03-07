@@ -69,13 +69,13 @@ library itself does not require linking against TBB for the default use cases.
   - `qbpp-license`: QUBO++ License manager
 
 - `include/` — Header files  
-  - `qbpp.hpp`: Main QUBO++ BQ Edition toolkit 
-  - `qbpp_abs3_solver.hpp`: ABS3 GPU Solver 
-  - `qbpp_defs.hpp`: Common definitions and macros  
-  - `qbpp_easy_solver.hpp`: Easy Solver implementation  
-  - `qbpp_exhaustive_solver.hpp`: Exhaustive Solver implementation  
-  - `qbpp_grb.hpp`: Gurobi Optimizer interface
-  - `qbpp_misc.hpp`: Miscelleneous library
+  - `qbpp/qbpp.hpp`: Main QUBO++ BQ Edition toolkit 
+  - `qbpp/abs3_solver.hpp`: ABS3 GPU Solver 
+  - `qbpp/defs.hpp`: Common definitions and macros  
+  - `qbpp/easy_solver.hpp`: Easy Solver implementation  
+  - `qbpp/exhaustive_solver.hpp`: Exhaustive Solver implementation  
+  - `qbpp/grb.hpp`: Gurobi Optimizer interface
+  - `qbpp/misc.hpp`: Miscelleneous library
 
 - `lib/` — QUBO++ shared libraries  
   - `libqbpp.so`: Shared library for the QUBO++ core  

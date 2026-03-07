@@ -103,9 +103,10 @@ The best possible value of $f$ is attained when the constraint term is zero and 
 ## QUBO++ program of the subgraph isomorphic problem
 Based on the QUBO formulation above, the following QUBO++ program solves the subgraph isomorphism problem for a guest graph with $M=6$ nodes and a host graph with $N=10$ nodes:
 ```cpp
-#include "qbpp.hpp"
-#include "qbpp_easy_solver.hpp"
-#include "qbpp_graph.hpp"
+#define MAXDEG 2
+#include <qbpp/qbpp.hpp>
+#include <qbpp/easy_solver.hpp>
+#include <qbpp/graph.hpp>
 
 int main() {
   const size_t N = 10;

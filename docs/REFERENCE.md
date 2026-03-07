@@ -47,8 +47,8 @@ Hence, it has three optimal solutions: $(a,b,c)=(0,0,0),(1,1,0),(0,0,1)$.
 **Solve**: finds solutions that minimize the energy of a given expression.
 The following QUBO++ program models the polynomial expression for $f$ and enumerates all optimal solutions:
 ```cpp
-#include "qbpp.hpp"
-#include "qbpp_exhaustive_solver.hpp"
+#include <qbpp/qbpp.hpp>
+#include <qbpp/exhaustive_solver.hpp>
 
 int main() {
   auto a = qbpp::var("a");
@@ -63,7 +63,7 @@ int main() {
 }
 ```
 
-The header `qbpp.hpp` enables use of the QUBO++ library, and `qbpp_exhaustive_solver.hpp` provides access to the Exhaustive Solver.
+The header `qbpp/qbpp.hpp` enables use of the QUBO++ library, and `qbpp/exhaustive_solver.hpp` provides access to the Exhaustive Solver.
 In this program, three variables, $a$, $b$, and $c$, are defined, along with the formula $f$.
 The formula $f$ is automatically expanded, and the member function `simplify_as_binary()` 
 applies the binary identity $x^2=x$ and merges equivalent terms to yield the simplified HUBO expression.
@@ -151,7 +151,7 @@ Expressions are built via overloaded arithmetic and compound-assignment operator
 `*` (multiplication), `+` (addition), `-` (subtraction / unary negation), `*=` (compound multiplication), `+=` (compound addition), and `-=` (compound subtraction).
 You can also rely on type deduction with `auto` when assigning expressions:
 ```cpp
-#include "qbpp.hpp"
+#include <qbpp/qbpp.hpp>
 
 int main() {
   auto x = qbpp::var("x", 3);
@@ -190,7 +190,7 @@ Thus, the assignment below causes a compilation error because `g` is **not** a `
 
 To construct a `qbpp::Expr` from non-expression values, use `qbpp::toExpr()`, which converts supported types to `qbpp::Expr`:
 ```cpp
-#include "qbpp.hpp"
+#include <qbpp/qbpp.hpp>
 
 int main() {
   auto x = qbpp::var("x", 3);
@@ -218,7 +218,8 @@ Alternatively, declare the type explicitly:
 Arrays of `qbpp::Expr` can be defined in the same way as arrays of `qbpp::Var`.
 The following QUBO++ program creates arrays `f` and `g`, each holding `qbpp::Expr` objects:
 ```cpp
-#include "qbpp.hpp"
+#define MAXDEG 2
+#include <qbpp/qbpp.hpp>
 
 int main() {
   auto x = qbpp::var("x", 3);
@@ -275,8 +276,9 @@ $$
 Thus, minimizing this quadratic function over binary variables yields an optimal partition, i.e., a QUBO instance.
 The following QUBO++ program builds the expression for $f(L)$ and finds a solution using the Easy Solver.
 ```cpp
-#include "qbpp.hpp"
-#include "qbpp_easy_solver.hpp"
+#define MAXDEG 2
+#include <qbpp/qbpp.hpp>
+#include <qbpp/easy_solver.hpp>
 
 int main() {
   std::vector<int> N = {37, 82, 64, 59, 21, 73, 47, 95};
@@ -337,7 +339,7 @@ It also accepts a list of pairs of a `qbpp::Var` object and a binary value for b
 
 {% raw %}
 ```cpp
-#include "qbpp.hpp"
+#include <qbpp/qbpp.hpp>
 
 int main() {
   auto a = qbpp::var("a");
@@ -388,8 +390,9 @@ $f = (a + b + c − 1)^2$ and $g = (a + 2b + 3c − 2)^2$, and combines them as 
 It then runs a simple solver to find a solution (targeting energy 0), prints the variable values and energies, flips a to 1 using `set()`, and demonstrates that the energy cache is invalidated and recomputed via `comp_energy()`.
 
 ```cpp
-#include "qbpp.hpp"
-#include "qbpp_easy_solver.hpp"
+#define MAXDEG 2
+#include <qbpp/qbpp.hpp>
+#include <qbpp/easy_solver.hpp>
 
 int main() {
   auto a = qbpp::var("a");
@@ -558,7 +561,8 @@ Therefore, after applying either `simplify_as_binary()` or `simplify_as_spin()`,
 The following example demonstrates how these functions are used and the differences in their outputs:
 
 ```cpp
-#include "qbpp.hpp"
+#define MAXDEG 2
+#include <qbpp/qbpp.hpp>
 
 int main() {
   auto a = qbpp::var("a");
@@ -610,8 +614,9 @@ $$
 
 The following code demonstrates how to solve these linear equations using the Exhaustive Solver:
 ```cpp
-#include "qbpp.hpp"
-#include "qbpp_exhaustive_solver.hpp"
+#define MAXDEG 2
+#include <qbpp/qbpp.hpp>
+#include <qbpp/exhaustive_solver.hpp>
 
 int main() {
   auto x = 0 <= qbpp::var_int("x") <= 10;
@@ -658,8 +663,9 @@ $
 is satisfied and finds all optimal solutions:
 
 ```cpp
-#include "qbpp.hpp"
-#include "qbpp_exhaustive_solver.hpp"
+#define MAXDEG 2
+#include <qbpp/qbpp.hpp>
+#include <qbpp/exhaustive_solver.hpp>
 
 int main() {
   auto a = qbpp::var("a");
@@ -705,8 +711,9 @@ $
 is satisfied and finds all optimal solutions:
 
 ```cpp
-#include "qbpp.hpp"
-#include "qbpp_exhaustive_solver.hpp"
+#define MAXDEG 2
+#include <qbpp/qbpp.hpp>
+#include <qbpp/exhaustive_solver.hpp>
 
 int main() {
   auto a = qbpp::var("a");
@@ -751,7 +758,8 @@ The following code demonstrates how to use the evaluation functions with a qbpp:
 
 {% raw %}
 ```cpp
-#include "qbpp.hpp"
+#define MAXDEG 2
+#include <qbpp/qbpp.hpp>
 
 int main() {
   auto a = qbpp::var("a");
@@ -787,7 +795,8 @@ The following code demonstrates how to use replacement functions to replace vari
 
 {% raw %}
 ```cpp
-#include "qbpp.hpp"
+#define MAXDEG 2
+#include <qbpp/qbpp.hpp>
 
 int main() {
   auto a = qbpp::var("a");
@@ -814,7 +823,7 @@ The eval() and replace() functions can be used with qbpp::MapList objects and qb
 
 {% raw %}
 ```cpp
-#include "qbpp.hpp"
+#include <qbpp/qbpp.hpp>
 
 int main() {
   auto a = qbpp::var_int("a") <= 5;
@@ -848,8 +857,8 @@ The reduction is performed using auxiliary variables, ensuring that the optimal 
 The following code demonstrates the reduction of the degree-3 expression $+abc$:
 
 ```cpp
-#include "qbpp.hpp"
-#include "qbpp_exhaustive_solver.hpp"
+#include <qbpp/qbpp.hpp>
+#include <qbpp/exhaustive_solver.hpp>
 
 int main() {
   auto a = qbpp::var("a");

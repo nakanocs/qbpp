@@ -45,8 +45,9 @@ $M=6$ bars of length $L=60$ and the following $N=4$ orders:
 The QUBO++ program for this bar cutting problem is as follows:
 ```cpp
 
-#include "qbpp.hpp"
-#include "qbpp_easy_solver.hpp"
+#define MAXDEG 2
+#include <qbpp/qbpp.hpp>
+#include <qbpp/easy_solver.hpp>
 
 int main() {
   const int L = 60;

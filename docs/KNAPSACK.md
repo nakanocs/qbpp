@@ -49,8 +49,9 @@ The constant $P$ is a sufficiently large penalty parameter to enforce the constr
 The following QUBO++ program solves a knapsack problem with 10 items using the Exhaustive Solver:
 ```cpp
 
-#include "qbpp.hpp"
-#include "qbpp_exhaustive_solver.hpp"
+#define MAXDEG 2
+#include <qbpp/qbpp.hpp>
+#include <qbpp/exhaustive_solver.hpp>
 
 int main() {
   qbpp::Vector<int> w = {10, 20, 30, 5, 8, 15, 12, 7, 17, 18};

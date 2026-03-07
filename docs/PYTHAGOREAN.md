@@ -19,8 +19,9 @@ To avoid duplicates, we assume $x<y$.
 ## QUBO++ program for listing Pythagorean Triples
 The following program lists Pythagorean triples with $x\leq 16$, $y\leq 16$, and $z\leq 16$:
 ```cpp
-#include "qbpp.hpp"
-#include "qbpp_easy_solver.hpp"
+#define MAXDEG 4
+#include <qbpp/qbpp.hpp>
+#include <qbpp/easy_solver.hpp>
 
 int main() {
   auto x = 1 <= qbpp::var_int("x") <= 16;

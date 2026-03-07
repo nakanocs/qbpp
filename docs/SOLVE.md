@@ -23,7 +23,7 @@ Both solvers are used in two steps:
 2. Call the **`search()`** member function on the solver object. It returns a **`qbpp::Sol`** object that stores the obtained solution.
 
 ## Easy Solver
-To use the **Easy Solver**, include the header file **`qbpp_easy_solver.hpp`**.
+To use the **Easy Solver**, include the header file **`qbpp/easy_solver.hpp`**.
 It is defined in the namespace **`qbpp::easy_solver`**.
 
 We use the following expression $f(a,b,c,d)$ as an example:
@@ -49,8 +49,9 @@ Calling the **`search()`** member function on `solver` returns a solution instan
 class **`qbpp::Sol`**, which is printed using `std::cout`.
 
 ```cpp
-#include "qbpp.hpp"
-#include "qbpp_easy_solver.hpp"
+#define MAXDEG 2
+#include <qbpp/qbpp.hpp>
+#include <qbpp/easy_solver.hpp>
 
 int main() {
   auto a = qbpp::var("a");
@@ -76,7 +77,7 @@ f = 25 -9*a -16*b -21*c -24*d +4*a*b +6*a*c +8*a*d +12*b*c +16*b*d +24*c*d
 One of the optimal solutions is correctly output.
 
 ## Exhaustive Solver
-To use the **Exhaustive Solver**, include the header file **`qbpp_exhaustive_solver.hpp`**.  
+To use the **Exhaustive Solver**, include the header file **`qbpp/exhaustive_solver.hpp`**.  
 It is defined in the namespace **`qbpp::exhaustive_solver`**.
 
 We construct an instance **`solver`** of the class **`qbpp::exhaustive_solver::ExhaustiveSolver`**
@@ -87,8 +88,9 @@ Since the Exhaustive Solver explores all possible assignments, it is guaranteed 
 stores an optimal solution.
 
 ```cpp
-#include "qbpp.hpp"
-#include "qbpp_exhaustive_solver.hpp"
+#define MAXDEG 2
+#include <qbpp/qbpp.hpp>
+#include <qbpp/exhaustive_solver.hpp>
 
 int main() {
   auto a = qbpp::var("a");

@@ -104,8 +104,9 @@ The following QUBO++ program implements the QUBO formulation above and finds a s
 
 #include <string_view>
 
-#include "qbpp.hpp"
-#include "qbpp_easy_solver.hpp"
+#define MAXDEG 2
+#include <qbpp/qbpp.hpp>
+#include <qbpp/easy_solver.hpp>
 
 constexpr std::string_view LETTERS = "SENDMORY";
 constexpr size_t L = LETTERS.size();

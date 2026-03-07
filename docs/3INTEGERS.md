@@ -40,8 +40,9 @@ $$
 The following QUBO++ program formulates these constraints as a HUBO expression and solves it using the Exhaustive Solver:
 
 ```cpp
-#include "qbpp.hpp"
-#include "qbpp_exhaustive_solver.hpp"
+#define MAXDEG 6
+#include <qbpp/qbpp.hpp>
+#include <qbpp/exhaustive_solver.hpp>
 
 int main() {
   auto x = 1 <= qbpp::var_int("x") <= 10;

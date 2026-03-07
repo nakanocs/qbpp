@@ -52,8 +52,9 @@ $$
 ## QUBO++ program
 The following QUBO++ program constructs an expression representing the constraints above and then finds a feasible solution using the Easy Solver:
 ```cpp
-#include "qbpp.hpp"
-#include "qbpp_easy_solver.hpp"
+#define MAXDEG 2
+#include <qbpp/qbpp.hpp>
+#include <qbpp/easy_solver.hpp>
 
 int main() {
   const int n = 8;

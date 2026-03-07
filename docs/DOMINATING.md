@@ -63,9 +63,10 @@ The penalty coefficient $n+1$ is a safe choice to prioritize satisfying the domi
 ## QUBO++ program for the HUBO formulation
 The following QUBO++ program finds a solution for a graph with $N=16$ nodes:
 ```cpp
-#include "qbpp.hpp"
-#include "qbpp_easy_solver.hpp"
-#include "qbpp_graph.hpp"
+#define MAXDEG 0
+#include <qbpp/qbpp.hpp>
+#include <qbpp/easy_solver.hpp>
+#include <qbpp/graph.hpp>
 
 int main() {
   const size_t N = 16;

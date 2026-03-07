@@ -27,6 +27,19 @@ The bit width of `energy_t` is guaranteed to be equal to or larger than that of 
 Defined as `uint32_t` and used to store a unique integer ID for each `qbpp::Var` object.  
 In most cases, it is not necessary to change this data type.
 
+## Degree of terms
+To specify the maximum degree of terms, define either `MAXDEG` or `BASEDEG`.
+- **`MAXDEG`**
+Variables in each term are stored in a fixed-size array.
+`MAXDEG` sets the size of this array, and an error occurs if a term contains more variables than the array can hold.
+If you are working with QUBO, set `MAXDEG` to 2.
+- **`BASEDEG`**
+Variables in each term are stored using a fixed-size array plus a variable-size array.
+`BASEDEG` sets the size of the fixed array.
+A term can store an unlimited number of variables; when the number of variables in a term exceeds `BASEDEG`, the variable-size array is used.
+
+You can define these macros via compiler options (e.g., `-DMAXDEG=2`) or in your source code (e.g., `#define MAXDEG 2`) before `#include <qbpp/qbpp.hpp>`.
+
 ## Available integer data types
 - **Standard integer types**:  
 `int8_t`, `int16_t`, `int32_t`, `int64_t`

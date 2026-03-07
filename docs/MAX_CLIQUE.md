@@ -47,9 +47,10 @@ The optimal solution minimizing $f$ corresponds to a maximum clique, and the obj
 Based on the formulation above, the following QUBO++ program constructs the QUBO expression $f$ for a 16-node graph and solves it using the Exhaustive Solver:
 
 ```cpp
-#include "qbpp.hpp"
-#include "qbpp_exhaustive_solver.hpp"
-#include "qbpp_graph.hpp"
+#define MAXDEG 2
+#include <qbpp/qbpp.hpp>
+#include <qbpp/exhaustive_solver.hpp>
+#include <qbpp/graph.hpp>
 
 int main() {
   const size_t N = 16;

@@ -190,9 +190,10 @@ The vector `vehicle_capacity` stores the capacities of the $V=3$ vehicles.
 In this example, it is set to `{100, 200, 300}`, so vehicles 0, 1, and 2 have small, medium, and large capacities, respectively.
 
 ```cpp
-#include "qbpp.hpp"
-#include "qbpp_easy_solver.hpp"
-#include "qbpp_graph.hpp"
+#define MAXDEG 2
+#include <qbpp/qbpp.hpp>
+#include <qbpp/easy_solver.hpp>
+#include <qbpp/graph.hpp>
 
 int main() {
   std::vector<std::tuple<float, float, int>> locations = {

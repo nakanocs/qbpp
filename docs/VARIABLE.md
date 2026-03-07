@@ -6,7 +6,7 @@ title: "VARIABLE"
 # Defining Variables and Expressions
 
 ## Header file and namespace
-To use QUBO++, you need to include the header file **`qbpp.hpp`** and use the **`qbpp`** namespace.
+To use QUBO++, you need to include the header file **`qbpp/qbpp.hpp`** and use the **`qbpp`** namespace.
 
 ## Defining variables and expressions
 You can define a variable using **`qbpp::var("name")`** with auto type deduction.
@@ -16,7 +16,8 @@ Expressions are constructed using standard arithmetic operators such as **`+`**,
 
 The following sample program defines three variables `a`, `b`, and `c`, and an expression `f`, which is printed using `std::cout`:
 ```cpp
-#include "qbpp.hpp"
+#define MAXDEG 2
+#include <qbpp/qbpp.hpp>
 
 int main() {
   auto a = qbpp::var("a");
