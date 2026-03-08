@@ -13,36 +13,24 @@ For an $n$-node graph $G=(V,E)$ whose nodes are labeled $0,1,\ldots,n−1$,
 we introduce $n$ binary variables $x_0,x_1,\ldots, x_{n-1}$, where $x_i=1$ if and only if node 
 $i$ is selected (i.e., $i\in S$).
 
-We use the following penalty term, which becomes 0 if and only if every edge is covered:
+Using negated literals $\overline{x}_i$ (where $\overline{x}_i=1$ iff $x_i=0$),
+we define the following penalty term, which becomes 0 if and only if every edge is covered:
 
 $$
 \begin{aligned}
-\text{constraint} &= \sum_{(i,j)\in E} (1-x_i)(1-x_j)
+\text{constraint} &= \sum_{(i,j)\in E} \overline{x}_i\,\overline{x}_j
 \end{aligned}
 $$
 
-For an edge $(i,j)$, the product $(1-x_i)(1-x_j)$ equals 1 only when neither endpoint is selected, meaning the edge is uncovered. Therefore, the sum counts the number of uncovered edges.
+For an edge $(i,j)$, the product $\overline{x}_i\,\overline{x}_j$ equals 1 only when neither endpoint is selected, meaning the edge is uncovered. Therefore, the sum counts the number of uncovered edges.
 
 Equivalently, since the condition $1\leq x_i+x_j\leq 2$ means that one or both endpoints are selected, we can write a QUBO++-style formulation as:
 
 $$
 \begin{aligned}
-\text{constraint'} &= \sum_{(i,j)\in E} (1\leq x_i+x_j\leq 2) \\
-                   &= \sum_{(i,j)\in E}(x_i+x_j-1)(x_i+x_j-2)
+\text{constraint'} &= \sum_{(i,j)\in E} (1\leq x_i+x_j\leq 2)
 \end{aligned}
 $$
-
-These two constraints are equivalent up to a constant scaling factor. Indeed, for binary variables,
-
-$$
-\begin{aligned}
-(1-x_i)(1-x_j) & = 1 -x_i -x_i +x_ix_j,\\
-(x_i+x_j-1)(x_i+x_j-2) &= 2 -2x_i -2x_i +2x_ix_j.
-\end{aligned}
-$$
-
-Both expressions evaluate to $1$ exactly when $x_i=x_j=0$ and to $0
-$ otherwise; hence they impose the same feasibility condition (and differ only by an affine transformation when used as penalties).
 
 The objective is to minimize the number of selected vertices:
 
@@ -86,7 +74,7 @@ int main() {
   auto objective = qbpp::sum(x);
   auto constraint = qbpp::toExpr(0);
   for (const auto& e : edges) {
-    constraint += (1 - x[e.first]) * (1 - x[e.second]);
+    constraint += ~x[e.first] * ~x[e.second];
   }
   auto f = objective + constraint * 2;
   f.simplify_as_binary();
