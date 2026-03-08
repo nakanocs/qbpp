@@ -32,17 +32,19 @@
 
     <!-- 左ナビ -->
     <nav style="width:max-content; position:sticky; top:1rem; padding:0 1rem 0 0; border-right:1px solid #ddd;">
-      {% if page.section == "python" %}
+      <div id="nav-python" {% if page.section == "python" %}{% else %}style="display:none;"{% endif %}>
       <h2 style="margin-left:0;">PyQUBO++<br> Information</h2>
       <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
         <li><a href="{{ '/python/' | relative_url }}"><strong>Introduction</strong></a></li>
         <li><a href="{{ '/python/DOCUMENT' | relative_url }}"><strong>Document</strong></a></li>
+        <li><a href="{{ '/DEMOS' | relative_url }}#from=python"><strong>Demos</strong></a></li>
       </ul>
       <hr style="margin:1rem 0;">
       <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
         <li><a href="{{ '/' | relative_url }}"><strong>&larr; QUBO++</strong></a></li>
       </ul>
-      {% else %}
+      </div>
+      <div id="nav-cpp" {% if page.section == "python" %}style="display:none;"{% endif %}>
       <h2 style="margin-left:0;">QUBO++<br> Information</h2>
       <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
         <li><a href="{{ '/' | relative_url }}"><strong>Introduction</strong></a> </li>
@@ -61,8 +63,16 @@
       <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
         <li><a href="{{ '/python/' | relative_url }}"><strong>PyQUBO++ &rarr;</strong></a></li>
       </ul>
-      {% endif %}
+      </div>
     </nav>
+    <script>
+    (function() {
+      if (window.location.hash === '#from=python') {
+        document.getElementById('nav-python').style.display = '';
+        document.getElementById('nav-cpp').style.display = 'none';
+      }
+    })();
+    </script>
 
     <!-- 右側：ページごとの本文 -->
     <main style="flex:1;min-width:0;">
