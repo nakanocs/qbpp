@@ -29,6 +29,15 @@ After completing this tutorial, you should be able to use PyQUBO++ for most typi
 7. [Factorization Through HUBO Expression](FACTORIZATION)
 8. [Range Constraints and Solving Integer Linear Programming](RANGE)
 
+## Topics
+For deeper insights into specific features and usage patterns:
+
+1. [Solving Expressions using Easy Solver and Exhaustive Solver](SOLVE)
+2. [Exhaustive Solver Usage](EXHAUSTIVE)
+
+For topics not yet covered in the PyQUBO++ documentation,
+please refer to the corresponding pages in the [QUBO++ (C++) documentation](../DOCUMENT).
+
 ## Quick References
 1. [Variables and Expressions](QR_VARIABLE)
 2. [Operators and Functions](QR_OPERATION)

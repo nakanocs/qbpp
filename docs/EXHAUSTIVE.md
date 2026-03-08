@@ -6,6 +6,7 @@ title: "Exhaustive Solver"
 # Exhaustive Solver Usage
 The **Exhaustive Solver** is a complete-search solver for QUBO/HUBO expressions.
 Since all possible assignments are examined, the optimality of the solutions is guaranteed.
+The search is parallelized using CPU threads, and if a CUDA GPU is available, GPU acceleration is automatically enabled to further speed up the search.
 
 Solving a problem with the Exhaustive Solver consists of the following three steps:
 1. Create an Exhaustive Solver (or `qbpp::exhaustive_solver::ExhaustiveSolver`) object.
@@ -29,14 +30,17 @@ used during the solution search.
 Displays the search progress as a percentage, which is helpful for estimating the total runtime.
 - **`enable_default_callback()`**:
 Enables the default callback function, which prints newly obtained best solutions.
+- **`target_energy(energy_t energy)`**:
+Sets a target energy value for early termination.
+When the solver finds a solution with energy less than or equal to the target, the search terminates immediately.
 
 ## Searching Solutions
 The Exhaustive Solver searches for solutions by calling one of the following
 member functions of the solver object:
-- **`search()`**: Returns the first optimal solution found.
-- **`search_optimal_solutions()`**: Returns a vector containing all optimal solutions.
-- **`search_all_solutions()`**: Returns a vector containing all solutions, sorted in increasing order of
-energy.
+- **`search()`**: Returns the best solution found. If a CUDA GPU is available, the search is automatically accelerated using the GPU alongside CPU threads.
+- **`search_optimal_solutions()`**: Returns a `Sol` object containing all optimal solutions in `sol.all_solutions()`.
+- **`search_topk_solutions(size_t k)`**: Returns a `Sol` object containing the top-k solutions with the lowest energy in `sol.all_solutions()`, sorted in increasing order of energy.
+- **`search_all_solutions()`**: Returns a `Sol` object containing all solutions in `sol.all_solutions()`, sorted in increasing order of energy.
 
 # Program example
 The following program searches for a solution to the
@@ -92,10 +96,10 @@ All optimal solutions can be obtained by calling the
 **`search_optimal_solutions()`** member function as follows:
 ```cpp
   auto solver = qbpp::exhaustive_solver::ExhaustiveSolver(f);
-  auto sols = solver.search_optimal_solutions();
-  for (const auto& sol : sols) {
-    std::cout << sol.energy() << ": ";
-    for (auto val : sol(x)) {
+  auto sol = solver.search_optimal_solutions();
+  for (const auto& s : sol.all_solutions()) {
+    std::cout << s.energy() << ": ";
+    for (auto val : s(x)) {
       std::cout << (val == 0 ? "-" : "+");
     }
     std::cout << std::endl;
@@ -113,21 +117,51 @@ The output is as follows:
 26: ++--+--++++-++++-+-+
 ```
 {% endraw %}
-Furthermore, all solutions, including non-optimal ones, can be obtained by calling
-the **`search_all_solutions()`** member function as follows:
+The top-k solutions with the lowest energy can be obtained by calling the
+**`search_topk_solutions(k)`** member function as follows:
 ```cpp
   auto solver = qbpp::exhaustive_solver::ExhaustiveSolver(f);
-  solver.enable_default_callback();
-  auto sols = solver.search_optimal_solutions();
-  for (const auto& sol : sols) {
-    std::cout << sol.energy() << ": ";
-    for (auto val : sol(x)) {
+  auto sol = solver.search_topk_solutions(10);
+  for (const auto& s : sol.all_solutions()) {
+    std::cout << s.energy() << ": ";
+    for (auto val : s(x)) {
       std::cout << (val == 0 ? "-" : "+");
     }
     std::cout << std::endl;
   }
 ```
-This program prints all $2^{20}$ solutions in increasing order of energy, as
+The output is as follows:
+{% raw %}
+```txt
+26: -----+-+++-+--+++--+
+26: --++-++----+----+-+-
+26: -+-+----+----++-++--
+26: -++---++-+---+-+++++
+26: +--+++--+-+++-+-----
+26: +-+-++++-++++--+--++
+26: ++--+--++++-++++-+-+
+26: +++++-+---+-++---++-
+34: ++--++--+-++-+-+++++
+34: +++---+-+-++++-++-++
+```
+{% endraw %}
+Furthermore, all solutions, including non-optimal ones, can be obtained by calling
+the **`search_all_solutions()`** member function as follows.
+Note that this function stores all $2^n$ solutions in memory, where $n$ is the number of variables.
+For example, with $n = 20$, over one million solutions are stored, and memory usage grows exponentially with $n$.
+Use this function only when $n$ is small enough.
+```cpp
+  auto solver = qbpp::exhaustive_solver::ExhaustiveSolver(f);
+  auto sol = solver.search_all_solutions();
+  for (const auto& s : sol.all_solutions()) {
+    std::cout << s.energy() << ": ";
+    for (auto val : s(x)) {
+      std::cout << (val == 0 ? "-" : "+");
+    }
+    std::cout << std::endl;
+  }
+```
+This prints all $2^{20}$ solutions in increasing order of energy, as
 shown below:
 {% raw %}
 ```txt

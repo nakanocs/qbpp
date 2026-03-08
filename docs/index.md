@@ -8,7 +8,7 @@ title: "QUBO++ documentation"
 * A **C++ library** for constructing polynomials of binary variables to solve combinatorial optimization problems.
 * Currently available for **amd64** (**x86_64**) and **arm64** Linux systems.
 * Bundled with two CPU solvers: **Easy Solver** (heuristic) and **Exhaustive Solver** (complete search).
-* Bundled with a GPU solver: **ABS3**.
+* Bundled with a GPU solver: **ABS3**. The Exhaustive Solver also supports GPU acceleration when a CUDA GPU is available.
 * Supports **High-Order Unconstrained Binary Optimization (HUBO)** with unlimited degree.
 * Natively supports variable complements ($\overline{x}$ or `~x`) without replacing them with $1-x$,
   which avoids term explosion in high-order terms.
@@ -26,6 +26,7 @@ title: "QUBO++ documentation"
 * **Enumerates all solutions** to QUBO/HUBO formulations on multicore CPUs.
 * **Optimality guaranteed**: the global optimum is found and certifiable.
 * **Multithreaded acceleration**: Uses Intel oneTBB for parallel search.
+* **GPU acceleration**: If a CUDA GPU is available, GPU workers automatically join the search alongside CPU threads.
 * **Unlimited integer coefficients**: Supports integer coefficients of arbitrary magnitude.
 
 ## ABS3 Solver

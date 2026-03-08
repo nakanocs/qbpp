@@ -18,6 +18,7 @@ They run in parallel on multicore CPUs using **Intel Threading Building Blocks (
   - Explores all possible solutions.
   - Guarantees optimality of the returned solution.
   - Is computationally feasible only when the number of binary variables is about 30-40 or fewer.
+  - If a CUDA GPU is available, GPU acceleration is automatically enabled alongside CPU threads.
 
 Both solvers are used in two steps:
 1. Create a solver object, **`EasySolver`** or **`ExhaustiveSolver`**.
