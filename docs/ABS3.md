@@ -114,9 +114,7 @@ The callback is invoked with one of the following events:
 | `CallbackEvent::Timer` | Called periodically at a configurable interval |
 
 Inside the callback, the following accessor methods are available:
-- **`best_energy()`** — current best energy
-- **`best_tts()`** — time-to-solution (seconds since `search()` started)
-- **`best_bitarray()`** — raw bit array of the current best solution
+- **`best_sol()`** — returns `const qbpp::Sol&` to the current best solution. Use `.energy()`, `.tts()`, `.get(var)`, etc.
 - **`current_event()`** — the event that triggered this callback
 
 ### Timer Control
@@ -145,8 +143,8 @@ class MySolver : public qbpp::abs3::ABS3Solver {
       timer(1.0);  // enable timer callback every 1 second
     }
     if (event == qbpp::abs3::CallbackEvent::BestUpdated) {
-      std::cout << "New best: energy=" << best_energy()
-                << " TTS=" << best_tts() << "s" << std::endl;
+      std::cout << "New best: energy=" << best_sol().energy()
+                << " TTS=" << best_sol().tts() << "s" << std::endl;
     }
   }
 };
@@ -171,11 +169,15 @@ The `inject()` method allows you to inject an external solution into the solver 
 This is useful for warm-starting a search with a previously found solution.
 The injected bit array is evaluated internally by the solver, and if its energy is better than the current best, it replaces it.
 
+Another important use case is running an external solver (e.g., Gurobi) concurrently with the ABS3 solver.
+The external solver runs in a separate thread, and whenever it finds a good solution, the solution is injected into the ABS3 solver via the `Timer` callback.
+In this scenario, setting up a periodic timer (e.g., `timer(1.0)`) is recommended so that the callback is invoked regularly to check for new external solutions.
+
 Two overloads are available:
 - **`inject(const uint64_t* bitarray)`** — inject a raw bit array
 - **`inject(const qbpp::Sol& sol)`** — inject a `Sol` object
 
-The `inject()` method can be called during any callback event, but the most common usage is to inject at `CallbackEvent::Start` to warm-start the search.
+The `inject()` method can be called during any callback event, but the most common usage is to inject at `CallbackEvent::Start` to warm-start the search, or during `CallbackEvent::Timer` to periodically feed solutions from an external solver.
 
 ### Example: Injecting a Previous Solution
 
@@ -207,8 +209,8 @@ class InjectSolver : public qbpp::abs3::ABS3Solver {
       }
     }
     if (event == qbpp::abs3::CallbackEvent::BestUpdated) {
-      std::cout << "  energy=" << best_energy()
-                << " TTS=" << best_tts() << "s" << std::endl;
+      std::cout << "  energy=" << best_sol().energy()
+                << " TTS=" << best_sol().tts() << "s" << std::endl;
     }
   }
 

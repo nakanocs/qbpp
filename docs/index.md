@@ -23,16 +23,18 @@ title: "QUBO++ documentation"
 * **Unlimited integer coefficients**: Supports integer coefficients of arbitrary magnitude.
 
 ## Exhaustive Solver
-* **Enumerates all solutions** to QUBO/HUBO formulations on multicore CPUs.
+* **Enumerates all solutions** to QUBO/HUBO formulations on multicore CPUs and CUDA GPUs.
 * **Optimality guaranteed**: the global optimum is found and certifiable.
 * **Multithreaded acceleration**: Uses Intel oneTBB for parallel search.
-* **GPU acceleration**: If a CUDA GPU is available, GPU workers automatically join the search alongside CPU threads.
 * **Unlimited integer coefficients**: Supports integer coefficients of arbitrary magnitude.
+* **GPU acceleration**: If a CUDA GPU is available, GPU workers automatically join the search alongside CPU threads. GPU acceleration is available for coefficients up to 128-bit integers; larger coefficients fall back to CPU-only search.
+
 
 ## ABS3 Solver
-* **GPU-optimized heuristic solver**: Finds solutions to QUBO/HUBO instances on CUDA-enabled GPUs.
-* **Multi-GPU scaling**: Uses all detected GPUs on a Linux host.
-* **128-bit integer coefficients**: Supports coefficients representable in signed 128-bit integers.
+* **Heuristic solver on multicore CPUs and CUDA GPUs**: Searches for solutions to QUBO/HUBO instances using both CPU threads and CUDA GPUs.
+* **Unlimited integer coefficients**: Supports integer coefficients of arbitrary magnitude.
+* **Multi-GPU scaling**: Uses all detected GPUs on a Linux host. GPU acceleration is available for coefficients up to 128-bit integers; larger coefficients fall back to CPU-only search.
+
 
 ### **ABS3 Supported GPU architectures**
   - **sm_80** : NVIDIA A100  (Ampere) 
@@ -43,9 +45,6 @@ title: "QUBO++ documentation"
   - **sm_120** : GeForce RTX 5090/5080/5070(Ti)/5060(Ti)/5050、RTX PRO 6000/5000/4500/4000/2000 Blackwell (workstation)  
   - **Note on verification** : Only a subset of the architectures above has been verified on real hardware. 
 
-###  **Numeric types**
-  - 32-bit and 64-bit term coefficients
-  - 64-bit energy values
 
 ### **Performance note**
   - Arithmetic overflow checks are omitted to maximize performance.
