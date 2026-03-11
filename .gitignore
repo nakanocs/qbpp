@@ -5,6 +5,9 @@ _site/
 .bundle/
 vendor/
 
+# Claude Code
+.claude/
+
 # OS / editor
 .DS_Store
 *.swp
