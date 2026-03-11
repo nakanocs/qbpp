@@ -1,0 +1,18 @@
+title: "QUBO++"
+
+markdown: kramdown
+theme: minima
+
+highlighter: rouge
+
+url: "https://qbpp-doc.cs.hiroshima-u.ac.jp"
+baseurl: ""
+
+kramdown:
+  syntax_highlighter: rouge
+
+safe: false
+plugins:
+  - jekyll-last-modified-at
+  - jekyll-seo-tag
+  - jekyll-sitemap
