@@ -12,6 +12,15 @@
   <!-- 自前のナビ用 CSS -->
   <link rel="stylesheet" href="{{ '/assets/custom.css' | relative_url }}">
 
+  <!-- Google Analytics (GA4) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-5X2BP69THZ"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-5X2BP69THZ');
+  </script>
+
   <!-- ここに MathJax 関連をまとめて入れる -->
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
   <script>
