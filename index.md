@@ -68,155 +68,41 @@ library itself does not require linking against TBB for the default use cases.
 
 # QUBO++ Licensing
 
-## License Types
-QUBO++ uses Cryptlex for license management.
-When activating a node-locked license, some information about the execution environment is securely stored on Cryptlex servers to verify the license.
-
-- **Anonymous Trial**  
-  - No license key required  
-  - Valid for 7 days  
-  - Maximum variable count: **1,000 (CPU) / 1,000 (GPU)**  
-
-- **Registered Trial**  
-  - Requires a free license key  
-  - Valid for 30 days  
-  - Maximum variable count: **10,000 (CPU) / 10,000 (GPU)**  
-
-- **Standard License**  
-  - Requires a paid license key  
-  - Valid for the duration of the license agreement  
-  - Maximum variable count: **2,147,483,647 ($2^{31} - 1$) (CPU) / 1,000 (GPU)**  
-  - *Practically, the maximum variable count may be limited by available physical memory.*  
-
-- **Professional License**  
-  - Requires a paid license key  
-  - Valid for the duration of the license agreement  
-  - Maximum variable count: **2,147,483,647 ($2^{31} - 1$) (CPU) / 2,147,483,647 ($2^{31} - 1$) (GPU)**  
-  - *Practically, the maximum variable count may be limited by available physical memory.*  
-
-- **Fallback (No license / Expired license)**   
-  - Maximum variable count: **100 (CPU) / 100 (GPU)**
-
-
-## Display/Activate/Deactivate QUBO++ License
-- The **`qbpp-license`** utility (in the `/bin` directory of the QUBO++ installation) displays, activates, and deactivates the license on the current machine.
-- A QUBO++ license must be activated on the machine before QUBO++ programs can run. Otherwise, QUBO++ runs in **Fallback Mode**.
-- Each license key has limits on the number of **activations** and **deactivations**. These limits are tracked per license.
-
-### Display License
-If a license has already been activated on this machine, running `qbpp-license`
-displays the current license details (e.g., expiry date/time, activation usage/limit,
-and license message).
-- **Registered Trial**/**Standard License**/**Professional License**
-You can specify the license key either by environment variable or by command-line option.
-  - Using environment variable:
-  ```bash
-  $ export QBPP_LICENSE_KEY=XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX
-  $ qbpp-license
-  ```
-  - Using command-line option:
-  ```bash
-  $ qbpp-license -k XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX
-  ```
-
-- **Anonymous Trial**  
-  Just run the command without specifying a license key:
-  ```bash
-  $ qbpp-license
-  ```
-
-### Activate License
-- To activate the license on the current machine, add the `-a` (or `--activate`) option to the above command:
-  ```bash
-  $ qbpp-license -a
-  ```
-- This consumes one activation from the license.
-- If the license is already activated on this machine, running the command again does not consume an additional activation for the same license key.
-
-### Deactivate License
-- To deactivate the license on the current machine, use the `-d` (or `--deactivate`) option:
-  ```bash
-  $ qbpp-license -d
-  ```
-- **Anonymous Trial** cannot be deactivated.
-- **Deactivation** will increase the **deactivation count** and free up an activation slot so that the license can be activated again on this or another machine.
-
-
-## Executing QUBO++ with license key.
-- For **Anonymous Trial**, there is no license key to set.
-- If you have a license key, specify it in one of the following ways before running your program:
-  - **Via Code**:
-  ```cpp
-  qbpp::license_key("XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX");
-  ```
-  - **Via Environment Variable**:
-  ```bash
-  export QBPP_LICENSE_KEY=XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX
-  ```
-
-## Notes on the license-check mechanism
-- **`qbpp-license`**  tries to refresh the license status from the license server,
-  so it may take a few seconds depending on your network.
-- By default, QUBO++ user programs verify the license using the local cache and do not
-  block on server synchronization. They may contact the license server only when necessary
-  (for example, when the license has not been synchronized for a long time).
-- Depending on your network environment, license synchronization by `qbpp-license` may time out
-and return an error. In such cases, you can increase the timeout with the `-t` option:
+To start using QUBO++, activate the license after installation:
 ```bash
-$ qbpp-license -t 60
+$ qbpp-license -a
 ```
-This sets the timeout to 60 seconds.
 
+If no license key is set, an **Anonymous Trial** (7 days, 1,000 variables) is activated.
 
-# Terms and Conditions
+| License Type | Key Required | Validity | CPU Variables | GPU Variables |
+|---|---|---|---|---|
+| **Anonymous Trial** | No | 7 days | 1,000 | 1,000 |
+| **Registered Trial** | Yes (free) | 30 days | 10,000 | 10,000 |
+| **Standard** | Yes (paid) | Agreement term | $2^{31} - 1$ | 1,000 |
+| **Professional** | Yes (paid) | Agreement term | $2^{31} - 1$ | $2^{31} - 1$ |
+| **Fallback** | N/A | Always | 100 | 100 |
 
-By using QUBO++, you agree to the following terms and conditions:
-
-1. **License Scope**  
-   QUBO++ is provided under a time-limited license, depending on the license type (Anonymous Trial, Registered Trial, Standard or Professional License).
-
-2. **Restrictions on Trial Licenses**  
-   The Anonymous Trial and Registered Trial licenses are provided strictly for evaluation purposes only.  
-
-3. **Standard/Professional Licenses and Payment Requirement**  
-   Standard/Professional Licenses require the purchase of a paid license key. These licenses grant full access to QUBO++ for commercial and research use, subject to the terms of the license agreement.
-
-4. **Redistribution**  
-   Redistribution of QUBO++ (in whole or in part, including headers and binaries) is prohibited without prior written permission from the copyright holder.
-
-5. **Reverse Engineering**  
-   You may not reverse engineer, decompile, or disassemble any part of the software.
-
-6. **Disclaimer**  
-   QUBO++ is provided "as is," without any warranties, express or implied. The authors shall not be held liable for any damages resulting from the use of this software.
-
-7. **Ownership**  
-   All intellectual property rights related to QUBO++ remain the property of the original author or copyright holder.
-
-8. **Termination**  
-   This license will automatically terminate if you fail to comply with these terms. Upon termination, you must cease all use of the software and destroy all copies.
+For details on license activation, deactivation, key configuration, troubleshooting, and terms and conditions, see **[License Management](LICENSE_MANAGEMENT)**.
 
 # Third-Party Libraries
 
-- **oneTBB (oneAPI Threading Building Blocks)**  
-  - Licensed under the Apache License 2.0.  
-  - Copyright © Intel Corporation.  
-  - See <https://www.apache.org/licenses/LICENSE-2.0> for details.  
+- **oneTBB (oneAPI Threading Building Blocks)**
+  - Licensed under the Apache License 2.0.
+  - Copyright © Intel Corporation.
+  - See <https://www.apache.org/licenses/LICENSE-2.0> for details.
 
-- **Boost C++ Libraries**  
-  - Licensed under the Boost Software License, Version 1.0.  
+- **Boost C++ Libraries**
+  - Licensed under the Boost Software License, Version 1.0.
   - See <https://www.boost.org/LICENSE_1_0.txt> for details.
 
-- **xxHash**  
-  - Licensed under the BSD 2-Clause License.  
-  - Copyright © Yann Collet.  
+- **xxHash**
+  - Licensed under the BSD 2-Clause License.
+  - Copyright © Yann Collet.
   - See <https://opensource.org/license/bsd-2-clause/> for details.
 
-- **Gurobi Optimizer**  
-  - QUBO++ supporting APIs for integration with the Gurobi Optimizer.  
-  - To use these APIs, you must obtain a valid license for the Gurobi Optimizer from Gurobi Optimization, LLC.  
+- **Gurobi Optimizer**
+  - QUBO++ supporting APIs for integration with the Gurobi Optimizer.
+  - To use these APIs, you must obtain a valid license for the Gurobi Optimizer from Gurobi Optimization, LLC.
   - The Gurobi Optimizer is not included with QUBO++, and its use is subject to the terms and conditions of its own license agreement.
-
-
-If you have any questions regarding licensing or wish to obtain a license key, please contact the distributor or the developer.
 

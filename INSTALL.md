@@ -1,9 +1,9 @@
 ---
 layout: default
-title: "Installation and License Management"
+title: "Installation"
 ---
 
-# Installation and License Management
+# Installation
 
 ## Supported Environment
 
@@ -79,30 +79,21 @@ export PATH=$QBPP_PATH/bin:$PATH
 export QBPP_LICENSE_KEY=[Your QUBO++ license key]
 ```
 
-## License Management
-The license is activated using the **`qbpp-license`** command as follows:
+## License Activation
+
+After installation, activate the license to start using QUBO++:
+
 ```bash
 $ qbpp-license -a
 ```
-This increments the activation count.
-Each license has a limited number of allowed activations.
-If `QBPP_LICENSE_KEY` is not set, the command attempts to activate an **Anonymous Trial License**.
 
-To check the current status of your QUBO++ license, simply run:
+If you have a license key, set it before activation:
 ```bash
-$ qbpp-license
+$ export QBPP_LICENSE_KEY=XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX
+$ qbpp-license -a
 ```
-The current status can only be displayed for activated licenses.
 
-If you want to move the license to another machine, you can deactivate it on this machine as follows:
-```bash
-$ qbpp-license -d
-```
-This decreases the activation count, and you can then activate the license on the other machine.
+If no license key is set, an **Anonymous Trial** (7 days, 1,000 variables) is activated.
 
-Since the license is node-locked, the activation information is stored on the machine, and re-activation is not necessary as long as the license has not expired.
-
-> **WARNING**
-> Each license key has a limited number of allowed activations and deactivations.
-> Once the total number of activations and deactivations reaches this limit, you will no longer be able to activate or deactivate that license.
+For details on license types, deactivation, troubleshooting, and more, see **[License Management](LICENSE_MANAGEMENT)**.
 
