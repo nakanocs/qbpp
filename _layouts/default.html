@@ -3,8 +3,9 @@
 
 <head>
   <meta charset="utf-8">
-  <title>{{ page.title }}{% if site.title %} - {{ site.title }}{% endif %}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  {% seo %}
 
   <!-- Minima テーマの main.css（ハイライト含む） -->
   <link rel="stylesheet" href="{{ '/assets/main.css' | relative_url }}">

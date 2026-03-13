@@ -1,4 +1,5 @@
 title: "QUBO++"
+description: "QUBO++ is a C++ library and Python package (PyQUBO++) for constructing and solving QUBO/HUBO combinatorial optimization problems. Includes Easy Solver, Exhaustive Solver, and ABS3 GPU Solver."
 
 markdown: kramdown
 theme: minima
