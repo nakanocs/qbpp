@@ -30,13 +30,26 @@ After completing this tutorial, you should be able to use PyQUBO++ for most typi
 8. [Range Constraints and Solving Integer Linear Programming](RANGE)
 
 ## Topics
-For deeper insights into specific features and usage patterns:
+This section provides topic-wise explanations of selected features of PyQUBO++.
+Each page focuses on a specific topic and offers deeper insights into design decisions,
+usage patterns, and, where appropriate, internal implementations.
 
-1. [Solving Expressions using Easy Solver and Exhaustive Solver](SOLVE)
-2. [Exhaustive Solver Usage](EXHAUSTIVE)
+1. [Data Types of Variables and Expressions](VAREXPR)
+2. [Basic Operators and Functions](OPERATOR)
+3. [Basic Operators and Functions for Vectors](OPVECTOR)
+4. [Multi-dimensional Variables and Expressions](MULTIDIM)
+5. [Comparison Operators](COMPARISON)
+6. [Expression Classes](EXPRESSION)
+7. [Evaluating Expressions](EVAL)
+8. [Replace Functions](REPLACE)
+9. [Sum Functions for Multi-dimensional Arrays](SUM)
+10. [Easy Solver Usage](EASYSOLVER)
+11. [Exhaustive Solver Usage](EXHAUSTIVE)
+12. [ABS3 Solver Usage](ABS3)
 
-For topics not yet covered in the PyQUBO++ documentation,
-please refer to the corresponding pages in the [QUBO++ (C++) documentation](../DOCUMENT).
+> **NOTE**
+> The Gurobi Solver is not available in the Python binding.
+> For Gurobi usage, please refer to the [QUBO++ (C++) documentation](../GUROBI).
 
 ## Quick References
 1. [Variables and Expressions](QR_VARIABLE)

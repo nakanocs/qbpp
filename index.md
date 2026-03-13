@@ -78,7 +78,7 @@ If no license key is set, an **Anonymous Trial** (7 days, 1,000 variables) is ac
 | License Type | Key Required | Validity | CPU Variables | GPU Variables |
 |---|---|---|---|---|
 | **Anonymous Trial** | No | 7 days | 1,000 | 1,000 |
-| **Registered Trial** | Yes (free) | 30 days | 10,000 | 10,000 |
+| **Registered Trial** | Yes  | 30 days | 10,000 | 10,000 |
 | **Standard** | Yes  | Agreement term | $2^{31} - 1$ | 1,000 |
 | **Professional** | Yes | Agreement term | $2^{31} - 1$ | $2^{31} - 1$ |
 | **Fallback** | N/A | Always | 100 | 100 |
