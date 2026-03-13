@@ -79,8 +79,8 @@ If no license key is set, an **Anonymous Trial** (7 days, 1,000 variables) is ac
 |---|---|---|---|---|
 | **Anonymous Trial** | No | 7 days | 1,000 | 1,000 |
 | **Registered Trial** | Yes (free) | 30 days | 10,000 | 10,000 |
-| **Standard** | Yes (paid) | Agreement term | $2^{31} - 1$ | 1,000 |
-| **Professional** | Yes (paid) | Agreement term | $2^{31} - 1$ | $2^{31} - 1$ |
+| **Standard** | Yes  | Agreement term | $2^{31} - 1$ | 1,000 |
+| **Professional** | Yes | Agreement term | $2^{31} - 1$ | $2^{31} - 1$ |
 | **Fallback** | N/A | Always | 100 | 100 |
 
 For details on license activation, deactivation, key configuration, troubleshooting, and terms and conditions, see **[License Management](LICENSE_MANAGEMENT)**.
