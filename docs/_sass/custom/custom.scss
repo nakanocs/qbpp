@@ -29,8 +29,19 @@ code,
   font-size: 0.85rem !important;
 }
 
-.highlight span {
-  filter: brightness(0.65) saturate(1.3);
+// Rouge syntax highlighting: darken keywords/strings without affecting plain text
+.highlight {
+  .k, .kd, .kn, .kp, .kr, .kt { color: #0550ae; font-weight: 600; } // keywords
+  .n, .na, .no, .nv, .nc, .ni { color: #1a1a1a; }                    // names/variables
+  .nb { color: #0550ae; }                                              // builtins
+  .bp { color: #0550ae; }                                              // builtin pseudo (self)
+  .nn { color: #1a1a1a; }                                              // module names
+  .nf, .fm { color: #6639ba; }                                        // function names
+  .s, .s1, .s2, .sa, .sb, .sc, .dl, .sd, .sh, .si, .sx { color: #0a3069; } // strings
+  .mi, .mf, .mh, .mo, .il { color: #0550ae; }                        // numbers
+  .o, .ow { color: #1a1a1a; font-weight: 600; }                      // operators
+  .p { color: #1a1a1a; }                                              // punctuation
+  .c, .c1, .ch, .cm, .cp, .cpf, .cs { color: #6e7781; font-style: italic; } // comments
 }
 
 .main-content div.highlighter-rouge,
