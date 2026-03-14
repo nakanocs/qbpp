@@ -44,9 +44,3 @@ last_edit_time_format: "%Y.%m.%d"
 back_to_top: true
 back_to_top_text: "Back to top"
 
-# Aux links (top right)
-aux_links:
-  "GitHub":
-    - "https://github.com/nakanocs/qbpp"
-
-aux_links_new_tab: true
