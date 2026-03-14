@@ -1,6 +1,7 @@
 ---
 layout: default
 title: "Factorization Through HUBO Expression"
+parent: "QUBO++ (C++)"
 ---
 
 # Factorization Through HUBO Expression

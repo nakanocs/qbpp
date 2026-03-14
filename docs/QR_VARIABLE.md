@@ -1,6 +1,7 @@
 ---
 layout: default
 title: "Reference Variables"
+parent: "QUBO++ (C++)"
 ---
 
 # Quick Reference: Variables and Expressions

@@ -1,6 +1,7 @@
 ---
 layout: default
 title: "Variable and Expression Classes"
+parent: "QUBO++ (C++)"
 ---
 
 
