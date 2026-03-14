@@ -3,6 +3,7 @@ layout: default
 title: "Case Studies"
 nav_order: 6
 has_children: true
+has_toc: false
 ---
 # Case Studies
 This section provides examples of solving optimization, mathematical, and graph problems using QUBO++.
