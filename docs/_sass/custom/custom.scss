@@ -1,3 +1,10 @@
+// Reduce gap between switch buttons and nav list
+@include mq(md) {
+  .site-nav {
+    padding-top: $sp-4;
+  }
+}
+
 // Tighter line-height in code blocks
 pre,
 code,
