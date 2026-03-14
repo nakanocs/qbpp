@@ -83,6 +83,85 @@
   }
 
   /* EN/JA language toggle */
+  var jaMap = {
+    'Home': '\u30DB\u30FC\u30E0',
+    'HUBO and QUBO': 'HUBO \u3068 QUBO',
+    'Installation': '\u30A4\u30F3\u30B9\u30C8\u30FC\u30EB',
+    'License Management': '\u30E9\u30A4\u30BB\u30F3\u30B9\u7BA1\u7406',
+    'Quick Start': '\u30AF\u30A4\u30C3\u30AF\u30B9\u30BF\u30FC\u30C8',
+    'Case Studies': '\u6D3B\u7528\u4E8B\u4F8B',
+    'Demos': '\u30C7\u30E2',
+    'Latest Release': '\u6700\u65B0\u30EA\u30EA\u30FC\u30B9',
+    'Variables and Expressions': '\u5909\u6570\u3068\u5F0F',
+    'Variable and Expression Classes': '\u5909\u6570\u30FB\u5F0F\u30AF\u30E9\u30B9',
+    'Expression Classes': '\u5F0F\u30AF\u30E9\u30B9',
+    'Vectors': '\u30D9\u30AF\u30C8\u30EB',
+    'Vector Operations': '\u30D9\u30AF\u30C8\u30EB\u6F14\u7B97',
+    'Integer Variables': '\u6574\u6570\u5909\u6570',
+    'Multi-dimensional Variables': '\u591A\u6B21\u5143\u5909\u6570',
+    'Reference Variables': '\u53C2\u7167\u5909\u6570',
+    'Operators and Functions': '\u6F14\u7B97\u5B50\u3068\u95A2\u6570',
+    'Sum Functions': '\u7DCF\u548C\u95A2\u6570',
+    'Range Constraints': '\u7BC4\u56F2\u5236\u7D04',
+    'Comparison Operators': '\u6BD4\u8F03\u6F14\u7B97\u5B50',
+    'Replace Functions': '\u7F6E\u63DB\u95A2\u6570',
+    'Evaluating Expressions': '\u5F0F\u306E\u8A55\u4FA1',
+    'Solving Expressions': '\u5F0F\u306E\u6C42\u89E3',
+    'Permutation Matrix': '\u7F6E\u63DB\u884C\u5217',
+    'Easy Solver': 'Easy Solver',
+    'Exhaustive Solver': 'Exhaustive Solver',
+    'ABS3 Solver': 'ABS3 Solver',
+    'Gurobi Solver': 'Gurobi Solver',
+    'Graph Library': '\u30B0\u30E9\u30D5\u30E9\u30A4\u30D6\u30E9\u30EA',
+    'Integer Linear Programming': '\u6574\u6570\u7DDA\u5F62\u8A08\u753B',
+    'N-Queens': 'N-\u30AF\u30A4\u30FC\u30F3',
+    'Graph Coloring': '\u30B0\u30E9\u30D5\u5F69\u8272',
+    'Edge Coloring': '\u8FBA\u5F69\u8272',
+    'Maximum Clique': '\u6700\u5927\u30AF\u30EA\u30FC\u30AF',
+    'Maximum Matching': '\u6700\u5927\u30DE\u30C3\u30C1\u30F3\u30B0',
+    'Min-Max Matching': '\u6700\u5C0F\u6700\u5927\u30DE\u30C3\u30C1\u30F3\u30B0',
+    'Vertex Cover': '\u9802\u70B9\u88AB\u8986',
+    'Dominating Set': '\u652F\u914D\u96C6\u5408',
+    'Subgraph Isomorphism': '\u90E8\u5206\u30B0\u30E9\u30D5\u540C\u578B',
+    'Knapsack': '\u30CA\u30C3\u30D7\u30B5\u30C3\u30AF',
+    'Set Cover': '\u96C6\u5408\u88AB\u8986',
+    'Partitioning Problem': '\u5206\u5272\u554F\u984C',
+    'Interval Subset Sum': '\u533A\u9593\u90E8\u5206\u548C',
+    'Bar Cutting': '\u68D2\u5207\u65AD',
+    'Shift Scheduling': '\u30B7\u30D5\u30C8\u30B9\u30B1\u30B8\u30E5\u30FC\u30EA\u30F3\u30B0',
+    'Magic Square': '\u9B54\u65B9\u9663',
+    'LABS Problem': 'LABS \u554F\u984C',
+    'Find Three Integers': '3\u6574\u6570\u63A2\u7D22',
+    '3-Digit Math': '3\u6841\u6F14\u7B97',
+    'Adder Simulation': '\u52A0\u7B97\u5668\u30B7\u30DF\u30E5\u30EC\u30FC\u30B7\u30E7\u30F3',
+    'Multiplier Simulation': '\u4E57\u7B97\u5668\u30B7\u30DF\u30E5\u30EC\u30FC\u30B7\u30E7\u30F3',
+    'Factorization Through HUBO Expression': 'HUBO\u5F0F\u306B\u3088\u308B\u7D20\u56E0\u6570\u5206\u89E3',
+    'Square Root': '\u5E73\u65B9\u6839',
+    'Cubic Equation': '3\u6B21\u65B9\u7A0B\u5F0F',
+    'Greatest Common Divisor': '\u6700\u5927\u516C\u7D04\u6570',
+    'Remainder Problem': '\u5270\u4F59\u554F\u984C',
+    'Pythagorean Triples': '\u30D4\u30BF\u30B4\u30E9\u30B9\u306E\u4E09\u3064\u7D44',
+    'Windows (WSL)': 'Windows (WSL)'
+  };
+
+  var navLinks = [];
+  function collectNavLinks() {
+    var links = document.querySelectorAll('.site-nav a.nav-list-link');
+    for (var i = 0; i < links.length; i++) {
+      var node = links[i].childNodes[0];
+      if (!node) continue;
+      var orig = node.textContent.trim();
+      if (jaMap[orig]) {
+        navLinks.push({node: node, en: orig, ja: jaMap[orig]});
+      }
+    }
+    /* site title */
+    var title = document.querySelector('.site-title');
+    if (title) {
+      navLinks.push({node: title, en: 'QUBO++ Documentation', ja: 'QUBO++ \u30C9\u30AD\u30E5\u30E1\u30F3\u30C8'});
+    }
+  }
+
   function initLang() {
     var header = document.getElementById('main-header');
     if (!header) return;
@@ -104,11 +183,16 @@
     div.appendChild(bEn); div.appendChild(bJa);
     header.appendChild(div);
 
+    collectNavLinks();
+
     function showLang(lang) {
       var en = document.querySelectorAll('.main-content .lang-en');
       var ja = document.querySelectorAll('.main-content .lang-ja');
       for (var i = 0; i < en.length; i++) en[i].style.display = lang === 'en' ? '' : 'none';
       for (var i = 0; i < ja.length; i++) ja[i].style.display = lang === 'ja' ? '' : 'none';
+      for (var i = 0; i < navLinks.length; i++) {
+        navLinks[i].node.textContent = lang === 'ja' ? navLinks[i].ja : navLinks[i].en;
+      }
       bEn.style.background = lang === 'en' ? '#7253ed' : '';
       bEn.style.color = lang === 'en' ? '#fff' : '';
       bEn.style.borderColor = lang === 'en' ? '#7253ed' : '#ccc';
