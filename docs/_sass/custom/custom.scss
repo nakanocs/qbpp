@@ -41,7 +41,8 @@ code,
   .mi, .mf, .mh, .mo, .il { color: #0550ae; }                        // numbers
   .o, .ow { color: #1a1a1a; font-weight: 600; }                      // operators
   .p { color: #1a1a1a; }                                              // punctuation
-  .c, .c1, .ch, .cm, .cp, .cpf, .cs { color: #6e7781; font-style: italic; } // comments
+  .cp, .cpf { color: #6639ba; font-weight: 600; }                          // preprocessor (#include, #define)
+  .c, .c1, .ch, .cm, .cs { color: #6e7781; font-style: italic; }          // comments
 }
 
 .main-content div.highlighter-rouge,
