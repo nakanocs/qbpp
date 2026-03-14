@@ -30,6 +30,7 @@ heading_anchors: true
 nav_external_links:
   - title: "Latest Release"
     url: "https://github.com/nakanocs/qbpp/releases/latest"
+    opens_in_new_tab: true
 
 # Google Analytics
 ga_tracking:
