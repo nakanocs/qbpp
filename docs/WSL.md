@@ -28,8 +28,8 @@ This installs WSL 2 and an Ubuntu-based Linux system running on Windows.
 
 After the installation is complete, update and upgrade the system software inside WSL:
 ```bash
-$ sudo apt update
-$ sudo apt upgrade -y
+sudo apt update
+sudo apt upgrade -y
 ```
 
 ## Install C++ compiler
@@ -37,7 +37,7 @@ QUBO++ requires a **C++ compiler**.
 
 Install it using the following command:
 ```bash
-$ sudo apt install -y build-essential
+sudo apt install -y build-essential
 ```
 
 ## Install QUBO++
@@ -50,14 +50,14 @@ There are two ways to install QUBO++:
 
 First, add the QUBO++ apt repository:
 ```bash
-$ curl -fsSL https://nakanocs.github.io/qbpp-apt/KEY.gpg | sudo gpg --dearmor -o /usr/share/keyrings/qbpp.gpg
-$ echo "deb [signed-by=/usr/share/keyrings/qbpp.gpg] https://nakanocs.github.io/qbpp-apt stable main" | sudo tee /etc/apt/sources.list.d/qbpp.list
+curl -fsSL https://nakanocs.github.io/qbpp-apt/KEY.gpg | sudo gpg --dearmor -o /usr/share/keyrings/qbpp.gpg
+echo "deb [signed-by=/usr/share/keyrings/qbpp.gpg] https://nakanocs.github.io/qbpp-apt stable main" | sudo tee /etc/apt/sources.list.d/qbpp.list
 ```
 
 Then install QUBO++:
 ```bash
-$ sudo apt update
-$ sudo apt install qbpp
+sudo apt update
+sudo apt install qbpp
 ```
 
 This automatically installs headers to `/usr/local/include/qbpp/`, shared libraries to `/usr/local/lib/`, and the `qbpp-license` command to `/usr/local/bin/`.
@@ -66,21 +66,21 @@ No environment variable configuration is needed.
 The sample programs are installed to `/usr/local/share/qbpp/samples/`.
 To compile and run them:
 ```bash
-$ cp -r /usr/local/share/qbpp/samples ~/qbpp_samples
-$ cd ~/qbpp_samples
-$ make
-$ ./nqueen_easy
+cp -r /usr/local/share/qbpp/samples ~/qbpp_samples
+cd ~/qbpp_samples
+make
+./nqueen_easy
 ```
 
 To upgrade to a new version:
 ```bash
-$ sudo apt update
-$ sudo apt install --only-upgrade qbpp
+sudo apt update
+sudo apt install --only-upgrade qbpp
 ```
 
 To uninstall:
 ```bash
-$ sudo apt remove qbpp
+sudo apt remove qbpp
 ```
 
 ### Method 2: Install via tar.gz
@@ -94,7 +94,7 @@ Download one of the following files, depending on your Windows PC architecture:
 
 If the file is downloaded to your Windows Downloads folder, extract it as follows:
 ```bash
-$ tar xf /mnt/c/Users/<user name>/Downloads/qbpp_<arch>_<version>.tar.gz
+tar xf /mnt/c/Users/<user name>/Downloads/qbpp_<arch>_<version>.tar.gz
 ```
 
 This creates a directory named **`qbpp_<arch>_<version>`** containing all required files.
@@ -102,46 +102,46 @@ This creates a directory named **`qbpp_<arch>_<version>`** containing all requir
 
 It is recommended to create a symbolic link to this directory:
 ```bash
-$ ln -s qbpp_<arch>_<version> qbpp
+ln -s qbpp_<arch>_<version> qbpp
 ```
 This creates a symbolic link named **`qbpp`**, which simplifies access to the installation directory.
 
 #### Set environment variables
 Execute the following commands to set the **environment variables** required to compile and run QUBO++ programs:
 ```bash
-$ export QBPP_PATH=$HOME/qbpp
-$ export CPLUS_INCLUDE_PATH=$QBPP_PATH/include:$CPLUS_INCLUDE_PATH
-$ export LIBRARY_PATH=$QBPP_PATH/lib:$LIBRARY_PATH
-$ export LD_LIBRARY_PATH=$QBPP_PATH/lib:$LD_LIBRARY_PATH
-$ export PATH=$QBPP_PATH/bin:$PATH
+export QBPP_PATH=$HOME/qbpp
+export CPLUS_INCLUDE_PATH=$QBPP_PATH/include:$CPLUS_INCLUDE_PATH
+export LIBRARY_PATH=$QBPP_PATH/lib:$LIBRARY_PATH
+export LD_LIBRARY_PATH=$QBPP_PATH/lib:$LD_LIBRARY_PATH
+export PATH=$QBPP_PATH/bin:$PATH
 ```
 It is recommended to append these commands to the end of the **`~/.bashrc`** file so that they are automatically executed when the WSL shell starts.
 
 #### Compile and run sample programs
 ```bash
-$ cd qbpp/samples
-$ make
-$ ./nqueen_easy
+cd qbpp/samples
+make
+./nqueen_easy
 ```
 
 #### Upgrading to a new version
 Download and extract the new QUBO++ release using `tar`, as described above.
 Then update the qbpp symbolic link to point to the new version as follows:
 ```bash
-$ ln -sfn qbpp_<arch>_<new version> qbpp
+ln -sfn qbpp_<arch>_<new version> qbpp
 ```
 This command overwrites the existing qbpp symbolic link so that it refers to the newly installed version.
 
 ## Activate license
 If you have a **QUBO++ license key**, set it using:
 ```bash
-$ export QBPP_LICENSE_KEY=[Your QUBO++ license key]
+export QBPP_LICENSE_KEY=[Your QUBO++ license key]
 ```
 It is recommended to append this command to the end of the **`~/.bashrc`** file.
 
 You can then **activate the QUBO++ license** by executing:
 ```bash
-$ qbpp-license -a
+qbpp-license -a
 ```
 If a QUBO++ license key has been set, the corresponding license will be activated.
 Otherwise, an anonymous license will be activated.
@@ -160,10 +160,10 @@ https://www.nvidia.com/Download/index.aspx
 
 After installing the driver, verify that the GPU is available in WSL by executing:
 ```bash
-$ nvidia-smi
+nvidia-smi
 ```
 If the driver is installed correctly, this command displays information about the installed GPU.
 You can then execute a sample program using the ABS3 GPU Solver as follows:
 ```bash
-$ ./labs_abs3
+./labs_abs3
 ```

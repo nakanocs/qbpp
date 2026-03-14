@@ -24,14 +24,14 @@ There are two ways to install QUBO++:
 
 First, add the QUBO++ apt repository:
 ```bash
-$ curl -fsSL https://nakanocs.github.io/qbpp-apt/KEY.gpg | sudo gpg --dearmor -o /usr/share/keyrings/qbpp.gpg
-$ echo "deb [signed-by=/usr/share/keyrings/qbpp.gpg] https://nakanocs.github.io/qbpp-apt stable main" | sudo tee /etc/apt/sources.list.d/qbpp.list
+curl -fsSL https://nakanocs.github.io/qbpp-apt/KEY.gpg | sudo gpg --dearmor -o /usr/share/keyrings/qbpp.gpg
+echo "deb [signed-by=/usr/share/keyrings/qbpp.gpg] https://nakanocs.github.io/qbpp-apt stable main" | sudo tee /etc/apt/sources.list.d/qbpp.list
 ```
 
 Then install QUBO++:
 ```bash
-$ sudo apt update
-$ sudo apt install qbpp
+sudo apt update
+sudo apt install qbpp
 ```
 
 This automatically installs headers to `/usr/local/include/qbpp/`, shared libraries to `/usr/local/lib/`, and the `qbpp-license` command to `/usr/local/bin/`.
@@ -40,21 +40,21 @@ No environment variable configuration is needed.
 The sample programs are installed to `/usr/local/share/qbpp/samples/`.
 To compile and run them:
 ```bash
-$ cp -r /usr/local/share/qbpp/samples ~/qbpp_samples
-$ cd ~/qbpp_samples
-$ make
-$ ./nqueen_easy
+cp -r /usr/local/share/qbpp/samples ~/qbpp_samples
+cd ~/qbpp_samples
+make
+./nqueen_easy
 ```
 
 To upgrade to a new version:
 ```bash
-$ sudo apt update
-$ sudo apt install --only-upgrade qbpp
+sudo apt update
+sudo apt install --only-upgrade qbpp
 ```
 
 To uninstall:
 ```bash
-$ sudo apt remove qbpp
+sudo apt remove qbpp
 ```
 
 ### Method 2: Install via tar.gz
@@ -62,7 +62,7 @@ $ sudo apt remove qbpp
 Download the `.tar.gz` file of the latest QUBO++ release from the [**Latest Releases**](https://github.com/nakanocs/qbpp/releases/latest) page.
 Extract the archive as follows:
 ```bash
-$ tar xf qbpp_<arch>_<version>.tar.gz
+tar xf qbpp_<arch>_<version>.tar.gz
 ```
 
 #### Setting Environment Variables
@@ -84,13 +84,13 @@ export QBPP_LICENSE_KEY=[Your QUBO++ license key]
 After installation, activate the license to start using QUBO++:
 
 ```bash
-$ qbpp-license -a
+qbpp-license -a
 ```
 
 If you have a license key, set it before activation:
 ```bash
-$ export QBPP_LICENSE_KEY=XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX
-$ qbpp-license -a
+export QBPP_LICENSE_KEY=XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX
+qbpp-license -a
 ```
 
 If no license key is set, an **Anonymous Trial** (7 days, 1,000 variables) is activated.

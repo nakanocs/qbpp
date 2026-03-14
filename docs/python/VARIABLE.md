@@ -9,7 +9,7 @@ parent: "PyQBPP"
 ## Installing PyQBPP
 To use PyQBPP, install it via pip:
 ```bash
-$ pip install pyqbpp
+pip install pyqbpp
 ```
 
 ## Importing the library

@@ -31,9 +31,9 @@ We recommend using a Python virtual environment (venv) to install PyQBPP.
 No sudo privileges are required.
 
 ```bash
-$ python3 -m venv ~/qbpp-env
-$ source ~/qbpp-env/bin/activate
-$ pip install pyqbpp
+python3 -m venv ~/qbpp-env
+source ~/qbpp-env/bin/activate
+pip install pyqbpp
 ```
 
 After installation, activate your QUBO++ license.
@@ -41,8 +41,8 @@ Set the `QBPP_LICENSE_KEY` environment variable to your license key and run `qbp
 If `QBPP_LICENSE_KEY` is not set, an anonymous trial license will be activated.
 
 ```bash
-$ export QBPP_LICENSE_KEY=[Your QUBO++ license key]
-$ qbpp-license -a
+export QBPP_LICENSE_KEY=[Your QUBO++ license key]
+qbpp-license -a
 ```
 
 ## Quick Example

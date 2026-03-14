@@ -17,14 +17,14 @@ There are two ways to install QUBO++:
 
 First, add the QUBO++ apt repository:
 ```bash
-$ curl -fsSL https://nakanocs.github.io/qbpp-apt/KEY.gpg | sudo gpg --dearmor -o /usr/share/keyrings/qbpp.gpg
-$ echo "deb [signed-by=/usr/share/keyrings/qbpp.gpg] https://nakanocs.github.io/qbpp-apt stable main" | sudo tee /etc/apt/sources.list.d/qbpp.list
+curl -fsSL https://nakanocs.github.io/qbpp-apt/KEY.gpg | sudo gpg --dearmor -o /usr/share/keyrings/qbpp.gpg
+echo "deb [signed-by=/usr/share/keyrings/qbpp.gpg] https://nakanocs.github.io/qbpp-apt stable main" | sudo tee /etc/apt/sources.list.d/qbpp.list
 ```
 
 Then install QUBO++:
 ```bash
-$ sudo apt update
-$ sudo apt install qbpp
+sudo apt update
+sudo apt install qbpp
 ```
 
 This automatically installs headers, shared libraries, and the `qbpp-license` command.
@@ -34,16 +34,16 @@ No environment variable configuration is needed.
 
 Download the latest `tar.gz` from <a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Releases</strong></a> and extract it:
 ```bash
-$ tar xf qbpp_<arch>_<version>.tar.gz
+tar xf qbpp_<arch>_<version>.tar.gz
 ```
 QUBO++ will be extracted into a directory such as **`qbpp_<arch>_<version>`**.
 
 Set the environment variables as follows:
 ```bash
-$ export QBPP_PATH=[QUBO++ install directory]
-$ export CPLUS_INCLUDE_PATH=$QBPP_PATH/include:$CPLUS_INCLUDE_PATH
-$ export LIBRARY_PATH=$QBPP_PATH/lib:$LIBRARY_PATH
-$ export LD_LIBRARY_PATH=$QBPP_PATH/lib:$LD_LIBRARY_PATH
+export QBPP_PATH=[QUBO++ install directory]
+export CPLUS_INCLUDE_PATH=$QBPP_PATH/include:$CPLUS_INCLUDE_PATH
+export LIBRARY_PATH=$QBPP_PATH/lib:$LIBRARY_PATH
+export LD_LIBRARY_PATH=$QBPP_PATH/lib:$LD_LIBRARY_PATH
 ```
 These environment variables are used for license management and for compiling, linking, and executing QUBO++ programs.
 
@@ -72,7 +72,7 @@ int main() {
 ### Compile the program
 Compile **`test.cpp`** to generate the executable **`test`**:
 ```bash
-$ g++ test.cpp -o test -std=c++17 -lqbpp -ltbb
+g++ test.cpp -o test -std=c++17 -lqbpp -ltbb
 ```
 This command creates an executable file named test.
 The compiler options mean the following:
@@ -84,7 +84,7 @@ The compiler options mean the following:
 Run `test` as follows:
 {% raw %}
 ```bash
-$ ./test
+./test
 sol = 0:{{x[0],0},{x[1],1},{x[2],1},{x[3],0},{y[0],0},{y[1],0},{y[2],1},{y[3],0}}
 x = 6, y = 4
 ```

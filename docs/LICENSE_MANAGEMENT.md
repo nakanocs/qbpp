@@ -40,7 +40,7 @@ export QBPP_LICENSE_KEY=XXXXXX-XXXXXX-XXXXXX-XXXXXX
 
 Then reload the shell:
 ```bash
-$ source ~/.bashrc
+source ~/.bashrc
 ```
 
 ### Method 2: Command-Line Option
@@ -48,7 +48,7 @@ $ source ~/.bashrc
 Pass the key directly to `qbpp-license`:
 
 ```bash
-$ qbpp-license -k XXXXXX-XXXXXX-XXXXXX-XXXXXX -a
+qbpp-license -k XXXXXX-XXXXXX-XXXXXX-XXXXXX -a
 ```
 
 ### Method 3: In C++ Code
@@ -71,7 +71,7 @@ int main() {
 A license must be activated on each machine before QUBO++ programs can use it. Activation is **node-locked** -- the license is tied to the specific machine.
 
 ```bash
-$ qbpp-license -a
+qbpp-license -a
 ```
 
 - This contacts the license server and registers the current machine.
@@ -83,7 +83,7 @@ $ qbpp-license -a
 To display the current license status without making any changes:
 
 ```bash
-$ qbpp-license
+qbpp-license
 ```
 
 This shows the license type, expiry date, variable limits, and activation usage. The command contacts the license server to refresh the status.
@@ -93,7 +93,7 @@ This shows the license type, expiry date, variable limits, and activation usage.
 To move a license to another machine, first deactivate it on the current machine:
 
 ```bash
-$ qbpp-license -d
+qbpp-license -d
 ```
 
 - Deactivation frees up one activation slot.
@@ -139,7 +139,7 @@ If your network is slow or behind a firewall/proxy, the default 20-second timeou
 To increase the timeout:
 
 ```bash
-$ qbpp-license -t 60 -a
+qbpp-license -t 60 -a
 ```
 
 If the server is unreachable, QUBO++ falls back to the cached license status. If no cache exists, QUBO++ runs in **Fallback Mode** (100-variable limit).
@@ -191,7 +191,7 @@ Floating licenses allow shared access across multiple machines within an organiz
 Usage is the same as node-locked licenses:
 
 ```bash
-$ export QBPP_LICENSE_KEY=F-XXXXXX-XXXXXX-XXXXXX-XXXXXX
-$ qbpp-license -a
+export QBPP_LICENSE_KEY=F-XXXXXX-XXXXXX-XXXXXX-XXXXXX
+qbpp-license -a
 ```
 

@@ -11,7 +11,7 @@ QUBO++ bundles a simple graph drawing library to visualize results obtained from
 It is a wrapper around Graphviz, which you can install on Ubuntu as follows:
 
 ```bash
-$ sudo apt install graphviz
+sudo apt install graphviz
 ```
 
 To use this library, include `qbpp/graph.hpp`:

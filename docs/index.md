@@ -70,7 +70,7 @@ library itself does not require linking against TBB for the default use cases.
 
 To start using QUBO++, activate the license after installation:
 ```bash
-$ qbpp-license -a
+qbpp-license -a
 ```
 
 If no license key is set, an **Anonymous Trial** (7 days, 1,000 variables) is activated.
