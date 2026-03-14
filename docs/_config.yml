@@ -1,4 +1,4 @@
-title: "QUBO++"
+title: "QUBO++ Documentation"
 description: "QUBO++ is a C++ library and Python package (PyQBPP) for constructing and solving QUBO/HUBO combinatorial optimization problems."
 
 markdown: kramdown

@@ -1,9 +1,8 @@
 ---
 layout: default
-title: "Factorization"
-nav_order: 7
-parent: "C++ Document"
+title: "Factorization Through HUBO Expression"
 ---
+
 # Factorization Through HUBO Expression
 
 ## HUBO for factorizing the product of two prime numbers
@@ -121,5 +120,4 @@ q = 1000039
 We can see that the expression `f` contains very large coefficients, and the factorization of the large composite number is correctly obtained.
 
 >**TIP**
-> **`COEFF_TYPE`** and **`ENERGY_TYPE`** can be set to **`int16_t`**, **`int32_t`**, **`int64_t`**, **`qbpp::int128_t`**, or **`qbpp::cpp_int`**.
-> The solvers support specific `(COEFF_TYPE, ENERGY_TYPE)` combinations: `(int16_t, int32_t)`, `(int32_t, int32_t)`, `(int32_t, int64_t)`, `(int64_t, int64_t)`, `(int64_t, qbpp::int128_t)`, `(qbpp::int128_t, qbpp::int128_t)`, and `(cpp_int, cpp_int)`.
+> **`COEFF_TYPE`** and **`ENERGY_TYPE`** can be set to **`int8_t`**, **`int16_t`**, **`int32_t`**, **`int64_t`**, **`qbpp::int128_t`**, **`qbpp::int256_t`**, **`qbpp::int512_t`**, **`qbpp::int1024_t`**, or **`qbpp::cpp_int`**.
