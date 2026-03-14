@@ -38,7 +38,7 @@ Run the following command once per machine:
 qbpp-license -k XXXXXX-XXXXXX-XXXXXX-XXXXXX -a
 ```
 
-The license key is **cached locally** in `~/.qbpp/` (encrypted). After activation, no environment variable or `-k` option is needed for subsequent runs — QUBO++ programs automatically use the cached key.
+The license key is encrypted and cached locally. After activation, no environment variable or `-k` option is needed for subsequent runs — QUBO++ programs automatically use the cached key.
 
 To re-activate or change the key, simply run the command again with a new key.
 
@@ -69,7 +69,7 @@ When multiple methods are used, the following priority applies:
 
 1. **`-k` argument** or `qbpp::license_key()` in code (highest)
 2. **`QBPP_LICENSE_KEY` environment variable**
-3. **Cached key** in `~/.qbpp/` (lowest)
+3. **Cached key** (lowest)
 
 > **Note**: For Anonymous Trial, no license key is needed. Simply run `qbpp-license -a` without setting a key.
 
@@ -136,8 +136,8 @@ Options:
 ## How License Verification Works
 
 - **`qbpp-license` command**: Always contacts the license server to get the latest status. This may take a few seconds depending on network conditions.
-- **QUBO++ programs**: Verify the license using the **local cache** (`~/.qbpp/license_cache`) and do not block on server communication. The server is contacted only when the cache needs to be refreshed (e.g., after a long period without synchronization).
-- **License key storage**: When a license is activated with `-k`, the key is cached locally in `~/.qbpp/`. This allows subsequent runs without setting the key again.
+- **QUBO++ programs**: Verify the license using the **local cache** and do not block on server communication. The server is contacted only when the cache needs to be refreshed (e.g., after a long period without synchronization).
+- **License key storage**: When a license is activated, the key is encrypted and cached locally. This allows subsequent runs without setting the key again.
 - **Offline use**: Once activated, the license works offline using the cached credentials. No persistent internet connection is required for running QUBO++ programs.
 
 ## Network and Timeout

@@ -2,6 +2,7 @@
 layout: default
 title: "Quick Start"
 nav_order: 4
+nav_exclude: true
 ---
 # Quick Start
 
