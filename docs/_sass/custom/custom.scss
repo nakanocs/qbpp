@@ -7,14 +7,14 @@
 
 // Smaller site title to fit narrow sidebar
 .site-title {
-  font-size: 1.0rem !important;
+  font-size: 1.1rem !important;
 }
 
 // Smaller body text (but not code blocks)
 .main-content {
   font-size: 0.85rem !important;
 
-  h1 { font-size: 1.6rem !important; }
+  h1 { font-size: 1.6rem !important; font-weight: 700 !important; }
   h2 { font-size: 1.3rem !important; }
   h3 { font-size: 1.1rem !important; }
   h4 { font-size: 0.95rem !important; }
