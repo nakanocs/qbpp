@@ -36,18 +36,15 @@
             if (txt === shared[s]) { isShared = true; break; }
           }
           if (isShared) continue;
-          var href = a.getAttribute('href') || '';
+          var href = a.href || a.getAttribute('href') || '';
           if (txt === 'PyQBPP (Python)' || href.indexOf('/python/') !== -1) {
             pythonItems.push(lis[i]);
-            console.log('[nav] PYTHON: "' + txt + '" href="' + href + '"');
           } else {
             cppItems.push(lis[i]);
-            console.log('[nav] CPP: "' + txt + '" href="' + href + '"');
           }
         }
       }
     }
-    console.log('[nav] cppItems=' + cppItems.length + ' pythonItems=' + pythonItems.length + ' path=' + window.location.pathname);
 
     var btnsCpp = document.querySelectorAll('.qbpp-switch-cpp');
     var btnsPython = document.querySelectorAll('.qbpp-switch-python');
