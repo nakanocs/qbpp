@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "PyQBPP Installation"
+title: "Installation"
 nav_order: 3
 ---
 # PyQBPP Installation

@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "PyQBPP Quick Start"
+title: "Quick Start"
 nav_order: 4
 ---
 # Quick Start
