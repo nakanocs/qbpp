@@ -47,6 +47,42 @@
       }
     }
 
+    // Insert Playground links after Demos
+    var cppPlaygroundUrl = 'https://233dwj2zapcrsk6kvnlhwcc3gu0jydbw.lambda-url.ap-northeast-1.on.aws/';
+    var pythonPlaygroundUrl = 'https://3nsgxoub3dgwgfb3dk27oc7yqu0zmmog.lambda-url.ap-northeast-1.on.aws/';
+    for (var n = 0; n < navEls.length; n++) {
+      var allUls = navEls[n].querySelectorAll('ul.nav-list');
+      for (var u = 0; u < allUls.length; u++) {
+        var lis = allUls[u].children;
+        for (var i = 0; i < lis.length; i++) {
+          if (lis[i].tagName !== 'LI') continue;
+          var a = lis[i].querySelector('a');
+          if (!a) continue;
+          var txt = a.childNodes[0] ? a.childNodes[0].textContent.trim() : a.textContent.trim();
+          if (txt === 'Demos') {
+            var mkLink = function(label, url) {
+              var li = document.createElement('li');
+              li.className = lis[i].className;
+              var link = document.createElement('a');
+              link.href = url;
+              link.target = '_blank';
+              link.textContent = label;
+              link.className = a.className;
+              li.appendChild(link);
+              return li;
+            };
+            var cppPg = mkLink('QUBO++ Playground', cppPlaygroundUrl);
+            var pyPg = mkLink('PyQBPP Playground', pythonPlaygroundUrl);
+            lis[i].parentNode.insertBefore(pyPg, lis[i].nextSibling);
+            lis[i].parentNode.insertBefore(cppPg, lis[i].nextSibling);
+            cppItems.push(cppPg);
+            pythonItems.push(pyPg);
+            break;
+          }
+        }
+      }
+    }
+
     var btnsCpp = document.querySelectorAll('.qbpp-switch-cpp');
     var btnsPython = document.querySelectorAll('.qbpp-switch-python');
 
