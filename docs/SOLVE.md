@@ -2,7 +2,7 @@
 layout: default
 title: "Solving Expressions"
 nav_order: 2
-parent: "C++ Document"
+parent: "QUBO++ (C++)"
 ---
 # Solving Expressions using Easy Solver and Exhaustive Solver
 

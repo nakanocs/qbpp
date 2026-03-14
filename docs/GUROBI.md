@@ -2,7 +2,7 @@
 layout: default
 title: "Gurobi Solver"
 nav_order: 22
-parent: "C++ Document"
+parent: "QUBO++ (C++)"
 ---
 # Gurobi Optimizer Usage
 

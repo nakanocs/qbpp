@@ -2,7 +2,7 @@
 layout: default
 title: "Evaluating Expressions"
 nav_order: 16
-parent: "C++ Document"
+parent: "QUBO++ (C++)"
 ---
 # Evaluating Expressions
 

@@ -2,7 +2,7 @@
 layout: default
 title: "Partitioning Problem"
 nav_order: 4
-parent: "C++ Document"
+parent: "QUBO++ (C++)"
 ---
 # Solving Partitioning Problem Using Vector of variables
 

@@ -2,7 +2,7 @@
 layout: default
 title: "Vectors"
 nav_order: 3
-parent: "C++ Document"
+parent: "QUBO++ (C++)"
 ---
 # Vector of variables and vector functions
 

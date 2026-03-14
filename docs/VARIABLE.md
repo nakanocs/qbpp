@@ -2,7 +2,7 @@
 layout: default
 title: "Variables and Expressions"
 nav_order: 1
-parent: "C++ Document"
+parent: "QUBO++ (C++)"
 ---
 # Defining Variables and Expressions
 

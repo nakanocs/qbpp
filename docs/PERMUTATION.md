@@ -2,7 +2,7 @@
 layout: default
 title: "Permutation Matrix"
 nav_order: 5
-parent: "C++ Document"
+parent: "QUBO++ (C++)"
 ---
 # Permutation matrix generation
 

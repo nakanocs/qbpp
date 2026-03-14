@@ -2,7 +2,7 @@
 layout: default
 title: "QR: Operations"
 nav_order: 31
-parent: "C++ Document"
+parent: "QUBO++ (C++)"
 ---
 # Quick Reference: Operators and Functions for Expressions
 

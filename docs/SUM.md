@@ -2,7 +2,7 @@
 layout: default
 title: "Sum Functions"
 nav_order: 18
-parent: "C++ Document"
+parent: "QUBO++ (C++)"
 ---
 # Sum Functions for Multi-dimensional Arrays
 QUBO++ provides two sum functions for multi-dimensional arrays of variables or expressions:

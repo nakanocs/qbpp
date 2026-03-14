@@ -2,7 +2,7 @@
 layout: default
 title: "Multi-dimensional Variables"
 nav_order: 13
-parent: "C++ Document"
+parent: "QUBO++ (C++)"
 ---
 # Multi-dimensional Variables and Expressions
 

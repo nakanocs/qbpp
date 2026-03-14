@@ -2,7 +2,7 @@
 layout: default
 title: "Graph Library"
 nav_order: 32
-parent: "C++ Document"
+parent: "QUBO++ (C++)"
 ---
 # QUBO++ Simple Graph Drawing Library and Solving the Maximum Independent Set (MIS) Problem
 

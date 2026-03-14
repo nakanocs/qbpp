@@ -2,7 +2,7 @@
 layout: default
 title: "Operators and Functions"
 nav_order: 11
-parent: "C++ Document"
+parent: "QUBO++ (C++)"
 ---
 # Basic Operators and Functions
 

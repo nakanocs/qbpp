@@ -2,7 +2,7 @@
 layout: default
 title: "Range Constraints"
 nav_order: 8
-parent: "C++ Document"
+parent: "QUBO++ (C++)"
 ---
 # Range Constraints and Solving Integer Linear Programming
 
