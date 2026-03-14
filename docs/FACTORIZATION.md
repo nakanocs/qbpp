@@ -1,6 +1,7 @@
 ---
 layout: default
 title: "Factorization Through HUBO Expression"
+nav_order: 7
 parent: "QUBO++ (C++)"
 ---
 
