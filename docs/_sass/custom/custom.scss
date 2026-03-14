@@ -29,21 +29,21 @@ code,
   font-size: 0.85rem !important;
 }
 
-// Rouge syntax highlighting — GitHub-like colors, override theme defaults
+// Rouge syntax highlighting — VSCode-like colors
 .highlight {
   .n, .na, .no, .nv, .nc, .ni, .ne { color: #24292e; }               // names/variables — black
   .nn { color: #24292e; }                                              // module names
-  .k, .kd, .kn, .kp, .kr { color: #d73a49; }                         // keywords — red
-  .kt { color: #d73a49; }                                             // keyword type
-  .nb { color: #005cc5; }                                              // builtins — blue
-  .bp { color: #005cc5; }                                              // builtin pseudo (self)
-  .nf, .fm { color: #6f42c1; }                                        // function def — purple
-  .s, .s1, .s2, .sa, .sb, .sc, .dl, .sd, .sh, .si, .sx { color: #032f62; } // strings — dark blue
-  .mi, .mf, .mh, .mo, .il { color: #005cc5; }                        // numbers — blue
-  .o, .ow { color: #d73a49; }                                         // operators — red
+  .k, .kd, .kn, .kp, .kr { color: #0000ff; }                         // keywords — blue
+  .kt { color: #267f99; }                                              // keyword type (int, auto) — teal
+  .nb { color: #267f99; }                                              // builtins — teal
+  .bp { color: #267f99; }                                              // builtin pseudo (self) — teal
+  .nf, .fm { color: #795e26; }                                        // function def — dark yellow
+  .s, .s1, .s2, .sa, .sb, .sc, .dl, .sd, .sh, .si, .sx { color: #a31515; } // strings — dark red
+  .mi, .mf, .mh, .mo, .il { color: #098658; }                        // numbers — green
+  .o, .ow { color: #24292e; }                                         // operators — black
   .p { color: #24292e; }                                               // punctuation — black
-  .cp, .cpf { color: #d73a49; }                                       // preprocessor — red
-  .c, .c1, .ch, .cm, .cs { color: #6a737d; font-style: italic; }     // comments — gray
+  .cp, .cpf { color: #808080; }                                       // preprocessor — gray
+  .c, .c1, .ch, .cm, .cs { color: #008000; font-style: italic; }     // comments — green italic
 }
 
 .main-content div.highlighter-rouge,
