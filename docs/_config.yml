@@ -33,8 +33,7 @@ nav_external_links:
     opens_in_new_tab: true
 
 # Google Analytics
-ga_tracking:
-  - G-5X2BP69THZ
+ga_tracking: G-5X2BP69THZ
 
 # Footer
 last_edit_timestamp: true
