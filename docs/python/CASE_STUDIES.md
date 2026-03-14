@@ -1,8 +1,7 @@
 ---
 layout: default
-nav_exclude: true
 title: "Case Studies"
-nav_order: 35
+nav_order: 6
 ---
 # Case Studies
 This section provides examples of solving optimization, mathematical, and graph problems using PyQBPP.

@@ -29,17 +29,21 @@ code,
   font-size: 0.85rem !important;
 }
 
-// Rouge syntax highlighting: use theme defaults, darken colored tokens only
+// Rouge syntax highlighting — GitHub-like colors, override theme defaults
 .highlight {
-  // Darken colored tokens (keywords, strings, numbers, etc.) but not plain names/punctuation
-  .k, .kd, .kn, .kp, .kr, .kt,
-  .nb, .bp, .nf, .fm,
-  .s, .s1, .s2, .sa, .sb, .sc, .dl, .sd, .sh, .si, .sx,
-  .mi, .mf, .mh, .mo, .il,
-  .cp, .cpf,
-  .c, .c1, .ch, .cm, .cs {
-    filter: brightness(0.7) saturate(1.2);
-  }
+  .n, .na, .no, .nv, .nc, .ni, .ne { color: #24292e; }               // names/variables — black
+  .nn { color: #24292e; }                                              // module names
+  .k, .kd, .kn, .kp, .kr { color: #d73a49; }                         // keywords — red
+  .kt { color: #d73a49; }                                             // keyword type
+  .nb { color: #005cc5; }                                              // builtins — blue
+  .bp { color: #005cc5; }                                              // builtin pseudo (self)
+  .nf, .fm { color: #6f42c1; }                                        // function def — purple
+  .s, .s1, .s2, .sa, .sb, .sc, .dl, .sd, .sh, .si, .sx { color: #032f62; } // strings — dark blue
+  .mi, .mf, .mh, .mo, .il { color: #005cc5; }                        // numbers — blue
+  .o, .ow { color: #d73a49; }                                         // operators — red
+  .p { color: #24292e; }                                               // punctuation — black
+  .cp, .cpf { color: #d73a49; }                                       // preprocessor — red
+  .c, .c1, .ch, .cm, .cs { color: #6a737d; font-style: italic; }     // comments — gray
 }
 
 .main-content div.highlighter-rouge,
