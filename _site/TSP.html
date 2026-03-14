@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>TSP - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Minima テーマの main.css（ハイライト含む） -->
+  <link rel="stylesheet" href="/assets/main.css">
+
+  <!-- 自前のナビ用 CSS -->
+  <link rel="stylesheet" href="/assets/custom.css">
+
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+
+<body>
+
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ -->
+    <nav style="width:max-content; position:sticky; top:1rem; padding:0 1rem 0 0; border-right:1px solid #ddd;">
+      
+      <h2 style="margin-left:0;">QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/"><strong>Introduction</strong></a> </li>
+        <li><a href="/HUBO_QUBO"><strong>HUBO and QUBO</strong></a> </li>
+        <li><a href="/QUICK"><strong>Quick Start</strong></a>
+          <ul style="list-style:none; padding-left:1.2em; margin:0.2em 0 0.2em;">
+            <li><a href="/WSL"><strong>for Windows</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/CASE_STUDIES"><strong>Case Studies</strong></a></li>
+        <li><a href="/DEMOS"><strong>Demos</strong></a></li>
+        <li><a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Release</strong></a></li>
+      </ul>
+      <hr style="margin:1rem 0;">
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/python/"><strong>PyQUBO++ &rarr;</strong></a></li>
+      </ul>
+      
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="traveling-salesman-problem">Traveling Salesman Problem</h1>
+<p>The Traveling Salesman Problem (TSP) asks for the shortest tour that visits every node exactly once and returns to the start.
+We assume that the nodes are placed on a plane and that the tour length is measured using the Euclidean distance.</p>
+
+<p>In the figure below, an example of nine nodes and an optimal tour is shown:</p>
+
+<p align="center">
+  <img src="images/tsp_solution.svg" alt="An example of nodes and the TSP solution" width="50%" />
+</p>
+
+<h2 id="qubo-formulation-of-the-tsp">QUBO formulation of the TSP</h2>
+<p>A tour can be represented by a permutation of the nodes.
+Accordingly, we use a <a href="PERMUTATION">permutation matrix</a> to encode a TSP solution.</p>
+
+<p>Let $X=(x_{i,j})$ ($0\leq i,j\leq n-1$) be a matrix of $n\times n$ binary values.
+The matrix $X$ is a <strong>permutation matrix</strong> each row and each column contains exactly one entry equal to 1, as illustrated below.</p>
+
+<p align="center">
+  <img src="images/matrix.svg" alt="A permutation matrix of size 4x4" width="50%" />
+</p>
+
+<p>We interpret  $x_{k,i}$ as “the $k$-th position in the tour is node $i$”.
+Therefore, every row and every column of $X$ must be one-hot, i.e., the following constraints must hold:</p>
+
+\[\begin{aligned}
+{\rm row}:&amp; \sum_{j=0}^{n-1}x_{i,j}=1 &amp; (0\leq i\leq n-1)\\
+{\rm column}:&amp; \sum_{i=0}^{n-1}x_{i,j}=1 &amp; (0\leq j\leq n-1)
+\end{aligned}\]
+
+<p>Let $d_{i,j}$ denote the distance between nodes $i$ and $j$.
+Then the tour length for a permutation matrix $X$ can be written as:</p>
+
+\[\begin{aligned}
+{\rm objective}: &amp;\sum_{k=0}^{k-1} d_{i,j}x_{k,i}x_{(k+1)\bmod n,j}
+\end{aligned}\]
+
+<p>This expression adds $d_{i,j}$ exactly when node $i$ is visited at position $k$ and node
+$j$ is visited next (at position $(k+1)\bmod n$), so it equals the total length of the tour.</p>
+
+<h2 id="qubo-program-for-tsp">QUBO++ program for TSP</h2>
+<p>Using the permutation-matrix formulation above, we can write a QUBO++ program for the TSP as follows:</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#define MAXDEG 2
+#include</span> <span class="cpf">&lt;qbpp/qbpp.hpp&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;qbpp/easy_solver.hpp&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;qbpp/graph.hpp&gt;</span><span class="cp">
+</span>
+<span class="k">class</span> <span class="nc">Nodes</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">nodes</span><span class="p">{{</span><span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">},</span>  <span class="p">{</span><span class="mi">33</span><span class="p">,</span> <span class="mi">125</span><span class="p">},</span>  <span class="p">{</span><span class="mi">12</span><span class="p">,</span> <span class="mi">226</span><span class="p">},</span>
+                                         <span class="p">{</span><span class="mi">121</span><span class="p">,</span> <span class="mi">11</span><span class="p">},</span> <span class="p">{</span><span class="mi">108</span><span class="p">,</span> <span class="mi">142</span><span class="p">},</span> <span class="p">{</span><span class="mi">111</span><span class="p">,</span> <span class="mi">243</span><span class="p">},</span>
+                                         <span class="p">{</span><span class="mi">220</span><span class="p">,</span> <span class="mi">4</span><span class="p">},</span>  <span class="p">{</span><span class="mi">210</span><span class="p">,</span> <span class="mi">113</span><span class="p">},</span> <span class="p">{</span><span class="mi">211</span><span class="p">,</span> <span class="mi">233</span><span class="p">}};</span>
+
+ <span class="nl">public:</span>
+  <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;&amp;</span> <span class="k">operator</span><span class="p">[](</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">index</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">nodes</span><span class="p">[</span><span class="n">index</span><span class="p">];</span>
+  <span class="p">}</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">size</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">nodes</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="p">}</span>
+
+  <span class="kt">int</span> <span class="n">dist</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">i</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="kt">size_t</span> <span class="n">j</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+    <span class="k">auto</span> <span class="p">[</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">]</span> <span class="o">=</span> <span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="k">auto</span> <span class="p">[</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">]</span> <span class="o">=</span> <span class="n">nodes</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+    <span class="k">const</span> <span class="kt">int</span> <span class="n">dx</span> <span class="o">=</span> <span class="n">x1</span> <span class="o">-</span> <span class="n">x2</span><span class="p">;</span>
+    <span class="k">const</span> <span class="kt">int</span> <span class="n">dy</span> <span class="o">=</span> <span class="n">y1</span> <span class="o">-</span> <span class="n">y2</span><span class="p">;</span>
+    <span class="k">return</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">llround</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="n">dx</span> <span class="o">*</span> <span class="n">dx</span> <span class="o">+</span> <span class="n">dy</span> <span class="o">*</span> <span class="n">dy</span><span class="p">))));</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">nodes</span> <span class="o">=</span> <span class="n">Nodes</span><span class="p">{};</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">,</span> <span class="n">nodes</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span> <span class="n">nodes</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+
+  <span class="k">auto</span> <span class="n">constraint</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sum</span><span class="p">(</span><span class="n">qbpp</span><span class="o">::</span><span class="n">vector_sum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span>
+                    <span class="n">qbpp</span><span class="o">::</span><span class="n">sum</span><span class="p">(</span><span class="n">qbpp</span><span class="o">::</span><span class="n">vector_sum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">);</span>
+
+  <span class="k">auto</span> <span class="n">objective</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">expr</span><span class="p">();</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nodes</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">auto</span> <span class="n">next_i</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">nodes</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">nodes</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="n">nodes</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">k</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">k</span> <span class="o">!=</span> <span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+          <span class="n">objective</span> <span class="o">+=</span> <span class="n">nodes</span><span class="p">.</span><span class="n">dist</span><span class="p">(</span><span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">next_i</span><span class="p">][</span><span class="n">k</span><span class="p">];</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">objective</span> <span class="o">+</span> <span class="n">constraint</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">;</span>
+  <span class="n">f</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">easy_solver</span><span class="o">::</span><span class="n">EasySolver</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+  <span class="n">solver</span><span class="p">.</span><span class="n">time_limit</span><span class="p">(</span><span class="mf">1.0</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">sol</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search</span><span class="p">();</span>
+  <span class="k">auto</span> <span class="n">tour</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">onehot_to_int</span><span class="p">(</span><span class="n">sol</span><span class="p">(</span><span class="n">x</span><span class="p">));</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Tour: "</span> <span class="o">&lt;&lt;</span> <span class="n">tour</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">graph</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">graph</span><span class="o">::</span><span class="n">GraphDrawer</span><span class="p">();</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nodes</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">graph</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">qbpp</span><span class="o">::</span><span class="n">graph</span><span class="o">::</span><span class="n">Node</span><span class="p">(</span><span class="n">i</span><span class="p">).</span><span class="n">position</span><span class="p">(</span><span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">first</span><span class="p">,</span> <span class="n">nodes</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">second</span><span class="p">));</span>
+  <span class="p">}</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nodes</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">auto</span> <span class="n">from</span> <span class="o">=</span> <span class="n">tour</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="k">auto</span> <span class="n">to</span> <span class="o">=</span> <span class="n">tour</span><span class="p">[(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">nodes</span><span class="p">.</span><span class="n">size</span><span class="p">()];</span>
+    <span class="n">graph</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">qbpp</span><span class="o">::</span><span class="n">graph</span><span class="o">::</span><span class="n">Edge</span><span class="p">(</span><span class="n">from</span><span class="p">,</span> <span class="n">to</span><span class="p">).</span><span class="n">color</span><span class="p">(</span><span class="s">"red"</span><span class="p">).</span><span class="n">penwidth</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="n">directed</span><span class="p">());</span>
+  <span class="p">}</span>
+  <span class="n">graph</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="s">"tsp_solution.svg"</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>In this program, the coordinates of nodes <code class="language-plaintext highlighter-rouge">0</code> through <code class="language-plaintext highlighter-rouge">8</code> are stored in a <code class="language-plaintext highlighter-rouge">Nodes</code> object named <code class="language-plaintext highlighter-rouge">nodes</code>.
+We create a 2D array <code class="language-plaintext highlighter-rouge">x</code> of binary variables and construct the one-hot constraints together with the tour-length objective.
+These terms are combined into a single QUBO expression <code class="language-plaintext highlighter-rouge">f</code> by adding the constraints with a penalty weight (here, <code class="language-plaintext highlighter-rouge">1000</code>) to prioritize feasibility.</p>
+
+<p>We then solve <code class="language-plaintext highlighter-rouge">f</code> using EasySolver with a 1.0-second time limit.
+The resulting assignment <code class="language-plaintext highlighter-rouge">sol(x)</code> forms a permutation matrix.
+This matrix is converted into a list of integers (a permutation) called <code class="language-plaintext highlighter-rouge">tour</code> using <code class="language-plaintext highlighter-rouge">qbpp::onehot_to_int()</code>, and then printed.
+Finally, the computed <code class="language-plaintext highlighter-rouge">tour</code> is rendered as a directed graph and saved to the file <code class="language-plaintext highlighter-rouge">tsp_solution.svg</code>.</p>
+
+<p>This program produces the following output:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Tour: {7,8,5,2,4,1,0,3,6}
+</code></pre></div></div>
+
+<h2 id="fixing-the-first-node">Fixing the first node</h2>
+<p>Without loss of generality, we can assume that node 0 is the starting node of the tour.
+Because the TSP tour is invariant under cyclic shifts, fixing the start position does not change the optimal tour length.</p>
+
+<p>By fixing the start node, we can reduce the number of binary variables in the QUBO expression.
+Specifically, we enforce that node 0 is assigned to position 0 in the permutation matrix.
+To do this, we fix the following binary variables:</p>
+
+\[\begin{aligned}
+x_{0,0} &amp;= 1\\
+x_{i,0} &amp;= 0&amp; (i\geq 1)\\
+x_{0,j} &amp;= 0&amp; (j\geq 1)
+\end{aligned}\]
+
+<p>These assignments ensure that node 0 appears only at position 0, and that no other node is assigned to position 0.
+As a result, the effective problem size is reduced, which generally makes the QUBO easier to solve for local-search–based solvers.</p>
+
+<h2 id="qubo-program-for-fixing-the-first-node">QUBO++ program for fixing the first node</h2>
+<p>In QUBO++, fixed variable assignments can be applied using the <code class="language-plaintext highlighter-rouge">qbpp::replace()</code> function:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">qbpp</span><span class="o">::</span><span class="n">MapList</span> <span class="n">ml</span><span class="p">;</span>
+  <span class="n">ml</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">});</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">nodes</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">ml</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">});</span>
+    <span class="n">ml</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">],</span> <span class="mi">0</span><span class="p">});</span>
+  <span class="p">}</span>
+
+  <span class="k">auto</span> <span class="n">g</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">replace</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ml</span><span class="p">);</span>
+  <span class="n">g</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">easy_solver</span><span class="o">::</span><span class="n">EasySolver</span><span class="p">(</span><span class="n">g</span><span class="p">);</span>
+  <span class="n">solver</span><span class="p">.</span><span class="n">time_limit</span><span class="p">(</span><span class="mf">1.0</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">sol</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search</span><span class="p">();</span>
+
+  <span class="k">auto</span> <span class="n">full_sol</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">Sol</span><span class="p">(</span><span class="n">f</span><span class="p">).</span><span class="n">set</span><span class="p">(</span><span class="n">sol</span><span class="p">).</span><span class="n">set</span><span class="p">(</span><span class="n">ml</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">tour</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">onehot_to_int</span><span class="p">(</span><span class="n">full_sol</span><span class="p">(</span><span class="n">x</span><span class="p">));</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Tour: "</span> <span class="o">&lt;&lt;</span> <span class="n">tour</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+</code></pre></div></div>
+<p>First, we create a <code class="language-plaintext highlighter-rouge">qbpp::MapList</code> object <code class="language-plaintext highlighter-rouge">ml</code>, which stores fixed assignments of variables.
+Each assignment is added using the <code class="language-plaintext highlighter-rouge">push_back()</code> member function.</p>
+
+<p>Next, we call <code class="language-plaintext highlighter-rouge">qbpp::replace(f, ml)</code>, which returns a new expression obtained by substituting the fixed values specified in <code class="language-plaintext highlighter-rouge">ml</code> into the original QUBO expression <code class="language-plaintext highlighter-rouge">f</code>.
+The resulting expression is stored in <code class="language-plaintext highlighter-rouge">g</code> and simplified.</p>
+
+<p>We then create a solver for <code class="language-plaintext highlighter-rouge">g</code> and obtain a solution <code class="language-plaintext highlighter-rouge">sol</code>.
+Since <code class="language-plaintext highlighter-rouge">sol</code> corresponds to the reduced problem, we create a <code class="language-plaintext highlighter-rouge">qbpp::Sol</code> object for <code class="language-plaintext highlighter-rouge">f</code> and set both the solver output <code class="language-plaintext highlighter-rouge">sol</code> and the fixed assignments <code class="language-plaintext highlighter-rouge">ml</code>.
+The resulting <code class="language-plaintext highlighter-rouge">full_sol</code> stores the complete assignment for all variables in <code class="language-plaintext highlighter-rouge">x</code>.</p>
+
+<p>Finally, the permutation matrix represented by <code class="language-plaintext highlighter-rouge">full_sol(x)</code> is converted into a permutation using <code class="language-plaintext highlighter-rouge">qbpp::onehot_to_int()</code> and printed.</p>
+
+<p>This program produces the following tour starting from node 0:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Tour: {0,3,6,7,8,5,2,1,4}
+</code></pre></div></div>
+
+      <hr style="margin: 2rem 0 1rem 0;">
+<div style="font-size: 0.9em; color: #666;">
+  Last updated: 2026.03.05
+</div>
+    </main>
+  </div>
+</body>
+
+</html>

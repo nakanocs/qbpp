@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>WSL - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Minima テーマの main.css（ハイライト含む） -->
+  <link rel="stylesheet" href="/assets/main.css">
+
+  <!-- 自前のナビ用 CSS -->
+  <link rel="stylesheet" href="/assets/custom.css">
+
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+
+<body>
+
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ -->
+    <nav style="width:max-content; position:sticky; top:1rem; padding:0 1rem 0 0; border-right:1px solid #ddd;">
+      
+      <h2 style="margin-left:0;">QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/"><strong>Introduction</strong></a> </li>
+        <li><a href="/HUBO_QUBO"><strong>HUBO and QUBO</strong></a> </li>
+        <li><a href="/QUICK"><strong>Quick Start</strong></a>
+          <ul style="list-style:none; padding-left:1.2em; margin:0.2em 0 0.2em;">
+            <li><a href="/WSL"><strong>for Windows</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/CASE_STUDIES"><strong>Case Studies</strong></a></li>
+        <li><a href="/DEMOS"><strong>Demos</strong></a></li>
+        <li><a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Release</strong></a></li>
+      </ul>
+      <hr style="margin:1rem 0;">
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/python/"><strong>PyQUBO++ &rarr;</strong></a></li>
+      </ul>
+      
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="quick-start-for-windows-wsl">Quick Start for Windows (WSL)</h1>
+<p>On Windows 11, QUBO++ can be used through <strong>WSL (Windows Subsystem for Linux)</strong>, which allows Linux programs to run natively on Windows.</p>
+
+<p>This document explains how to install WSL, required libraries, and QUBO++, and how to compile and run sample programs.</p>
+
+<h2 id="install-wsl">Install WSL</h2>
+<p>On Windows 11, <strong>WSL</strong> can be installed from Windows PowerShell.
+Open PowerShell as Administrator and execute the following command:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>C:\WINDOWS\System32&gt; wsl --install
+Provisioning the new WSL instance Ubuntu
+This might take a while...
+Create a default Unix user account: [user account name]
+New password: [your password]
+Retype new password: [your password]
+passwd: password updated successfully
+To run a command as administrator (user "root"), use "sudo &lt;command&gt;".
+See "man sudo_root" for details.
+</code></pre></div></div>
+<p>Enter your <strong>[user account name]</strong> and <strong>[your password]</strong> when prompted.
+This installs WSL 2 and an Ubuntu-based Linux system running on Windows.</p>
+
+<p>After the installation is complete, update and upgrade the system software inside WSL:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>apt update
+<span class="nv">$ </span><span class="nb">sudo </span>apt upgrade <span class="nt">-y</span>
+</code></pre></div></div>
+
+<h2 id="install-c-compiler">Install C++ compiler</h2>
+<p>QUBO++ requires a <strong>C++ compiler</strong>.</p>
+
+<p>Install it using the following command:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>apt <span class="nb">install</span> <span class="nt">-y</span> build-essential
+</code></pre></div></div>
+
+<h2 id="install-qubo">Install QUBO++</h2>
+
+<p>There are two ways to install QUBO++:</p>
+<ul>
+  <li><strong>Method 1: apt (recommended)</strong> — Simple installation with automatic path configuration</li>
+  <li><strong>Method 2: tar.gz</strong> — Manual installation without requiring apt repository setup</li>
+</ul>
+
+<h3 id="method-1-install-via-apt-recommended">Method 1: Install via apt (recommended)</h3>
+
+<p>First, add the QUBO++ apt repository:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>curl <span class="nt">-fsSL</span> https://nakanocs.github.io/qbpp-apt/KEY.gpg | <span class="nb">sudo </span>gpg <span class="nt">--dearmor</span> <span class="nt">-o</span> /usr/share/keyrings/qbpp.gpg
+<span class="nv">$ </span><span class="nb">echo</span> <span class="s2">"deb [signed-by=/usr/share/keyrings/qbpp.gpg] https://nakanocs.github.io/qbpp-apt stable main"</span> | <span class="nb">sudo tee</span> /etc/apt/sources.list.d/qbpp.list
+</code></pre></div></div>
+
+<p>Then install QUBO++:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>apt update
+<span class="nv">$ </span><span class="nb">sudo </span>apt <span class="nb">install </span>qbpp
+</code></pre></div></div>
+
+<p>This automatically installs headers to <code class="language-plaintext highlighter-rouge">/usr/local/include/qbpp/</code>, shared libraries to <code class="language-plaintext highlighter-rouge">/usr/local/lib/</code>, and the <code class="language-plaintext highlighter-rouge">qbpp-license</code> command to <code class="language-plaintext highlighter-rouge">/usr/local/bin/</code>.
+No environment variable configuration is needed.</p>
+
+<p>The sample programs are installed to <code class="language-plaintext highlighter-rouge">/usr/local/share/qbpp/samples/</code>.
+To compile and run them:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cp</span> <span class="nt">-r</span> /usr/local/share/qbpp/samples ~/qbpp_samples
+<span class="nv">$ </span><span class="nb">cd</span> ~/qbpp_samples
+<span class="nv">$ </span>make
+<span class="nv">$ </span>./nqueen_easy
+</code></pre></div></div>
+
+<p>To upgrade to a new version:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>apt update
+<span class="nv">$ </span><span class="nb">sudo </span>apt <span class="nb">install</span> <span class="nt">--only-upgrade</span> qbpp
+</code></pre></div></div>
+
+<p>To uninstall:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>apt remove qbpp
+</code></pre></div></div>
+
+<h3 id="method-2-install-via-targz">Method 2: Install via tar.gz</h3>
+
+<p>Download the <code class="language-plaintext highlighter-rouge">.tar.gz</code> file of the latest QUBO++ release from the <a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Release</strong></a> page.</p>
+
+<p>Download one of the following files, depending on your Windows PC architecture:</p>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">qbpp_amd64_&lt;version&gt;.tar.gz</code></strong> : For Intel- or AMD-based Windows PCs</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">qbpp_arm64_&lt;version&gt;.tar.gz</code></strong> : For ARM-based Windows PCs (e.g., Copilot+ PCs)</li>
+</ul>
+
+<p>If the file is downloaded to your Windows Downloads folder, extract it as follows:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">tar </span>xf /mnt/c/Users/&lt;user name&gt;/Downloads/qbpp_&lt;<span class="nb">arch</span><span class="o">&gt;</span>_&lt;version&gt;.tar.gz
+</code></pre></div></div>
+
+<p>This creates a directory named <strong><code class="language-plaintext highlighter-rouge">qbpp_&lt;arch&gt;_&lt;version&gt;</code></strong> containing all required files.</p>
+
+<p>It is recommended to create a symbolic link to this directory:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">ln</span> <span class="nt">-s</span> qbpp_&lt;<span class="nb">arch</span><span class="o">&gt;</span>_&lt;version&gt; qbpp
+</code></pre></div></div>
+<p>This creates a symbolic link named <strong><code class="language-plaintext highlighter-rouge">qbpp</code></strong>, which simplifies access to the installation directory.</p>
+
+<h4 id="set-environment-variables">Set environment variables</h4>
+<p>Execute the following commands to set the <strong>environment variables</strong> required to compile and run QUBO++ programs:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">export </span><span class="nv">QBPP_PATH</span><span class="o">=</span><span class="nv">$HOME</span>/qbpp
+<span class="nv">$ </span><span class="nb">export </span><span class="nv">CPLUS_INCLUDE_PATH</span><span class="o">=</span><span class="nv">$QBPP_PATH</span>/include:<span class="nv">$CPLUS_INCLUDE_PATH</span>
+<span class="nv">$ </span><span class="nb">export </span><span class="nv">LIBRARY_PATH</span><span class="o">=</span><span class="nv">$QBPP_PATH</span>/lib:<span class="nv">$LIBRARY_PATH</span>
+<span class="nv">$ </span><span class="nb">export </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="nv">$QBPP_PATH</span>/lib:<span class="nv">$LD_LIBRARY_PATH</span>
+<span class="nv">$ </span><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$QBPP_PATH</span>/bin:<span class="nv">$PATH</span>
+</code></pre></div></div>
+<p>It is recommended to append these commands to the end of the <strong><code class="language-plaintext highlighter-rouge">~/.bashrc</code></strong> file so that they are automatically executed when the WSL shell starts.</p>
+
+<h4 id="compile-and-run-sample-programs">Compile and run sample programs</h4>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cd </span>qbpp/samples
+<span class="nv">$ </span>make
+<span class="nv">$ </span>./nqueen_easy
+</code></pre></div></div>
+
+<h4 id="upgrading-to-a-new-version">Upgrading to a new version</h4>
+<p>Download and extract the new QUBO++ release using <code class="language-plaintext highlighter-rouge">tar</code>, as described above.
+Then update the qbpp symbolic link to point to the new version as follows:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">ln</span> <span class="nt">-sfn</span> qbpp_&lt;<span class="nb">arch</span><span class="o">&gt;</span>_&lt;new version&gt; qbpp
+</code></pre></div></div>
+<p>This command overwrites the existing qbpp symbolic link so that it refers to the newly installed version.</p>
+
+<h2 id="activate-license">Activate license</h2>
+<p>If you have a <strong>QUBO++ license key</strong>, set it using:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">export </span><span class="nv">QBPP_LICENSE_KEY</span><span class="o">=[</span>Your QUBO++ license key]
+</code></pre></div></div>
+<p>It is recommended to append this command to the end of the <strong><code class="language-plaintext highlighter-rouge">~/.bashrc</code></strong> file.</p>
+
+<p>You can then <strong>activate the QUBO++ license</strong> by executing:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>qbpp-license <span class="nt">-a</span>
+</code></pre></div></div>
+<p>If a QUBO++ license key has been set, the corresponding license will be activated.
+Otherwise, an anonymous license will be activated.</p>
+
+<h2 id="execute-abs3-gpu-solver">Execute ABS3 GPU Solver</h2>
+<p>If your system has a <strong>CUDA-enabled GPU</strong>, the ABS3 GPU Solver can be executed from WSL.</p>
+
+<p>To enable GPU acceleration in WSL, install the <strong>NVIDIA GPU driver for Windows</strong> from the following page:</p>
+
+<p>https://www.nvidia.com/Download/index.aspx</p>
+
+<blockquote>
+  <p><strong>NOTE</strong>
+Do not install a Linux GPU driver inside WSL.
+WSL uses the Windows GPU driver via its integration layer.</p>
+</blockquote>
+
+<p>After installing the driver, verify that the GPU is available in WSL by executing:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>nvidia-smi
+</code></pre></div></div>
+<p>If the driver is installed correctly, this command displays information about the installed GPU.
+You can then execute a sample program using the ABS3 GPU Solver as follows:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>./labs_abs3
+</code></pre></div></div>
+
+      <hr style="margin: 2rem 0 1rem 0;">
+<div style="font-size: 0.9em; color: #666;">
+  Last updated: 2026.01.17
+</div>
+    </main>
+  </div>
+</body>
+
+</html>

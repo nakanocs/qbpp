@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Reminder Problem - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Minima テーマの main.css（ハイライト含む） -->
+  <link rel="stylesheet" href="/assets/main.css">
+
+  <!-- 自前のナビ用 CSS -->
+  <link rel="stylesheet" href="/assets/custom.css">
+
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+
+<body>
+
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ -->
+    <nav style="width:max-content; position:sticky; top:1rem; padding:0 1rem 0 0; border-right:1px solid #ddd;">
+      
+      <h2 style="margin-left:0;">QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/"><strong>Introduction</strong></a> </li>
+        <li><a href="/HUBO_QUBO"><strong>HUBO and QUBO</strong></a> </li>
+        <li><a href="/QUICK"><strong>Quick Start</strong></a>
+          <ul style="list-style:none; padding-left:1.2em; margin:0.2em 0 0.2em;">
+            <li><a href="/WSL"><strong>for Windows</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/CASE_STUDIES"><strong>Case Studies</strong></a></li>
+        <li><a href="/DEMOS"><strong>Demos</strong></a></li>
+        <li><a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Release</strong></a></li>
+      </ul>
+      <hr style="margin:1rem 0;">
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/python/"><strong>PyQUBO++ &rarr;</strong></a></li>
+      </ul>
+      
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="remainder-problem">Remainder Problem</h1>
+<p>The following problem can be solved using QUBO++.
+Find the minimum non-negative integer $x$ such that</p>
+
+<ul>
+  <li>the remainder when $x$ is divided by 3 is 2,</li>
+  <li>the remainder when $x$ is divided by 5 is 3, and</li>
+  <li>the remainder when $x$ is divided by 7 is 5.</li>
+</ul>
+
+<p>Since 3, 5, and 7 are pairwise coprime, it is enough to search $x$ within one period:</p>
+
+\[0\leq x \leq 3\times 5\times 7 -1\]
+
+<p>Introduce non-negative integers $d_3$, $d_5$, and $d_7$ (quotients) and rewrite the remainder conditions as linear equalities:</p>
+
+\[\begin{aligned}
+ x - 3d_3 &amp;= 2 \\
+ x - 5d_5 &amp;=3 \\
+ x - 7d_7 &amp;= 5
+\end{aligned}\]
+
+<p>We want to minimize $x$ subject to these constraints.
+From the range $x$ above, we can bound the quotient variables as</p>
+
+\[\begin{aligned}
+ 0&amp;\leq d_3 \leq 5\times 7-1 \\
+ 0&amp;\leq d_5 \leq 3\times 7-1 \\
+ 0&amp;\leq d_7 \leq 3\times 5-1
+\end{aligned}\]
+
+<h2 id="qubo-praogram">QUBO++ praogram</h2>
+<p>The following program finds a solution $x$ for this remainder problem:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#define MAXDEG 2
+#include</span> <span class="cpf">&lt;qbpp/qbpp.hpp&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;qbpp/easy_solver.hpp&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var_int</span><span class="p">(</span><span class="s">"x"</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">3</span> <span class="o">*</span> <span class="mi">5</span> <span class="o">*</span> <span class="mi">7</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">d3</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var_int</span><span class="p">(</span><span class="s">"d3"</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">5</span> <span class="o">*</span> <span class="mi">7</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">d5</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var_int</span><span class="p">(</span><span class="s">"d5"</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">3</span> <span class="o">*</span> <span class="mi">7</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">d7</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var_int</span><span class="p">(</span><span class="s">"d7"</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">3</span> <span class="o">*</span> <span class="mi">5</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">c3</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">d3</span> <span class="o">==</span> <span class="mi">2</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">c5</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">d5</span> <span class="o">==</span> <span class="mi">3</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">c7</span> <span class="o">=</span> <span class="n">x</span> <span class="o">-</span> <span class="mi">7</span> <span class="o">*</span> <span class="n">d7</span> <span class="o">==</span> <span class="mi">5</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1000</span> <span class="o">*</span> <span class="p">(</span><span class="n">c3</span> <span class="o">+</span> <span class="n">c5</span> <span class="o">+</span> <span class="n">c7</span><span class="p">);</span>
+  <span class="n">f</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">easy_solver</span><span class="o">::</span><span class="n">EasySolver</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+  <span class="n">solver</span><span class="p">.</span><span class="n">time_limit</span><span class="p">(</span><span class="mf">1.0</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">sol</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search</span><span class="p">();</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"x = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">" - 3 * "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">d3</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">" = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="o">*</span><span class="n">c3</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">" - 5 * "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">d5</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">" = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="o">*</span><span class="n">c5</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">" - 7 * "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">d7</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">" = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="o">*</span><span class="n">c7</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>The three constraints are represented as <code class="language-plaintext highlighter-rouge">c3</code>, <code class="language-plaintext highlighter-rouge">c5</code>, and <code class="language-plaintext highlighter-rouge">c7</code>.
+Each of them is converted into a QUBO penalty term that becomes 0 when the corresponding equality holds.</p>
+
+<p>We then minimize <code class="language-plaintext highlighter-rouge">x</code> with a large penalty weight (1000) so that satisfying the constraints is prioritized over reducing <code class="language-plaintext highlighter-rouge">x</code>.</p>
+
+<p>Finally, the Easy Solver searches for a low-energy solution of f within the time limit (1.0 second), and the obtained values are printed as follows:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x = 68
+68 - 3 * 22 = 2
+68 - 5 * 13 = 3
+68 - 7 * 9 = 5
+</code></pre></div></div>
+<p>Therefore,</p>
+
+\[\begin{aligned}
+x &amp;\equiv 68 &amp; (\bmod 105)
+\end{aligned}\]
+
+<p>and the minimum solution is $x=68$.</p>
+
+      <hr style="margin: 2rem 0 1rem 0;">
+<div style="font-size: 0.9em; color: #666;">
+  Last updated: 2026.03.05
+</div>
+    </main>
+  </div>
+</body>
+
+</html>

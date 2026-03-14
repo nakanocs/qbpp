@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Basic Operators and Functions - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Minima テーマの main.css（ハイライト含む） -->
+  <link rel="stylesheet" href="/assets/main.css">
+
+  <!-- 自前のナビ用 CSS -->
+  <link rel="stylesheet" href="/assets/custom.css">
+
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+
+<body>
+
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ -->
+    <nav style="width:max-content; position:sticky; top:1rem; padding:0 1rem 0 0; border-right:1px solid #ddd;">
+      
+      <h2 style="margin-left:0;">QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/"><strong>Introduction</strong></a> </li>
+        <li><a href="/HUBO_QUBO"><strong>HUBO and QUBO</strong></a> </li>
+        <li><a href="/QUICK"><strong>Quick Start</strong></a>
+          <ul style="list-style:none; padding-left:1.2em; margin:0.2em 0 0.2em;">
+            <li><a href="/WSL"><strong>for Windows</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/CASE_STUDIES"><strong>Case Studies</strong></a></li>
+        <li><a href="/DEMOS"><strong>Demos</strong></a></li>
+        <li><a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Release</strong></a></li>
+      </ul>
+      <hr style="margin:1rem 0;">
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/python/"><strong>PyQUBO++ &rarr;</strong></a></li>
+      </ul>
+      
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="basic-operators-and-functions">Basic Operators and Functions</h1>
+
+<h2 id="unary-and-binary-operators">Unary and Binary Operators</h2>
+<p>QUBO++ supports the following basic binary operators for constructing expressions (i.e., <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> objects):</p>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">+</code></strong>: Returns the sum of the operands.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">-</code></strong>: Returns the difference of the operands.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">*</code></strong>: Returns the product of the operands.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">/</code></strong>: Returns the quotient of the operands.
+The divisor must be an integer, and both the constant term and all coefficients of the dividend must be divisible by the divisor.</li>
+  <li>unary <strong><code class="language-plaintext highlighter-rouge">-</code></strong>: Returns the negation of the operand.</li>
+</ul>
+
+<p>The precedence of these operators follows the standard C++ operator precedence rules.</p>
+
+<p>The following program demonstrates how to construct expressions using these operators:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#define MAXDEG 2
+#include</span> <span class="cpf">&lt;qbpp/qbpp.hpp&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">y</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"y"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="mi">6</span> <span class="o">*</span> <span class="o">-</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">g</span> <span class="o">=</span> <span class="n">f</span> <span class="o">/</span> <span class="mi">3</span><span class="p">;</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"g = "</span> <span class="o">&lt;&lt;</span> <span class="n">g</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+<p>This program produces the following output:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>f = 6 -6*x*y +6*x -6*y
+g = 2 -2*x*y +2*x -2*y
+</code></pre></div></div>
+
+<h2 id="compound-operators">Compound operators</h2>
+<p>Also the following compound operators to update qbpp::Expr objects are supported.</p>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">+=</code></strong> : Adds the righthand size operand to the lefthand side.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">-=</code></strong> : Subtract the righthand size operand from the lefthand side.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">*=</code></strong> : Multiply the righthand side operand to the lefthand side.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">/=</code></strong> : Divides the lefthand side operand by the righthand side. The righthand side operand must be an integer and the constant term integer and all coefficiets of the lefthand side must be divisible.</li>
+</ul>
+
+<p>The following program demonstrates how to construct expressions using these compound operators:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#define MAXDEG 2
+#include</span> <span class="cpf">&lt;qbpp/qbpp.hpp&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">y</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"y"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">4</span><span class="p">;</span>
+
+  <span class="n">f</span> <span class="o">+=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">y</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  
+  <span class="n">f</span> <span class="o">-=</span> <span class="mi">12</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  
+  <span class="n">f</span> <span class="o">*=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">y</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  
+  <span class="n">f</span> <span class="o">/=</span> <span class="mi">2</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>This program produces the following output:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>f = 4 +6*x +3*y
+f = -8 +6*x +3*y
+f = 12*x*y +6*y*y -16*y
+f = 6*x*y +3*y*y -8*y
+</code></pre></div></div>
+
+<h2 id="square-functions">Square functions</h2>
+<p>QUBO++ provides both a global function <strong><code class="language-plaintext highlighter-rouge">qbpp::sqr()</code></strong> and a member function <strong><code class="language-plaintext highlighter-rouge">sqr()</code></strong> of the <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> class to compute the square of an expression.</p>
+
+<p>In the following program, for a <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> object <code class="language-plaintext highlighter-rouge">f</code>, the global function <strong><code class="language-plaintext highlighter-rouge">qbpp::sqr(f)</code></strong> returns a new <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> object representing the square of <code class="language-plaintext highlighter-rouge">f</code>,
+whereas the member function <strong><code class="language-plaintext highlighter-rouge">f.sqr()</code></strong> updates <code class="language-plaintext highlighter-rouge">f</code> in place by replacing it with its square.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#define MAXDEG 2
+#include</span> <span class="cpf">&lt;qbpp/qbpp.hpp&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f = "</span> <span class="o">&lt;&lt;</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sqr</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+  <span class="n">f</span><span class="p">.</span><span class="n">sqr</span><span class="p">();</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>This program produces the following output:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>f = 1 +x*x +x +x
+f = 1 +x
+f = 1 +x*x +x +x
+</code></pre></div></div>
+
+<h2 id="simplify-functions">Simplify functions</h2>
+<p>After operators or functions are applied to <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> objects, expressions are automatically expanded.
+To sort terms and simplify the resulting expressions, simplify functions must be explicitly called.</p>
+
+<p>QUBO++ provides the following three <strong>global simplify functions</strong>:</p>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">qbpp::simplify()</code></strong>:
+Returns a simplified expression by merging coefficients of identical terms.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">qbpp::simplify_as_binary()</code></strong>:
+Returns a simplified expression under the assumption that all variables take binary values $0/1$
+i.e., the identity $x^2=x$ holds.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">qbpp::simplify_as_spin()</code></strong>:
+Returns a simplified expression under the assumption that all variables take spin values $−1/+1$, i.e., the identity $x^2=1$ holds.</li>
+</ul>
+
+<p>The following program demonstrates the behavior of these simplify functions:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#define MAXDEG 2
+#include</span> <span class="cpf">&lt;qbpp/qbpp.hpp&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sqr</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"simplified(f) = "</span> <span class="o">&lt;&lt;</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">simplify</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"simplified_as_binary(f) = "</span> <span class="o">&lt;&lt;</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">simplify_as_binary</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"simplified_as_spin(f) = "</span> <span class="o">&lt;&lt;</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">simplify_as_spin</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>This program produces the following output:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>f = 1 +x*x -x -x
+simplified(f) = 1 -2*x +x*x
+simplified_as_binary(f) = 1 -x
+simplified_as_spin(f) = 2 -2*x
+</code></pre></div></div>
+
+<p><strong>Member function</strong> versions of these simplify functions are also provided for <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> objects, and they update the object in place with the simplified result.</p>
+
+<p>For example, the following program updates <code class="language-plaintext highlighter-rouge">f</code> by applying <strong><code class="language-plaintext highlighter-rouge">simplify()</code></strong>:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#define MAXDEG 2
+#include</span> <span class="cpf">&lt;qbpp/qbpp.hpp&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sqr</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+  
+  <span class="n">f</span><span class="p">.</span><span class="n">simplify</span><span class="p">();</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>This program prints the following output:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>f = 1 -2*x +x*x
+</code></pre></div></div>
+
+      <hr style="margin: 2rem 0 1rem 0;">
+<div style="font-size: 0.9em; color: #666;">
+  Last updated: 2026.03.05
+</div>
+    </main>
+  </div>
+</body>
+
+</html>

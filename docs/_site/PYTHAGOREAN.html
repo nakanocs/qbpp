@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Pythagorean Triples - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Minima テーマの main.css（ハイライト含む） -->
+  <link rel="stylesheet" href="/assets/main.css">
+
+  <!-- 自前のナビ用 CSS -->
+  <link rel="stylesheet" href="/assets/custom.css">
+
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+
+<body>
+
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ（全ページ共通） -->
+    <nav style="min-width:220px; position:sticky; top:1rem; padding-right:1rem; border-right:1px solid #ddd;">
+      <h2>QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0;">
+        <li><a href="/"><strong>Introduction</strong></a> </li>
+        <li><a href="/HUBO_QUBO"><strong>HUBO and QUBO</strong></a> </li>
+        <li><a href="/QUICK"><strong>Quick Start</strong></a> </li>
+        <li><a href="/WSL"><strong>Quick Start for Windows</strong></a> </li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/CASE_STUDIES"><strong>Case Studies</strong></a></li>
+        <li><a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Release</strong></a></li>
+      </ul>
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="pythagorean-triples">Pythagorean Triples</h1>
+
+<p>Three integers $x$, $y$, and $z$ are <strong>Pythagorean triples</strong> if they satisfy</p>
+
+\[\begin{aligned}
+x^2+y^2&amp;=z^2
+\end{aligned}\]
+
+<p>To avoid duplicates, we assume $x&lt;y$.</p>
+
+<h2 id="qubo-program-for-listing-pythagorean-triples">QUBO++ program for listing Pythagorean Triples</h2>
+<p>The following program lists Pythagorean triples with $x\leq 16$, $y\leq 16$, and $z\leq 16$:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
+#include</span> <span class="cpf">"qbpp_easy_solver.hpp"</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var_int</span><span class="p">(</span><span class="s">"x"</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">16</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var_int</span><span class="p">(</span><span class="s">"y"</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">16</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">z</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var_int</span><span class="p">(</span><span class="s">"z"</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">16</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">y</span> <span class="o">-</span> <span class="n">z</span> <span class="o">*</span> <span class="n">z</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">c</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">y</span> <span class="o">-</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="o">+</span><span class="n">qbpp</span><span class="o">::</span><span class="n">inf</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">g</span> <span class="o">=</span> <span class="n">f</span> <span class="o">+</span> <span class="n">c</span><span class="p">;</span>
+  <span class="n">g</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">easy_solver</span><span class="o">::</span><span class="n">EasySolver</span><span class="p">(</span><span class="n">g</span><span class="p">);</span>
+  <span class="n">solver</span><span class="p">.</span><span class="n">time_limit</span><span class="p">(</span><span class="mf">10.0</span><span class="p">);</span>
+  <span class="n">solver</span><span class="p">.</span><span class="n">enable_best_energy_sols</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">sols</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search</span><span class="p">();</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">sol</span> <span class="o">:</span> <span class="n">sols</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"x="</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">", y="</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">", z="</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+              <span class="o">&lt;&lt;</span> <span class="s">", *f="</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">", *c="</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="o">*</span><span class="n">c</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>In this program, we define integer variables <code class="language-plaintext highlighter-rouge">x</code>, <code class="language-plaintext highlighter-rouge">y</code>, and <code class="language-plaintext highlighter-rouge">z</code> with ranges from 1 to 16.
+We then create two constraint expressions:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">f</code> for $x^2+y^2-z^2=0$, and</li>
+  <li><code class="language-plaintext highlighter-rouge">c</code> for $x+1\leq y$.</li>
+</ul>
+
+<p>They are combined into <code class="language-plaintext highlighter-rouge">g</code>.
+The expression <code class="language-plaintext highlighter-rouge">g</code> attains its minimum value 0 when all constraints are satisfied.</p>
+
+<p>An Easy Solver object <code class="language-plaintext highlighter-rouge">solver</code> is created for <code class="language-plaintext highlighter-rouge">g</code> and configured with the following options:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">time_limit(10.0)</code>: Terminates the search after 10 seconds.</li>
+  <li><code class="language-plaintext highlighter-rouge">enable_best_energy_sols(10)</code>: Keeps up to 10 solutions with the best (lowest) energy.</li>
+</ul>
+
+<p>The call to <code class="language-plaintext highlighter-rouge">search()</code> returns a <code class="language-plaintext highlighter-rouge">qbpp::easy_solver::Sols</code> object named <code class="language-plaintext highlighter-rouge">sols</code>, which stores the best solutions.
+Since <code class="language-plaintext highlighter-rouge">qbpp::easy_solver::Sols</code> provides iterator access to the stored best-energy solutions (<code class="language-plaintext highlighter-rouge">begin()</code>, <code class="language-plaintext highlighter-rouge">end()</code>, <code class="language-plaintext highlighter-rouge">cbegin()</code>, and <code class="language-plaintext highlighter-rouge">cend()</code>), they can be printed using a range-based for loop.</p>
+
+<p>This program produces output like the following:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x=3, y=4, z=5, *f=0, *c=1
+x=6, y=8, z=10, *f=0, *c=2
+x=9, y=12, z=15, *f=0, *c=3
+x=5, y=12, z=13, *f=0, *c=7
+</code></pre></div></div>
+
+      <hr style="margin: 2rem 0 1rem 0;">
+<div style="font-size: 0.9em; color: #666;">
+  Last updated: 2026.01.03
+</div>
+    </main>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>HUBO and QUBO - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Minima テーマの main.css（ハイライト含む） -->
+  <link rel="stylesheet" href="/assets/main.css">
+
+  <!-- 自前のナビ用 CSS -->
+  <link rel="stylesheet" href="/assets/custom.css">
+
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+
+<body>
+
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ（全ページ共通） -->
+    <nav style="min-width:220px; position:sticky; top:1rem; padding-right:1rem; border-right:1px solid #ddd;">
+      <h2>QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0;">
+        <li><a href="/"><strong>Introduction</strong></a> </li>
+        <li><a href="/HUBO_QUBO"><strong>HUBO and QUBO</strong></a> </li>
+        <li><a href="/QUICK"><strong>Quick Start</strong></a> </li>
+        <li><a href="/WSL"><strong>Quick Start for Windows</strong></a> </li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/CASE_STUDIES"><strong>Case Studies</strong></a></li>
+        <li><a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Release</strong></a></li>
+      </ul>
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="hubo-and-qubo">HUBO and QUBO</h1>
+<p>A <strong>High-Order Unconstrained Binary Optimization (HUBO)</strong> problem is defined by a polynomial over binary variables.
+The goal is to find an assignment of binary values ${0,1}$ to all variables that minimizes the value of the polynomial.</p>
+
+<p>The following polynomial is an example of a HUBO instance:</p>
+
+\[\begin{aligned}
+f(a,b,c,d) &amp;=1 -2a +45c +8d +4ab -13ac +2ad -10bc -12bd +2abc +5acd
+\end{aligned}\]
+
+<p>This polynomial attains its minimum value of $-3$ when $(a,b,c,d) = (0,1,0,1)$.
+Finding such an assignment constitutes the HUBO problem for this polynomial.</p>
+
+<p>A <strong>Quadratic Unconstrained Binary Optimization (QUBO)</strong> problem is a special case of HUBO in which the polynomial is restricted to degree at most two.</p>
+
+<p>Usually, optimization problems consist of an objective function and a set of constraints, both expressed as functions of variables.
+They aim to find an assignment of variable values that minimizes (or maximizes) the objective function while satisfying all constraints.</p>
+
+<p>In contrast, HUBO and QUBO problems consist only of an objective function and have no explicit constraints.
+This simple problem structure enables solvers to efficiently explore solutions by leveraging highly accelerated SIMD-style parallelism.
+Furthermore, because constraints can be encoded into the objective function using penalty terms, many constrained optimization problems can be reformulated as equivalent HUBO or QUBO problems.</p>
+
+<p><strong>QUBO++</strong> is a <strong>model-and-solve tool</strong> implemented in C++.
+It allows users to formulate combinatorial optimization problems as HUBO or QUBO polynomials and then solve them.
+QUBO++ also includes three built-in solvers.</p>
+
+      <hr style="margin: 2rem 0 1rem 0;">
+<div style="font-size: 0.9em; color: #666;">
+  Last updated: 2026.01.14
+</div>
+    </main>
+  </div>
+</body>
+
+</html>

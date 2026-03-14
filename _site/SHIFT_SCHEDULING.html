@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Shift Scheduling - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Minima テーマの main.css（ハイライト含む） -->
+  <link rel="stylesheet" href="/assets/main.css">
+
+  <!-- 自前のナビ用 CSS -->
+  <link rel="stylesheet" href="/assets/custom.css">
+
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+
+<body>
+
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ -->
+    <nav style="width:max-content; position:sticky; top:1rem; padding:0 1rem 0 0; border-right:1px solid #ddd;">
+      
+      <h2 style="margin-left:0;">QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/"><strong>Introduction</strong></a> </li>
+        <li><a href="/HUBO_QUBO"><strong>HUBO and QUBO</strong></a> </li>
+        <li><a href="/QUICK"><strong>Quick Start</strong></a>
+          <ul style="list-style:none; padding-left:1.2em; margin:0.2em 0 0.2em;">
+            <li><a href="/WSL"><strong>for Windows</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/CASE_STUDIES"><strong>Case Studies</strong></a></li>
+        <li><a href="/DEMOS"><strong>Demos</strong></a></li>
+        <li><a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Release</strong></a></li>
+      </ul>
+      <hr style="margin:1rem 0;">
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/python/"><strong>PyQUBO++ &rarr;</strong></a></li>
+      </ul>
+      
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="shift-scheduling-problem">Shift Scheduling Problem</h1>
+<p>Consider the following <strong>shift scheduling problem</strong>, which aims to find a schedule that minimizes the total worker cost.</p>
+
+<ul>
+  <li>There are 6 workers and a planning horizon of 31 days, from day 1 to day 31.
+For simplicity, we assume that all workers are off on day 0 and day 32.</li>
+  <li>Exactly 4 workers must be scheduled on each day from day 1 to day 31.</li>
+  <li>The following constraints must be satisfied for each worker:
+    <ul>
+      <li>works for either 20 or 21 days,</li>
+      <li>works no more than 6 consecutive days,</li>
+      <li>works no fewer than 3 consecutive days,</li>
+      <li>has no isolated day off; days off must be consecutive.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="qubo-formulation-for-the-shift-scheduling-problem">QUBO formulation for the shift scheduling problem</h2>
+<p>The QUBO formulation uses a $6\times 33$ matrix of binary variables $X=(x_{i,j})$ ($0\leq i\leq 5, 0\leq j\leq 32$) where worker $i$ works on day $j$ if and only if $x_{i,j}=1$.</p>
+
+<p>Since all workers are off on day 0 and day 32, we fix</p>
+
+\[\begin{aligned}
+x_{i,0}=x_{i,32}=0 &amp; &amp;(0\leq i\leq 5).
+\end{aligned}\]
+
+<p>The constraints are formulated as follows.</p>
+
+<h3 id="daily-staffing-constraint">Daily staffing constraint</h3>
+<p>Exactly 4 workers must be scheduled on each day:</p>
+
+\[\begin{aligned}
+\sum_{i=0}^{5} x_{i,j} = 4&amp; &amp;(1\leq j\leq 31)
+\end{aligned}\]
+
+<h3 id="total-working-days-constraint">Total working days constraint</h3>
+<p>Each worker must work for either 20 or 21 days:</p>
+
+\[\begin{aligned}
+20\leq \sum_{j=0}^{32} x_{i,j} \leq 21&amp; &amp;(0\leq i\leq 5)
+\end{aligned}\]
+
+<h3 id="maximum-consecutive-working-days-constraint">Maximum consecutive working days constraint</h3>
+<p>No worker may work for more than 6 consecutive days:</p>
+
+\[\begin{aligned}
+ x_{i,j}x_{i,j+1}x_{i,j+2}x_{i,j+3}x_{i,j+4}x_{i,j+5}x_{i,j+6} = 0 &amp; &amp;(0\leq i\leq 5, 0\leq j\leq 26)\\
+\end{aligned}\]
+
+<h3 id="minimum-consecutive-working-days-constraint">Minimum consecutive working days constraint</h3>
+<p>Each working period must consist of at least 3 consecutive working days:</p>
+
+\[\begin{aligned}
+ (1-x_{i,j})x_{i,j+1}x_{i,j+2}(1-x_{i,j+3}) = 0 &amp; &amp;(0\leq i\leq 5, 0\leq j\leq 29)\\
+(1-x_{i,j})x_{i,j+1}(1-x_{i,j+2}) = 0 &amp; &amp; (0\leq i\leq 5, 0\leq j \leq 30)
+\end{aligned}\]
+
+<h3 id="no-isolated-day-off-constraint">No isolated day off constraint</h3>
+<p>No worker may have a single day off between two working days:</p>
+
+\[\begin{aligned}
+ x_{i,j}(1-x_{i,j+1})x_{i,j+2} = 0 &amp; &amp;(0\leq i\leq 5, 0\leq j\leq 30)\\
+\end{aligned}\]
+
+<h3 id="total-worker-cost">Total worker cost</h3>
+<p>Let $C=(c_i)$ be a cost vector, where $c_i$ denotes the daily cost of assigning worker $i$.
+The total worker cost is formulated as:</p>
+
+\[\begin{aligned}
+\sum_{i=0}^5\sum_{j=0}^{32} c_i x_{i,j}
+\end{aligned}\]
+
+<p>This objective function is minimized subject to the constraints described above.</p>
+
+<h2 id="qubo-program-for-the-shift-scheduling">QUBO++ program for the shift scheduling</h2>
+<p>The shift scheduling problem defined above can be formulated and solved using QUBO++ as follows:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#define MAXDEG 0
+#include</span> <span class="cpf">&lt;qbpp/qbpp.hpp&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;qbpp/easy_solver.hpp&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">const</span> <span class="kt">size_t</span> <span class="n">days</span> <span class="o">=</span> <span class="mi">31</span><span class="p">;</span>
+  <span class="k">const</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">Vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">worker_cost</span> <span class="o">=</span> <span class="p">{</span><span class="mi">13</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">10</span><span class="p">};</span>
+  <span class="k">const</span> <span class="kt">size_t</span> <span class="n">workers</span> <span class="o">=</span> <span class="n">worker_cost</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">,</span> <span class="n">workers</span><span class="p">,</span> <span class="n">days</span> <span class="o">+</span> <span class="mi">2</span><span class="p">);</span>
+
+  <span class="k">auto</span> <span class="n">workers_each_day</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">vector_sum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">each_day_4_workers</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">toExpr</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="n">days</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">each_day_4_workers</span> <span class="o">+=</span> <span class="n">workers_each_day</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="mi">4</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">auto</span> <span class="n">workers_working_days</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">vector_sum</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">work_20_21_days</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sum</span><span class="p">(</span><span class="mi">20</span> <span class="o">&lt;=</span> <span class="n">workers_working_days</span> <span class="o">&lt;=</span> <span class="mi">21</span><span class="p">);</span>
+
+  <span class="k">auto</span> <span class="n">no_more_than_6_consecutive_working_days</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">toExpr</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">w</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">w</span> <span class="o">&lt;</span> <span class="n">workers</span><span class="p">;</span> <span class="o">++</span><span class="n">w</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="n">days</span> <span class="o">-</span> <span class="mi">5</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">no_more_than_6_consecutive_working_days</span> <span class="o">+=</span>
+          <span class="n">x</span><span class="p">[</span><span class="n">w</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">w</span><span class="p">][</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">w</span><span class="p">][</span><span class="n">j</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">w</span><span class="p">][</span><span class="n">j</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">w</span><span class="p">][</span><span class="n">j</span> <span class="o">+</span> <span class="mi">4</span><span class="p">]</span> <span class="o">*</span>
+          <span class="n">x</span><span class="p">[</span><span class="n">w</span><span class="p">][</span><span class="n">j</span> <span class="o">+</span> <span class="mi">5</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">w</span><span class="p">][</span><span class="n">j</span> <span class="o">+</span> <span class="mi">6</span><span class="p">];</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">auto</span> <span class="n">no_less_than_3_consecutive_working_days</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">toExpr</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">w</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">w</span> <span class="o">&lt;</span> <span class="n">workers</span><span class="p">;</span> <span class="o">++</span><span class="n">w</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">days</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">no_less_than_3_consecutive_working_days</span> <span class="o">+=</span>
+          <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">w</span><span class="p">][</span><span class="n">j</span><span class="p">])</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">w</span><span class="p">][</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">w</span><span class="p">][</span><span class="n">j</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">w</span><span class="p">][</span><span class="n">j</span> <span class="o">+</span> <span class="mi">3</span><span class="p">]);</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">days</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">no_less_than_3_consecutive_working_days</span> <span class="o">+=</span>
+          <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">w</span><span class="p">][</span><span class="n">j</span><span class="p">])</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">w</span><span class="p">][</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">w</span><span class="p">][</span><span class="n">j</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">auto</span> <span class="n">no_single_day_off</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">toExpr</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">w</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">w</span> <span class="o">&lt;</span> <span class="n">workers</span><span class="p">;</span> <span class="o">++</span><span class="n">w</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="n">days</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">no_single_day_off</span> <span class="o">+=</span> <span class="n">x</span><span class="p">[</span><span class="n">w</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">w</span><span class="p">][</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">w</span><span class="p">][</span><span class="n">j</span> <span class="o">+</span> <span class="mi">2</span><span class="p">];</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">auto</span> <span class="n">total_worker_cost</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sum</span><span class="p">(</span><span class="n">worker_cost</span> <span class="o">*</span> <span class="n">workers_working_days</span><span class="p">);</span>
+
+  <span class="k">auto</span> <span class="n">constraints</span> <span class="o">=</span> <span class="n">work_20_21_days</span> <span class="o">+</span> <span class="n">no_less_than_3_consecutive_working_days</span> <span class="o">+</span>
+                     <span class="n">no_more_than_6_consecutive_working_days</span> <span class="o">+</span>
+                     <span class="n">no_single_day_off</span> <span class="o">+</span> <span class="n">each_day_4_workers</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">total_worker_cost</span> <span class="o">+</span> <span class="mi">10000</span> <span class="o">*</span> <span class="n">constraints</span><span class="p">;</span>
+
+  <span class="n">qbpp</span><span class="o">::</span><span class="n">MapList</span> <span class="n">ml</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">workers</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">ml</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">});</span>
+    <span class="n">ml</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">days</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">});</span>
+  <span class="p">}</span>
+  <span class="n">f</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+
+  <span class="k">auto</span> <span class="n">g</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">replace</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ml</span><span class="p">);</span>
+  <span class="n">g</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+  <span class="n">workers_working_days</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="n">ml</span><span class="p">);</span>
+
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">easy_solver</span><span class="o">::</span><span class="n">EasySolver</span><span class="p">(</span><span class="n">g</span><span class="p">);</span>
+  <span class="n">solver</span><span class="p">.</span><span class="n">time_limit</span><span class="p">(</span><span class="mf">5.0</span><span class="p">);</span>
+  <span class="n">solver</span><span class="p">.</span><span class="n">target_energy</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">sol</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search</span><span class="p">();</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">workers</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Worker "</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="s">": "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">workers_working_days</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+              <span class="o">&lt;&lt;</span> <span class="s">" days worked: "</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="n">days</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]);</span>
+    <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Workers each day        : "</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">d</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">d</span> <span class="o">&lt;=</span> <span class="n">days</span><span class="p">;</span> <span class="o">++</span><span class="n">d</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">workers_each_day</span><span class="p">[</span><span class="n">d</span><span class="p">]);</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+  <span class="k">auto</span> <span class="n">sol_f</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">Sol</span><span class="p">(</span><span class="n">f</span><span class="p">).</span><span class="n">set</span><span class="p">(</span><span class="n">ml</span><span class="p">).</span><span class="n">set</span><span class="p">(</span><span class="n">sol</span><span class="p">);</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Total worker cost: "</span> <span class="o">&lt;&lt;</span> <span class="n">sol_f</span><span class="p">(</span><span class="n">total_worker_cost</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Constraints violations: "</span> <span class="o">&lt;&lt;</span> <span class="n">sol_f</span><span class="p">(</span><span class="n">constraints</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>In this program, the variables and expressions are defined as follows:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">x</code>: A $6\times 33$ matrix of binary variables,</li>
+  <li><code class="language-plaintext highlighter-rouge">workers_each_day</code>: A vector containing the column-wise sums of <code class="language-plaintext highlighter-rouge">x</code>, representing the number of workers assigned to each day.</li>
+  <li><code class="language-plaintext highlighter-rouge">each_day_4_workers</code>: A constraint expression that attains a minimum value of 0 if and only if exactly four workers are assigned to each day.</li>
+  <li><code class="language-plaintext highlighter-rouge">workers_working_days</code>: A vector of row-wise sums of <code class="language-plaintext highlighter-rouge">x</code>, representing the total number of working days for each worker.</li>
+  <li><code class="language-plaintext highlighter-rouge">work_20_21_days</code>: A constraint expression that attains a minimum value of 0 if and only if each worker works for either 20 or 21 days.</li>
+  <li><code class="language-plaintext highlighter-rouge">no_more_than_6_consecutive_working_days</code>:  A constraint expression that attains a minimum value of 0 if and only if no worker works for 7 or more consecutive days.</li>
+  <li><code class="language-plaintext highlighter-rouge">no_less_than_3_consecutive_working_days</code>: A constraint expression that attains a minimum value of 0 if and only if every working period consists of at least 3 consecutive working days.</li>
+  <li><code class="language-plaintext highlighter-rouge">no_single_day_off</code>: A constraint expression that attains a minimum value of 0 if and only if no worker has a single day off between two working days.</li>
+  <li><code class="language-plaintext highlighter-rouge">constraints</code>: The sum of all constraint expressions.</li>
+  <li><code class="language-plaintext highlighter-rouge">total_worker_cost</code>: An expression representing the total worker cost.</li>
+</ul>
+
+<h3 id="qubo-construction-and-solution">QUBO construction and solution</h3>
+<p>By summing <code class="language-plaintext highlighter-rouge">total_worker_cost</code> and <code class="language-plaintext highlighter-rouge">constraints</code> with a penalty factor of 10000,
+we obtain an expression <code class="language-plaintext highlighter-rouge">f</code>, which represents a QUBO formulation of the shift scheduling problem.</p>
+
+<p>A <code class="language-plaintext highlighter-rouge">qbpp::MapList</code> object <code class="language-plaintext highlighter-rouge">ml</code> is used to fix the values of the variables corresponding to day 0 and day 32.
+Applying the <code class="language-plaintext highlighter-rouge">qbpp::replace()</code> function to <code class="language-plaintext highlighter-rouge">f</code> with <code class="language-plaintext highlighter-rouge">ml</code> yields a new expression <code class="language-plaintext highlighter-rouge">g</code>.</p>
+
+<p>The Easy Solver is then applied to <code class="language-plaintext highlighter-rouge">g</code>, and the resulting solution is stored in <code class="language-plaintext highlighter-rouge">sol</code>.
+The obtained solution is as follows:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Worker 0: 20 days worked: 0001111001110011111001111001111
+Worker 1: 20 days worked: 1111001111110001111110011110000
+Worker 2: 21 days worked: 0000111100111110011111100111111
+Worker 3: 21 days worked: 1111110011111100111000111111000
+Worker 4: 21 days worked: 1111100111001111000111000111111
+Worker 5: 21 days worked: 1110011110001111100111111000111
+Workers each day        : 4444444444444444444444444444444
+Total worker cost: 1465
+Constraints violations: 0
+</code></pre></div></div>
+<p>We observe that a feasible shift schedule with a total worker cost of <code class="language-plaintext highlighter-rouge">1465</code> is obtained, and all constraints are satisfied.</p>
+
+      <hr style="margin: 2rem 0 1rem 0;">
+<div style="font-size: 0.9em; color: #666;">
+  Last updated: 2026.03.05
+</div>
+    </main>
+  </div>
+</body>
+
+</html>

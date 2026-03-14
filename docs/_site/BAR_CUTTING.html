@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Bar Cutting Problem - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Minima テーマの main.css（ハイライト含む） -->
+  <link rel="stylesheet" href="/assets/main.css">
+
+  <!-- 自前のナビ用 CSS -->
+  <link rel="stylesheet" href="/assets/custom.css">
+
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+
+<body>
+
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ（全ページ共通） -->
+    <nav style="min-width:220px; position:sticky; top:1rem; padding-right:1rem; border-right:1px solid #ddd;">
+      <h2>QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0;">
+        <li><a href="/"><strong>Introduction</strong></a> </li>
+        <li><a href="/HUBO_QUBO"><strong>HUBO and QUBO</strong></a> </li>
+        <li><a href="/QUICK"><strong>Quick Start</strong></a> </li>
+        <li><a href="/WSL"><strong>Quick Start for Windows</strong></a> </li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/CASE_STUDIES"><strong>Case Studies</strong></a></li>
+        <li><a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Release</strong></a></li>
+      </ul>
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="bar-cutting-problem">Bar Cutting Problem</h1>
+<p>Suppose that we are given $M$ identical bars of fixed length $L$, and a set of $N$ orders specified by pairs $(l_j,c_j)$
+($0\leq j\leq N−1$), where $l_j$ is the required length and $c_j$ is the required quantity of order $j$.
+The <strong>bar cutting problem</strong> aims to determine how the $M$ bars can be cut to satisfy all orders.</p>
+
+<p>In general, the bar cutting problem is formulated as a minimization problem that seeks to minimize the number of used bars.
+For simplicity, in this example we consider the feasibility problem of determining whether the $M$ bars can fulfill all $N$ orders.</p>
+
+<p>Let $x_{i,j}$ ($0\leq i\leq M-1, 0\leq j\leq N-1$) denote the number of pieces of order $j$ cut from bar $i$.
+The following constraints must be satisfied.</p>
+
+<h3 id="order-constraint">Order Constraint:</h3>
+<p>For each order $j$, the total number of pieces assigned across all bars must equal $c_j$:</p>
+
+\[\begin{aligned}
+ \sum_{i=0}^{M-1}x_{i,j} &amp;= c_j &amp; &amp;(0\leq j\leq N-1) 
+\end{aligned}\]
+
+<h3 id="bar-constraint">Bar Constraint</h3>
+<p>For each bar $i$, the total length of the assigned pieces must not exceed $L$:</p>
+
+\[\begin{aligned}
+ \sum_{j=0}^{N-1}l_jx_{i,j} &amp;\leq  L &amp; &amp;(0\leq i\leq M-1) 
+\end{aligned}\]
+
+<h2 id="qubo-program">QUBO++ program</h2>
+<p>The following QUBO++ program finds a feasible cutting plan using 
+$M=6$ bars of length $L=60$ and the following $N=4$ orders:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Order $j$</th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Length $l_j$</td>
+      <td>13</td>
+      <td>23</td>
+      <td>8</td>
+      <td>11</td>
+    </tr>
+    <tr>
+      <td>Quantity $c_j$</td>
+      <td>10</td>
+      <td>4</td>
+      <td>8</td>
+      <td>6</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The QUBO++ program for this bar cutting problem is as follows:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
+#include</span> <span class="cpf">"qbpp_easy_solver.hpp"</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">const</span> <span class="kt">int</span> <span class="n">L</span> <span class="o">=</span> <span class="mi">60</span><span class="p">;</span>
+  <span class="k">const</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">Vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">l</span> <span class="o">=</span> <span class="p">{</span><span class="mi">13</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">11</span><span class="p">};</span>
+  <span class="k">const</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">Vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">c</span> <span class="o">=</span> <span class="p">{</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">};</span>
+  <span class="k">const</span> <span class="kt">size_t</span> <span class="n">N</span> <span class="o">=</span> <span class="n">l</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+  <span class="k">const</span> <span class="kt">size_t</span> <span class="n">M</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+
+  <span class="n">qbpp</span><span class="o">::</span><span class="n">Vector</span><span class="o">&lt;</span><span class="n">qbpp</span><span class="o">::</span><span class="n">Vector</span><span class="o">&lt;</span><span class="n">qbpp</span><span class="o">::</span><span class="n">VarInt</span><span class="o">&gt;&gt;</span> <span class="n">x</span><span class="p">(</span><span class="n">M</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">M</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">push_back</span><span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var_int</span><span class="p">(</span><span class="s">"x["</span> <span class="o">+</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">+</span> <span class="s">"]["</span> <span class="o">+</span>
+                                        <span class="n">qbpp</span><span class="o">::</span><span class="n">str</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="o">+</span> <span class="s">"]"</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">c</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">auto</span> <span class="n">order_fulfilled_count</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">vector_sum</span><span class="p">(</span><span class="n">qbpp</span><span class="o">::</span><span class="n">transpose</span><span class="p">(</span><span class="n">x</span><span class="p">));</span>
+  <span class="k">auto</span> <span class="n">order_constraint</span> <span class="o">=</span> <span class="n">order_fulfilled_count</span> <span class="o">-</span> <span class="n">c</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span>
+
+  <span class="k">auto</span> <span class="n">bar_length_used</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">expr</span><span class="p">(</span><span class="n">M</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">M</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">bar_length_used</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sum</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">l</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="k">auto</span> <span class="n">bar_constraint</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">bar_length_used</span> <span class="o">&lt;=</span> <span class="n">L</span><span class="p">;</span>
+
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sum</span><span class="p">(</span><span class="n">order_constraint</span><span class="p">)</span> <span class="o">+</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sum</span><span class="p">(</span><span class="n">bar_constraint</span><span class="p">);</span>
+  <span class="n">f</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">easy_solver</span><span class="o">::</span><span class="n">EasySolver</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+  <span class="n">solver</span><span class="p">.</span><span class="n">time_limit</span><span class="p">(</span><span class="mf">10.0</span><span class="p">);</span>
+  <span class="n">solver</span><span class="p">.</span><span class="n">target_energy</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">sol</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search</span><span class="p">();</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">M</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Bar "</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="s">":  "</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">])</span> <span class="o">&lt;&lt;</span> <span class="s">"  "</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" used = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">bar_length_used</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+              <span class="o">&lt;&lt;</span> <span class="s">", waste = "</span> <span class="o">&lt;&lt;</span> <span class="n">L</span> <span class="o">-</span> <span class="n">sol</span><span class="p">(</span><span class="n">bar_length_used</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Order "</span> <span class="o">&lt;&lt;</span> <span class="n">j</span>
+              <span class="o">&lt;&lt;</span> <span class="s">" fulfilled = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">order_fulfilled_count</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+              <span class="o">&lt;&lt;</span> <span class="s">", required = "</span> <span class="o">&lt;&lt;</span> <span class="n">c</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>The program uses an $M×N$ matrix <code class="language-plaintext highlighter-rouge">x</code> of nonnegative integer variables, where <code class="language-plaintext highlighter-rouge">x[i][j]</code> corresponds to 
+$x_{i,j}$, i.e., the number of pieces of order $j$ cut from bar $i$.
+We implement <code class="language-plaintext highlighter-rouge">x</code> as a nested <code class="language-plaintext highlighter-rouge">qbpp::Vector</code> of <code class="language-plaintext highlighter-rouge">qbpp::VarInt</code> objects, and each variable is bounded by 
+$0\leq x_{i,j} \leq c_j$.</p>
+
+<p>The constraints are defined as follows:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">order_fulfilled_count</code>: a vector of $N$ expressions where <code class="language-plaintext highlighter-rouge">order_fulfilled_count[j]</code> represents the total number of pieces produced for order $j$.</li>
+  <li><code class="language-plaintext highlighter-rouge">order_constraint</code>: a vector of $N$ constraint expressions enforcing <code class="language-plaintext highlighter-rouge">order_fulfilled_count[j] == c[j]</code> for all $j$.</li>
+  <li><code class="language-plaintext highlighter-rouge">bar_length_used</code>: a vector of $M$ expressions where <code class="language-plaintext highlighter-rouge">bar_length_used[i]</code> represents the total length used in bar $i$.</li>
+  <li><code class="language-plaintext highlighter-rouge">bar_constraint</code>: a vector of $M$ constraint expressions enforcing <code class="language-plaintext highlighter-rouge">0 &lt;= bar_length_used[i] &lt;= L</code> for all $i$.</li>
+  <li><code class="language-plaintext highlighter-rouge">f</code>: the sum of all constraint expressions. After calling <code class="language-plaintext highlighter-rouge">f.simplify_as_binary()</code>, the Easy Solver searches for a solution with target energy 0 (i.e., all constraints satisfied).</li>
+</ul>
+
+<p>The following output is an example feasible solution:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Bar 0:  2  0  0  3   used = 59, waste = 1
+Bar 1:  4  0  1  0   used = 60, waste = 0
+Bar 2:  1  1  3  0   used = 60, waste = 0
+Bar 3:  0  0  4  2   used = 54, waste = 6
+Bar 4:  2  1  0  1   used = 60, waste = 0
+Bar 5:  1  2  0  0   used = 59, waste = 1
+Order 0 fulfilled = 10, required = 10
+Order 1 fulfilled = 4, required = 4
+Order 2 fulfilled = 8, required = 8
+Order 3 fulfilled = 6, required = 6
+</code></pre></div></div>
+<p>We observe that all $N=4$ orders are fulfilled using $M=6$ bars.</p>
+
+<p>If we set $M=5$, the solver returns the following infeasible solution, in which not all orders are satisfied:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Bar 0:  4  0  1  0   used = 60, waste = 0
+Bar 1:  0  0  6  1   used = 59, waste = 1
+Bar 2:  2  1  0  1   used = 60, waste = 0
+Bar 3:  2  0  0  3   used = 59, waste = 1
+Bar 4:  1  2  0  0   used = 59, waste = 1
+Order 0 fulfilled = 9, required = 10
+Order 1 fulfilled = 3, required = 4
+Order 2 fulfilled = 7, required = 8
+Order 3 fulfilled = 5, required = 6
+</code></pre></div></div>
+
+      <hr style="margin: 2rem 0 1rem 0;">
+<div style="font-size: 0.9em; color: #666;">
+  Last updated: 2026.02.03
+</div>
+    </main>
+  </div>
+</body>
+
+</html>

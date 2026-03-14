@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Minimum Set Cover Problem - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Minima テーマの main.css（ハイライト含む） -->
+  <link rel="stylesheet" href="/assets/main.css">
+
+  <!-- 自前のナビ用 CSS -->
+  <link rel="stylesheet" href="/assets/custom.css">
+
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+
+<body>
+
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ -->
+    <nav style="width:max-content; position:sticky; top:1rem; padding:0 1rem 0 0; border-right:1px solid #ddd;">
+      
+      <h2 style="margin-left:0;">QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/"><strong>Introduction</strong></a> </li>
+        <li><a href="/HUBO_QUBO"><strong>HUBO and QUBO</strong></a> </li>
+        <li><a href="/QUICK"><strong>Quick Start</strong></a>
+          <ul style="list-style:none; padding-left:1.2em; margin:0.2em 0 0.2em;">
+            <li><a href="/WSL"><strong>for Windows</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/CASE_STUDIES"><strong>Case Studies</strong></a></li>
+        <li><a href="/DEMOS"><strong>Demos</strong></a></li>
+        <li><a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Release</strong></a></li>
+      </ul>
+      <hr style="margin:1rem 0;">
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/python/"><strong>PyQUBO++ &rarr;</strong></a></li>
+      </ul>
+      
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="minimum-set-cover-problem">Minimum Set Cover Problem</h1>
+<p>Let $U$ be a universe set, and let ${\cal 𝐹}={S_0, S_1, \ldots S_{m-1}}$ be a family of subsets of $U$.
+A subfamily $\cal S\subseteq \cal F$ is called a <strong>set cover</strong> if it covers all elements of $U$, i.e.,</p>
+
+\[\begin{aligned}
+\bigcup_{S_j\subseteq \cal S}S_j &amp;= U.
+\end{aligned}\]
+
+<p>The <strong>minimum set cover problem</strong> is to find a set cover 
+$\cal S$ with the minimum cardinality.
+Here, we consider the weighted version, where each subset 
+$S_j$ has a weight $w_j$, and the goal is to find a <strong>set cover with the minimum total weight</strong>.</p>
+
+<h2 id="hubo-formulation-of-the-minimum-set-cover-problem">HUBO formulation of the minimum set cover problem</h2>
+<p>We formulate this problem as a HUBO problem.
+Assume that $U=\lbrace 0,1,\ldots, n-1\rbrace$, and $m$ subsets $S_0, S_1, \ldots, S_{m-1}$ are given.
+We introduce $m$ binary variables $x_0, x_1, \ldots, x_{m-1}$,
+where $x_j=1$ if and only if $S_j\in\cal S$.</p>
+
+<p>For each element $i\in U$, define the following expression:</p>
+
+\[\begin{aligned}
+c_i &amp;=\prod_{j: i\in S_j}(1-x_j) &amp;&amp; (0\leq i\leq n-1)
+\end{aligned}\]
+
+<p>If none of the selected subsets contains $i$, then $i$ is not covered.
+In that case, $x_j=0$ holds for all $j$ such that $i\in S_j$
+and hence $c_i=1$.
+On the other hand, if at least one selected subset contains $i$, then $x_j$=1 for some $j$ with $i\in S$, and the factor $(1−x_j)$ becomes 0, so $c_i=1$.
+Therefore, the following <strong>constraint</strong> becomes 0 if and only if all elements are covered:</p>
+
+\[\begin{aligned}
+\text{constraint} &amp;=\sum_{i=0}^{n-1}c_i
+\end{aligned}\]
+
+<p>The <strong>objective</strong> is to minimize the total weight of the selected subsets:</p>
+
+\[\begin{aligned}
+\text{objective} &amp;=\sum_{j=0}^{m-1}w_jx_j
+\end{aligned}\]
+
+<p>We can now construct a HUBO objective function for the weighted minimum set cover problem as:</p>
+
+\[\begin{aligned}
+f &amp;= \text{objective}+P\times\text{constraint}, 
+\end{aligned}\]
+
+<p>where $P$ is a sufficiently large positive constant to prioritize feasibility over the objective.</p>
+
+<h2 id="qubo-program-for-the-minimum-set-cover-problem">QUBO++ program for the minimum set cover problem</h2>
+<p>The following QUBO++ program constructs a HUBO expression for a weighted minimum set cover instance with $n=10$ elements and $m=8$ subsets:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;set&gt;</span><span class="cp">
+</span>
+<span class="cp">#define MAXDEG 6
+#include</span> <span class="cpf">&lt;qbpp/qbpp.hpp&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;qbpp/exhaustive_solver.hpp&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">const</span> <span class="kt">size_t</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+  <span class="n">qbpp</span><span class="o">::</span><span class="n">Vector</span><span class="o">&lt;</span><span class="n">qbpp</span><span class="o">::</span><span class="n">Vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;&gt;</span> <span class="n">cover</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span> <span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">},</span>       <span class="p">{</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">},</span>    <span class="p">{</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">},</span>
+      <span class="p">{</span><span class="mi">9</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">},</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">9</span><span class="p">},</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">}};</span>
+  <span class="n">qbpp</span><span class="o">::</span><span class="n">Vector</span> <span class="n">cost</span> <span class="o">=</span> <span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">};</span>
+  <span class="k">auto</span> <span class="n">m</span> <span class="o">=</span> <span class="n">cover</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">,</span> <span class="n">m</span><span class="p">);</span>
+
+  <span class="k">auto</span> <span class="n">c</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">expr</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">c</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">m</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span> <span class="o">:</span> <span class="n">cover</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">{</span>
+      <span class="n">c</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">*=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">auto</span> <span class="n">objective</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sum</span><span class="p">(</span><span class="n">cost</span> <span class="o">*</span> <span class="n">x</span><span class="p">);</span>
+
+  <span class="k">auto</span> <span class="n">constraint</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sum</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
+
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">objective</span> <span class="o">+</span> <span class="mi">1000</span> <span class="o">*</span> <span class="n">constraint</span><span class="p">;</span>
+
+  <span class="n">f</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">exhaustive_solver</span><span class="o">::</span><span class="n">ExhaustiveSolver</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+
+  <span class="k">auto</span> <span class="n">sol</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search</span><span class="p">();</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"objective = "</span> <span class="o">&lt;&lt;</span> <span class="n">objective</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"constraint = "</span> <span class="o">&lt;&lt;</span> <span class="n">constraint</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">m</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">sol</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Set "</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="s">": "</span> <span class="o">&lt;&lt;</span> <span class="n">cover</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="s">" cost = "</span> <span class="o">&lt;&lt;</span> <span class="n">cost</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>This program defines a vector <strong><code class="language-plaintext highlighter-rouge">x</code></strong> of $m=8$ <strong>binary variables</strong> and constructs a vector <strong><code class="language-plaintext highlighter-rouge">c</code></strong> of $n=10$ <strong>expressions</strong>.
+Each expression <code class="language-plaintext highlighter-rouge">c[j]</code> corresponds to an element $j\in U$ and is initialized to 1.
+For every subset $S_i$, and for every element $j\in S_i$, we multiply <code class="language-plaintext highlighter-rouge">c[j]</code> by 
+<code class="language-plaintext highlighter-rouge">(1 − x[i])</code>.
+As a result, <code class="language-plaintext highlighter-rouge">c[j]</code> becomes 0 if at least one selected subset covers element <code class="language-plaintext highlighter-rouge">j</code>, and remains 1 otherwise.</p>
+
+<p>The <strong><code class="language-plaintext highlighter-rouge">constraint</code></strong> is defined as the sum of all entries in <code class="language-plaintext highlighter-rouge">c</code>, and it becomes 0 if and only if all elements are covered.
+The weighted <strong><code class="language-plaintext highlighter-rouge">objective</code></strong> is defined as the dot product of <code class="language-plaintext highlighter-rouge">cost</code> and <code class="language-plaintext highlighter-rouge">x</code>.
+They are combined into the HUBO expression:</p>
+
+\[\begin{aligned}
+f &amp;= \text{objective} + 1000\times\text{constraint},
+\end{aligned}\]
+
+<p>where the penalty constant 1000 is chosen sufficiently large to prioritize feasibility.</p>
+
+<p>The Exhaustive Solver is then used to find an optimal solution <code class="language-plaintext highlighter-rouge">sol</code>.
+The program prints the values of <code class="language-plaintext highlighter-rouge">objective</code> and <code class="language-plaintext highlighter-rouge">constraint</code>, and finally lists all selected subsets. For example, the output is:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>objective = 11
+constraint = 0
+Set 0: {0,1,2} cost = 3
+Set 2: {4,5,6} cost = 3
+Set 3: {6,7,8} cost = 2
+Set 6: {0,3,6,9} cost = 3
+</code></pre></div></div>
+<p>This output indicates that a feasible set cover with total cost 11 is obtained.</p>
+
+<h2 id="qubo-formulation-for-the-minimum-set-cover-problem">QUBO formulation for the minimum set cover problem</h2>
+<p>The HUBO formulation above may contain terms of degree three or higher, and therefore it is not necessarily a QUBO expression.
+To obtain a QUBO formulation, we rewrite the covering constraint.</p>
+
+<p>For each element $i\in U$, define</p>
+
+\[\begin{aligned}
+c_i &amp;=\sum_{j: i\in S_j} x_j &amp;&amp; (0\leq i\leq n-1)
+\end{aligned}\]
+
+<p>If $c_i\geq 1$, then at least one selected subset $S_j$ covers $i$.
+If $c_i=0$, then no selected subset covers $i$.
+Thus, we can express the covering constraint in the QUBO++ style as:</p>
+
+\[\begin{aligned}
+\text{constraint} &amp;= \sum_{i=0}^{n-1} (c_i\geq 1)
+\end{aligned}\]
+
+<p>This constraint takes the minimum value 0 if and only if all elements are covered.
+Based on this formulation, the QUBO++ program can be modified as follows:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="k">auto</span> <span class="n">c</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">expr</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">m</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span> <span class="o">:</span> <span class="n">cover</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">{</span>
+      <span class="n">c</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">+=</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">auto</span> <span class="n">constraint</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="o">+</span><span class="n">qbpp</span><span class="o">::</span><span class="n">inf</span><span class="p">);</span>
+</code></pre></div></div>
+<p>In this program, the expressions <code class="language-plaintext highlighter-rouge">1 &lt;= c[j] &lt;= +qbpp::inf</code> are created for all 
+<code class="language-plaintext highlighter-rouge">j</code>, and their sum is stored in <code class="language-plaintext highlighter-rouge">constraint</code>.</p>
+
+<blockquote>
+  <p><strong>Remark</strong>.
+The term <code class="language-plaintext highlighter-rouge">1 &lt;= c[j] &lt;= +qbpp::inf</code> may introducing auxiliary binary variables
+internally. As a result, the final expression can be handled by a QUBO solver, 
+while preserving the intended meaning of the coverage constraint.</p>
+</blockquote>
+
+<p>With this modification, the program produces the same optimal solution as the HUBO version.</p>
+
+      <hr style="margin: 2rem 0 1rem 0;">
+<div style="font-size: 0.9em; color: #666;">
+  Last updated: 2026.03.05
+</div>
+    </main>
+  </div>
+</body>
+
+</html>

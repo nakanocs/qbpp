@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Graph Edge Coloring Problem - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Minima テーマの main.css（ハイライト含む） -->
+  <link rel="stylesheet" href="/assets/main.css">
+
+  <!-- 自前のナビ用 CSS -->
+  <link rel="stylesheet" href="/assets/custom.css">
+
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+
+<body>
+
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ（全ページ共通） -->
+    <nav style="min-width:220px; position:sticky; top:1rem; padding-right:1rem; border-right:1px solid #ddd;">
+      <h2>QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0;">
+        <li><a href="/"><strong>Introduction</strong></a> </li>
+        <li><a href="/HUBO_QUBO"><strong>HUBO and QUBO</strong></a> </li>
+        <li><a href="/QUICK"><strong>Quick Start</strong></a> </li>
+        <li><a href="/WSL"><strong>Quick Start for Windows</strong></a> </li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/CASE_STUDIES"><strong>Case Studies</strong></a></li>
+        <li><a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Release</strong></a></li>
+      </ul>
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="graph-edge-coloring-problem">Graph Edge Coloring Problem</h1>
+<p>Given an undirected graph $G=(V,E)$, the <strong>graph edge coloring problem</strong> aims to assign a color to each edge so that no two edges of the same color share a common endpoint.</p>
+
+<p>More specifically, for a set $C$ of colors, the goal is to find an assignment 
+$\sigma:E\rightarrow C$ such that for any two distinct edges $𝑒$ and $e’$ incident to the same node, we have $\sigma(e)\neq \sigma(e’)$.
+Equivalently, for every node $u\in V$ and any two distinct neighbors $v\neq v’$
+with $(u,v)\in E$ and $(u,v’)\in E$ the following must hold:</p>
+
+\[\sigma((u,v))\neq \sigma((u,v')).\]
+
+<p>The graph edge coloring problem can be formulated easily as a QUBO expression.
+Let $V=\lbrace 0,1,\ldots,n−1\rbrace$ and $C=\lbrace 0,1,\ldots,m−1\rbrace$.
+We assign unique IDs $0,1,\ldots,e−1$ to the $e=∣E∣$ edges, and let $(u_i,v_i)$ denote the $i$-th edge.</p>
+
+<p>We introduce an $e\times m$ matrix $X=(x_{i,j})$ of binary variables, where 
+$x_{i,j}=1$ if and only if edge $(u_i,v_i)$ is assigned color $j$.</p>
+
+<h3 id="one-hot-constraint">One-hot constraint</h3>
+<p>Since exactly one color must be assigned to each edge, each row of 
+$X$ must be one-hot:</p>
+
+\[\begin{aligned}
+  \text{onehot}&amp;= \sum_{i=0}^{e-1}\bigr(\sum_{j=0}^{m-1}x_{i,j}==1\bigl)\\
+   &amp;=\sum_{i=0}^{e-1}\bigr(1-\sum_{j=0}^{m-1}x_{i,j}\bigl)^2
+\end{aligned}\]
+
+<h3 id="incident-edges-must-differ">Incident edges must differ</h3>
+<p>For each node, any pair of distinct incident edges must not be assigned the same color. This can be penalized as follows:</p>
+
+\[\begin{aligned}
+  \text{different}&amp;= \sum_{u\in V}\sum_{\substack{i&lt;k\\ i,k\in I(u)}}x_u\cdot x_v\\
+   &amp;=\sum_{u\in V}\sum_{\substack{i&lt;k\\ i,k\in I(u)}}\sum_{j=0}^{m-1}x_{u,j}x_{v,j}
+\end{aligned}\]
+
+<p>where $I(u)\subseteq \lbrace 0,1,\ldots,e−1\rbrace$ denotes the set of edge IDs incident to node $u$.</p>
+
+<h2 id="qubo-objective">QUBO objective</h2>
+<p>By combining these expressions, we obtain the QUBO objective function:</p>
+
+\[\begin{aligned}
+  f &amp;= \text{onehot}+\text{different}
+\end{aligned}\]
+
+<p>This objective attains the minimum value 0 if and only if a valid 
+edge coloring of the graph exists.</p>
+
+<h2 id="qubo-formulation">QUBO++ formulation</h2>
+<p>It is known that the edge chromatic number of a simple graph is either $\Delta$ or $\Delta+1$, where $\Delta$ is the maximum degree of the graph. The following QUBO++ program attempts to find an edge coloring of a graph with $n$ nodes and $s$ edges using $m=\Delta$ colors:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
+#include</span> <span class="cpf">"qbpp_easy_solver.hpp"</span><span class="cp">
+#include</span> <span class="cpf">"qbpp_graph.hpp"</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">const</span> <span class="kt">size_t</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">16</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="p">,</span> <span class="kt">size_t</span><span class="o">&gt;&gt;</span> <span class="n">edges</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>   <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span>   <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">},</span>   <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span>   <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">},</span>   <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">},</span>   <span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">},</span>
+      <span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">},</span>   <span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mi">7</span><span class="p">},</span>   <span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mi">13</span><span class="p">},</span>  <span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mi">15</span><span class="p">},</span>  <span class="p">{</span><span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">},</span>   <span class="p">{</span><span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="p">},</span>   <span class="p">{</span><span class="mi">4</span><span class="p">,</span> <span class="mi">14</span><span class="p">},</span>
+      <span class="p">{</span><span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">},</span>   <span class="p">{</span><span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">},</span>   <span class="p">{</span><span class="mi">6</span><span class="p">,</span> <span class="mi">14</span><span class="p">},</span>  <span class="p">{</span><span class="mi">7</span><span class="p">,</span> <span class="mi">14</span><span class="p">},</span>  <span class="p">{</span><span class="mi">7</span><span class="p">,</span> <span class="mi">15</span><span class="p">},</span>  <span class="p">{</span><span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">},</span>   <span class="p">{</span><span class="mi">8</span><span class="p">,</span> <span class="mi">12</span><span class="p">},</span>
+      <span class="p">{</span><span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">},</span>  <span class="p">{</span><span class="mi">9</span><span class="p">,</span> <span class="mi">11</span><span class="p">},</span>  <span class="p">{</span><span class="mi">9</span><span class="p">,</span> <span class="mi">12</span><span class="p">},</span>  <span class="p">{</span><span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">},</span> <span class="p">{</span><span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">},</span> <span class="p">{</span><span class="mi">10</span><span class="p">,</span> <span class="mi">13</span><span class="p">},</span> <span class="p">{</span><span class="mi">10</span><span class="p">,</span> <span class="mi">14</span><span class="p">},</span>
+      <span class="p">{</span><span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">},</span> <span class="p">{</span><span class="mi">11</span><span class="p">,</span> <span class="mi">13</span><span class="p">},</span> <span class="p">{</span><span class="mi">12</span><span class="p">,</span> <span class="mi">14</span><span class="p">},</span> <span class="p">{</span><span class="mi">13</span><span class="p">,</span> <span class="mi">15</span><span class="p">},</span> <span class="p">{</span><span class="mi">14</span><span class="p">,</span> <span class="mi">15</span><span class="p">}};</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;&gt;</span> <span class="n">adj</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">edges</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">edges</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="n">adj</span><span class="p">[</span><span class="n">u</span><span class="p">].</span><span class="n">push_back</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+    <span class="n">adj</span><span class="p">[</span><span class="n">v</span><span class="p">].</span><span class="n">push_back</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="kt">size_t</span> <span class="n">max_degree</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">neighbors</span> <span class="o">:</span> <span class="n">adj</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">neighbors</span><span class="p">.</span><span class="n">size</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">max_degree</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">max_degree</span> <span class="o">=</span> <span class="n">neighbors</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">const</span> <span class="kt">size_t</span> <span class="n">m</span> <span class="o">=</span> <span class="n">max_degree</span><span class="p">;</span>
+
+  <span class="k">const</span> <span class="kt">size_t</span> <span class="n">s</span> <span class="o">=</span> <span class="n">edges</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">m</span><span class="p">);</span>
+
+  <span class="k">auto</span> <span class="n">onehot</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sum</span><span class="p">(</span><span class="n">qbpp</span><span class="o">::</span><span class="n">vector_sum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">different</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">Expr</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">u</span> <span class="o">:</span> <span class="n">adj</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">{</span>
+      <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">v</span> <span class="o">:</span> <span class="n">adj</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">u</span> <span class="o">&lt;</span> <span class="n">v</span><span class="p">)</span> <span class="p">{</span>
+          <span class="n">different</span> <span class="o">+=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sum</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">v</span><span class="p">]);</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">onehot</span> <span class="o">+</span> <span class="n">different</span><span class="p">;</span>
+
+  <span class="n">f</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">easy_solver</span><span class="o">::</span><span class="n">EasySolver</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+  <span class="n">solver</span><span class="p">.</span><span class="n">target_energy</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">sol</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search</span><span class="p">();</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"colors = "</span> <span class="o">&lt;&lt;</span> <span class="n">m</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"onehot = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">onehot</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"different = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">different</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+  <span class="k">auto</span> <span class="n">edge_color</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">onehot_to_int</span><span class="p">(</span><span class="n">sol</span><span class="p">(</span><span class="n">x</span><span class="p">));</span>
+
+  <span class="n">qbpp</span><span class="o">::</span><span class="n">graph</span><span class="o">::</span><span class="n">GraphDrawer</span> <span class="n">graph</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">graph</span><span class="p">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">qbpp</span><span class="o">::</span><span class="n">graph</span><span class="o">::</span><span class="n">Node</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+  <span class="p">}</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">edges</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">e</span> <span class="o">=</span> <span class="n">edges</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="n">graph</span><span class="p">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">qbpp</span><span class="o">::</span><span class="n">graph</span><span class="o">::</span><span class="n">Edge</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">first</span><span class="p">,</span> <span class="n">e</span><span class="p">.</span><span class="n">second</span><span class="p">)</span>
+                       <span class="p">.</span><span class="n">color</span><span class="p">(</span><span class="n">edge_color</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                       <span class="p">.</span><span class="n">penwidth</span><span class="p">(</span><span class="mf">2.0f</span><span class="p">));</span>
+  <span class="p">}</span>
+
+  <span class="n">graph</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="s">"edge_color.svg"</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>In this program, we first build the incidence list <code class="language-plaintext highlighter-rouge">adj</code>, where <code class="language-plaintext highlighter-rouge">adj[i]</code> stores the indices of edges incident to node <code class="language-plaintext highlighter-rouge">i</code>.
+We then compute the maximum degree $\Delta$ and set <code class="language-plaintext highlighter-rouge">m=</code>$\Delta$.
+Next, we define an <code class="language-plaintext highlighter-rouge">s</code>$\times$<code class="language-plaintext highlighter-rouge">m</code> matrix <code class="language-plaintext highlighter-rouge">x</code> of binary variables, where <code class="language-plaintext highlighter-rouge">x[i][j]=1</code> means that edge <code class="language-plaintext highlighter-rouge">i</code> is assigned color <code class="language-plaintext highlighter-rouge">j</code>.
+We construct the expressions <code class="language-plaintext highlighter-rouge">onehot</code>, <code class="language-plaintext highlighter-rouge">different</code>, and <code class="language-plaintext highlighter-rouge">f</code> as follows:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">onehot</code> enforces that each edge is assigned exactly one color.</li>
+  <li><code class="language-plaintext highlighter-rouge">different</code> penalizes pairs of edges that share an endpoint and are assigned the same color.</li>
+  <li><code class="language-plaintext highlighter-rouge">f = onehot + different</code> is the QUBO objective, which attains the minimum value 0 if and only if a valid <code class="language-plaintext highlighter-rouge">m</code>-edge-coloring is found.</li>
+</ul>
+
+<p>We solve the resulting QUBO using the Easy Solver with target energy 0, and store the solution in <code class="language-plaintext highlighter-rouge">sol</code>. We then print the values of <code class="language-plaintext highlighter-rouge">onehot</code> and <code class="language-plaintext highlighter-rouge">different</code> evaluated at <code class="language-plaintext highlighter-rouge">sol</code>.</p>
+
+<p>We also compute <code class="language-plaintext highlighter-rouge">edge_color</code>, which stores the color assigned to each edge, by applying <code class="language-plaintext highlighter-rouge">qbpp::onehot_to_int()</code> to <code class="language-plaintext highlighter-rouge">sol(x)</code>.
+Finally, we draw the edge-colored graph using <code class="language-plaintext highlighter-rouge">qbpp::graph::GraphDrawer</code>, where edge <code class="language-plaintext highlighter-rouge">i</code> is colored with color number <code class="language-plaintext highlighter-rouge">edge_color[i] + 1</code>.</p>
+
+<p>The function <code class="language-plaintext highlighter-rouge">qbpp::onehot_to_int()</code> returns a vector of integers in the range <code class="language-plaintext highlighter-rouge">[0,m−1]</code>, where each entry indicates the position of the 1 in the corresponding one-hot row. If a row is not a valid one-hot vector, the function returns $−1$ for that row. In this case, the edge color becomes $−1+1=0$, so the edge is drawn in color 0 (black).</p>
+
+<p>This program produces the following output:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>colors = 6
+onehot = 0
+different = 0
+</code></pre></div></div>
+<p>Therefore, a valid edge coloring using <code class="language-plaintext highlighter-rouge">m = 6</code> colors is found:</p>
+<p align="center">
+  <img src="images/edge_color.svg" alt="The solution of the graph coloring problem." width="80%" />
+</p>
+
+
+      <hr style="margin: 2rem 0 1rem 0;">
+<div style="font-size: 0.9em; color: #666;">
+  Last updated: 2026.02.02
+</div>
+    </main>
+  </div>
+</body>
+
+</html>

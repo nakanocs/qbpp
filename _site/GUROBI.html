@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Gurobi Optimizer Usage - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Minima テーマの main.css（ハイライト含む） -->
+  <link rel="stylesheet" href="/assets/main.css">
+
+  <!-- 自前のナビ用 CSS -->
+  <link rel="stylesheet" href="/assets/custom.css">
+
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+
+<body>
+
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ -->
+    <nav style="width:max-content; position:sticky; top:1rem; padding:0 1rem 0 0; border-right:1px solid #ddd;">
+      
+      <h2 style="margin-left:0;">QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/"><strong>Introduction</strong></a> </li>
+        <li><a href="/HUBO_QUBO"><strong>HUBO and QUBO</strong></a> </li>
+        <li><a href="/QUICK"><strong>Quick Start</strong></a>
+          <ul style="list-style:none; padding-left:1.2em; margin:0.2em 0 0.2em;">
+            <li><a href="/WSL"><strong>for Windows</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/CASE_STUDIES"><strong>Case Studies</strong></a></li>
+        <li><a href="/DEMOS"><strong>Demos</strong></a></li>
+        <li><a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Release</strong></a></li>
+      </ul>
+      <hr style="margin:1rem 0;">
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/python/"><strong>PyQUBO++ &rarr;</strong></a></li>
+      </ul>
+      
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="gurobi-optimizer-usage">Gurobi Optimizer Usage</h1>
+
+<p>QUBO++ can use the Gurobi Optimizer to solve QUBO expressions.
+To use the Gurobi Optimizer, you must have a valid Gurobi license.</p>
+
+<p>Solving a problem using the Gurobi Optimizer consists of the following three steps:</p>
+<ol>
+  <li>Create a Gurobi model object (i.e., <strong><code class="language-plaintext highlighter-rouge">qbpp::grb::QuboModel</code></strong>).</li>
+  <li>Set solver options by calling member functions of the Gurobi model object.</li>
+  <li>Search for a solution by calling the <strong><code class="language-plaintext highlighter-rouge">optimize()</code></strong> member function, which returns a solution (a <code class="language-plaintext highlighter-rouge">qbpp::Sol</code> object).</li>
+</ol>
+
+<h2 id="creating-gurobi-model-object">Creating Gurobi model object</h2>
+<p>To use the Gurobi Optimizer, a Gurobi model object (i.e., <strong><code class="language-plaintext highlighter-rouge">qbpp::grb::QuboModel</code></strong>) is constructed with an expression (<code class="language-plaintext highlighter-rouge">qbpp::Expr</code>) as follows:</p>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">qbpp::grb::QuboModel(const qbpp::Expr&amp; f)</code></strong></li>
+</ul>
+
+<p>Here, <code class="language-plaintext highlighter-rouge">f</code> is the expression to be solved.</p>
+
+<h2 id="setting-gurobi-options">Setting Gurobi options</h2>
+<p>For a created Gurobi model object, the following member functions can be used to specify solver options:</p>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">set(key, val)</code>:</strong>
+Sets the Gurobi parameter specified by key to val.
+Both key and val must be strings.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">time_limit(time_limit)</code></strong>:
+Sets the time limit in seconds.
+Internally, this calls
+<code class="language-plaintext highlighter-rouge">set("TimeLimit", std::to_string(time_limit))</code>.</li>
+</ul>
+
+<p>For a complete list of available parameters, refer to the following Gurobi documentation:
+https://docs.gurobi.com/projects/optimizer/en/current/reference/parameters.html</p>
+
+<h2 id="searching-solutions">Searching solutions</h2>
+<p>The Gurobi Optimizer searches for a solution by calling the <strong><code class="language-plaintext highlighter-rouge">optimize()</code></strong> member function of the Gurobi model object.
+The <code class="language-plaintext highlighter-rouge">optimize()</code> function returns a solution object, which is a derived class of <code class="language-plaintext highlighter-rouge">qbpp::Sol</code>.
+The member function <strong><code class="language-plaintext highlighter-rouge">bound()</code></strong> returns the best bound obtained during optimization.</p>
+
+<h2 id="sample-program">Sample program</h2>
+<p>The following program searches for a solution to the partitioning problem using the Gurobi Optimizer:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#define MAXDEG 2
+#include</span> <span class="cpf">&lt;qbpp/qbpp.hpp&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;qbpp/grb.hpp&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;</span> <span class="n">w</span> <span class="o">=</span> <span class="p">{</span><span class="mi">64</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="mi">47</span><span class="p">,</span> <span class="mi">74</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">83</span><span class="p">,</span> <span class="mi">63</span><span class="p">,</span> <span class="mi">40</span><span class="p">};</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">,</span> <span class="n">w</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+  <span class="k">auto</span> <span class="n">p</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">expr</span><span class="p">();</span>
+  <span class="k">auto</span> <span class="n">q</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">expr</span><span class="p">();</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">w</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">p</span> <span class="o">+=</span> <span class="n">w</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="n">q</span> <span class="o">+=</span> <span class="n">w</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+  <span class="p">}</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sqr</span><span class="p">(</span><span class="n">p</span> <span class="o">-</span> <span class="n">q</span><span class="p">);</span>
+  <span class="n">f</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+  <span class="k">auto</span> <span class="n">model</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">grb</span><span class="o">::</span><span class="n">QuboModel</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+  <span class="n">model</span><span class="p">.</span><span class="n">time_limit</span><span class="p">(</span><span class="mf">10.0</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">sol</span> <span class="o">=</span> <span class="n">model</span><span class="p">.</span><span class="n">optimize</span><span class="p">();</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Solution: "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Bound = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">.</span><span class="n">bound</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f(sol) = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"p(sol) = "</span> <span class="o">&lt;&lt;</span> <span class="n">p</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"q(sol) = "</span> <span class="o">&lt;&lt;</span> <span class="n">q</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"P :"</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">w</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">](</span><span class="n">sol</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" "</span> <span class="o">&lt;&lt;</span> <span class="n">w</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Q :"</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">w</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">](</span><span class="n">sol</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" "</span> <span class="o">&lt;&lt;</span> <span class="n">w</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>First, this program creates a Gurobi model for the expression <code class="language-plaintext highlighter-rouge">f</code>, which represents the partitioning problem.
+The time limit is set to 10.0 seconds, and then <code class="language-plaintext highlighter-rouge">optimize()</code> is called.
+The obtained solution is stored in <code class="language-plaintext highlighter-rouge">sol</code>.</p>
+
+<p>This program produces the following output:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Solution: 0:{{x[0],1},{x[1],1},{x[2],0},{x[3],1},{x[4],0},{x[5],0},{x[6],0},{x[7],1}}
+Bound = 0
+f(sol) = 0
+p(sol) = 205
+q(sol) = 205
+P : 64 27 74 40
+Q : 47 12 83 63
+</code></pre></div></div>
+
+<p>Since the solution value and the bound have the same energy 0
+the obtained solution is guaranteed to be optimal.</p>
+
+      <hr style="margin: 2rem 0 1rem 0;">
+<div style="font-size: 0.9em; color: #666;">
+  Last updated: 2026.03.05
+</div>
+    </main>
+  </div>
+</body>
+
+</html>

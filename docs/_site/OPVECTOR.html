@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Basic Operations and Functions for Vectors - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Minima テーマの main.css（ハイライト含む） -->
+  <link rel="stylesheet" href="/assets/main.css">
+
+  <!-- 自前のナビ用 CSS -->
+  <link rel="stylesheet" href="/assets/custom.css">
+
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+
+<body>
+
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ（全ページ共通） -->
+    <nav style="min-width:220px; position:sticky; top:1rem; padding-right:1rem; border-right:1px solid #ddd;">
+      <h2>QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0;">
+        <li><a href="/"><strong>Introduction</strong></a> </li>
+        <li><a href="/HUBO_QUBO"><strong>HUBO and QUBO</strong></a> </li>
+        <li><a href="/QUICK"><strong>Quick Start</strong></a> </li>
+        <li><a href="/WSL"><strong>Quick Start for Windows</strong></a> </li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/CASE_STUDIES"><strong>Case Studies</strong></a></li>
+        <li><a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Release</strong></a></li>
+      </ul>
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="basic-operators-and-functions-for-vectors">Basic Operators and Functions for Vectors</h1>
+<p>Basically, operators and functions for vectors operate element-wise.</p>
+
+<h2 id="basic-operators-for-vectors">Basic operators for vectors</h2>
+<p>The basic operators <strong><code class="language-plaintext highlighter-rouge">+</code></strong>, <strong><code class="language-plaintext highlighter-rouge">-</code></strong>, <strong><code class="language-plaintext highlighter-rouge">*</code></strong>, and <strong><code class="language-plaintext highlighter-rouge">/</code></strong> work for vectors of variables and expressions.</p>
+
+<p>In QUBO++, these operators are applied element-wise.</p>
+
+<h3 id="vectorscalar-operations">Vector–Scalar Operations</h3>
+<p>When you combine a vector and a scalar, the scalar is applied to each element of the vector.
+For example, if <code class="language-plaintext highlighter-rouge">x</code> is a vector of size 3, then:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">2 * x</code> produces <code class="language-plaintext highlighter-rouge">{2*x[0], 2*x[1], 2*x[2]}</code></li>
+  <li><code class="language-plaintext highlighter-rouge">x + 1</code> produces <code class="language-plaintext highlighter-rouge">{x[0] + 1, x[1] + 1, x[2] + 1}</code></li>
+</ul>
+
+<p>The following program illustrates this behavior:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">f</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f["</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="s">"] = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>This program creates a vector <code class="language-plaintext highlighter-rouge">x = {x[0], x[1], x[2]}</code> of binary variables.
+Then <code class="language-plaintext highlighter-rouge">2 * x</code> multiplies each element by <code class="language-plaintext highlighter-rouge">2</code>, and <code class="language-plaintext highlighter-rouge">+ 1</code> adds <code class="language-plaintext highlighter-rouge">1</code> to each element, so <code class="language-plaintext highlighter-rouge">f</code> becomes:
+<code class="language-plaintext highlighter-rouge">{1 + 2*x[0], 1 + 2*x[1], 1 + 2*x[2]}</code>.
+This program produces the following output:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>f = {1 +2*x[0],1 +2*x[1],1 +2*x[2]}
+f[0] = 1 +2*x[0]
+f[1] = 1 +2*x[1]
+f[2] = 1 +2*x[2]
+</code></pre></div></div>
+
+<h3 id="vectorvector-operations">Vector–Vector Operations</h3>
+<p>When you combine two vectors of the same size, the operation is performed element-wise at each index.</p>
+
+<p>The following example uses two vectors <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code>, both of size 3:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">y</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"y"</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">f</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f["</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="s">"] = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Here:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">2 * x</code> becomes <code class="language-plaintext highlighter-rouge">{2*x[0], 2*x[1], 2*x[2]}</code></li>
+  <li><code class="language-plaintext highlighter-rouge">3 * y</code> becomes <code class="language-plaintext highlighter-rouge">{3*y[0], 3*y[1], 3*y[2]}</code></li>
+  <li>adding them is element-wise, so the <code class="language-plaintext highlighter-rouge">i</code>-th element is <code class="language-plaintext highlighter-rouge">2*x[i] + 3*y[i]</code></li>
+  <li><code class="language-plaintext highlighter-rouge">+ 1</code> is again applied element-wise</li>
+</ul>
+
+<p>Therefore, <code class="language-plaintext highlighter-rouge">f</code> becomes: <code class="language-plaintext highlighter-rouge">{1 + 2*x[0] + 3*y[0], 1 + 2*x[1] + 3*y[1], 1 + 2*x[2] + 3*y[2]}</code>
+which matches the output:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>f = {1 +2*x[0] +3*y[0],1 +2*x[1] +3*y[1],1 +2*x[2] +3*y[2]}
+f[0] = 1 +2*x[0] +3*y[0]
+f[1] = 1 +2*x[1] +3*y[1]
+f[2] = 1 +2*x[2] +3*y[2]
+</code></pre></div></div>
+<p>Vector–vector operations require the same vector size.</p>
+
+<p>The next example demonstrates a more complex element-wise expression involving vector–scalar operations, vector–vector operations, unary minus, and parentheses:</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">y</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"y"</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="mi">6</span> <span class="o">*</span> <span class="o">-</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">g</span> <span class="o">=</span> <span class="n">f</span> <span class="o">/</span> <span class="mi">3</span><span class="p">;</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">x</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f["</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="s">"] = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"g = "</span> <span class="o">&lt;&lt;</span> <span class="n">g</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">x</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"g["</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="s">"] = "</span> <span class="o">&lt;&lt;</span> <span class="n">g</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>In this example, all operations are still applied element-wise.</p>
+
+<ul>
+  <li>First, <code class="language-plaintext highlighter-rouge">x + 1</code> and <code class="language-plaintext highlighter-rouge">y - 1</code> add/subtract the scalar to/from each element, producing two vectors
+<code class="language-plaintext highlighter-rouge">{x[i]+1}</code> and <code class="language-plaintext highlighter-rouge">{y[i]−1}</code>.</li>
+  <li>The unary minus -(x + 1) also works element-wise, so it becomes <code class="language-plaintext highlighter-rouge">{−(x[i]+1)}</code>.</li>
+  <li>The multiplication <code class="language-plaintext highlighter-rouge">6 * -(x + 1) * (y - 1)</code> is then performed element-wise as well, so for each index <code class="language-plaintext highlighter-rouge">i</code>, <code class="language-plaintext highlighter-rouge">f[i]=6⋅(−(x[i]+1))⋅(y[i]−1)</code>.
+Expanding this expression yields <code class="language-plaintext highlighter-rouge">f[i]=6−6x[i]y[i]+6x[i]−6y[i]</code>, which matches the printed form in the output.</li>
+  <li>Finally, <code class="language-plaintext highlighter-rouge">g = f / 3</code> divides each element by 3, so <code class="language-plaintext highlighter-rouge">g[i]=f[i]/3=2−2x[i]y[i]+2x[i]−2y[i]</code>,
+again matching the output.
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>f = {6 -6*x[0]*y[0] +6*x[0] -6*y[0],6 -6*x[1]*y[1] +6*x[1] -6*y[1],6 -6*x[2]*y[2] +6*x[2] -6*y[2]}
+f[0] = 6 -6*x[0]*y[0] +6*x[0] -6*y[0]
+f[1] = 6 -6*x[1]*y[1] +6*x[1] -6*y[1]
+f[2] = 6 -6*x[2]*y[2] +6*x[2] -6*y[2]
+g = {2 -2*x[0]*y[0] +2*x[0] -2*y[0],2 -2*x[1]*y[1] +2*x[1] -2*y[1],2 -2*x[2]*y[2] +2*x[2] -2*y[2]}
+g[0] = 2 -2*x[0]*y[0] +2*x[0] -2*y[0]
+g[1] = 2 -2*x[1]*y[1] +2*x[1] -2*y[1]
+g[2] = 2 -2*x[2]*y[2] +2*x[2] -2*y[2]
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<h2 id="compound-opertors-for-vectors">Compound opertors for vectors</h2>
+<p>Similarly, the compound operators <strong><code class="language-plaintext highlighter-rouge">+=</code></strong>, <strong><code class="language-plaintext highlighter-rouge">-=</code></strong>, <strong><code class="language-plaintext highlighter-rouge">*=</code></strong>, and <strong><code class="language-plaintext highlighter-rouge">/=</code></strong> work for vectors of variables and expressions.
+The following example demonstrates how these operators work for a vector of size 3:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">y</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"y"</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">4</span><span class="p">;</span>
+
+  <span class="n">f</span> <span class="o">+=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">y</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">f</span> <span class="o">-=</span> <span class="mi">12</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">f</span> <span class="o">*=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">y</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">f</span> <span class="o">/=</span> <span class="mi">2</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>This program produces the following output:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>f = {4 +6*x[0] +3*y[0],4 +6*x[1] +3*y[1],4 +6*x[2] +3*y[2]}
+f = {-8 +6*x[0] +3*y[0],-8 +6*x[1] +3*y[1],-8 +6*x[2] +3*y[2]}
+f = {12*x[0]*y[0] +6*y[0]*y[0] -16*y[0],12*x[1]*y[1] +6*y[1]*y[1] -16*y[1],12*x[2]*y[2] +6*y[2]*y[2] -16*y[2]}
+f = {6*x[0]*y[0] +3*y[0]*y[0] -8*y[0],6*x[1]*y[1] +3*y[1]*y[1] -8*y[1],6*x[2]*y[2] +3*y[2]*y[2] -8*y[2]}
+</code></pre></div></div>
+
+<h2 id="square-functions-for-vectors">Square functions for vectors</h2>
+<p>Square functions also work for vectors, as demonstrated below:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f = "</span> <span class="o">&lt;&lt;</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sqr</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">f</span><span class="p">.</span><span class="n">sqr</span><span class="p">();</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>This program produces the following output:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>f = {1 +x[0]*x[0] +x[0] +x[0],1 +x[1]*x[1] +x[1] +x[1],1 +x[2]*x[2] +x[2] +x[2]}
+f = {1 +x[0],1 +x[1],1 +x[2]}
+f = {1 +x[0]*x[0] +x[0] +x[0],1 +x[1]*x[1] +x[1] +x[1],1 +x[2]*x[2] +x[2] +x[2]}
+</code></pre></div></div>
+
+<h2 id="simplfy-functions-for-vectors">Simplfy functions for vectors</h2>
+<p>Simplify functions also work for vectors, as demonstrated below:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sqr</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"simplified(f) = "</span> <span class="o">&lt;&lt;</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">simplify</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"simplified_as_binary(f) = "</span> <span class="o">&lt;&lt;</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">simplify_as_binary</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"simplified_as_spin(f) = "</span> <span class="o">&lt;&lt;</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">simplify_as_spin</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>This program produces the following output:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>f = {1 +x[0]*x[0] -x[0] -x[0],1 +x[1]*x[1] -x[1] -x[1],1 +x[2]*x[2] -x[2] -x[2]}
+simplified(f) = {1 -2*x[0] +x[0]*x[0],1 -2*x[1] +x[1]*x[1],1 -2*x[2] +x[2]*x[2]}
+simplified_as_binary(f) = {1 -x[0],1 -x[1],1 -x[2]}
+simplified_as_spin(f) = {2 -2*x[0],2 -2*x[1],2 -2*x[2]}
+</code></pre></div></div>
+
+<blockquote>
+  <p><strong>NOTE</strong>
+These operators and functions also work for <strong>multi-dimensional arrays</strong>.</p>
+</blockquote>
+
+      <hr style="margin: 2rem 0 1rem 0;">
+<div style="font-size: 0.9em; color: #666;">
+  Last updated: 2026.02.04
+</div>
+    </main>
+  </div>
+</body>
+
+</html>

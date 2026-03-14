@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Installation and License Management - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Minima テーマの main.css（ハイライト含む） -->
+  <link rel="stylesheet" href="/assets/main.css">
+
+  <!-- 自前のナビ用 CSS -->
+  <link rel="stylesheet" href="/assets/custom.css">
+
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+
+<body>
+
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ（全ページ共通） -->
+    <nav style="min-width:220px; position:sticky; top:1rem; padding-right:1rem; border-right:1px solid #ddd;">
+      <h2>QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0;">
+        <li><a href="/"><strong>Introduction</strong></a> </li>
+        <li><a href="/HUBO_QUBO"><strong>HUBO and QUBO</strong></a> </li>
+        <li><a href="/QUICK"><strong>Quick Start</strong></a> </li>
+        <li><a href="/WSL"><strong>Quick Start for Windows</strong></a> </li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/CASE_STUDIES"><strong>Case Studies</strong></a></li>
+        <li><a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Release</strong></a></li>
+      </ul>
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="installation-and-license-management">Installation and License Management</h1>
+
+<h2 id="installation">Installation</h2>
+<p>Download the <code class="language-plaintext highlighter-rouge">.tar.gz</code> file of the latest QUBO++ release from the <a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Releases</strong></a> page.
+Extract the archive as follows:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">tar </span>xf qbpp_&lt;<span class="nb">arch</span><span class="o">&gt;</span>_&lt;version&gt;.tar.gz
+</code></pre></div></div>
+<p>The actual file name varies depending on the version you downloaded.
+QUBO++ runs on Linux-based systems with the following CPUs:</p>
+<ul>
+  <li><strong>amd64</strong>: 64-bit Intel and AMD processors</li>
+  <li><strong>arm64</strong>: 64-bit ARM processors</li>
+</ul>
+
+<h2 id="setting-environment-variables">Setting Environment Variables</h2>
+<p>To compile and run QUBO++ programs, it is recommended to set the following environment variables:</p>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">CPLUS_INCLUDE_PATH</code></strong>: Path to the directory containing the QUBO++ header files.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">LIBRARY_PATH</code></strong>: Path to the directory containing the QUBO++ shared libraries used during compilation and linking.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">LD_LIBRARY_PATH</code>:</strong> Path to the directory containing the QUBO++ shared libraries required at runtime.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">QBPP_LICENSE_KEY</code></strong>: Your QUBO++ license key. If omitted, an anonymous trial license is used.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">PATH</code></strong>: Path to the directory containing the QUBO++ executable binaries.</li>
+</ul>
+
+<p>To set these paths automatically each time a shell starts, add the following lines to the end of your <strong><code class="language-plaintext highlighter-rouge">~/.bashrc</code></strong>:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">QBPP_PATH</span><span class="o">=[</span>QUBO++ <span class="nb">install </span>directory]
+
+<span class="nb">export </span><span class="nv">CPLUS_INCLUDE_PATH</span><span class="o">=</span><span class="nv">$QBPP_PATH</span>/include:<span class="nv">$CPLUS_INCLUDE_PATH</span>
+<span class="nb">export </span><span class="nv">LIBRARY_PATH</span><span class="o">=</span><span class="nv">$QBPP_PATH</span>/lib:<span class="nv">$LIBRARY_PATH</span>
+<span class="nb">export </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="nv">$QBPP_PATH</span>/lib:<span class="nv">$LD_LIBRARY_PATH</span>
+<span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$QBPP_PATH</span>/bin:<span class="nv">$PATH</span>
+
+<span class="nb">export </span><span class="nv">QBPP_LICENSE_KEY</span><span class="o">=[</span>Your QUBO++ license key]
+</code></pre></div></div>
+
+<h2 id="lincense-management">Lincense Management</h2>
+<p>The license is activated using the <strong><code class="language-plaintext highlighter-rouge">qbpp-license</code></strong> command as follows:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>qbpp-license <span class="nt">-a</span>
+</code></pre></div></div>
+<p>This increments the activation count.
+Each license has a limited number of allowed activations.
+If <code class="language-plaintext highlighter-rouge">QBPP_LICENSE_KEY</code> is not set, the command attempts to activate an <strong>Anonymous Trial License</strong>.</p>
+
+<p>To check the current status of your QUBO++ license, simply run:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>qbpp-license
+</code></pre></div></div>
+<p>The current status can only be displayed for activated licenses.</p>
+
+<p>If you want to move the license to another machine, you can deactivate it on this machine as follows:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>qbpp-license <span class="nt">-d</span>
+</code></pre></div></div>
+<p>This decreases the activation count, and you can then activate the license on the other machine.</p>
+
+<p>Since the license is node-locked, the activation information is stored on the machine, and re-activation is not necessary as long as the license has not expired.</p>
+
+<blockquote>
+  <p><strong>WARNING</strong>
+Each license key has a limited number of allowed activations and deactivations.
+Once the total number of activations and deactivations reaches this limit, you will no longer be able to activate or deactivate that license.</p>
+</blockquote>
+
+
+      <hr style="margin: 2rem 0 1rem 0;">
+<div style="font-size: 0.9em; color: #666;">
+  Last updated: 2026.02.04
+</div>
+    </main>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>3-Digit Math Problem - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Minima テーマの main.css（ハイライト含む） -->
+  <link rel="stylesheet" href="/assets/main.css">
+
+  <!-- 自前のナビ用 CSS -->
+  <link rel="stylesheet" href="/assets/custom.css">
+
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+
+<body>
+
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ -->
+    <nav style="width:max-content; position:sticky; top:1rem; padding:0 1rem 0 0; border-right:1px solid #ddd;">
+      
+      <h2 style="margin-left:0;">QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/"><strong>Introduction</strong></a> </li>
+        <li><a href="/HUBO_QUBO"><strong>HUBO and QUBO</strong></a> </li>
+        <li><a href="/QUICK"><strong>Quick Start</strong></a>
+          <ul style="list-style:none; padding-left:1.2em; margin:0.2em 0 0.2em;">
+            <li><a href="/WSL"><strong>for Windows</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/CASE_STUDIES"><strong>Case Studies</strong></a></li>
+        <li><a href="/DEMOS"><strong>Demos</strong></a></li>
+        <li><a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Release</strong></a></li>
+      </ul>
+      <hr style="margin:1rem 0;">
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/python/"><strong>PyQUBO++ &rarr;</strong></a></li>
+      </ul>
+      
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="3-digit-math-problem">3-Digit Math Problem</h1>
+
+<p>Let us solve the following math problem using QUBO++.</p>
+
+<blockquote>
+  <p><strong>Math Problem</strong>:
+Find all three-digit odd integers whose <strong>product of digits</strong> is <strong>252</strong>.</p>
+</blockquote>
+
+<p>Let $x$, $y$, and $z$ be the hundreds, tens, and ones digits of the integer, respectively.
+More specifically:</p>
+<ul>
+  <li>$x$ is an integer in $[1, 9]$,</li>
+  <li>$y$ is an integer in $[0, 9]$,</li>
+  <li>$t$ is an integer in $[0, 4]$,</li>
+  <li>$z = 2t + 1$ (so $z$ is odd).</li>
+</ul>
+
+<p>Then the value $v$ of the three-digit integer $xyz$ is</p>
+
+\[\begin{aligned}
+v&amp;=100x+10y+z
+\end{aligned}\]
+
+<p>We find all solutions satisfying:</p>
+
+\[\begin{aligned}
+xyz &amp;= 252
+\end{aligned}\]
+
+<h2 id="qubo-program">QUBO++ program</h2>
+<p>The following QUBO++ program finds all solutions:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;set&gt;</span><span class="cp">
+</span>
+<span class="cp">#define MAXDEG 6
+#include</span> <span class="cpf">&lt;qbpp/qbpp.hpp&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;qbpp/exhaustive_solver.hpp&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var_int</span><span class="p">(</span><span class="s">"x"</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">9</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var_int</span><span class="p">(</span><span class="s">"y"</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">9</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">t</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var_int</span><span class="p">(</span><span class="s">"t"</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">4</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">z</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">t</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">v</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="n">z</span><span class="p">;</span>
+
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span> <span class="o">*</span> <span class="n">z</span> <span class="o">==</span> <span class="mi">252</span><span class="p">;</span>
+
+  <span class="n">f</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">exhaustive_solver</span><span class="o">::</span><span class="n">ExhaustiveSolver</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">sols</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search_optimal_solutions</span><span class="p">();</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">s</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">sol</span> <span class="o">:</span> <span class="n">sols</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">s</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">sol</span><span class="p">(</span><span class="n">v</span><span class="p">)));</span>
+  <span class="p">}</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">v</span> <span class="o">:</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">v</span> <span class="o">&lt;&lt;</span> <span class="s">" "</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>In this program, <strong><code class="language-plaintext highlighter-rouge">x</code></strong>, <strong><code class="language-plaintext highlighter-rouge">y</code></strong>, and <strong><code class="language-plaintext highlighter-rouge">t</code></strong> are defined as integer variables with the ranges above.
+Then <strong><code class="language-plaintext highlighter-rouge">z</code></strong>, <strong><code class="language-plaintext highlighter-rouge">v</code></strong>, and <strong><code class="language-plaintext highlighter-rouge">f</code></strong> are defined as expressions.
+We create an Exhaustive Solver instance for <code class="language-plaintext highlighter-rouge">f</code> and store all optimal solutions in <code class="language-plaintext highlighter-rouge">sols</code>.</p>
+
+<p>Because <code class="language-plaintext highlighter-rouge">x</code>, <code class="language-plaintext highlighter-rouge">y</code>, and <code class="language-plaintext highlighter-rouge">t</code> are encoded by multiple binary variables, different binary assignments can represent the same integer values.
+As a result, the same digit triple (<code class="language-plaintext highlighter-rouge">x</code>,<code class="language-plaintext highlighter-rouge">y</code>,<code class="language-plaintext highlighter-rouge">z</code>) may appear multiple times in <code class="language-plaintext highlighter-rouge">sols</code>.
+Therefore, we use a <code class="language-plaintext highlighter-rouge">std::set&lt;int&gt;</code> named <code class="language-plaintext highlighter-rouge">s</code> to remove duplicates by collecting only the resulting integer values <code class="language-plaintext highlighter-rouge">v</code>.</p>
+
+<p>The integers in <code class="language-plaintext highlighter-rouge">s</code> are printed as follows:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>479 497 667 749 947 
+</code></pre></div></div>
+
+      <hr style="margin: 2rem 0 1rem 0;">
+<div style="font-size: 0.9em; color: #666;">
+  Last updated: 2026.03.05
+</div>
+    </main>
+  </div>
+</body>
+
+</html>

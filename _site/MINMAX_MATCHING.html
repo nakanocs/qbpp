@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Minimum Maximal Matching Problem - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Minima テーマの main.css（ハイライト含む） -->
+  <link rel="stylesheet" href="/assets/main.css">
+
+  <!-- 自前のナビ用 CSS -->
+  <link rel="stylesheet" href="/assets/custom.css">
+
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+
+<body>
+
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ -->
+    <nav style="width:max-content; position:sticky; top:1rem; padding:0 1rem 0 0; border-right:1px solid #ddd;">
+      
+      <h2 style="margin-left:0;">QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/"><strong>Introduction</strong></a> </li>
+        <li><a href="/HUBO_QUBO"><strong>HUBO and QUBO</strong></a> </li>
+        <li><a href="/QUICK"><strong>Quick Start</strong></a>
+          <ul style="list-style:none; padding-left:1.2em; margin:0.2em 0 0.2em;">
+            <li><a href="/WSL"><strong>for Windows</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/CASE_STUDIES"><strong>Case Studies</strong></a></li>
+        <li><a href="/DEMOS"><strong>Demos</strong></a></li>
+        <li><a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Release</strong></a></li>
+      </ul>
+      <hr style="margin:1rem 0;">
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/python/"><strong>PyQUBO++ &rarr;</strong></a></li>
+      </ul>
+      
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="minimum-maximal-matching-problem">Minimum Maximal Matching Problem</h1>
+
+<p>A <strong>matching</strong> in an undirected graph is a set of edges such that no two edges share a common endpoint.
+A <strong>maximal matching</strong> is a matching to which no additional edge can be added without violating the matching condition.
+Given an undirected graph $G=(V,E)$, the minimum maximal matching problem asks for a maximal matching $S \subseteq E$ with the minimum number of edges.</p>
+
+<p>The maximality condition of a matching can be described in a compact way.
+For a node $u\in V$, let $N(u)$ denote the set of edges in $S$ incident to $u$.
+Then $S$ is a maximal matching if and only if, for every edge $(u,v)\in E$, the following condition holds:</p>
+
+\[1 \leq |N(u)|+|N(v)| \leq 2\]
+
+<p>This condition is satisfied if and only if $S$ constitute a maximal matching. To ensure that $S$ is a maximal matching, the following cases cover all possibilities:</p>
+
+<p align="center">
+  <img src="images/min_max_matching.svg" alt="The solution of the maximum matching problem." width="80%" />
+</p>
+
+<p>We can formulate the minimum maximal matching problem as finding a subset $S$ that satisfies the above condition and has minimum cardinality.</p>
+
+<p>For a formal proof, see the following paper:</p>
+
+<blockquote>
+  <p><strong>Reference</strong>:
+Nakahara, Y., Tsukiyama, S., Nakano, K., Parque, V., &amp; Ito, Y. (2025). <strong>A penalty-free QUBO formulation for the minimum maximal matching problem</strong>. International Journal of Parallel, Emergent and Distributed Systems, 1–19. https://doi.org/10.1080/17445760.2025.2579546</p>
+</blockquote>
+
+<h1 id="qubo-formuation-for-the-minimum-maximal-matching">QUBO formuation for the minimum maximal matching</h1>
+<p>Assume that the graph has $n$ vertices and $m$ edges, and that the edges are labeled $0,1,\ldots,m-1$.
+We introduce $m$ binary variables $x_0, x_1, \ldots, x_{m-1}$, where $x_i=1$ if and only if edge $i$ is selected (i.e., belongs to $S$).
+The objective is to minimize the number of selected edges:</p>
+
+\[\begin{aligned}
+\text{objective} &amp;= \sum_{i=0}^{m-1} x_i .
+\end{aligned}\]
+
+<p>To enforce the maximality condition, we use the following constraint:</p>
+
+\[\begin{aligned}
+\text{constraint} &amp;= \sum_{(u,v)\in E} (1 \leq |N(u)|+|N(v)| \leq 2)
+\end{aligned}\]
+
+<p>We construct a QUBO expression $f$ by combining the objective and the constraint as follows:</p>
+
+\[\begin{aligned}
+f &amp;= \text{objective} + \text{constraint}.
+\end{aligned}\]
+
+<h2 id="qubo-program">QUBO++ program</h2>
+<p>The following QUBO++ program finds a minimum maximal matching of a fixed undirected graph with $N=16$ nodes and $M=27$ edges:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#define MAXDEG 2
+#include</span> <span class="cpf">&lt;qbpp/qbpp.hpp&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;qbpp/exhaustive_solver.hpp&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;qbpp/graph.hpp&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">const</span> <span class="kt">size_t</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">16</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="p">,</span> <span class="kt">size_t</span><span class="o">&gt;&gt;</span> <span class="n">edges</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>   <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span>   <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span>   <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">},</span>   <span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">},</span>   <span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">},</span>   <span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mi">7</span><span class="p">},</span>
+      <span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mi">13</span><span class="p">},</span>  <span class="p">{</span><span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">},</span>   <span class="p">{</span><span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="p">},</span>   <span class="p">{</span><span class="mi">4</span><span class="p">,</span> <span class="mi">14</span><span class="p">},</span>  <span class="p">{</span><span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">},</span>   <span class="p">{</span><span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">},</span>   <span class="p">{</span><span class="mi">6</span><span class="p">,</span> <span class="mi">12</span><span class="p">},</span>
+      <span class="p">{</span><span class="mi">6</span><span class="p">,</span> <span class="mi">14</span><span class="p">},</span>  <span class="p">{</span><span class="mi">7</span><span class="p">,</span> <span class="mi">14</span><span class="p">},</span>  <span class="p">{</span><span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">},</span>   <span class="p">{</span><span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">},</span>  <span class="p">{</span><span class="mi">9</span><span class="p">,</span> <span class="mi">12</span><span class="p">},</span>  <span class="p">{</span><span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">},</span> <span class="p">{</span><span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">},</span>
+      <span class="p">{</span><span class="mi">11</span><span class="p">,</span> <span class="mi">13</span><span class="p">},</span> <span class="p">{</span><span class="mi">11</span><span class="p">,</span> <span class="mi">15</span><span class="p">},</span> <span class="p">{</span><span class="mi">12</span><span class="p">,</span> <span class="mi">14</span><span class="p">},</span> <span class="p">{</span><span class="mi">12</span><span class="p">,</span> <span class="mi">15</span><span class="p">},</span> <span class="p">{</span><span class="mi">13</span><span class="p">,</span> <span class="mi">15</span><span class="p">},</span> <span class="p">{</span><span class="mi">14</span><span class="p">,</span> <span class="mi">15</span><span class="p">}};</span>
+  <span class="k">const</span> <span class="kt">size_t</span> <span class="n">M</span> <span class="o">=</span> <span class="n">edges</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;&gt;</span> <span class="n">adj</span><span class="p">(</span><span class="n">N</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">M</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">edge</span> <span class="o">=</span> <span class="n">edges</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="n">adj</span><span class="p">[</span><span class="n">edge</span><span class="p">.</span><span class="n">first</span><span class="p">].</span><span class="n">push_back</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+    <span class="n">adj</span><span class="p">[</span><span class="n">edge</span><span class="p">.</span><span class="n">second</span><span class="p">].</span><span class="n">push_back</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">,</span> <span class="n">M</span><span class="p">);</span>
+
+  <span class="k">auto</span> <span class="n">objective</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sum</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+
+  <span class="k">auto</span> <span class="n">constraint</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">toExpr</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">e</span> <span class="o">:</span> <span class="n">edges</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">auto</span> <span class="n">u</span> <span class="o">=</span> <span class="n">e</span><span class="p">.</span><span class="n">first</span><span class="p">;</span>
+    <span class="k">auto</span> <span class="n">v</span> <span class="o">=</span> <span class="n">e</span><span class="p">.</span><span class="n">second</span><span class="p">;</span>
+    <span class="k">auto</span> <span class="n">t</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">toExpr</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span> <span class="n">idx</span> <span class="o">:</span> <span class="n">adj</span><span class="p">[</span><span class="n">u</span><span class="p">])</span> <span class="p">{</span>
+      <span class="n">t</span> <span class="o">+=</span> <span class="n">x</span><span class="p">[</span><span class="n">idx</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span> <span class="n">idx</span> <span class="o">:</span> <span class="n">adj</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="p">{</span>
+      <span class="n">t</span> <span class="o">+=</span> <span class="n">x</span><span class="p">[</span><span class="n">idx</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="n">constraint</span> <span class="o">+=</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">t</span> <span class="o">&lt;=</span> <span class="mi">2</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">objective</span> <span class="o">+</span> <span class="n">constraint</span><span class="p">;</span>
+
+  <span class="n">f</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">exhaustive_solver</span><span class="o">::</span><span class="n">ExhaustiveSolver</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">sol</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search</span><span class="p">();</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"objective = "</span> <span class="o">&lt;&lt;</span> <span class="n">objective</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"constraint = "</span> <span class="o">&lt;&lt;</span> <span class="n">constraint</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+  <span class="n">qbpp</span><span class="o">::</span><span class="n">graph</span><span class="o">::</span><span class="n">GraphDrawer</span> <span class="n">graph</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">selected_nodes</span><span class="p">(</span><span class="n">N</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">M</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">sol</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span> <span class="p">{</span>
+      <span class="n">selected_nodes</span><span class="p">[</span><span class="n">edges</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">first</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+      <span class="n">selected_nodes</span><span class="p">[</span><span class="n">edges</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">second</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">graph</span><span class="p">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">qbpp</span><span class="o">::</span><span class="n">graph</span><span class="o">::</span><span class="n">Node</span><span class="p">(</span><span class="n">i</span><span class="p">).</span><span class="n">color</span><span class="p">(</span><span class="n">selected_nodes</span><span class="p">[</span><span class="n">i</span><span class="p">]));</span>
+  <span class="p">}</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">M</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">auto</span> <span class="n">edge</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">graph</span><span class="o">::</span><span class="n">Edge</span><span class="p">(</span><span class="n">edges</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">first</span><span class="p">,</span> <span class="n">edges</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">second</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">sol</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span> <span class="p">{</span>
+      <span class="n">edge</span><span class="p">.</span><span class="n">color</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="n">penwidth</span><span class="p">(</span><span class="mf">2.0</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">graph</span><span class="p">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">graph</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="s">"minmaxmatching.svg"</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>We first define a vector <code class="language-plaintext highlighter-rouge">x</code> of <code class="language-plaintext highlighter-rouge">M</code> binary variables, and then define <code class="language-plaintext highlighter-rouge">objective</code>, <code class="language-plaintext highlighter-rouge">constraint</code>, and <code class="language-plaintext highlighter-rouge">f</code> based on the formulation above.
+The Exhaustive Solver is used to find an optimal solution of <code class="language-plaintext highlighter-rouge">f</code>.
+The values of objective and constraint are printed, and the resulting graph is saved to <code class="language-plaintext highlighter-rouge">minmaxmatching.svg</code>.</p>
+
+<p>This program produces the following output:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>objective = 6
+constraint = 0
+</code></pre></div></div>
+<p>Thus, $S$ contains 6 edges.
+The resulting graph stored in <code class="language-plaintext highlighter-rouge">minmaxmatching.svg</code> is shown below:</p>
+<p align="center">
+  <img src="images/minmaxmatching.svg" alt="The solution of the minimum maximum matching problem." width="80%" />
+</p>
+<p>In this graph, the selected edges in $S$ and all nodes incident to these edges are highlighted.
+We can see that no more edge can be added, and the maximality condition is satisfied.</p>
+
+
+      <hr style="margin: 2rem 0 1rem 0;">
+<div style="font-size: 0.9em; color: #666;">
+  Last updated: 2026.03.05
+</div>
+    </main>
+  </div>
+</body>
+
+</html>

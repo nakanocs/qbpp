@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>REPLACE - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Minima テーマの main.css（ハイライト含む） -->
+  <link rel="stylesheet" href="/assets/main.css">
+
+  <!-- 自前のナビ用 CSS -->
+  <link rel="stylesheet" href="/assets/custom.css">
+
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+
+<body>
+
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ -->
+    <nav style="width:max-content; position:sticky; top:1rem; padding:0 1rem 0 0; border-right:1px solid #ddd;">
+      
+      <h2 style="margin-left:0;">QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/"><strong>Introduction</strong></a> </li>
+        <li><a href="/HUBO_QUBO"><strong>HUBO and QUBO</strong></a> </li>
+        <li><a href="/QUICK"><strong>Quick Start</strong></a>
+          <ul style="list-style:none; padding-left:1.2em; margin:0.2em 0 0.2em;">
+            <li><a href="/WSL"><strong>for Windows</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/CASE_STUDIES"><strong>Case Studies</strong></a></li>
+        <li><a href="/DEMOS"><strong>Demos</strong></a></li>
+        <li><a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Release</strong></a></li>
+      </ul>
+      <hr style="margin:1rem 0;">
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/python/"><strong>PyQUBO++ &rarr;</strong></a></li>
+      </ul>
+      
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="replace-functions">Replace functions</h1>
+
+<p>QUBO++ provides the following replace function, which can be used to fix variable values in an expression.</p>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">qbpp::replace(const qbpp::Expr&amp; f, const qbpp::MapList&amp; ml)</code></strong></li>
+</ul>
+
+<p>Replaces (fixes) variable values in the expression <code class="language-plaintext highlighter-rouge">f</code> according to the mapping specified by <code class="language-plaintext highlighter-rouge">ml</code>.</p>
+
+<h2 id="using-the-replace-function-to-fix-variable-values">Using the replace function to fix variable values</h2>
+<p>We explain the <strong><code class="language-plaintext highlighter-rouge">qbpp::replace()</code></strong> function using the
+<a href="PARTITION">QUBO++ program for partitioning problem</a>.
+This program finds a partition of the numbers in the following vector <strong><code class="language-plaintext highlighter-rouge">w</code></strong> into two subsets $P$ and $Q$ ($=\overline{P}$) such that the difference between their sums is minimized:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;</span> <span class="n">w</span> <span class="o">=</span> <span class="p">{</span><span class="mi">64</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="mi">47</span><span class="p">,</span> <span class="mi">74</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">83</span><span class="p">,</span> <span class="mi">63</span><span class="p">,</span> <span class="mi">40</span><span class="p">};</span>
+</code></pre></div></div>
+<p>We modify this partitioning problem so that 64 must belong to $P$ and 27 must belong to $Q$, ensuring that they are placed in distinct subsets.</p>
+
+<p>To enforce this constraint, the values of <code class="language-plaintext highlighter-rouge">x[0]</code> and <code class="language-plaintext highlighter-rouge">x[1]</code> are fixed to 1 and 0, respectively, using the <code class="language-plaintext highlighter-rouge">qbpp::replace()</code> function.</p>
+
+<p>The complete QUBO++ program is shown below:</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#define MAXDEG 2
+#include</span> <span class="cpf">&lt;qbpp/qbpp.hpp&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;qbpp/exhaustive_solver.hpp&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">qbpp</span><span class="o">::</span><span class="n">Vector</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;</span> <span class="n">w</span> <span class="o">=</span> <span class="p">{</span><span class="mi">64</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="mi">47</span><span class="p">,</span> <span class="mi">74</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">83</span><span class="p">,</span> <span class="mi">63</span><span class="p">,</span> <span class="mi">40</span><span class="p">};</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">,</span> <span class="n">w</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+  <span class="k">auto</span> <span class="n">p</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sum</span><span class="p">(</span><span class="n">w</span> <span class="o">*</span> <span class="n">x</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">q</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sum</span><span class="p">(</span><span class="n">w</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">x</span><span class="p">));</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sqr</span><span class="p">(</span><span class="n">p</span> <span class="o">-</span> <span class="n">q</span><span class="p">);</span>
+  <span class="n">f</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+
+  <span class="n">qbpp</span><span class="o">::</span><span class="n">MapList</span> <span class="n">ml</span><span class="p">({{</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">}});</span>
+  <span class="k">auto</span> <span class="n">g</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">replace</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ml</span><span class="p">);</span>
+  <span class="n">g</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">exhaustive_solver</span><span class="o">::</span><span class="n">ExhaustiveSolver</span><span class="p">(</span><span class="n">g</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">sol</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search</span><span class="p">();</span>
+
+  <span class="k">auto</span> <span class="n">full_sol</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">Sol</span><span class="p">(</span><span class="n">f</span><span class="p">).</span><span class="n">set</span><span class="p">(</span><span class="n">sol</span><span class="p">).</span><span class="n">set</span><span class="p">(</span><span class="n">ml</span><span class="p">);</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"sol = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"ml = "</span> <span class="o">&lt;&lt;</span> <span class="n">ml</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"full_sol = "</span> <span class="o">&lt;&lt;</span> <span class="n">full_sol</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f(full_sol) = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span><span class="p">(</span><span class="n">full_sol</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"p(full_sol) = "</span> <span class="o">&lt;&lt;</span> <span class="n">p</span><span class="p">(</span><span class="n">full_sol</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"q(full_sol) = "</span> <span class="o">&lt;&lt;</span> <span class="n">q</span><span class="p">(</span><span class="n">full_sol</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"P :"</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">w</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">](</span><span class="n">full_sol</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" "</span> <span class="o">&lt;&lt;</span> <span class="n">w</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Q :"</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">w</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">](</span><span class="n">full_sol</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" "</span> <span class="o">&lt;&lt;</span> <span class="n">w</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>First, a <code class="language-plaintext highlighter-rouge">qbpp::MapList</code> object <strong><code class="language-plaintext highlighter-rouge">ml</code></strong> is defined, which specifies fixed values for the variables <code class="language-plaintext highlighter-rouge">x[0]</code> and <code class="language-plaintext highlighter-rouge">x[1]</code>.
+Given the original expression <code class="language-plaintext highlighter-rouge">f</code> for the partitioning problem and the qbpp::MapList object <code class="language-plaintext highlighter-rouge">ml</code>, the <strong><code class="language-plaintext highlighter-rouge">qbpp::replace()</code></strong> function is used to replace <code class="language-plaintext highlighter-rouge">x[0]</code> and <code class="language-plaintext highlighter-rouge">x[1]</code> in <code class="language-plaintext highlighter-rouge">f</code> with the constants 1 and 0, respectively.
+The resulting expression is stored in <strong><code class="language-plaintext highlighter-rouge">g</code></strong>.</p>
+
+<p>The Exhaustive Solver is then applied to <code class="language-plaintext highlighter-rouge">g</code> to find an optimal solution, which is stored in <code class="language-plaintext highlighter-rouge">sol</code>.
+Note that the expression <code class="language-plaintext highlighter-rouge">g</code> no longer contains the variables <code class="language-plaintext highlighter-rouge">x[0]</code> and <code class="language-plaintext highlighter-rouge">x[1]</code>, and consequently, <code class="language-plaintext highlighter-rouge">sol</code> also does not include assignments for these variables.</p>
+
+<p>To construct a complete solution that includes all variables, we create a zero-initialized <code class="language-plaintext highlighter-rouge">qbpp::Sol</code> object for <code class="language-plaintext highlighter-rouge">f</code> and then set the binary values using <code class="language-plaintext highlighter-rouge">set()</code> with <code class="language-plaintext highlighter-rouge">sol</code> and <code class="language-plaintext highlighter-rouge">ml</code>.</p>
+
+<p>From the output below, we can confirm that 64 is placed in $P$ and 27 is placed in $Q$, as intended:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sol = 4:{{x[2],1},{x[3],0},{x[4],1},{x[5],1},{x[6],0},{x[7],0}}
+ml = {{x[0],1},{x[1],0}}
+full_sol = 4:{{x[0],1},{x[1],0},{x[2],1},{x[3],0},{x[4],1},{x[5],1},{x[6],0},{x[7],0}}
+f(full_sol) = 4
+p(full_sol) = 206
+q(full_sol) = 204
+P : 64 47 12 83
+Q : 27 74 63 40
+</code></pre></div></div>
+
+<h2 id="using-the-replace-function-to-replace-variables-with-expressions">Using the replace function to replace variables with expressions</h2>
+<p>The <code class="language-plaintext highlighter-rouge">replace()</code> function can also replace a variable with an expression, not only with a constant value.</p>
+
+<p>Here, we present a more sophisticated way to ensure that 64 and 27 are placed in distinct subsets in the partitioning problem introduced above.
+The key idea is to replace the variable <code class="language-plaintext highlighter-rouge">x[0]</code> in the expression <code class="language-plaintext highlighter-rouge">f</code> with the expression <code class="language-plaintext highlighter-rouge">1 - x[1]</code>.
+This enforces the constraint that <code class="language-plaintext highlighter-rouge">x[0]</code> and <code class="language-plaintext highlighter-rouge">x[1]</code> always take opposite values, guaranteeing that the corresponding elements (64 and 27) belong to different subsets.</p>
+
+<p>The following C++ program implements this idea:</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">qbpp</span><span class="o">::</span><span class="n">MapList</span> <span class="nf">ml</span><span class="p">({{</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]}});</span>
+  <span class="k">auto</span> <span class="n">g</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">replace</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ml</span><span class="p">);</span>
+  <span class="n">g</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">exhaustive_solver</span><span class="o">::</span><span class="n">ExhaustiveSolver</span><span class="p">(</span><span class="n">g</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">sol</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search</span><span class="p">();</span>
+
+  <span class="k">auto</span> <span class="n">full_sol</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">Sol</span><span class="p">(</span><span class="n">f</span><span class="p">).</span><span class="n">set</span><span class="p">(</span><span class="n">sol</span><span class="p">,</span> <span class="n">ml</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>In this program, a qbpp::MapList object ml is defined so that the variable <code class="language-plaintext highlighter-rouge">x[0]</code> is replaced by the expression <code class="language-plaintext highlighter-rouge">1 - x[1]</code>.</p>
+
+<p>The <code class="language-plaintext highlighter-rouge">qbpp::replace()</code> function applies this substitution to the original expression <code class="language-plaintext highlighter-rouge">f</code>, and the resulting expression is stored in <code class="language-plaintext highlighter-rouge">g</code>.
+As a result, <code class="language-plaintext highlighter-rouge">g</code> no longer contains the variable <code class="language-plaintext highlighter-rouge">x[0]</code>; instead, all occurrences of <code class="language-plaintext highlighter-rouge">x[0]</code> are replaced by the expression <code class="language-plaintext highlighter-rouge">1 - x[1]</code>.</p>
+
+<p>The Exhaustive Solver is then used to find an optimal solution for <code class="language-plaintext highlighter-rouge">g</code>, which is stored in <code class="language-plaintext highlighter-rouge">sol</code>.
+Since <code class="language-plaintext highlighter-rouge">x[0]</code> does not appear in <code class="language-plaintext highlighter-rouge">g</code>, the solution sol also does not include an assignment for <code class="language-plaintext highlighter-rouge">x[0]</code>.</p>
+
+<p>To construct a complete solution over the original variables in <code class="language-plaintext highlighter-rouge">f</code>, we start with a zero-initialized <code class="language-plaintext highlighter-rouge">qbpp::Sol(f)</code> and then populate it by calling <code class="language-plaintext highlighter-rouge">set(sol, ml)</code>.
+Note that <code class="language-plaintext highlighter-rouge">sol</code> and <code class="language-plaintext highlighter-rouge">ml</code> must be passed to <code class="language-plaintext highlighter-rouge">set()</code> together, because the mapping in <code class="language-plaintext highlighter-rouge">ml</code> (e.g., <code class="language-plaintext highlighter-rouge">x[0] = 1 - x[1]</code>) may depend on variable values contained in <code class="language-plaintext highlighter-rouge">sol</code>.</p>
+
+<p>This program produces the following output:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sol = 4:{{x[1],0},{x[2],1},{x[3],0},{x[4],1},{x[5],1},{x[6],0},{x[7],0}}
+ml = {{x[0],1 -x[1]}}
+full_sol = 4:{{x[0],1},{x[1],0},{x[2],1},{x[3],0},{x[4],1},{x[5],1},{x[6],0},{x[7],0}}
+f(full_sol) = 4
+p(full_sol) = 206
+q(full_sol) = 204
+P : 64 47 12 83
+Q : 27 74 63 40
+</code></pre></div></div>
+
+<p>We can confirm that:</p>
+<ul>
+  <li>the solution <code class="language-plaintext highlighter-rouge">sol</code> does not include x[0],</li>
+  <li><code class="language-plaintext highlighter-rouge">x[0]</code> and <code class="language-plaintext highlighter-rouge">x[1]</code> take opposite values, and</li>
+  <li>64 and 27 are placed in distinct subsets, as intended.</li>
+</ul>
+
+<h2 id="replace-functions-for-integer-variables">Replace Functions for Integer Variables</h2>
+<p>Integer variables can be replaced with fixed integer values using the <code class="language-plaintext highlighter-rouge">replace()</code> functions.</p>
+
+<p>Here, we demonstrate this feature using a simple <strong>multiplication expression</strong>.
+Let $p$, $q$, and $r$ be integer variables, and consider the following constraint:</p>
+
+\[\begin{aligned}
+p\times q - r &amp;=0
+\end{aligned}\]
+
+<p>This expression can be interpreted in several ways, leading to different types of problems:</p>
+<ul>
+  <li><strong>Multiplication</strong>: For fixed values of $p$ and $q$, find $r$ that satisfies the expression.</li>
+  <li><strong>Factorization</strong>: For a fixed value of $r$, find $p$ and $q$ that satisfy the expression.</li>
+  <li><strong>Division</strong>: For fixed values of $p$ and $r$, find $q$ that satisfies the expression.</li>
+</ul>
+
+<p>Using the <strong><code class="language-plaintext highlighter-rouge">qbpp::replace()</code></strong> function, integer variables can be fixed to constant values.
+We demonstrate QUBO++ programs that solve these problems using <code class="language-plaintext highlighter-rouge">qbpp::replace()</code>.</p>
+
+<h3 id="multiplication">Multiplication</h3>
+<p>The folloing program fixes $p=5$ and $q=7$ and finds the product $r=35$:</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#define MAXDEG 4
+#include</span> <span class="cpf">&lt;qbpp/qbpp.hpp&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;qbpp/easy_solver.hpp&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">p</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">&lt;=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var_int</span><span class="p">(</span><span class="s">"p"</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">8</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">q</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">&lt;=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var_int</span><span class="p">(</span><span class="s">"q"</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">8</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">r</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">&lt;=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var_int</span><span class="p">(</span><span class="s">"r"</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">40</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">p</span> <span class="o">*</span> <span class="n">q</span> <span class="o">-</span> <span class="n">r</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="n">f</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+
+  <span class="n">qbpp</span><span class="o">::</span><span class="n">MapList</span> <span class="n">ml</span><span class="p">({{</span><span class="n">p</span><span class="p">,</span> <span class="mi">5</span><span class="p">},</span> <span class="p">{</span><span class="n">q</span><span class="p">,</span> <span class="mi">7</span><span class="p">}});</span>
+  <span class="k">auto</span> <span class="n">g</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">replace</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ml</span><span class="p">);</span>
+  <span class="n">g</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"g = "</span> <span class="o">&lt;&lt;</span> <span class="n">g</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">easy_solver</span><span class="o">::</span><span class="n">EasySolver</span><span class="p">(</span><span class="n">g</span><span class="p">);</span>
+  <span class="n">solver</span><span class="p">.</span><span class="n">target_energy</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">sol</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search</span><span class="p">();</span>
+
+  <span class="k">auto</span> <span class="n">full_sol</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">Sol</span><span class="p">(</span><span class="n">f</span><span class="p">).</span><span class="n">set</span><span class="p">(</span><span class="n">sol</span><span class="p">).</span><span class="n">set</span><span class="p">(</span><span class="n">ml</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"p= "</span> <span class="o">&lt;&lt;</span> <span class="n">full_sol</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">", q= "</span> <span class="o">&lt;&lt;</span> <span class="n">full_sol</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+            <span class="o">&lt;&lt;</span> <span class="s">", r= "</span> <span class="o">&lt;&lt;</span> <span class="n">full_sol</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>In this program, a <code class="language-plaintext highlighter-rouge">qbpp::MapList</code> object <code class="language-plaintext highlighter-rouge">ml</code> is used to fix the values of the integer variables 
+<code class="language-plaintext highlighter-rouge">p</code> and <code class="language-plaintext highlighter-rouge">q</code> in the original expression <code class="language-plaintext highlighter-rouge">f</code>.
+By applying <code class="language-plaintext highlighter-rouge">qbpp::replace(f, ml)</code>, the variables <code class="language-plaintext highlighter-rouge">p</code> and <code class="language-plaintext highlighter-rouge">q</code> in <code class="language-plaintext highlighter-rouge">f</code> are replaced with the constants 5 and 7, respectively.
+The resulting expression is stored in <code class="language-plaintext highlighter-rouge">g</code>, which now contains only the variable <code class="language-plaintext highlighter-rouge">r</code>.
+The Easy Solver is then applied to <code class="language-plaintext highlighter-rouge">g</code>, and the resulting solution is stored in <code class="language-plaintext highlighter-rouge">sol</code>.
+To construct a complete solution that includes all variables, we create a zero-initialized <code class="language-plaintext highlighter-rouge">qbpp::Sol</code> object for <code class="language-plaintext highlighter-rouge">f</code> and then set the binary values using <code class="language-plaintext highlighter-rouge">set()</code> with <code class="language-plaintext highlighter-rouge">sol</code> and <code class="language-plaintext highlighter-rouge">ml</code>.
+Finally, the values of <code class="language-plaintext highlighter-rouge">p</code>, <code class="language-plaintext highlighter-rouge">q</code>, and <code class="language-plaintext highlighter-rouge">r</code> are printed.</p>
+
+<p>This program produces the following output, confirming that the multiplication result is obtained correctly:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>g = 1089 -65*r[0] -128*r[1] -248*r[2] -464*r[3] -800*r[4] -413*r[5] +4*r[0]*r[1] +8*r[0]*r[2] +16*r[0]*r[3] +32*r[0]*r[4] +14*r[0]*r[5] +16*r[1]*r[2] +32*r[1]*r[3] +64*r[1]*r[4] +28*r[1]*r[5] +64*r[2]*r[3] +128*r[2]*r[4] +56*r[2]*r[5] +256*r[3]*r[4] +112*r[3]*r[5] +224*r[4]*r[5]
+p= 5, q= 7, r= 35
+</code></pre></div></div>
+
+<h3 id="factorization">Factorization</h3>
+<p>For the factorization of $r=35$, the <code class="language-plaintext highlighter-rouge">qbpp::MapList</code> object <code class="language-plaintext highlighter-rouge">ml</code> in the QUBO++ program is modified as follows:</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">qbpp</span><span class="o">::</span><span class="n">MapList</span> <span class="nf">ml</span><span class="p">({{</span><span class="n">r</span><span class="p">,</span> <span class="mi">35</span><span class="p">}});</span>
+</code></pre></div></div>
+
+<p>By fixing the value of $r$, the solver searches for integer values of $p$ and $q$ that satisfy the constraint</p>
+
+\[\begin{aligned}
+p\times q&amp;=35
+\end{aligned}\]
+
+<p>This program produces the following output:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>g = 961 -120*p[0] -232*p[1] -336*p[2] -120*q[0] -232*q[1] -336*q[2] +16*p[0]*p[1] +24*p[0]*p[2] -45*p[0]*q[0] -80*p[0]*q[1] -105*p[0]*q[2] +48*p[1]*p[2] -80*p[1]*q[0] -136*p[1]*q[1] -168*p[1]*q[2] -105*p[2]*q[0] -168*p[2]*q[1] -189*p[2]*q[2] +16*q[0]*q[1] +24*q[0]*q[2] +48*q[1]*q[2] +20*p[0]*p[1]*q[0] +48*p[0]*p[1]*q[1] +84*p[0]*p[1]*q[2] +30*p[0]*p[2]*q[0] +72*p[0]*p[2]*q[1] +126*p[0]*p[2]*q[2] +20*p[0]*q[0]*q[1] +30*p[0]*q[0]*q[2] +60*p[0]*q[1]*q[2] +60*p[1]*p[2]*q[0] +144*p[1]*p[2]*q[1] +252*p[1]*p[2]*q[2] +48*p[1]*q[0]*q[1] +72*p[1]*q[0]*q[2] +144*p[1]*q[1]*q[2] +84*p[2]*q[0]*q[1] +126*p[2]*q[0]*q[2] +252*p[2]*q[1]*q[2] +16*p[0]*p[1]*q[0]*q[1] +24*p[0]*p[1]*q[0]*q[2] +48*p[0]*p[1]*q[1]*q[2] +24*p[0]*p[2]*q[0]*q[1] +36*p[0]*p[2]*q[0]*q[2] +72*p[0]*p[2]*q[1]*q[2] +48*p[1]*p[2]*q[0]*q[1] +72*p[1]*p[2]*q[0]*q[2] +144*p[1]*p[2]*q[1]*q[2]
+p= 5, q= 7, r= 35
+</code></pre></div></div>
+
+<h3 id="division">Division</h3>
+<p>To compute the division $r/p$ with $r=35$ and $p=5$, the qbpp::MapList object ml in the QUBO++ program is modified as follows:</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">qbpp</span><span class="o">::</span><span class="n">MapList</span> <span class="nf">ml</span><span class="p">({{</span><span class="n">p</span><span class="p">,</span> <span class="mi">5</span><span class="p">},</span> <span class="p">{</span><span class="n">r</span><span class="p">,</span> <span class="mi">35</span><span class="p">}});</span>
+</code></pre></div></div>
+
+<p>This program produces the following output:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">g</span> <span class="o">=</span> <span class="mi">625</span> <span class="o">-</span><span class="mi">225</span><span class="o">*</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span><span class="mi">400</span><span class="o">*</span><span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span><span class="mi">525</span><span class="o">*</span><span class="n">q</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span><span class="mi">100</span><span class="o">*</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span><span class="mi">150</span><span class="o">*</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">q</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span><span class="mi">300</span><span class="o">*</span><span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">q</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">p</span><span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">q</span><span class="o">=</span> <span class="mi">7</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span> <span class="mi">35</span>
+</code></pre></div></div>
+<p>This confirms that the division result $q=r/p=7$ is correctly obtained.</p>
+
+<blockquote>
+  <p><strong>NOTE</strong>
+QUBO++ also provides a member function version of <code class="language-plaintext highlighter-rouge">replace()</code> for expressions.
+In other words:</p>
+  <ul>
+    <li><strong><code class="language-plaintext highlighter-rouge">f.replace(ml)</code></strong> updates the expression <code class="language-plaintext highlighter-rouge">f</code> in place by applying the replacements specified in <code class="language-plaintext highlighter-rouge">ml</code>.</li>
+    <li><strong><code class="language-plaintext highlighter-rouge">qbpp::replace(f, ml)</code></strong> returns a new expression in which the replacements have been applied, without modifying the original expression <code class="language-plaintext highlighter-rouge">f</code>.
+ Use <code class="language-plaintext highlighter-rouge">f.replace(ml)</code> when you want to permanently modify an existing expression, and use <code class="language-plaintext highlighter-rouge">qbpp::replace(f, ml)</code> when you want to keep the original expression unchanged.</li>
+  </ul>
+</blockquote>
+
+      <hr style="margin: 2rem 0 1rem 0;">
+<div style="font-size: 0.9em; color: #666;">
+  Last updated: 2026.03.04
+</div>
+    </main>
+  </div>
+</body>
+
+</html>

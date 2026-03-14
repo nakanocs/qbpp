@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Evaluating Expressions - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Minima テーマの main.css（ハイライト含む） -->
+  <link rel="stylesheet" href="/assets/main.css">
+
+  <!-- 自前のナビ用 CSS -->
+  <link rel="stylesheet" href="/assets/custom.css">
+
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+
+<body>
+
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ（全ページ共通） -->
+    <nav style="min-width:220px; position:sticky; top:1rem; padding-right:1rem; border-right:1px solid #ddd;">
+      <h2>QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0;">
+        <li><a href="/"><strong>Introduction</strong></a> </li>
+        <li><a href="/HUBO_QUBO"><strong>HUBO and QUBO</strong></a> </li>
+        <li><a href="/QUICK"><strong>Quick Start</strong></a> </li>
+        <li><a href="/WSL"><strong>Quick Start for Windows</strong></a> </li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/CASE_STUDIES"><strong>Case Studies</strong></a></li>
+        <li><a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Release</strong></a></li>
+      </ul>
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="evaluating-expressions">Evaluating Expressions</h1>
+
+<h2 id="evaluation-using-qbppmaplist">Evaluation using qbpp::Maplist</h2>
+<p>The value of expressions can be simply done by providing an assignment of values to all elements
+as a list of pairs of a variable and its value.
+A list can be defined as a <strong><code class="language-plaintext highlighter-rouge">qbpp::MapList</code></strong> object.
+For example, the following program computes the function $f(x,y,z)$ for $(x,y,z)=(0,1,1)$.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">y</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"y"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">z</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"z"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sqr</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">z</span> <span class="o">-</span> <span class="mi">3</span><span class="p">);</span>
+
+  <span class="n">qbpp</span><span class="o">::</span><span class="n">MapList</span> <span class="n">ml</span><span class="p">;</span>
+  <span class="n">ml</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">});</span>
+  <span class="n">ml</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">y</span><span class="p">,</span> <span class="mi">1</span><span class="p">});</span>
+  <span class="n">ml</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">z</span><span class="p">,</span> <span class="mi">1</span><span class="p">});</span>
+  
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">ml</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f(0,1,1) = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span><span class="p">(</span><span class="n">ml</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>In this program, <code class="language-plaintext highlighter-rouge">qbpp::MapList</code> object <code class="language-plaintext highlighter-rouge">ml</code> is defined,
+and an assignment <code class="language-plaintext highlighter-rouge">{x, 0}</code>, <code class="language-plaintext highlighter-rouge">{y, 1}</code> and <code class="language-plaintext highlighter-rouge">{z, 1}</code> is appended to <code class="language-plaintext highlighter-rouge">ml</code>.
+Then <code class="language-plaintext highlighter-rouge">f(ml)</code> returns the value of $f(0,1,1)$.
+This program displays the follwing output:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{{x,0},{y,1},{z,1}}
+f(0,1,1) = 4
+</code></pre></div></div>
+
+<p>Alternratively, we can provide an assignemt directly as follows:</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">y</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"y"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">z</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"z"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sqr</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">z</span> <span class="o">-</span> <span class="mi">3</span><span class="p">);</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f(0,1,1) = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span><span class="p">({{</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">},</span> <span class="p">{</span><span class="n">y</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="n">z</span><span class="p">,</span> <span class="mi">1</span><span class="p">}})</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="evaluation-using-qbppsol">Evaluation using qbpp::Sol</h2>
+<p>A solution object (<strong><code class="language-plaintext highlighter-rouge">qbpp::Sol</code></strong>) can be used to evaluate the value of an expression (<strong><code class="language-plaintext highlighter-rouge">qbpp::Expr</code></strong>).
+To do this, we first construct a <code class="language-plaintext highlighter-rouge">qbpp::Sol</code> object sol associated with a given expression <code class="language-plaintext highlighter-rouge">f</code>.
+The newly created <strong><code class="language-plaintext highlighter-rouge">qbpp::Sol</code></strong> object is initialized with the all-zero assignment.</p>
+
+<p>Using the <strong><code class="language-plaintext highlighter-rouge">set()</code></strong> member function of <code class="language-plaintext highlighter-rouge">qbpp::Sol</code>, we can assign values to individual variables.
+Then, both <strong><code class="language-plaintext highlighter-rouge">f(sol)</code></strong> and <strong><code class="language-plaintext highlighter-rouge">sol(f)</code></strong> return the value of the expression f under the assignment stored in sol.
+Furthermore, the <strong><code class="language-plaintext highlighter-rouge">comp_energy()</code></strong> member function computes and returns the same value.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">y</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"y"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">z</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"z"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sqr</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">z</span> <span class="o">-</span> <span class="mi">3</span><span class="p">);</span>
+
+  <span class="n">qbpp</span><span class="o">::</span><span class="n">Sol</span> <span class="n">sol</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+  <span class="n">sol</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+  <span class="n">sol</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+  
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f(0,1,1) = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f(0,1,1) = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f(0,1,1) = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">.</span><span class="n">comp_energy</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Note that the member function <strong><code class="language-plaintext highlighter-rouge">comp_energy()</code></strong> of a solution object <code class="language-plaintext highlighter-rouge">sol</code> computes the energy value and caches it internally.
+In addition, a solution object returned by a solver already has its energy value computed and cached.
+To retrieve the energy without recomputing it, you can use the member function <strong><code class="language-plaintext highlighter-rouge">energy()</code></strong>, as shown below:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
+#include</span> <span class="cpf">"qbpp_easy_solver.hpp"</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">y</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"y"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">z</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"z"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sqr</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">z</span> <span class="o">-</span> <span class="mi">4</span><span class="p">);</span>
+
+  <span class="n">f</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">easy_solver</span><span class="o">::</span><span class="n">EasySolver</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+  <span class="n">solver</span><span class="p">.</span><span class="n">target_energy</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">sol</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search</span><span class="p">();</span>
+  
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"sol = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"energy = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">.</span><span class="n">energy</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  
+  <span class="n">sol</span><span class="p">.</span><span class="n">flip</span><span class="p">(</span><span class="n">z</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"flipped sol = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"flipped energy = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">.</span><span class="n">energy</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>In this program, <code class="language-plaintext highlighter-rouge">sol.energy()</code> correctly returns 0.
+However, after flipping the variable <code class="language-plaintext highlighter-rouge">z</code>, the cached energy value becomes invalid.
+Calling <code class="language-plaintext highlighter-rouge">sol.energy()</code> without recomputing the energy therefore results in <strong>a runtime error</strong>, as shown below:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sol = 0:{{x,1},{y,0},{z,1}}
+energy = 0
+terminate called after throwing an instance of 'std::runtime_error'
+</code></pre></div></div>
+
+<p>To resolve this issue, you must explicitly recompute the energy by calling <strong><code class="language-plaintext highlighter-rouge">sol.comp_energy()</code></strong> after modifying the solution, as follows:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"sol = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"energy = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">.</span><span class="n">energy</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  
+  <span class="n">sol</span><span class="p">.</span><span class="n">flip</span><span class="p">(</span><span class="n">z</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"sol.comp_energy() = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">.</span><span class="n">comp_energy</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"flipped sol = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"flipped energy = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">.</span><span class="n">energy</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+</code></pre></div></div>
+<p>This program produces the following output:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sol = 0:{{x,1},{y,0},{z,1}}
+energy = 0
+sol.comp_energy() = 9
+flipped sol = 9:{{x,1},{y,0},{z,0}}
+flipped energy = 9
+</code></pre></div></div>
+
+      <hr style="margin: 2rem 0 1rem 0;">
+<div style="font-size: 0.9em; color: #666;">
+  Last updated: 2026.02.04
+</div>
+    </main>
+  </div>
+</body>
+
+</html>

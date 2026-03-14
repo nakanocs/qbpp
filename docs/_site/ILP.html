@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Integer Linear Programming - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Minima テーマの main.css（ハイライト含む） -->
+  <link rel="stylesheet" href="/assets/main.css">
+
+  <!-- 自前のナビ用 CSS -->
+  <link rel="stylesheet" href="/assets/custom.css">
+
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+
+<body>
+
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ（全ページ共通） -->
+    <nav style="min-width:220px; position:sticky; top:1rem; padding-right:1rem; border-right:1px solid #ddd;">
+      <h2>QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0;">
+        <li><a href="/"><strong>Introduction</strong></a> </li>
+        <li><a href="/HUBO_QUBO"><strong>HUBO and QUBO</strong></a> </li>
+        <li><a href="/QUICK"><strong>Quick Start</strong></a> </li>
+        <li><a href="/WSL"><strong>Quick Start for Windows</strong></a> </li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/CASE_STUDIES"><strong>Case Studies</strong></a></li>
+        <li><a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Release</strong></a></li>
+      </ul>
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="integer-linear-programming-ilp">Integer Linear Programming (ILP)</h1>
+<p><strong>Integer Linear Programming (ILP)</strong> can be converted into a QUBO expression using QUBO++.
+As an example, consider the following ILP:</p>
+
+\[\begin{aligned}
+\text{Maximize:} &amp;&amp; 2x_0 +5x_1+5x_2\\
+\text{Subject to:} &amp;&amp; x_0 + 3 x_1 + x_2 &amp;\leq 12 \\
+                &amp;&amp;  x_0 + 2x_2 &amp;\leq 5\\
+                &amp;&amp; x_1 + x_2 &amp;\leq 4;
+\end{aligned}\]
+
+<h2 id="qubo-program">QUBO++ program</h2>
+<p>The following QUBO++ program formulates this ILP as a QUBO expression and solves it using the Easy Solver:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
+#include</span> <span class="cpf">"qbpp_easy_solver.hpp"</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var_int</span><span class="p">(</span><span class="s">"x"</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">5</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">objective</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+  <span class="k">auto</span> <span class="n">c1</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">12</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">c2</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">5</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">c3</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">4</span><span class="p">;</span>
+
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="o">-</span><span class="n">objective</span> <span class="o">+</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="n">c1</span> <span class="o">+</span> <span class="n">c2</span> <span class="o">+</span> <span class="n">c3</span><span class="p">);</span>
+  <span class="n">f</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">easy_solver</span><span class="o">::</span><span class="n">EasySolver</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+  <span class="n">solver</span><span class="p">.</span><span class="n">time_limit</span><span class="p">(</span><span class="mf">1.0</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">sol</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search</span><span class="p">();</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"x0 = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&lt;&lt;</span> <span class="s">", x1 = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="o">&lt;&lt;</span> <span class="s">", x2 = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"objective = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">objective</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"*c1 = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="o">*</span><span class="n">c1</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">", *c2 = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="o">*</span><span class="n">c2</span><span class="p">)</span>
+            <span class="o">&lt;&lt;</span> <span class="s">", *c3 = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="o">*</span><span class="n">c3</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>In this program, <code class="language-plaintext highlighter-rouge">x</code> is a vector of three <code class="language-plaintext highlighter-rouge">qbpp::VarInt</code> objects, each taking an integer value in the range $[0, 5]$.
+The objective function and the three constraints are represented by <code class="language-plaintext highlighter-rouge">objective</code>, <code class="language-plaintext highlighter-rouge">c1</code>, <code class="language-plaintext highlighter-rouge">c2</code>, and <code class="language-plaintext highlighter-rouge">c3</code>, respectively.
+They are combined into a single QUBO expression <code class="language-plaintext highlighter-rouge">f</code>, where the penalty constant <code class="language-plaintext highlighter-rouge">100</code> is used to enforce the constraints.</p>
+
+<p>The Easy Solver searches for a low-energy solution of <code class="language-plaintext highlighter-rouge">f</code> and returns it as <code class="language-plaintext highlighter-rouge">sol</code>.
+The obtained solution and the values of <code class="language-plaintext highlighter-rouge">objective</code>, <code class="language-plaintext highlighter-rouge">*c1</code>, <code class="language-plaintext highlighter-rouge">*c2</code>, and <code class="language-plaintext highlighter-rouge">*c3</code> are printed as follows:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x0 = 2, x1 = 3, x2 = 1
+objective = 24
+*c1 = 12, *c2 = 4, *c3 = 4
+</code></pre></div></div>
+<p>We observe that a obtained solution with the objective 24 satisfies all constraints.</p>
+
+      <hr style="margin: 2rem 0 1rem 0;">
+<div style="font-size: 0.9em; color: #666;">
+  Last updated: 2026.02.04
+</div>
+    </main>
+  </div>
+</body>
+
+</html>

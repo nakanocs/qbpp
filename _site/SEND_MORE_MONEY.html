@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>SEND+MORE=MONEY - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Minima テーマの main.css（ハイライト含む） -->
+  <link rel="stylesheet" href="/assets/main.css">
+
+  <!-- 自前のナビ用 CSS -->
+  <link rel="stylesheet" href="/assets/custom.css">
+
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+
+<body>
+
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ -->
+    <nav style="width:max-content; position:sticky; top:1rem; padding:0 1rem 0 0; border-right:1px solid #ddd;">
+      
+      <h2 style="margin-left:0;">QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/"><strong>Introduction</strong></a> </li>
+        <li><a href="/HUBO_QUBO"><strong>HUBO and QUBO</strong></a> </li>
+        <li><a href="/QUICK"><strong>Quick Start</strong></a>
+          <ul style="list-style:none; padding-left:1.2em; margin:0.2em 0 0.2em;">
+            <li><a href="/WSL"><strong>for Windows</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/CASE_STUDIES"><strong>Case Studies</strong></a></li>
+        <li><a href="/DEMOS"><strong>Demos</strong></a></li>
+        <li><a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Release</strong></a></li>
+      </ul>
+      <hr style="margin:1rem 0;">
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/python/"><strong>PyQUBO++ &rarr;</strong></a></li>
+      </ul>
+      
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="math-puzzle-send-more-money">Math Puzzle: SEND MORE MONEY</h1>
+
+<p><strong>SEND + MORE = MONEY</strong> is a famous alphametic puzzle: assign a decimal digit to each letter so that
+\(\text{SEND}+\text{MORE}=\text{MONEY}\)</p>
+
+<p>The constraints are:</p>
+<ul>
+  <li>The digits assigned to letters are all distinct.</li>
+  <li><code class="language-plaintext highlighter-rouge">S</code> and <code class="language-plaintext highlighter-rouge">M</code> must not be 0.</li>
+</ul>
+
+<h2 id="qubo-formulation">QUBO++ formulation</h2>
+
+<p>We assign a unique index to each letter as follows:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">index</th>
+      <th style="text-align: center">0</th>
+      <th style="text-align: center">1</th>
+      <th style="text-align: center">2</th>
+      <th style="text-align: center">3</th>
+      <th style="text-align: center">4</th>
+      <th style="text-align: center">5</th>
+      <th style="text-align: center">6</th>
+      <th style="text-align: center">7</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">letter</td>
+      <td style="text-align: center">S</td>
+      <td style="text-align: center">E</td>
+      <td style="text-align: center">N</td>
+      <td style="text-align: center">D</td>
+      <td style="text-align: center">M</td>
+      <td style="text-align: center">O</td>
+      <td style="text-align: center">R</td>
+      <td style="text-align: center">Y</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Let $I(\alpha)$ denote the index of letter $\alpha$ ($\in \lbrace S,E,N,D,M,O,R,Y\rbrace$).
+We use an $8\times 10$ binary matrix $X=(x_{i,j})$ $(0\leq i\leq 7, 0\leq j\leq 9)$ to represent the digit assigned to each letter:  $x_{I(\alpha),j}=1$ if and only if letter $\alpha$ is assigned digit $j$.</p>
+
+<h3 id="one-hot-constraints-each-letter-takes-exactly-one-digit">One-hot constraints (each letter takes exactly one digit)</h3>
+<p>Each row of $X$ must be one-hot:</p>
+
+\[\begin{aligned}
+\text{onehot} &amp;=\sum_{i=0}^{7}\Bigl(\sum_{j=0}^{9}x_{i,j}=1\Bigr) \\
+              &amp;=\sum_{i=0}^{7}\Bigl(1-\sum_{j=0}^{9}x_{i,j}\Bigr)^2
+\end{aligned}\]
+
+<p>The value of $\text{onehot}$ is minimized to 0 if and only if every row is one-hot.</p>
+
+<h3 id="all-different-constraints-no-two-letters-share-the-same-digit">All-different constraints (no two letters share the same digit)</h3>
+<p>Digits must be distinct across letters, i.e., no two rows choose the same column:
+\(\begin{aligned}
+\text{different} &amp;=\sum_{0\leq i&lt;j\leq 7}\sum_{k=0}^9x_{i,k}x_{j,k}
+\end{aligned}\)</p>
+
+<h3 id="encoding-the-words-as-linear-expressions">Encoding the words as linear expressions</h3>
+<p>The values of $\text{SEND}$, $\text{MORE}$, and $\text{MONEY}$ are represented
+by:</p>
+
+\[\begin{aligned}
+\text{SEND} &amp;= 1000\sum_{k=0}^9 kx_{I(S),k}+ 100\sum_{k=0}^9 kx_{I(E),k}+ 10\sum_{k=0}^9 kx_{I(N),k}+\sum_{k=0}^9 kx_{I(D),k}\\ 
+       &amp;= \sum_{k=0}^9k(1000x_{I(S),k}+100x_{I(E),k}+10x_{I(N),k}+x_{I(D),k})\\
+\text{MORE} &amp;= 1000\sum_{k=0}^9 kx_{I(M),k}+ 100\sum_{k=0}^9 kx_{I(O),k}+ 10\sum_{k=0}^9 kx_{I(R),k}+\sum_{k=0}^9 kx_{I(E),k}\\ 
+       &amp;= \sum_{k=0}^9k(1000x_{I(M),k}+100x_{I(O),k}+10x_{I(R),k}+x_{I(E),k})\\
+\text{MONEY} &amp;= 10000\sum_{k=0}^9 kx_{I(M),k}+1000\sum_{k=0}^9 kx_{I(O),k}+ 100\sum_{k=0}^9 kx_{I(N),k}+ 10\sum_{k=0}^9 kx_{I(E),k}+\sum_{k=0}^9 kx_{I(Y),k}\\ 
+       &amp;= \sum_{k=0}^9k(10000x_{I(M),k}+ 1000x_{I(O),k}+100x_{I(N),k}+10x_{I(E),k}+x_{I(Y),k})
+\end{aligned}\]
+
+<h3 id="equality-constraint">Equality constraint</h3>
+<p>We enforce the equation by penalizing the residual:</p>
+
+\[\begin{aligned}
+\text{equal} &amp;= \Bigl(\text{SEND}+\text{MORE} = \text{MONEY}\Bigr) \\
+             &amp;= \Bigl(\text{SEND}+\text{MORE} - \text{MONEY}\Bigr)^2
+\end{aligned}\]
+
+<h3 id="combined-objective">Combined objective</h3>
+<p>All constraints are combined into a single objective:</p>
+
+\[\begin{aligned}
+f &amp; = P\cdot (\text{onehot}+\text{different})+\text{equal}
+\end{aligned}\]
+
+<p>where
+<code class="language-plaintext highlighter-rouge">P</code> is a sufficiently large constant to prioritize feasibility (<code class="language-plaintext highlighter-rouge">onehot</code> and <code class="language-plaintext highlighter-rouge">different</code>).
+In principle, if all terms are nonnegative and each becomes 0 exactly when its constraint holds, then any solution with $f=0$ satisfies all constraints.
+In practice, choosing a larger <code class="language-plaintext highlighter-rouge">P</code> often helps heuristic solvers.</p>
+
+<p>In this case, there is no need to prioritize them and we can set $P=1$,
+because $\text{equal}\geq 0$ always holds and $f$ takes a minimum value of 0
+only if $\text{onehot}=\text{different}=\text{equal}=0$ holds.
+However, a large constant $P$ helps solvers to find the optimal solution.</p>
+
+<p>Finally, since $\text{S}$ and $\text{M}$ must not be 0, we fix
+the binary variables as follows:
+\(x_{I(S),0} = x_{I(M),0}= 0\)</p>
+
+<h2 id="qubo-program-for-sendmoremoney">QUBO++ program for SEND+MORE=MONEY</h2>
+<p>The following QUBO++ program implements the QUBO formulation above and finds a solution using EasySolver:</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#define COEFF_TYPE qbpp::int128_t
+#define ENERGY_TYPE qbpp::int128_t
+</span>
+<span class="cp">#include</span> <span class="cpf">&lt;string_view&gt;</span><span class="cp">
+</span>
+<span class="cp">#define MAXDEG 2
+#include</span> <span class="cpf">&lt;qbpp/qbpp.hpp&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;qbpp/easy_solver.hpp&gt;</span><span class="cp">
+</span>
+<span class="k">constexpr</span> <span class="n">std</span><span class="o">::</span><span class="n">string_view</span> <span class="n">LETTERS</span> <span class="o">=</span> <span class="s">"SENDMORY"</span><span class="p">;</span>
+<span class="k">constexpr</span> <span class="kt">size_t</span> <span class="n">L</span> <span class="o">=</span> <span class="n">LETTERS</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+
+<span class="k">constexpr</span> <span class="kt">size_t</span> <span class="nf">I</span><span class="p">(</span><span class="kt">char</span> <span class="n">c</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">LETTERS</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">LETTERS</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">c</span><span class="p">)</span> <span class="k">return</span> <span class="n">i</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">L</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">const</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">Vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">K</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">};</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
+
+
+  <span class="k">auto</span> <span class="n">onehot</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sum</span><span class="p">(</span><span class="n">qbpp</span><span class="o">::</span><span class="n">vector_sum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">);</span>
+
+  <span class="k">auto</span> <span class="n">different</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">toExpr</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">L</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">L</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">different</span> <span class="o">+=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sum</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">auto</span> <span class="n">send</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sum</span><span class="p">((</span><span class="n">x</span><span class="p">[</span><span class="n">I</span><span class="p">(</span><span class="sc">'S'</span><span class="p">)]</span> <span class="o">*</span> <span class="mi">1000</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="n">I</span><span class="p">(</span><span class="sc">'E'</span><span class="p">)]</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="n">I</span><span class="p">(</span><span class="sc">'N'</span><span class="p">)]</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="n">I</span><span class="p">(</span><span class="sc">'D'</span><span class="p">)])</span> <span class="o">*</span> <span class="n">K</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">more</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sum</span><span class="p">((</span><span class="n">x</span><span class="p">[</span><span class="n">I</span><span class="p">(</span><span class="sc">'M'</span><span class="p">)]</span> <span class="o">*</span> <span class="mi">1000</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="n">I</span><span class="p">(</span><span class="sc">'O'</span><span class="p">)]</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="n">I</span><span class="p">(</span><span class="sc">'R'</span><span class="p">)]</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="n">I</span><span class="p">(</span><span class="sc">'E'</span><span class="p">)])</span> <span class="o">*</span> <span class="n">K</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">money</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sum</span><span class="p">((</span><span class="n">x</span><span class="p">[</span><span class="n">I</span><span class="p">(</span><span class="sc">'M'</span><span class="p">)]</span> <span class="o">*</span> <span class="mi">10000</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="n">I</span><span class="p">(</span><span class="sc">'O'</span><span class="p">)]</span> <span class="o">*</span> <span class="mi">1000</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="n">I</span><span class="p">(</span><span class="sc">'N'</span><span class="p">)]</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="n">I</span><span class="p">(</span><span class="sc">'E'</span><span class="p">)]</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="n">I</span><span class="p">(</span><span class="sc">'Y'</span><span class="p">)])</span> <span class="o">*</span> <span class="n">K</span><span class="p">);</span>
+
+
+  <span class="k">auto</span> <span class="n">equal</span> <span class="o">=</span> <span class="n">send</span> <span class="o">+</span> <span class="n">more</span> <span class="o">-</span> <span class="n">money</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span>
+
+  <span class="n">qbpp</span><span class="o">::</span><span class="n">coeff_t</span> <span class="n">P</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">P</span> <span class="o">*</span> <span class="p">(</span><span class="n">onehot</span> <span class="o">+</span> <span class="n">different</span><span class="p">)</span> <span class="o">+</span> <span class="n">equal</span><span class="p">;</span>
+
+  <span class="n">f</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+
+  <span class="n">qbpp</span><span class="o">::</span><span class="n">MapList</span> <span class="n">ml</span> <span class="o">=</span> <span class="p">{{</span><span class="n">x</span><span class="p">[</span><span class="n">I</span><span class="p">(</span><span class="sc">'S'</span><span class="p">)][</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">},</span> <span class="p">{</span><span class="n">x</span><span class="p">[</span><span class="n">I</span><span class="p">(</span><span class="sc">'M'</span><span class="p">)][</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">}};</span>
+  <span class="k">auto</span> <span class="n">g</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">replace</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ml</span><span class="p">);</span>
+
+  <span class="n">g</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">easy_solver</span><span class="o">::</span><span class="n">EasySolver</span><span class="p">(</span><span class="n">g</span><span class="p">);</span>
+  <span class="n">solver</span><span class="p">.</span><span class="n">target_energy</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+  <span class="k">auto</span> <span class="n">sol</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search</span><span class="p">();</span>
+
+  <span class="k">auto</span> <span class="n">full_sol</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">Sol</span><span class="p">(</span><span class="n">f</span><span class="p">).</span><span class="n">set</span><span class="p">(</span><span class="n">sol</span><span class="p">).</span><span class="n">set</span><span class="p">(</span><span class="n">ml</span><span class="p">);</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"onehot = "</span> <span class="o">&lt;&lt;</span> <span class="n">full_sol</span><span class="p">(</span><span class="n">onehot</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"different = "</span> <span class="o">&lt;&lt;</span> <span class="n">full_sol</span><span class="p">(</span><span class="n">different</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"equal = "</span> <span class="o">&lt;&lt;</span> <span class="n">full_sol</span><span class="p">(</span><span class="n">equal</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+  <span class="k">auto</span> <span class="n">val</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">onehot_to_int</span><span class="p">(</span><span class="n">full_sol</span><span class="p">(</span><span class="n">x</span><span class="p">));</span>
+
+  <span class="k">auto</span> <span class="n">str</span> <span class="o">=</span> <span class="p">[](</span><span class="kt">int</span> <span class="n">d</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">d</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">?</span> <span class="s">"*"</span> <span class="o">:</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">d</span><span class="p">);</span>
+  <span class="p">};</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"SEND + MORE = MONEY"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">str</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="n">I</span><span class="p">(</span><span class="sc">'S'</span><span class="p">)])</span> <span class="o">&lt;&lt;</span> <span class="n">str</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="n">I</span><span class="p">(</span><span class="sc">'E'</span><span class="p">)])</span> <span class="o">&lt;&lt;</span> <span class="n">str</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="n">I</span><span class="p">(</span><span class="sc">'N'</span><span class="p">)])</span>
+            <span class="o">&lt;&lt;</span> <span class="n">str</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="n">I</span><span class="p">(</span><span class="sc">'D'</span><span class="p">)])</span> <span class="o">&lt;&lt;</span> <span class="s">" + "</span> <span class="o">&lt;&lt;</span> <span class="n">str</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="n">I</span><span class="p">(</span><span class="sc">'M'</span><span class="p">)])</span> <span class="o">&lt;&lt;</span> <span class="n">str</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="n">I</span><span class="p">(</span><span class="sc">'O'</span><span class="p">)])</span>
+            <span class="o">&lt;&lt;</span> <span class="n">str</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="n">I</span><span class="p">(</span><span class="sc">'R'</span><span class="p">)])</span> <span class="o">&lt;&lt;</span> <span class="n">str</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="n">I</span><span class="p">(</span><span class="sc">'E'</span><span class="p">)])</span> <span class="o">&lt;&lt;</span> <span class="s">" = "</span> <span class="o">&lt;&lt;</span> <span class="n">str</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="n">I</span><span class="p">(</span><span class="sc">'M'</span><span class="p">)])</span>
+            <span class="o">&lt;&lt;</span> <span class="n">str</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="n">I</span><span class="p">(</span><span class="sc">'O'</span><span class="p">)])</span> <span class="o">&lt;&lt;</span> <span class="n">str</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="n">I</span><span class="p">(</span><span class="sc">'N'</span><span class="p">)])</span> <span class="o">&lt;&lt;</span> <span class="n">str</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="n">I</span><span class="p">(</span><span class="sc">'E'</span><span class="p">)])</span>
+            <span class="o">&lt;&lt;</span> <span class="n">str</span><span class="p">(</span><span class="n">val</span><span class="p">[</span><span class="n">I</span><span class="p">(</span><span class="sc">'Y'</span><span class="p">)])</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>In this program, <code class="language-plaintext highlighter-rouge">LETTERS</code> assigns an integer index to each letter in <code class="language-plaintext highlighter-rouge">"SENDMORY"</code>, which is used to implement $I(\alpha)$.
+We define an <code class="language-plaintext highlighter-rouge">L</code>$\times$<code class="language-plaintext highlighter-rouge">10</code> matrix <code class="language-plaintext highlighter-rouge">x</code> of binary variables (here $L=8$).
+The expressions <code class="language-plaintext highlighter-rouge">onehot</code>, <code class="language-plaintext highlighter-rouge">different</code>, and <code class="language-plaintext highlighter-rouge">equal</code> are computed according to the formulation and combined into a single objective <code class="language-plaintext highlighter-rouge">f</code> with a penalty weight <code class="language-plaintext highlighter-rouge">P</code>.</p>
+
+<p>We use a <code class="language-plaintext highlighter-rouge">qbpp::MapList</code> object <code class="language-plaintext highlighter-rouge">ml</code> to fix <code class="language-plaintext highlighter-rouge">x[I('S')][0]</code> and <code class="language-plaintext highlighter-rouge">x[I('M')][0]</code> to 0, and create a reduced expression g by applying this replacement.
+The solver is run on <code class="language-plaintext highlighter-rouge">g</code>, and the resulting assignment <code class="language-plaintext highlighter-rouge">sol</code> is merged with the fixed mapping <code class="language-plaintext highlighter-rouge">ml</code> to produce <code class="language-plaintext highlighter-rouge">full_sol</code> for the original objective f.</p>
+
+<p>Finally, <code class="language-plaintext highlighter-rouge">qbpp::onehot_to_int(full_sol(x))</code> converts the one-hot rows into digits, and the program prints the obtained solution.
+This program produces the following output:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>onehot = 0
+different = 0
+equal = 0
+SEND + MORE = MONEY
+9567 + 1085 = 10652
+</code></pre></div></div>
+<p>This confirms that all constraints are satisfied and the correct solution is obtained.</p>
+
+      <hr style="margin: 2rem 0 1rem 0;">
+<div style="font-size: 0.9em; color: #666;">
+  Last updated: 2026.03.05
+</div>
+    </main>
+  </div>
+</body>
+
+</html>

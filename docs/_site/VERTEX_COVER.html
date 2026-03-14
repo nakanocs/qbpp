@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Minimum Vertex Cover Problem - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Minima テーマの main.css（ハイライト含む） -->
+  <link rel="stylesheet" href="/assets/main.css">
+
+  <!-- 自前のナビ用 CSS -->
+  <link rel="stylesheet" href="/assets/custom.css">
+
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+
+<body>
+
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ（全ページ共通） -->
+    <nav style="min-width:220px; position:sticky; top:1rem; padding-right:1rem; border-right:1px solid #ddd;">
+      <h2>QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0;">
+        <li><a href="/"><strong>Introduction</strong></a> </li>
+        <li><a href="/HUBO_QUBO"><strong>HUBO and QUBO</strong></a> </li>
+        <li><a href="/QUICK"><strong>Quick Start</strong></a> </li>
+        <li><a href="/WSL"><strong>Quick Start for Windows</strong></a> </li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/CASE_STUDIES"><strong>Case Studies</strong></a></li>
+        <li><a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Release</strong></a></li>
+      </ul>
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="minimum-vertex-cover-problem">Minimum Vertex Cover Problem</h1>
+<p>A <strong>vertex cover</strong> of an undirected graph $G=(V,E)$ is a subset 
+$S\subseteq V$ such that, for every edge $(u,v)\in E$, at least one of its endpoints belongs to $S$.
+The <strong>minimum vertex cover problem</strong> is to find a vertex cover with minimum cardinality.</p>
+
+<p>We can formulate this problem as a QUBO expression.
+For an $n$-node graph $G=(V,E)$ whose nodes are labeled $0,1,\ldots,n−1$,
+we introduce $n$ binary variables $x_0,x_1,\ldots, x_{n-1}$, where $x_i=1$ if and only if node 
+$i$ is selected (i.e., $i\in S$).</p>
+
+<p>We use the following penalty term, which becomes 0 if and only if every edge is covered:</p>
+
+\[\begin{aligned}
+\text{constraint} &amp;= \sum_{(i,j)\in E} (1-x_i)(1-x_j)
+\end{aligned}\]
+
+<p>For an edge $(i,j)$, the product $(1-x_i)(1-x_j)$ equals 1 only when neither endpoint is selected, meaning the edge is uncovered. Therefore, the sum counts the number of uncovered edges.</p>
+
+<p>Equivalently, since the condition $1\leq x_i+x_j\leq 2$ means that one or both endpoints are selected, we can write a QUBO++-style formulation as:</p>
+
+\[\begin{aligned}
+\text{constraint'} &amp;= \sum_{(i,j)\in E} (1\leq x_i+x_j\leq 2) \\
+                   &amp;= \sum_{(i,j)\in E}(x_i+x_j-1)(x_i+x_j-2)
+\end{aligned}\]
+
+<p>These two constraints are equivalent up to a constant scaling factor. Indeed, for binary variables,</p>
+
+\[\begin{aligned}
+(1-x_i)(1-x_j) &amp; = 1 -x_i -x_i +x_ix_j,\\
+(x_i+x_j-1)(x_i+x_j-2) &amp;= 2 -2x_i -2x_i +2x_ix_j.
+\end{aligned}\]
+
+<p>Both expressions evaluate to $1$ exactly when $x_i=x_j=0$ and to $0
+$ otherwise; hence they impose the same feasibility condition (and differ only by an affine transformation when used as penalties).</p>
+
+<p>The objective is to minimize the number of selected vertices:</p>
+
+\[\begin{aligned}
+\text{objective} &amp;= \sum_{i=0}^{n-1}x_i
+\end{aligned}\]
+
+<p>Finally, the QUBO expression $f$ is given by:</p>
+
+\[\begin{aligned}
+f &amp;= \text{objective} + 2\times \text{constraint}, \text{or}\\
+  &amp;= \text{objective} + \text{constraint'}
+\end{aligned}\]
+
+<p>The penalty coefficient 2 is used to prioritize satisfying the constraint over minimizing the objective.</p>
+
+<h2 id="qubo-program-for-the-minimum-vertex-cover-problem">QUBO++ program for the minimum vertex cover problem</h2>
+<p>The following QUBO++ program solves the minimum vertex cover problem for a graph with $N=16$ nodes:</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
+#include</span> <span class="cpf">"qbpp_exhaustive_solver.hpp"</span><span class="cp">
+#include</span> <span class="cpf">"qbpp_graph.hpp"</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">const</span> <span class="kt">size_t</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">16</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="p">,</span> <span class="kt">size_t</span><span class="o">&gt;&gt;</span> <span class="n">edges</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>   <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span>   <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span>   <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">},</span>   <span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">},</span>  <span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">},</span>
+      <span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mi">7</span><span class="p">},</span>   <span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mi">13</span><span class="p">},</span>  <span class="p">{</span><span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">},</span>   <span class="p">{</span><span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="p">},</span>   <span class="p">{</span><span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">},</span>  <span class="p">{</span><span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">},</span>
+      <span class="p">{</span><span class="mi">6</span><span class="p">,</span> <span class="mi">14</span><span class="p">},</span>  <span class="p">{</span><span class="mi">7</span><span class="p">,</span> <span class="mi">14</span><span class="p">},</span>  <span class="p">{</span><span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">},</span>   <span class="p">{</span><span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">},</span>  <span class="p">{</span><span class="mi">9</span><span class="p">,</span> <span class="mi">12</span><span class="p">},</span> <span class="p">{</span><span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">},</span>
+      <span class="p">{</span><span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">},</span> <span class="p">{</span><span class="mi">11</span><span class="p">,</span> <span class="mi">13</span><span class="p">},</span> <span class="p">{</span><span class="mi">12</span><span class="p">,</span> <span class="mi">14</span><span class="p">},</span> <span class="p">{</span><span class="mi">13</span><span class="p">,</span> <span class="mi">15</span><span class="p">},</span> <span class="p">{</span><span class="mi">14</span><span class="p">,</span> <span class="mi">15</span><span class="p">}};</span>
+
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">,</span> <span class="n">N</span><span class="p">);</span>
+
+  <span class="k">auto</span> <span class="n">objective</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sum</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">constraint</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">toExpr</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">e</span> <span class="o">:</span> <span class="n">edges</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">constraint</span> <span class="o">+=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">e</span><span class="p">.</span><span class="n">first</span><span class="p">])</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">e</span><span class="p">.</span><span class="n">second</span><span class="p">]);</span>
+  <span class="p">}</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">objective</span> <span class="o">+</span> <span class="n">constraint</span> <span class="o">*</span> <span class="mi">2</span><span class="p">;</span>
+  <span class="n">f</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">exhaustive_solver</span><span class="o">::</span><span class="n">ExhaustiveSolver</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">sol</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search</span><span class="p">();</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"objective = "</span> <span class="o">&lt;&lt;</span> <span class="n">objective</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"constraint = "</span> <span class="o">&lt;&lt;</span> <span class="n">constraint</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+  <span class="n">qbpp</span><span class="o">::</span><span class="n">graph</span><span class="o">::</span><span class="n">GraphDrawer</span> <span class="n">graph</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">graph</span><span class="p">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">qbpp</span><span class="o">::</span><span class="n">graph</span><span class="o">::</span><span class="n">Node</span><span class="p">(</span><span class="n">i</span><span class="p">).</span><span class="n">color</span><span class="p">(</span><span class="n">sol</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">])));</span>
+  <span class="p">}</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">e</span> <span class="o">:</span> <span class="n">edges</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">graph</span><span class="p">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">qbpp</span><span class="o">::</span><span class="n">graph</span><span class="o">::</span><span class="n">Edge</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">first</span><span class="p">,</span> <span class="n">e</span><span class="p">.</span><span class="n">second</span><span class="p">));</span>
+  <span class="p">}</span>
+  <span class="n">graph</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="s">"vertexcover.svg"</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>In this program, <code class="language-plaintext highlighter-rouge">objective</code>, <code class="language-plaintext highlighter-rouge">constraint</code>, and <code class="language-plaintext highlighter-rouge">f</code> are constructed according to the formulation above.
+The Exhaustive Solver is applied to <code class="language-plaintext highlighter-rouge">f</code> to search for an optimal solution.
+The obtained solution <code class="language-plaintext highlighter-rouge">sol</code> is visualized and saved as <code class="language-plaintext highlighter-rouge">vertexcover.svg</code>.</p>
+
+<p>This program prints the following output:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">objective</span> <span class="o">=</span> <span class="mi">9</span>
+<span class="n">constraint</span> <span class="o">=</span> <span class="mi">0</span>
+</code></pre></div></div>
+<p>An optimal solution with objective value 9 and constraint value 0 is obtained.
+The resulting image, which highlights the selected vertices, is shown below:</p>
+
+<p align="center">
+  <img src="images/vertexcover.svg" alt="The solution of the minimum vertex cover problem." width="80%" />
+</p>
+
+      <hr style="margin: 2rem 0 1rem 0;">
+<div style="font-size: 0.9em; color: #666;">
+  Last updated: 2026.02.02
+</div>
+    </main>
+  </div>
+</body>
+
+</html>

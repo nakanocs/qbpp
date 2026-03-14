@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>RANGE - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Minima テーマの main.css（ハイライト含む） -->
+  <link rel="stylesheet" href="/assets/main.css">
+
+  <!-- 自前のナビ用 CSS -->
+  <link rel="stylesheet" href="/assets/custom.css">
+
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+
+<body>
+
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ（全ページ共通） -->
+    <nav style="min-width:220px; position:sticky; top:1rem; padding-right:1rem; border-right:1px solid #ddd;">
+      <h2>QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0;">
+        <li><a href="/"><strong>Introduction</strong></a> </li>
+        <li><a href="/HUBO_QUBO"><strong>HUBO and QUBO</strong></a> </li>
+        <li><a href="/QUICK"><strong>Quick Start</strong></a> </li>
+        <li><a href="/WSL"><strong>Quick Start for Windows</strong></a> </li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/CASE_STUDIES"><strong>Case Studies</strong></a></li>
+        <li><a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Release</strong></a></li>
+      </ul>
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="square-root">Square Root</h1>
+
+<p>This example demonstrates how to compute the square root of
+$c=2$ using large integers represented by <code class="language-plaintext highlighter-rouge">qbpp::cpp_int</code>.
+Let $s = 10 ^{10}$ be a fixed integer.
+Since QUBO++ cannot handle real numbers directly, we compute  $\sqrt{cs^2}$ instead of $\sqrt{c}$.
+From the following relation,</p>
+
+\[\begin{aligned}
+\sqrt{c} &amp;= \sqrt{cs^2}/s
+\end{aligned}\]
+
+<p>we can obtain an approximation of $\sqrt{c}$ with 10 decimal-digit precision.</p>
+
+<h2 id="hubo-formulation-of-the-square-root-computation">HUBO formulation of the square root computation</h2>
+<p>We define an integer variable $x$ that takes values in the range $[s, 2s]$.
+We then formulate the problem using the following equation:</p>
+
+\[\begin{aligned}
+x ^ 2 &amp;= cs ^ 2
+\end{aligned}\]
+
+<p>In QUBO++, this equality constraint is converted into the following HUBO expression:</p>
+
+\[(x ^ 2 -cs^2)^2\]
+
+<p>By finding the value of $x$ that minimizes this expression,
+we obtain an approximation of the square root of $c$ with
+10 decimal-digit precision.
+Since $x$ is internally represented as a linear expression of binary variables, this objective function becomes quartic in those binary variables.</p>
+
+<h2 id="qubo-parogram">QUBO++ parogram</h2>
+<p>The following QUBO++ program constructs a HUBO expression based on the above idea and solves it using the Easy Solver:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#define COEFF_TYPE qbpp::cpp_int
+#define ENERGY_TYPE qbpp::cpp_int
+</span>
+<span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
+#include</span> <span class="cpf">"qbpp_easy_solver.hpp"</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">const</span> <span class="kt">int</span> <span class="n">c</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">s</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">cpp_int</span><span class="p">(</span><span class="s">"10000000000"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">s</span> <span class="o">&lt;=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var_int</span><span class="p">(</span><span class="s">"x"</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">c</span> <span class="o">*</span> <span class="n">s</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span> <span class="o">==</span> <span class="n">c</span> <span class="o">*</span> <span class="n">s</span> <span class="o">*</span> <span class="n">s</span><span class="p">;</span>
+  <span class="n">f</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">easy_solver</span><span class="o">::</span><span class="n">EasySolver</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+  <span class="n">solver</span><span class="p">.</span><span class="n">time_limit</span><span class="p">(</span><span class="mf">1.0</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">sol</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search</span><span class="p">();</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Energy = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">.</span><span class="n">energy</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"x = "</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s"> = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Since very large coefficients are used, we define the two macros <code class="language-plaintext highlighter-rouge">COEFF_TYPE</code> and <code class="language-plaintext highlighter-rouge">ENERGY_TYPE</code> as <code class="language-plaintext highlighter-rouge">qbpp::cpp_int</code>,
+which can represent arbitrarily large integers.
+The constant <code class="language-plaintext highlighter-rouge">s</code>, the integer variable <code class="language-plaintext highlighter-rouge">x</code>, and the HUBO expression <code class="language-plaintext highlighter-rouge">f</code> are defined according to the formulation described above.
+The Easy Solver is executed with a time limit of 1.0 second.</p>
+
+<p>This program produces the following output:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Energy = 57910111919782629376
+x = 10000000000 +x[0] +2*x[1] +4*x[2] +8*x[3] +16*x[4] +32*x[5] +64*x[6] +128*x[7] +256*x[8] +512*x[9] +1024*x[10] +2048*x[11] +4096*x[12] +8192*x[13] +16384*x[14] +32768*x[15] +65536*x[16] +131072*x[17] +262144*x[18] +524288*x[19] +1048576*x[20] +2097152*x[21] +4194304*x[22] +8388608*x[23] +16777216*x[24] +33554432*x[25] +67108864*x[26] +134217728*x[27] +268435456*x[28] +536870912*x[29] +1073741824*x[30] +2147483648*x[31] +4294967296*x[32] +1410065409*x[33]
+ = 14142135624
+</code></pre></div></div>
+<p>We can confirm that the Easy Solver outputs the correct approximation:</p>
+
+\[\sqrt{2\times 10^{20}}\approx 14142135624\]
+
+<p>Note that the reported energy value is not zero, and the equality constraint is not satisfied exactly.
+This is simply because there is no exact integer solution to the equality.
+Instead, the solver finds a solution that minimizes the error of the equality constraint.
+The energy value shown in the output corresponds to the square of this error.
+Since the error is minimized, the resulting value of $x$ represents an approximation of the square root.</p>
+
+      <hr style="margin: 2rem 0 1rem 0;">
+<div style="font-size: 0.9em; color: #666;">
+  Last updated: 2026.02.04
+</div>
+    </main>
+  </div>
+</body>
+
+</html>

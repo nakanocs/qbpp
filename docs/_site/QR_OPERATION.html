@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Quick Reference: Operators and Functions - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Minima テーマの main.css（ハイライト含む） -->
+  <link rel="stylesheet" href="/assets/main.css">
+
+  <!-- 自前のナビ用 CSS -->
+  <link rel="stylesheet" href="/assets/custom.css">
+
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+
+<body>
+
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ（全ページ共通） -->
+    <nav style="min-width:220px; position:sticky; top:1rem; padding-right:1rem; border-right:1px solid #ddd;">
+      <h2>QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0;">
+        <li><a href="/"><strong>Introduction</strong></a> </li>
+        <li><a href="/HUBO_QUBO"><strong>HUBO and QUBO</strong></a> </li>
+        <li><a href="/QUICK"><strong>Quick Start</strong></a> </li>
+        <li><a href="/WSL"><strong>Quick Start for Windows</strong></a> </li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/CASE_STUDIES"><strong>Case Studies</strong></a></li>
+        <li><a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Release</strong></a></li>
+      </ul>
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="quick-reference-operators-and-functions-for-expressions">Quick Reference: Operators and Functions for Expressions</h1>
+
+<p>The table below summarizes the operators and functions available for <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> objects.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Operators/Functions</th>
+      <th>Operator Symbols/Function Names</th>
+      <th>Function Type</th>
+      <th>Return Type</th>
+      <th>Argument Type</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Type Conversion</td>
+      <td><code class="language-plaintext highlighter-rouge">toExpr()</code></td>
+      <td>Global</td>
+      <td><code class="language-plaintext highlighter-rouge">qbpp::Expr</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ExprType</code></td>
+    </tr>
+    <tr>
+      <td>Type Conversion</td>
+      <td><code class="language-plaintext highlighter-rouge">toInt()</code></td>
+      <td>Global</td>
+      <td><code class="language-plaintext highlighter-rouge">Int</code></td>
+      <td><code class="language-plaintext highlighter-rouge">qbpp::Expr</code></td>
+    </tr>
+    <tr>
+      <td>Assignment</td>
+      <td><code class="language-plaintext highlighter-rouge">=</code></td>
+      <td>Member</td>
+      <td><code class="language-plaintext highlighter-rouge">qbpp::Expr</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ExprType</code></td>
+    </tr>
+    <tr>
+      <td>Binary Operators</td>
+      <td><code class="language-plaintext highlighter-rouge">+</code>, <code class="language-plaintext highlighter-rouge">-</code>, <code class="language-plaintext highlighter-rouge">*</code></td>
+      <td>Global</td>
+      <td><code class="language-plaintext highlighter-rouge">qbpp::Expr</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ExprType</code>-<code class="language-plaintext highlighter-rouge">ExprType</code></td>
+    </tr>
+    <tr>
+      <td>Compound Assignment Operators</td>
+      <td><code class="language-plaintext highlighter-rouge">+=</code>, <code class="language-plaintext highlighter-rouge">-=</code>, <code class="language-plaintext highlighter-rouge">*=</code></td>
+      <td>Member</td>
+      <td><code class="language-plaintext highlighter-rouge">qbpp::Expr</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ExprType</code></td>
+    </tr>
+    <tr>
+      <td>Division</td>
+      <td><code class="language-plaintext highlighter-rouge">/</code></td>
+      <td>Global</td>
+      <td><code class="language-plaintext highlighter-rouge">qbpp::Expr</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ExprType</code>-<code class="language-plaintext highlighter-rouge">Int</code></td>
+    </tr>
+    <tr>
+      <td>Compound Division</td>
+      <td><code class="language-plaintext highlighter-rouge">/=</code></td>
+      <td>Member</td>
+      <td><code class="language-plaintext highlighter-rouge">qbpp::Expr</code></td>
+      <td><code class="language-plaintext highlighter-rouge">Int</code></td>
+    </tr>
+    <tr>
+      <td>Unary Operators</td>
+      <td><code class="language-plaintext highlighter-rouge">+</code>, <code class="language-plaintext highlighter-rouge">-</code></td>
+      <td>Global</td>
+      <td><code class="language-plaintext highlighter-rouge">qbpp::Expr</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ExprType</code></td>
+    </tr>
+    <tr>
+      <td>Comparison (Equality)</td>
+      <td><code class="language-plaintext highlighter-rouge">==</code></td>
+      <td>Global</td>
+      <td><code class="language-plaintext highlighter-rouge">qbpp::ExprExpr</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ExprType</code>-<code class="language-plaintext highlighter-rouge">Int</code></td>
+    </tr>
+    <tr>
+      <td>Comparison (Range Comparison)</td>
+      <td><code class="language-plaintext highlighter-rouge">&lt;= &lt;=</code></td>
+      <td>Global</td>
+      <td><code class="language-plaintext highlighter-rouge">qbpp::ExprExpr</code></td>
+      <td><code class="language-plaintext highlighter-rouge">IntInf</code>-<code class="language-plaintext highlighter-rouge">ExprType</code>-<code class="language-plaintext highlighter-rouge">IntInf</code></td>
+    </tr>
+    <tr>
+      <td>Square</td>
+      <td><code class="language-plaintext highlighter-rouge">sqr()</code></td>
+      <td>Global</td>
+      <td><code class="language-plaintext highlighter-rouge">qbpp::Expr</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ExprType</code></td>
+    </tr>
+    <tr>
+      <td>Square</td>
+      <td><code class="language-plaintext highlighter-rouge">sqr()</code></td>
+      <td>Member</td>
+      <td><code class="language-plaintext highlighter-rouge">qbpp::Expr</code></td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>GCD</td>
+      <td><code class="language-plaintext highlighter-rouge">gcd()</code></td>
+      <td>Global</td>
+      <td><code class="language-plaintext highlighter-rouge">Int</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ExprType</code></td>
+    </tr>
+    <tr>
+      <td>Simplify</td>
+      <td><code class="language-plaintext highlighter-rouge">simplify()</code>, <code class="language-plaintext highlighter-rouge">simplify_as_binary()</code>, <code class="language-plaintext highlighter-rouge">simplify_as_spin()</code></td>
+      <td>Global</td>
+      <td><code class="language-plaintext highlighter-rouge">qbpp::Expr</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ExprType</code></td>
+    </tr>
+    <tr>
+      <td>Simplify</td>
+      <td><code class="language-plaintext highlighter-rouge">simplify()</code>, <code class="language-plaintext highlighter-rouge">simplify_as_binary()</code>, <code class="language-plaintext highlighter-rouge">simplify_as_spin()</code></td>
+      <td>Member</td>
+      <td><code class="language-plaintext highlighter-rouge">qbpp::Expr</code></td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>Eval</td>
+      <td><code class="language-plaintext highlighter-rouge">operator()</code></td>
+      <td>Member</td>
+      <td><code class="language-plaintext highlighter-rouge">Int</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ExprType</code>-<code class="language-plaintext highlighter-rouge">qbpp::MapList</code></td>
+    </tr>
+    <tr>
+      <td>Replace</td>
+      <td><code class="language-plaintext highlighter-rouge">replace()</code></td>
+      <td>Global</td>
+      <td><code class="language-plaintext highlighter-rouge">qbpp::Expr</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ExprType</code>-<code class="language-plaintext highlighter-rouge">qbpp::MapList</code></td>
+    </tr>
+    <tr>
+      <td>Replace</td>
+      <td><code class="language-plaintext highlighter-rouge">replace()</code></td>
+      <td>Member</td>
+      <td><code class="language-plaintext highlighter-rouge">qbpp::Expr</code></td>
+      <td><code class="language-plaintext highlighter-rouge">qbpp::MapList</code></td>
+    </tr>
+    <tr>
+      <td>Reduce</td>
+      <td><code class="language-plaintext highlighter-rouge">reduce()</code></td>
+      <td>Global</td>
+      <td><code class="language-plaintext highlighter-rouge">qbpp::Expr</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ExprType</code></td>
+    </tr>
+    <tr>
+      <td>Reduce</td>
+      <td><code class="language-plaintext highlighter-rouge">reduce()</code></td>
+      <td>Member</td>
+      <td><code class="language-plaintext highlighter-rouge">qbpp::Expr</code></td>
+      <td><code class="language-plaintext highlighter-rouge">qbpp::MapList</code></td>
+    </tr>
+    <tr>
+      <td>Binary/Spin Conversion</td>
+      <td><code class="language-plaintext highlighter-rouge">binary_to_spin()</code>, <code class="language-plaintext highlighter-rouge">spin_to_binary()</code></td>
+      <td>Global</td>
+      <td><code class="language-plaintext highlighter-rouge">qbpp::Expr</code></td>
+      <td><code class="language-plaintext highlighter-rouge">ExprType</code></td>
+    </tr>
+    <tr>
+      <td>Binary/Spin Conversion</td>
+      <td><code class="language-plaintext highlighter-rouge">binary_to_spin()</code>, <code class="language-plaintext highlighter-rouge">spin_to_binary()</code></td>
+      <td>Member</td>
+      <td><code class="language-plaintext highlighter-rouge">qbpp::Expr</code></td>
+      <td>-</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="type-conversion-qbpptoexpr-and-qbpptoint">Type Conversion: <strong><code class="language-plaintext highlighter-rouge">qbpp::toExpr()</code></strong> and <strong><code class="language-plaintext highlighter-rouge">qbpp::toInt()</code></strong></h2>
+<p>The global function <strong><code class="language-plaintext highlighter-rouge">qbpp::toExpr()</code></strong> converts its argument into a <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> instance and returns it.
+The argument may be:</p>
+<ul>
+  <li>an integer</li>
+  <li>a variable (<code class="language-plaintext highlighter-rouge">qbpp::Var</code>)</li>
+  <li>a product term (<code class="language-plaintext highlighter-rouge">qbpp::Term</code>)</li>
+  <li>an expression (<code class="language-plaintext highlighter-rouge">qbpp::Expr</code>) — in this case, no conversion is performed</li>
+</ul>
+
+<p>We refer to these argument types collectively as <code class="language-plaintext highlighter-rouge">ExprType</code>.</p>
+
+<p>The global function <strong><code class="language-plaintext highlighter-rouge">qbpp::toInt()</code></strong> extracts and returns the integer constant term of a <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> object.
+If the expression contains any product terms (<code class="language-plaintext highlighter-rouge">qbpp::Term</code> objects), an error is thrown.</p>
+
+<h2 id="expression-related-type-exprtype">Expression-related type: <strong><code class="language-plaintext highlighter-rouge">ExprType</code></strong></h2>
+<p>The term <strong><code class="language-plaintext highlighter-rouge">ExprType</code></strong> denotes a category of types that can be converted to a <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> object.</p>
+
+<h2 id="integer-related-types-int-and-intinf">Integer-Related Types: <strong><code class="language-plaintext highlighter-rouge">Int</code></strong> and <strong><code class="language-plaintext highlighter-rouge">IntInf</code></strong></h2>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">Int</code></strong>: ordinary integers</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">IntInf</code></strong>: either an integer, <code class="language-plaintext highlighter-rouge">-qbpp::inf</code>, or <code class="language-plaintext highlighter-rouge">+qbpp::inf</code>, representing infinite bounds.</li>
+</ul>
+
+<h2 id="global-and-member-functions">Global and Member Functions</h2>
+<p>Operators and functions related to <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> are provided in two forms:</p>
+<ul>
+  <li><strong>Global functions</strong>:
+These take at least one ExprType argument and typically return a new <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> object without modifying the inputs.</li>
+  <li><strong>Member functions</strong>:
+These are member functions of the <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> class.
+In many cases, they update the calling object and also return the resulting <code class="language-plaintext highlighter-rouge">qbpp::Expr</code>.</li>
+</ul>
+
+<h3 id="example-sqr">Example: <code class="language-plaintext highlighter-rouge">sqr()</code></h3>
+<p>The <code class="language-plaintext highlighter-rouge">sqr()</code> function computes the square of an expression and is available in both forms:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">sqr(f)</code> (global): returns the square of f without modifying f</li>
+  <li><code class="language-plaintext highlighter-rouge">f.sqr()</code> (member): updates f to its square and returns the updated expression</li>
+</ul>
+
+<h2 id="assignment-operator-">Assignment Operator: <code class="language-plaintext highlighter-rouge">=</code></h2>
+<p>The left-hand side must be a <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> object.
+The right-hand side must be an <code class="language-plaintext highlighter-rouge">ExprType</code>, which is first converted to a <code class="language-plaintext highlighter-rouge">qbpp::Expr</code>.
+The converted expression is then assigned to the left-hand side.</p>
+
+<h2 id="binary-operators----">Binary Operators: <code class="language-plaintext highlighter-rouge">+</code>, <code class="language-plaintext highlighter-rouge">-</code>, <code class="language-plaintext highlighter-rouge">*</code></h2>
+<p>These operators are defined as global functions.
+They take two <code class="language-plaintext highlighter-rouge">ExprType</code> operands, compute the result, and return it.
+If at least one operand is a <code class="language-plaintext highlighter-rouge">qbpp::Expr</code>, the result is always a <code class="language-plaintext highlighter-rouge">qbpp::Expr</code>.
+If neither operand is a <code class="language-plaintext highlighter-rouge">qbpp::Expr</code>, the result may be a <code class="language-plaintext highlighter-rouge">qbpp::Term</code>.</p>
+
+<h3 id="example">Example</h3>
+<p>For a variable <code class="language-plaintext highlighter-rouge">x</code> of type <code class="language-plaintext highlighter-rouge">qbpp::Var</code>:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">2 + x</code>: <code class="language-plaintext highlighter-rouge">qbpp::Expr</code></li>
+  <li><code class="language-plaintext highlighter-rouge">2 * x</code>: <code class="language-plaintext highlighter-rouge">qbpp::Term</code></li>
+</ul>
+
+<h2 id="compound-assignment-operators----">Compound Assignment Operators: <code class="language-plaintext highlighter-rouge">+=</code>, <code class="language-plaintext highlighter-rouge">-=</code>, <code class="language-plaintext highlighter-rouge">*=</code></h2>
+<p>These operators are defined as member functions.
+The left-hand side must be a <code class="language-plaintext highlighter-rouge">qbpp::Expr</code>.
+The specified operation is applied using the right-hand side operand.
+The left-hand side expression is updated in place.</p>
+
+<h2 id="division--and-compound-division-">Division <code class="language-plaintext highlighter-rouge">/</code> and Compound Division <code class="language-plaintext highlighter-rouge">/=</code></h2>
+<p>The division operator <code class="language-plaintext highlighter-rouge">/</code> is defined as a global function.</p>
+
+<p>It takes a non-integer <code class="language-plaintext highlighter-rouge">ExprType</code> operand as the <strong>dividend</strong> and an integer operand as the <strong>divisor</strong>, and returns the <strong>quotient</strong> as a <code class="language-plaintext highlighter-rouge">qbpp::Expr</code>.</p>
+
+<p>The dividend expression must be divisible by the divisor; that is,
+both the integer constant term and all integer coefficients in the expression must be divisible by the divisor.</p>
+
+<p>The compound division operator <code class="language-plaintext highlighter-rouge">/=</code> is defined as a member function.</p>
+<ul>
+  <li>The left-hand side must be a <code class="language-plaintext highlighter-rouge">qbpp::Expr</code>.</li>
+  <li>The right-hand side must be an integer.</li>
+</ul>
+
+<p>The same divisibility condition applies, and the division is performed in place, updating the left-hand side expression.</p>
+
+<h2 id="comparison-equality-">Comparison (Equality): <code class="language-plaintext highlighter-rouge">==</code></h2>
+<p>The equality comparison operator <code class="language-plaintext highlighter-rouge">==</code> takes:</p>
+<ul>
+  <li>a non-integer <code class="language-plaintext highlighter-rouge">ExprType</code> on the left-hand side, and</li>
+  <li>an integer on the right-hand side.</li>
+</ul>
+
+<p>It returns an expression whose minimum value is 0 when the equality constraint is satisfied.
+More specifically, for a non-integer <code class="language-plaintext highlighter-rouge">ExprType</code> object <code class="language-plaintext highlighter-rouge">f</code> and an integer <code class="language-plaintext highlighter-rouge">n</code>, the operator returns: <code class="language-plaintext highlighter-rouge">qbpp::sqr(f-n)</code>.</p>
+
+<p>For the returned object <code class="language-plaintext highlighter-rouge">g</code>:</p>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">g</code></strong> represents the constraint expression <code class="language-plaintext highlighter-rouge">qbpp::sqr(f - n)</code>, and</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">*g</code></strong> returns the underlying expression <code class="language-plaintext highlighter-rouge">f</code>.</li>
+</ul>
+
+<h3 id="qbppexprexpr-class"><code class="language-plaintext highlighter-rouge">qbpp::ExprExpr</code> class</h3>
+
+<p>Here, <code class="language-plaintext highlighter-rouge">g</code> is a <strong><code class="language-plaintext highlighter-rouge">qbpp::ExprExpr</code></strong> object, which is a derived class of <code class="language-plaintext highlighter-rouge">qbpp::Expr</code>.
+Dereferencing <code class="language-plaintext highlighter-rouge">g</code> using the <code class="language-plaintext highlighter-rouge">*</code> operator returns the associated underlying qbpp::Expr object.</p>
+
+<h2 id="comparison-range-comparison--">Comparison (Range Comparison): <code class="language-plaintext highlighter-rouge">&lt;= &lt;=</code></h2>
+<p>The <strong>range comparison operator</strong> is written in the form:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">l</span> <span class="o">&lt;=</span> <span class="n">f</span> <span class="o">&lt;=</span> <span class="n">u</span>
+</code></pre></div></div>
+<p>where:</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">f</code> is a non-integer ExprType, and</li>
+  <li><code class="language-plaintext highlighter-rouge">l</code> and <code class="language-plaintext highlighter-rouge">u</code> are integers.</li>
+</ul>
+
+<p>This operator returns an expression whose minimum value is 0 when the range constraint is satisfied.</p>
+
+<p>More specifically, an auxiliary integer variable <code class="language-plaintext highlighter-rouge">a</code> with unit gaps, taking values in the range <code class="language-plaintext highlighter-rouge">[l,u−1]</code>, is implicitly introduced, and the operator returns:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">(</span><span class="n">f</span> <span class="o">-</span> <span class="n">a</span><span class="p">)(</span><span class="n">f</span> <span class="o">-</span> <span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>For the returned <code class="language-plaintext highlighter-rouge">qbpp::ExprExpr</code> object <code class="language-plaintext highlighter-rouge">g</code>:</p>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">g</code></strong> represents the constraint expression <code class="language-plaintext highlighter-rouge">(f - a)(f - (a + 1))</code>, and</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">*g</code></strong> returns the underlying expression <code class="language-plaintext highlighter-rouge">f</code>.</li>
+</ul>
+
+<h2 id="square-functions-sqr">Square functions: <code class="language-plaintext highlighter-rouge">sqr()</code></h2>
+<p>For a qbpp::Expr object <code class="language-plaintext highlighter-rouge">f</code>:</p>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">qbpp::sqr(f)</code></strong> (global function): Returns the expression <code class="language-plaintext highlighter-rouge">f * f</code>.
+The argument <code class="language-plaintext highlighter-rouge">f</code> may be a non-integer <code class="language-plaintext highlighter-rouge">ExprType</code> object.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">f.sqr()</code></strong> (member function):
+Updates <code class="language-plaintext highlighter-rouge">f</code> in place by replacing it with <code class="language-plaintext highlighter-rouge">f * f</code>, and returns the updated expression.</li>
+</ul>
+
+<h2 id="greatest-common-divisor-function-gcd">Greatest Common Divisor function <code class="language-plaintext highlighter-rouge">gcd()</code></h2>
+<p>The global function <strong><code class="language-plaintext highlighter-rouge">gcd()</code></strong> takes a <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> object as its argument and returns the greatest common divisor (GCD) of all integer coefficients and the integer constant term.</p>
+
+<p>Since the given <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> object is divisible by the resulting GCD, all integer coefficients and the integer constant term can be reduced by dividing by the GCD without changing the structure of the expression or its optimal solutions.</p>
+
+<h2 id="simplify-functions-simplify-simplify_as_binary-simplify_as_spin">Simplify functions: <code class="language-plaintext highlighter-rouge">simplify()</code>, <code class="language-plaintext highlighter-rouge">simplify_as_binary()</code>, <code class="language-plaintext highlighter-rouge">simplify_as_spin()</code></h2>
+<p>For a <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> object <code class="language-plaintext highlighter-rouge">f</code>, the member function <strong><code class="language-plaintext highlighter-rouge">f.simplify()</code></strong> performs the following operations in place:</p>
+<ul>
+  <li>Sort variables within each term according to their unique variable IDs</li>
+  <li>Merge duplicated terms</li>
+  <li>Sort terms such that:
+    <ul>
+      <li>lower-degree terms appear earlier, and</li>
+      <li>terms of the same degree are ordered lexicographically.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>The global function <strong><code class="language-plaintext highlighter-rouge">qbpp::simplify(f)</code></strong> performs the same operations without modifying <code class="language-plaintext highlighter-rouge">f</code>.</p>
+
+<h3 id="binary-and-spin-simplification">Binary and Spin Simplification</h3>
+<p>Two specialized variants of the simplification function are provided:</p>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">simplify_as_binary()</code></strong>:
+Simplification is performed under the assumption that all variables take binary values 
+$\lbrace 0,1\rbrace$.
+The identity $x^2=x$ is applied to all variables $x$.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">simplify_as_spin()</code></strong>
+Simplification is performed under the assumption that all variables take spin values 
+$\lbrace -1,+1\rbrace$.
+The identity $x^2=1$ is applied to all variables $x$.</li>
+</ul>
+
+<p>Both variants are available as member functions and global functions:</p>
+<ul>
+  <li>Member functions: These perform simplification in place and update <code class="language-plaintext highlighter-rouge">f</code>.
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">f.simplify_as_binary()</code></li>
+      <li><code class="language-plaintext highlighter-rouge">f.simplify_as_spin()</code></li>
+    </ul>
+  </li>
+  <li>Global functions: These return a simplified expression without modifying f.
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">qbpp::simplify_as_binary(f)</code></li>
+      <li><code class="language-plaintext highlighter-rouge">qbpp::simplify_as_spin(f)</code></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="evaluation-function">Evaluation function</h2>
+<p>A <strong><code class="language-plaintext highlighter-rouge">qbpp::MapList</code></strong> object stores a list of pairs consisting of a <code class="language-plaintext highlighter-rouge">qbpp::Var</code> object and an integer.
+Each pair defines a mapping from a variable to an integer value.</p>
+
+<p>For a <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> object <code class="language-plaintext highlighter-rouge">f</code> and a <code class="language-plaintext highlighter-rouge">qbpp::MapList</code> object <code class="language-plaintext highlighter-rouge">ml</code>, the evaluation function <code class="language-plaintext highlighter-rouge">f(ml)</code> evaluates the value of <code class="language-plaintext highlighter-rouge">f</code> under the variable assignments specified by <code class="language-plaintext highlighter-rouge">ml</code> and returns the resulting integer value.</p>
+
+<p>All variables appearing in <code class="language-plaintext highlighter-rouge">f</code> must have corresponding mappings defined in <code class="language-plaintext highlighter-rouge">ml</code>.</p>
+
+<h2 id="replace-functions-replace">Replace Functions: <code class="language-plaintext highlighter-rouge">replace()</code></h2>
+<p>A <strong><code class="language-plaintext highlighter-rouge">qbpp::MapList</code></strong> object may also contain pairs consisting of a <code class="language-plaintext highlighter-rouge">qbpp::Var</code> object and an <code class="language-plaintext highlighter-rouge">ExprType</code> object.
+Such pairs define mappings from variables to expressions.</p>
+
+<p>For a <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> object <code class="language-plaintext highlighter-rouge">f</code> and a <code class="language-plaintext highlighter-rouge">qbpp::MapList</code> object <code class="language-plaintext highlighter-rouge">ml</code>:</p>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">qbpp::replace(f, ml)</code></strong>:
+Returns a new <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> object obtained by replacing variables in <code class="language-plaintext highlighter-rouge">f</code> according to the mappings in <code class="language-plaintext highlighter-rouge">ml</code>, without modifying <code class="language-plaintext highlighter-rouge">f</code>.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">f.replace(ml)</code></strong>:
+Replaces variables in <code class="language-plaintext highlighter-rouge">f</code> according to the mappings in <code class="language-plaintext highlighter-rouge">ml</code> in place and returns the resulting <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> object.</li>
+</ul>
+
+<h2 id="reduce-functions-reduce">Reduce Functions: <code class="language-plaintext highlighter-rouge">reduce()</code></h2>
+<p>The <strong><code class="language-plaintext highlighter-rouge">reduce()</code></strong> function converts a <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> object containing higher-degree terms into an equivalent <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> object consisting only of linear and quadratic terms, resulting in a QUBO expression.</p>
+
+<p>For a <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> object <code class="language-plaintext highlighter-rouge">f</code>:</p>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">qbpp::reduce(f)</code></strong>:
+Returns a new <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> object with linear and quadratic terms that is equivalent to <code class="language-plaintext highlighter-rouge">f</code>.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">f.reduce()</code></strong>:
+Replaces <code class="language-plaintext highlighter-rouge">f</code> with the result of <code class="language-plaintext highlighter-rouge">qbpp::reduce(f)</code> and returns the updated expression.</li>
+</ul>
+
+<h2 id="binaryspin-conversion-functions-spin_to_binary-binary_to_spin">Binary/Spin Conversion functions: <code class="language-plaintext highlighter-rouge">spin_to_binary()</code>, <code class="language-plaintext highlighter-rouge">binary_to_spin()</code></h2>
+<p>Let <code class="language-plaintext highlighter-rouge">x</code> be a binary variable and s be a spin variable.
+We assume that <code class="language-plaintext highlighter-rouge">x = 1</code> if and only if <code class="language-plaintext highlighter-rouge">s = 1</code>.
+Under this assumption, the following relations hold:</p>
+
+\[\begin{aligned}
+ s &amp;= 2x-1 \\
+ x &amp;= (s+1)/2 
+\end{aligned}\]
+
+<p>Let $f(s)$ be a function of a spin variable $s$.
+Then the function $g(x)=f(2x−1)$ is a function of the binary variable $x$ that yields the same value under the above relation.</p>
+
+<p>The <strong><code class="language-plaintext highlighter-rouge">spin_to_binary()</code></strong> function uses this relation to convert a <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> object representing a function of spin variables into an equivalent <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> object representing a function of binary variables.
+More specifically, it replaces all spin variables <code class="language-plaintext highlighter-rouge">s</code> in <code class="language-plaintext highlighter-rouge">f</code> by <code class="language-plaintext highlighter-rouge">2 * s - 1</code>.</p>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">qbpp::spin_to_binary(f)</code></strong>:
+Produces and returns a new <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> object by replacing all spin variables <code class="language-plaintext highlighter-rouge">s</code> in <code class="language-plaintext highlighter-rouge">f</code> with <code class="language-plaintext highlighter-rouge">2 * s - 1</code>.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">f.spin_to_binary()</code></strong>:
+Updates <code class="language-plaintext highlighter-rouge">f</code> in place using <code class="language-plaintext highlighter-rouge">qbpp::spin_to_binary(f)</code> and returns the updated expression.</li>
+</ul>
+
+<p>Similarly, the <strong><code class="language-plaintext highlighter-rouge">binary_to_spin()</code></strong> function replaces all binary variables <code class="language-plaintext highlighter-rouge">x</code> in <code class="language-plaintext highlighter-rouge">f</code> by <code class="language-plaintext highlighter-rouge">(x + 1) / 2</code>.
+The resulting expression may contain non-integer coefficients.
+Therefore, the entire expression is multiplied by 
+$2^d$ where $d$ is the maximum degree of all terms, so that all coefficients become integers.</p>
+
+<p>As with <code class="language-plaintext highlighter-rouge">spin_to_binary()</code>, both global and member function variants of <code class="language-plaintext highlighter-rouge">binary_to_spin()</code> are provided.</p>
+
+
+      <hr style="margin: 2rem 0 1rem 0;">
+<div style="font-size: 0.9em; color: #666;">
+  Last updated: 2026.01.17
+</div>
+    </main>
+  </div>
+</body>
+
+</html>

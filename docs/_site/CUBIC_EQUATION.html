@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Cubic Equation - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Minima テーマの main.css（ハイライト含む） -->
+  <link rel="stylesheet" href="/assets/main.css">
+
+  <!-- 自前のナビ用 CSS -->
+  <link rel="stylesheet" href="/assets/custom.css">
+
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+
+<body>
+
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ（全ページ共通） -->
+    <nav style="min-width:220px; position:sticky; top:1rem; padding-right:1rem; border-right:1px solid #ddd;">
+      <h2>QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0;">
+        <li><a href="/"><strong>Introduction</strong></a> </li>
+        <li><a href="/HUBO_QUBO"><strong>HUBO and QUBO</strong></a> </li>
+        <li><a href="/QUICK"><strong>Quick Start</strong></a> </li>
+        <li><a href="/WSL"><strong>Quick Start for Windows</strong></a> </li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/CASE_STUDIES"><strong>Case Studies</strong></a></li>
+        <li><a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Release</strong></a></li>
+      </ul>
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="cubic-equation">Cubic Equation</h1>
+<p>Cubic equations over the integers can be solved using QUBO++. For example, consider</p>
+
+\[\begin{aligned}
+x^3 -147x +286 &amp;=0.
+\end{aligned}\]
+
+<p>This equation has three integer solutions: $x = -13, 2, 11$.</p>
+
+<h2 id="qubo-program-for-solving-the-cubic-equations">QUBO++ program for solving the cubic equations</h2>
+<p>In the following QUBO++ program, we define an integer variable x that takes values in $[-100, 100]$, and we enumerate all optimal solutions using the Exhaustive Solver:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
+#include</span> <span class="cpf">"qbpp_exhaustive_solver.hpp"</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100</span> <span class="o">&lt;=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var_int</span><span class="p">(</span><span class="s">"x"</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">100</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span> <span class="o">-</span> <span class="mi">147</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">286</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="n">f</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+  
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">exhaustive_solver</span><span class="o">::</span><span class="n">ExhaustiveSolver</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">sols</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search_optimal_solutions</span><span class="p">();</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">sol</span> <span class="o">:</span> <span class="n">sols</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"x= "</span> <span class="o">&lt;&lt;</span> <span class="n">x</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">" sol = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>The expression <code class="language-plaintext highlighter-rouge">f</code> corresponds to the following objective function:</p>
+
+\[\begin{aligned}
+f &amp; = (x^3 -147x +286)^2
+\end{aligned}\]
+
+<p>Since the integer variable <code class="language-plaintext highlighter-rouge">x</code> is implemented as a linear expression of binary variables, <code class="language-plaintext highlighter-rouge">f</code> becomes a polynomial of degree 6.
+This program produces the following output:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x = -100 +x[0] +2*x[1] +4*x[2] +8*x[3] +16*x[4] +32*x[5] +64*x[6] +73*x[7]
+x = 11 sol = 0:{{x[0],0},{x[1],1},{x[2],1},{x[3],0},{x[4],0},{x[5],1},{x[6],0},{x[7],1}}
+x = 2 sol = 0:{{x[0],0},{x[1],1},{x[2],1},{x[3],0},{x[4],0},{x[5],1},{x[6],1},{x[7],0}}
+x = -13 sol = 0:{{x[0],0},{x[1],1},{x[2],1},{x[3],1},{x[4],0},{x[5],0},{x[6],0},{x[7],1}}
+x = 2 sol = 0:{{x[0],1},{x[1],0},{x[2],1},{x[3],1},{x[4],1},{x[5],0},{x[6],0},{x[7],1}}
+x = -13 sol = 0:{{x[0],1},{x[1],1},{x[2],1},{x[3],0},{x[4],1},{x[5],0},{x[6],1},{x[7],0}}
+x = 11 sol = 0:{{x[0],1},{x[1],1},{x[2],1},{x[3],1},{x[4],0},{x[5],1},{x[6],1},{x[7],0}}
+</code></pre></div></div>
+
+<p>The first line indicates that the integer variable <code class="language-plaintext highlighter-rouge">x</code> is encoded using 8 binary variables.
+Also, the program outputs 6 optimal solutions even though the original cubic equation has only 3 integer solutions.
+This happens because the coefficient <code class="language-plaintext highlighter-rouge">73</code> of <code class="language-plaintext highlighter-rouge">x[7]</code> is not a power of two, so the same integer value can be represented by multiple different assignments of the binary variables encoding <code class="language-plaintext highlighter-rouge">x</code>.</p>
+
+<p>To eliminate duplicate values of <code class="language-plaintext highlighter-rouge">x</code>, you can modify the program to use <code class="language-plaintext highlighter-rouge">std::unordered_set</code> as follows:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;unordered_set&gt;</span><span class="cp">
+</span>
+<span class="p">...</span> <span class="n">omitted</span> <span class="p">...</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">unordered_set</span><span class="o">&lt;</span><span class="n">qbpp</span><span class="o">::</span><span class="n">energy_t</span><span class="o">&gt;</span> <span class="n">seen</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">sol</span> <span class="o">:</span> <span class="n">sols</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="k">auto</span> <span class="n">xv</span> <span class="o">=</span> <span class="n">x</span><span class="p">(</span><span class="n">sol</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">seen</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">xv</span><span class="p">).</span><span class="n">second</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"x = "</span> <span class="o">&lt;&lt;</span> <span class="n">xv</span> <span class="o">&lt;&lt;</span> <span class="s">" sol = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span> <span class="o">&lt;&lt;</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+  <span class="p">}</span>
+</code></pre></div></div>
+<p>This modified program outputs the following unique solutions:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x = 11 sol = 0:{{x[0],0},{x[1],1},{x[2],1},{x[3],0},{x[4],0},{x[5],1},{x[6],0},{x[7],1}}
+x = 2 sol = 0:{{x[0],0},{x[1],1},{x[2],1},{x[3],0},{x[4],0},{x[5],1},{x[6],1},{x[7],0}}
+x = -13 sol = 0:{{x[0],0},{x[1],1},{x[2],1},{x[3],1},{x[4],0},{x[5],0},{x[6],0},{x[7],1}}
+</code></pre></div></div>
+
+
+      <hr style="margin: 2rem 0 1rem 0;">
+<div style="font-size: 0.9em; color: #666;">
+  Last updated: 2026.01.17
+</div>
+    </main>
+  </div>
+</body>
+
+</html>

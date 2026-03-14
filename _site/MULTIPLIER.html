@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Multiplier Simulation and Factorization - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Minima テーマの main.css（ハイライト含む） -->
+  <link rel="stylesheet" href="/assets/main.css">
+
+  <!-- 自前のナビ用 CSS -->
+  <link rel="stylesheet" href="/assets/custom.css">
+
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+
+<body>
+
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ -->
+    <nav style="width:max-content; position:sticky; top:1rem; padding:0 1rem 0 0; border-right:1px solid #ddd;">
+      
+      <h2 style="margin-left:0;">QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/"><strong>Introduction</strong></a> </li>
+        <li><a href="/HUBO_QUBO"><strong>HUBO and QUBO</strong></a> </li>
+        <li><a href="/QUICK"><strong>Quick Start</strong></a>
+          <ul style="list-style:none; padding-left:1.2em; margin:0.2em 0 0.2em;">
+            <li><a href="/WSL"><strong>for Windows</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/CASE_STUDIES"><strong>Case Studies</strong></a></li>
+        <li><a href="/DEMOS"><strong>Demos</strong></a></li>
+        <li><a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Release</strong></a></li>
+      </ul>
+      <hr style="margin:1rem 0;">
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/python/"><strong>PyQUBO++ &rarr;</strong></a></li>
+      </ul>
+      
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="multiplier-simulation-and-factorization">Multiplier Simulation and Factorization</h1>
+<p>Multiplication of two integers can be performed using additions.
+In this section, we design a multiplier for two 4-bit integers using full adders.
+The figure below shows how two　$x_3x_2x_1x_0$ and　$y_3y_2y_1y_0$ are multiplied to obtain an 8-bit integer $z_7z_6z_5z_4z_3z_2z_1z_0$.
+In this figure, $p_{i,j}=x_iy_j$ ($0\leq i,j\leq 3$) and these partial products are summed to compute the final 8-bit result.</p>
+
+<p align="center">
+ <img src="images/multiplication.svg" alt="4-bit multiplication" width="50%" />
+</p>
+
+<p>We use a 4-bit ripple-carry adder that computes the sum of two 4-bit integers
+$a_3a_2a_1a_0$ and $b_3b_2b_1b_0$ producing the 5-bit sum $z_4z_3z_2z_1z_0$.
+It consists of four full adders connected by a 5-bit carry wire $c_4c_3c_2c_1c_0$
+that propagates carries.</p>
+
+<p align="center">
+ <img src="images/adder4.svg" alt="The 4-bit ripple carry adder" width="50%" />
+</p>
+
+<p>A 4-bit multiplier can be constructed using three 4-bit adders.
+They are connected by wires $c_{i,j}$ ($0\leq i\leq 2, 0\leq j\leq 3$) to propagate intermediate sum bits, as shown below:</p>
+<p align="center">
+ <img src="images/multiplier.svg" alt="The 4-bit multiplier using three 4-bit adders" width="50%" />
+</p>
+
+<h2 id="qubo-formulation-for-multiplier">QUBO formulation for multiplier</h2>
+<p>We will show QUBO formulation for simulating the <code class="language-plaintext highlighter-rouge">N</code>-bit multiplier.
+To do this, we implement functions that construct a full adder, an adder, and a multiplier.</p>
+
+<h3 id="full-adder">Full adder</h3>
+<p>The following QUBO expression simulates a full adder with three input bits <code class="language-plaintext highlighter-rouge">a</code>, <code class="language-plaintext highlighter-rouge">b</code>, and <code class="language-plaintext highlighter-rouge">i</code>, and two output bits: carry-out <code class="language-plaintext highlighter-rouge">o</code> and sum <code class="language-plaintext highlighter-rouge">s</code>:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">qbpp</span><span class="o">::</span><span class="n">Expr</span> <span class="nf">fa</span><span class="p">(</span><span class="k">const</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">Expr</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">Expr</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">,</span> <span class="k">const</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">Expr</span><span class="o">&amp;</span> <span class="n">i</span><span class="p">,</span>
+              <span class="k">const</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">Expr</span><span class="o">&amp;</span> <span class="n">o</span><span class="p">,</span> <span class="k">const</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">Expr</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="n">i</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">o</span> <span class="o">+</span> <span class="n">s</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>The function <code class="language-plaintext highlighter-rouge">fa</code> returns an expression that enforces consistency between the input and output bits of a full adder.</p>
+
+<h3 id="adder">Adder</h3>
+<p>Assume that vectors <code class="language-plaintext highlighter-rouge">a</code>, <code class="language-plaintext highlighter-rouge">b</code>, and <code class="language-plaintext highlighter-rouge">s</code> of <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> objects represent integers.
+We assume that <code class="language-plaintext highlighter-rouge">a</code> and <code class="language-plaintext highlighter-rouge">b</code> each have <code class="language-plaintext highlighter-rouge">N</code> elements representing <code class="language-plaintext highlighter-rouge">N</code>-bit integers, while <code class="language-plaintext highlighter-rouge">s</code> has <code class="language-plaintext highlighter-rouge">N + 1</code> elements representing an <code class="language-plaintext highlighter-rouge">(N + 1)</code>-bit integer.
+The following function adder returns a QUBO expression whose minimum value is 0 if and only if <code class="language-plaintext highlighter-rouge">a + b == s</code> holds:</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">qbpp</span><span class="o">::</span><span class="n">Expr</span> <span class="nf">adder</span><span class="p">(</span><span class="k">const</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">Vector</span><span class="o">&lt;</span><span class="n">qbpp</span><span class="o">::</span><span class="n">Expr</span><span class="o">&gt;&amp;</span> <span class="n">a</span><span class="p">,</span>
+                 <span class="k">const</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">Vector</span><span class="o">&lt;</span><span class="n">qbpp</span><span class="o">::</span><span class="n">Expr</span><span class="o">&gt;&amp;</span> <span class="n">b</span><span class="p">,</span>
+                 <span class="k">const</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">Vector</span><span class="o">&lt;</span><span class="n">qbpp</span><span class="o">::</span><span class="n">Expr</span><span class="o">&gt;&amp;</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">N</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+  <span class="k">auto</span> <span class="n">c</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">toExpr</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">f</span> <span class="o">+=</span> <span class="n">fa</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">b</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">c</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">c</span><span class="p">[</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span>
+  <span class="p">}</span>
+  <span class="n">f</span><span class="p">.</span><span class="n">replace</span><span class="p">({{</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">},</span> <span class="p">{</span><span class="n">c</span><span class="p">[</span><span class="n">N</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="n">N</span><span class="p">]}});</span>
+  <span class="k">return</span> <span class="n">f</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>In this function, <code class="language-plaintext highlighter-rouge">c</code> is a vector of <code class="language-plaintext highlighter-rouge">N + 1</code> variables used to connect the carry-out and carry-in signals of the <code class="language-plaintext highlighter-rouge">fa</code> blocks, forming an <code class="language-plaintext highlighter-rouge">N</code>-bit ripple-carry adder.</p>
+
+<h3 id="multiplier">Multiplier</h3>
+<p>Assume that vectors <code class="language-plaintext highlighter-rouge">x</code>, <code class="language-plaintext highlighter-rouge">y</code>, and <code class="language-plaintext highlighter-rouge">z</code> of <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> represent integers.
+We assume that <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> each have <code class="language-plaintext highlighter-rouge">N</code> elements and that <code class="language-plaintext highlighter-rouge">z</code> has <code class="language-plaintext highlighter-rouge">2 * N</code> elements.
+The following function multiplier returns a QUBO expression whose minimum value is 0 if and only if <code class="language-plaintext highlighter-rouge">x * y == z</code> holds.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">qbpp</span><span class="o">::</span><span class="n">Expr</span> <span class="nf">multiplier</span><span class="p">(</span><span class="k">const</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">Vector</span><span class="o">&lt;</span><span class="n">qbpp</span><span class="o">::</span><span class="n">Expr</span><span class="o">&gt;&amp;</span> <span class="n">x</span><span class="p">,</span>
+                      <span class="k">const</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">Vector</span><span class="o">&lt;</span><span class="n">qbpp</span><span class="o">::</span><span class="n">Expr</span><span class="o">&gt;&amp;</span> <span class="n">y</span><span class="p">,</span>
+                      <span class="k">const</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">Vector</span><span class="o">&lt;</span><span class="n">qbpp</span><span class="o">::</span><span class="n">Expr</span><span class="o">&gt;&amp;</span> <span class="n">z</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">N</span> <span class="o">=</span> <span class="n">x</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+  <span class="k">auto</span> <span class="n">c</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"c"</span><span class="p">,</span> <span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">toExpr</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">qbpp</span><span class="o">::</span><span class="n">Vector</span><span class="o">&lt;</span><span class="n">qbpp</span><span class="o">::</span><span class="n">Expr</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">s</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">b</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">a</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]);</span>
+      <span class="p">}</span>
+      <span class="n">a</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">a</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">s</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]);</span>
+    <span class="p">}</span>
+    <span class="n">f</span> <span class="o">+=</span> <span class="n">adder</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">s</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">f</span> <span class="o">+=</span> <span class="n">z</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span>
+
+  <span class="n">qbpp</span><span class="o">::</span><span class="n">MapList</span> <span class="n">ml</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span> <span class="o">-</span> <span class="mi">2</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">ml</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">z</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]});</span>
+  <span class="p">}</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">ml</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">c</span><span class="p">[</span><span class="n">N</span> <span class="o">-</span> <span class="mi">2</span><span class="p">][</span><span class="n">i</span><span class="p">],</span> <span class="n">z</span><span class="p">[</span><span class="n">N</span> <span class="o">+</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]});</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">f</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="n">ml</span><span class="p">).</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>This function uses an <code class="language-plaintext highlighter-rouge">(N−1)×(N+1)</code> matrix <code class="language-plaintext highlighter-rouge">c</code> of <code class="language-plaintext highlighter-rouge">qbpp::Var</code> objects to connect the <code class="language-plaintext highlighter-rouge">N−1</code> adders of <code class="language-plaintext highlighter-rouge">N</code> bits.
+Since each bit of <code class="language-plaintext highlighter-rouge">z</code> corresponds to one element of <code class="language-plaintext highlighter-rouge">c</code>, their correspondence is defined in <code class="language-plaintext highlighter-rouge">ml</code>, and the replacements are performed using <code class="language-plaintext highlighter-rouge">replace()</code>.</p>
+
+<h2 id="qubo-program-for-factorization">QUBO++ program for factorization</h2>
+<p>Using the function <code class="language-plaintext highlighter-rouge">multiplier</code>, we can factor a composite integer into two factors.
+The following program constructs a 4-bit multiplier with</p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">x</code>: 4 binary variables,</li>
+  <li><code class="language-plaintext highlighter-rouge">y</code>: 4 binary variables,</li>
+  <li><code class="language-plaintext highlighter-rouge">z</code>: a vector of constants <code class="language-plaintext highlighter-rouge">{1, 1, 1, 1, 0, 0, 0, 1}</code>, representing the 8-bit integer <code class="language-plaintext highlighter-rouge">10001111</code> <code class="language-plaintext highlighter-rouge">(143)</code>, and stores the resulting expression in <code class="language-plaintext highlighter-rouge">f</code>:</li>
+</ul>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#define MAXDEG 2
+#include</span> <span class="cpf">&lt;qbpp/qbpp.hpp&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;qbpp/easy_solver.hpp&gt;</span><span class="cp">
+</span>
+<span class="n">qbpp</span><span class="o">::</span><span class="n">Expr</span> <span class="nf">fa</span><span class="p">(</span><span class="k">const</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">Expr</span><span class="o">&amp;</span> <span class="n">a</span><span class="p">,</span> <span class="k">const</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">Expr</span><span class="o">&amp;</span> <span class="n">b</span><span class="p">,</span> <span class="k">const</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">Expr</span><span class="o">&amp;</span> <span class="n">i</span><span class="p">,</span>
+              <span class="k">const</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">Expr</span><span class="o">&amp;</span> <span class="n">o</span><span class="p">,</span> <span class="k">const</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">Expr</span><span class="o">&amp;</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="o">+</span> <span class="n">i</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">o</span> <span class="o">+</span> <span class="n">s</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">qbpp</span><span class="o">::</span><span class="n">Expr</span> <span class="n">adder</span><span class="p">(</span><span class="k">const</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">Vector</span><span class="o">&lt;</span><span class="n">qbpp</span><span class="o">::</span><span class="n">Expr</span><span class="o">&gt;&amp;</span> <span class="n">a</span><span class="p">,</span>
+                 <span class="k">const</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">Vector</span><span class="o">&lt;</span><span class="n">qbpp</span><span class="o">::</span><span class="n">Expr</span><span class="o">&gt;&amp;</span> <span class="n">b</span><span class="p">,</span>
+                 <span class="k">const</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">Vector</span><span class="o">&lt;</span><span class="n">qbpp</span><span class="o">::</span><span class="n">Expr</span><span class="o">&gt;&amp;</span> <span class="n">s</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">N</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+  <span class="k">auto</span> <span class="n">c</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">toExpr</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">f</span> <span class="o">+=</span> <span class="n">fa</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">b</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">c</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">c</span><span class="p">[</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">f</span><span class="p">.</span><span class="n">replace</span><span class="p">({{</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">},</span> <span class="p">{</span><span class="n">c</span><span class="p">[</span><span class="n">N</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="n">N</span><span class="p">]}});</span>
+<span class="p">}</span>
+
+<span class="n">qbpp</span><span class="o">::</span><span class="n">Expr</span> <span class="n">multiplier</span><span class="p">(</span><span class="k">const</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">Vector</span><span class="o">&lt;</span><span class="n">qbpp</span><span class="o">::</span><span class="n">Expr</span><span class="o">&gt;&amp;</span> <span class="n">x</span><span class="p">,</span>
+                      <span class="k">const</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">Vector</span><span class="o">&lt;</span><span class="n">qbpp</span><span class="o">::</span><span class="n">Expr</span><span class="o">&gt;&amp;</span> <span class="n">y</span><span class="p">,</span>
+                      <span class="k">const</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">Vector</span><span class="o">&lt;</span><span class="n">qbpp</span><span class="o">::</span><span class="n">Expr</span><span class="o">&gt;&amp;</span> <span class="n">z</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">N</span> <span class="o">=</span> <span class="n">x</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+  <span class="k">auto</span> <span class="n">c</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"c"</span><span class="p">,</span> <span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">toExpr</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">qbpp</span><span class="o">::</span><span class="n">Vector</span><span class="o">&lt;</span><span class="n">qbpp</span><span class="o">::</span><span class="n">Expr</span><span class="o">&gt;</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">s</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">b</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">a</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]);</span>
+      <span class="p">}</span>
+      <span class="n">a</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">a</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">s</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]);</span>
+    <span class="p">}</span>
+    <span class="n">f</span> <span class="o">+=</span> <span class="n">adder</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">s</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">f</span> <span class="o">+=</span> <span class="n">z</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span>
+
+  <span class="n">qbpp</span><span class="o">::</span><span class="n">MapList</span> <span class="n">ml</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span> <span class="o">-</span> <span class="mi">2</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">ml</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">c</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">z</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]});</span>
+  <span class="p">}</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">ml</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">c</span><span class="p">[</span><span class="n">N</span> <span class="o">-</span> <span class="mi">2</span><span class="p">][</span><span class="n">i</span><span class="p">],</span> <span class="n">z</span><span class="p">[</span><span class="n">N</span> <span class="o">+</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]});</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="n">f</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="n">ml</span><span class="p">).</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">,</span> <span class="mi">4</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">y</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"y"</span><span class="p">,</span> <span class="mi">4</span><span class="p">);</span>
+  <span class="n">qbpp</span><span class="o">::</span><span class="n">Vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">z</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">};</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">multiplier</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">).</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">easy_solver</span><span class="o">::</span><span class="n">EasySolver</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+  <span class="n">solver</span><span class="p">.</span><span class="n">target_energy</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">sol</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search</span><span class="p">();</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">it</span> <span class="o">=</span> <span class="n">x</span><span class="p">.</span><span class="n">rbegin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">x</span><span class="p">.</span><span class="n">rend</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="o">*</span><span class="n">it</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" * "</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">it</span> <span class="o">=</span> <span class="n">y</span><span class="p">.</span><span class="n">rbegin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">y</span><span class="p">.</span><span class="n">rend</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="o">*</span><span class="n">it</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" = "</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">it</span> <span class="o">=</span> <span class="n">z</span><span class="p">.</span><span class="n">rbegin</span><span class="p">();</span> <span class="n">it</span> <span class="o">!=</span> <span class="n">z</span><span class="p">.</span><span class="n">rend</span><span class="p">();</span> <span class="o">++</span><span class="n">it</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">it</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>The Easy Solver is executed on <code class="language-plaintext highlighter-rouge">f</code>, and the obtained solution is stored in <code class="language-plaintext highlighter-rouge">sol</code>.
+The resulting values of <code class="language-plaintext highlighter-rouge">x</code> and <code class="language-plaintext highlighter-rouge">y</code> are printed as:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1011 * 1101 = 10001111
+</code></pre></div></div>
+<p>This output indicates $11\times 13 = 143$, demonstrating the factorization result.</p>
+
+      <hr style="margin: 2rem 0 1rem 0;">
+<div style="font-size: 0.9em; color: #666;">
+  Last updated: 2026.03.05
+</div>
+    </main>
+  </div>
+</body>
+
+</html>

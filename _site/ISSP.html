@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Interval Subset Sum Problem (ISSP) - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Minima テーマの main.css（ハイライト含む） -->
+  <link rel="stylesheet" href="/assets/main.css">
+
+  <!-- 自前のナビ用 CSS -->
+  <link rel="stylesheet" href="/assets/custom.css">
+
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+
+<body>
+
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ -->
+    <nav style="width:max-content; position:sticky; top:1rem; padding:0 1rem 0 0; border-right:1px solid #ddd;">
+      
+      <h2 style="margin-left:0;">QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/"><strong>Introduction</strong></a> </li>
+        <li><a href="/HUBO_QUBO"><strong>HUBO and QUBO</strong></a> </li>
+        <li><a href="/QUICK"><strong>Quick Start</strong></a>
+          <ul style="list-style:none; padding-left:1.2em; margin:0.2em 0 0.2em;">
+            <li><a href="/WSL"><strong>for Windows</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/CASE_STUDIES"><strong>Case Studies</strong></a></li>
+        <li><a href="/DEMOS"><strong>Demos</strong></a></li>
+        <li><a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Release</strong></a></li>
+      </ul>
+      <hr style="margin:1rem 0;">
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/python/"><strong>PyQUBO++ &rarr;</strong></a></li>
+      </ul>
+      
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="interval-subset-sum-problem-issp">Interval Subset Sum Problem (ISSP)</h1>
+<p>The <strong>Interval Subset Sum Problem (ISSP)</strong> is a generalization of the <strong>Subset Sum Problem</strong>.
+Given $n$ integer <strong>intervals $[l_i, u_i]$</strong> $(0\leq i\leq n-1)$ and an <strong>upper bound $T$</strong>, the goal is to choose an integer value</p>
+
+\[\begin{aligned}
+v_i &amp;\in \lbrace 0\rbrace \cup [l_i, u_i] &amp;&amp; (i = 0,1,\dots,n-1),
+\end{aligned}\]
+
+<p>so as to satisfy the constraint</p>
+
+\[\begin{aligned}
+ \sum_{i=0}^{n-1} v_i \leq T,
+\end{aligned}\]
+
+<p>and maximize the objective:</p>
+
+\[\begin{aligned}
+ \sum_{i=0}^{n-1} v_i.
+\end{aligned}\]
+
+<h2 id="hubo-formulation-of-the-ispp">HUBO formulation of the ISPP</h2>
+<p>An integer variable can be represented by multiple binary variables using a binary encoding.
+In QUBO++, such integer variables can be defined easily as shown in
+<a href="INTEGER">Integer Variables and Solving Simultaneous Equations</a>.</p>
+
+<p>Let $v_i$ $(0\leq i\leq n-1)$ be an integer variable that can take a value in $[l_i, u_i]$.
+We also introduce a binary variable $s_i$  $(0\leq i\leq n-1)$ such that $s_i=1$ if and only if
+interval $i$ is selected.</p>
+
+<p>To model ISSP, we use the product $s_i v_i$ as the selected value:</p>
+
+\[\begin{aligned}
+s_iv_i &amp;= 0 &amp;&amp; \text{if } s_i= 0\\
+       &amp;\in [l_i,u_i] &amp;&amp; \text{if } s_i= 1
+\end{aligned}\]
+
+<p>Let</p>
+
+\[\begin{aligned}
+\text{sum} &amp;= \sum_{i=0}^{n-1} s_i v_i .
+\end{aligned}\]
+
+<p>In QUBO++, we impose this inequality constraint via a penalty term:</p>
+
+\[\begin{aligned}
+ \text{constraint} &amp;= \sum_{i=0}^{n-1} \bigr(0\leq s_iv_i \leq T\bigl) \\
+                &amp;= (T-\sum_{i=0}^{n-1} s_iv_i)^2
+\end{aligned}\]
+
+<p>Since $s_i v_i$ is quadratic in binary variables, $\text{sum}$ is quadratic and $\text{constraint}$ becomes quartic.</p>
+
+<p>Because the ISSP maximizes the sum under the upper bound $T$, we minimize the negative sum:</p>
+
+\[\begin{aligned}
+ \text{objective} &amp;= -\sum_{i=0}^{n-1} s_iv_i 
+\end{aligned}\]
+
+<p>Finally, we combine the objective and the constraint penalty into a single HUBO function:</p>
+
+\[\begin{aligned}
+f &amp;= \text{objective} + P\times\text{constraint},
+\end{aligned}\]
+
+<p>where $P$ is a sufficiently large constant to prioritize feasibility.</p>
+
+<h2 id="qubo-program-of-the-hubo-formulation">QUBO++ program of the HUBO formulation</h2>
+<p>The following QUBO++ program solves an ISSP instance with 8 intervals.
+The lower and upper bounds $[l_i,u_i]$ are stored in the vectors <code class="language-plaintext highlighter-rouge">lower</code> and <code class="language-plaintext highlighter-rouge">upper</code>, and $T=100$.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;qbpp/qbpp.hpp&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;qbpp/easy_solver.hpp&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">qbpp</span><span class="o">::</span><span class="n">Vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">lower</span> <span class="o">=</span> <span class="p">{</span><span class="mi">18</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">23</span><span class="p">};</span>
+  <span class="n">qbpp</span><span class="o">::</span><span class="n">Vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">upper</span> <span class="o">=</span> <span class="p">{</span><span class="mi">19</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">25</span><span class="p">};</span>
+  <span class="k">const</span> <span class="kt">int</span> <span class="n">T</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+
+  <span class="k">auto</span> <span class="n">v</span> <span class="o">=</span> <span class="n">lower</span> <span class="o">&lt;=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var_int</span><span class="p">(</span><span class="s">"v"</span><span class="p">,</span> <span class="n">lower</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="o">&lt;=</span> <span class="n">upper</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">s</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"s"</span><span class="p">,</span> <span class="n">lower</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+
+  <span class="k">auto</span> <span class="n">sum</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sum</span><span class="p">(</span><span class="n">v</span> <span class="o">*</span> <span class="n">s</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">constraint</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">sum</span> <span class="o">&lt;=</span> <span class="n">T</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="o">-</span><span class="n">sum</span> <span class="o">+</span> <span class="mi">1000</span> <span class="o">*</span> <span class="n">constraint</span><span class="p">;</span>
+  <span class="n">f</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">easy_solver</span><span class="o">::</span><span class="n">EasySolver</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+  <span class="n">solver</span><span class="p">.</span><span class="n">target_energy</span><span class="p">(</span><span class="o">-</span><span class="n">T</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">sol</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search</span><span class="p">();</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">v</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">sol</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span> <span class="p">{</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Interval "</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="s">": val = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"sum = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">sum</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>First, we define a vector <code class="language-plaintext highlighter-rouge">v</code> of integer variables where each <code class="language-plaintext highlighter-rouge">v[i]</code> takes an integer value in
+<code class="language-plaintext highlighter-rouge">[lower[i], upper[i]]</code>.
+We also define a vector <code class="language-plaintext highlighter-rouge">s</code> of binary variables, where <code class="language-plaintext highlighter-rouge">s[i] = 1</code> means
+interval <code class="language-plaintext highlighter-rouge">i</code> is selected.
+The expression <code class="language-plaintext highlighter-rouge">sum</code> represents $\sum_i v_i s_i$.</p>
+
+<p>The inequality constraint <code class="language-plaintext highlighter-rouge">0 &lt;= sum &lt;= T</code> is stored in <code class="language-plaintext highlighter-rouge">constraint</code>. In QUBO++, such a constraint
+is internally converted into a nonnegative penalty term that becomes zero when the constraint is satisfied.</p>
+
+<p>Finally, we construct the HUBO objective function <code class="language-plaintext highlighter-rouge">f</code> as
+<code class="language-plaintext highlighter-rouge">f = -sum + P * constraint</code> (with <code class="language-plaintext highlighter-rouge">P = 1000</code> in this example).
+Minimizing <code class="language-plaintext highlighter-rouge">f</code> therefore maximizes <code class="language-plaintext highlighter-rouge">sum</code> while heavily penalizing any violation of the constraint.</p>
+
+<p>We set the target energy to <code class="language-plaintext highlighter-rouge">-T</code> because if the solver finds a feasible solution with <code class="language-plaintext highlighter-rouge">sum = T</code>,
+then the penalty term is zero and the objective term becomes <code class="language-plaintext highlighter-rouge">-T</code>, i.e., the global minimum reaches <code class="language-plaintext highlighter-rouge">-T</code>.</p>
+
+<p>For the obtained solution, the selected intervals and their values are printed. For example:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Interval 0: val = 18
+Interval 1: val = 17
+Interval 2: val = 22
+Interval 4: val = 20
+Interval 7: val = 23
+sum = 100
+</code></pre></div></div>
+<p>This output confirms that a feasible solution achieving the maximum possible <code class="language-plaintext highlighter-rouge">sum</code> ($=T$) was obtained.</p>
+
+<h2 id="qubo-formulation-for-the-issp">QUBO formulation for the ISSP</h2>
+<p>The HUBO formulation above contains quartic terms because it uses products $s_i v_i$.
+We can avoid quartic terms by introducing auxiliary integer variables.</p>
+
+<p>Let $a_i$ $(0\leq i\leq n-1)$ be an integer variable that can take a value in
+$[0,\, u_i-l_i]$.
+We also use a binary variable $s_i$ $(0\leq i\leq n-1$) such that $s_i=1$ if and only if
+interval $i$ is selected</p>
+
+<p>We define</p>
+
+\[\begin{aligned}
+  v_i &amp;= l_is_i + a_i &amp;&amp; (0\leq i\leq n-1) \\
+\end{aligned}\]
+
+<p>To ensure that $x_i$ becomes 0 when $s_i=0$, we add the following penalty term:</p>
+
+\[\begin{aligned}
+  \text{constraint1} &amp;= \sum_{i=0}^{n-1}\sum_j (1-s_i)a_i
+\end{aligned}\]
+
+<p>Since $a_i \ge 0$ and $1-s_i \ge 0$, we have $\text{constraint1}\ge 0$.
+Moreover, $\text{constraint1}=0$ holds if and only if $a_i=0$ whenever $s_i=0$.
+Therefore, the selected value $v_i$ satisfies</p>
+
+\[\begin{aligned}
+  v_i &amp; = 0 &amp;&amp; \text{if } s_i=0,\\
+      &amp; \in  [l_i,u_i] &amp;&amp;\text{if } s_i=1.
+\end{aligned}\]
+
+<p>because $v_i = l_i + a_i$ and $a_i \in [0,u_i-l_i]$ when $s_i=1$.</p>
+
+<p>Let</p>
+
+\[\begin{aligned}
+\text{sum} &amp;= \sum_{i=0}^{n-1} x_i.
+\end{aligned}\]
+
+<p>The ISSP constraint is:</p>
+
+\[\begin{aligned}
+ \text{constraint2} &amp;= \sum_{i=0}^{n-1} \bigr(0\leq v_i \leq T\bigl) \\
+                &amp;= (T-\sum_{i=0}^{n-1} v_i)^2
+\end{aligned}\]
+
+<p>Finally, since ISSP maximizes $\text{sum}$ under the upper bound $T$, we minimize</p>
+
+\[\begin{aligned}
+ \text{objective} &amp;= -\sum_{i=0}^{n-1} v_i 
+\end{aligned}\]
+
+<p>Combining the objective and the penalties, we obtain the QUBO expression:</p>
+
+\[\begin{aligned}
+f &amp;= \text{objective} + P\times(\text{constraint1}+\text{constraint2}),
+\end{aligned}\]
+
+<p>where $P$ is a sufficiently large constant to prioritize feasibility.</p>
+
+<h2 id="qubo-program-of-the-qubo-formulation">QUBO++ program of the QUBO formulation</h2>
+<p>The following QUBO++ program solves the same ISSP instance using the QUBO formulation:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#define MAXDEG 2
+#include</span> <span class="cpf">&lt;qbpp/qbpp.hpp&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;qbpp/easy_solver.hpp&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">qbpp</span><span class="o">::</span><span class="n">Vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">lower</span> <span class="o">=</span> <span class="p">{</span><span class="mi">18</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">23</span><span class="p">};</span>
+  <span class="n">qbpp</span><span class="o">::</span><span class="n">Vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">upper</span> <span class="o">=</span> <span class="p">{</span><span class="mi">19</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">22</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">25</span><span class="p">};</span>
+  <span class="k">const</span> <span class="kt">int</span> <span class="n">T</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+
+  <span class="k">auto</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var_int</span><span class="p">(</span><span class="s">"a"</span><span class="p">,</span> <span class="n">lower</span><span class="p">.</span><span class="n">size</span><span class="p">())</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">upper</span> <span class="o">-</span> <span class="n">lower</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">s</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"s"</span><span class="p">,</span> <span class="n">lower</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+  <span class="k">auto</span> <span class="n">v</span> <span class="o">=</span> <span class="n">s</span> <span class="o">*</span> <span class="n">lower</span> <span class="o">+</span> <span class="n">a</span><span class="p">;</span>
+
+  <span class="k">auto</span> <span class="n">sum</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sum</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">constraint1</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sum</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">s</span><span class="p">)</span> <span class="o">*</span> <span class="n">a</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">constraint2</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">sum</span> <span class="o">&lt;=</span> <span class="n">T</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="o">-</span><span class="n">sum</span> <span class="o">+</span> <span class="mi">1000</span> <span class="o">*</span> <span class="p">(</span><span class="n">constraint1</span> <span class="o">+</span> <span class="n">constraint2</span><span class="p">);</span>
+  <span class="n">f</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+  
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">easy_solver</span><span class="o">::</span><span class="n">EasySolver</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+  <span class="n">solver</span><span class="p">.</span><span class="n">target_energy</span><span class="p">(</span><span class="o">-</span><span class="n">T</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">sol</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search</span><span class="p">();</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">v</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">sol</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span> <span class="p">{</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Interval "</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="s">": val = "</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">sol</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"sum = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">sum</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>First, we define a vector <code class="language-plaintext highlighter-rouge">a</code> of integer variables, where each <code class="language-plaintext highlighter-rouge">a[i]</code> takes an integer value in
+<code class="language-plaintext highlighter-rouge">[0, upper[i] - lower[i]]</code>.
+We also define a vector <code class="language-plaintext highlighter-rouge">s</code> of binary variables.
+Using <code class="language-plaintext highlighter-rouge">a</code> and <code class="language-plaintext highlighter-rouge">s</code>, we construct <code class="language-plaintext highlighter-rouge">x = s * lower + a</code>, which corresponds to 
+$v_i = s_i * l_i+a_i$.
+The expression <code class="language-plaintext highlighter-rouge">constraint1 = sum((1 - s) * a)</code> penalizes any solution with <code class="language-plaintext highlighter-rouge">a[i] &gt; 0</code> when <code class="language-plaintext highlighter-rouge">s[i] = 0</code>,
+thereby enforcing <code class="language-plaintext highlighter-rouge">v[i] = 0</code> for unselected intervals.
+The inequality constraint <code class="language-plaintext highlighter-rouge">constraint2 = 0 &lt;= sum &lt;= T</code>
+ensures that the total selected sum does not exceed <code class="language-plaintext highlighter-rouge">T</code>.</p>
+
+<p>Finally, we minimize <code class="language-plaintext highlighter-rouge">f = -sum + P * (constraint1 + constraint2)</code> with a sufficiently large penalty constant <code class="language-plaintext highlighter-rouge">P</code>.
+As in the previous example, setting <code class="language-plaintext highlighter-rouge">target_energy(-T)</code> allows the solver to stop early if it finds a feasible solution achieving <code class="language-plaintext highlighter-rouge">sum = T</code> (in which case the penalty terms are zero and the objective term becomes <code class="language-plaintext highlighter-rouge">-T</code>).</p>
+
+      <hr style="margin: 2rem 0 1rem 0;">
+<div style="font-size: 0.9em; color: #666;">
+  Last updated: 2026.03.05
+</div>
+    </main>
+  </div>
+</body>
+
+</html>

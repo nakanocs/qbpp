@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>PyQUBO++ Introduction - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Minima テーマの main.css（ハイライト含む） -->
+  <link rel="stylesheet" href="/assets/main.css">
+
+  <!-- 自前のナビ用 CSS -->
+  <link rel="stylesheet" href="/assets/custom.css">
+
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+
+<body>
+
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ -->
+    <nav style="width:max-content; position:sticky; top:1rem; padding:0 1rem 0 0; border-right:1px solid #ddd;">
+      
+      <h2 style="margin-left:0;">PyQUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/python/"><strong>Introduction</strong></a></li>
+      </ul>
+      <hr style="margin:1rem 0;">
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/"><strong>&larr; QUBO++</strong></a></li>
+      </ul>
+      
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="pyqubo-python-interface-for-qubo">PyQUBO++: Python Interface for QUBO++</h1>
+
+<p>PyQUBO++ is a Python wrapper for the QUBO++ library,
+allowing you to model and solve combinatorial optimization problems
+using QUBO/HUBO formulations directly from Python.</p>
+
+<h2 id="features">Features</h2>
+<ul>
+  <li>Symbolic construction of QUBO/HUBO expressions in Python</li>
+  <li>Access to QUBO++ solvers (Easy Solver, Exhaustive Solver, ABS3)</li>
+  <li>Familiar Python syntax with the full power of the QUBO++ engine</li>
+</ul>
+
+<h2 id="quick-example">Quick Example</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">pyqbpp</span> <span class="kn">import</span> <span class="n">Var</span><span class="p">,</span> <span class="n">EasySolver</span><span class="p">,</span> <span class="n">var</span><span class="p">,</span> <span class="n">expr</span><span class="p">,</span> <span class="nb">sum</span><span class="p">,</span> <span class="n">vector_sum</span><span class="p">,</span> <span class="n">between</span>
+
+<span class="n">Var</span><span class="p">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+
+<span class="c1"># Each row and column has exactly one queen
+</span><span class="n">f</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">vector_sum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="nb">sum</span><span class="p">(</span><span class="n">vector_sum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">f</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">()</span>
+
+<span class="n">solver</span> <span class="o">=</span> <span class="n">EasySolver</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="n">solver</span><span class="p">.</span><span class="n">target_energy</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">sol</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>More detailed documentation will be added soon.</p>
+
+      <hr style="margin: 2rem 0 1rem 0;">
+<div style="font-size: 0.9em; color: #666;">
+  Last updated: 2026.03.06
+</div>
+    </main>
+  </div>
+</body>
+
+</html>

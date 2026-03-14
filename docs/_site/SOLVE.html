@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>SOLVE - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Minima テーマの main.css（ハイライト含む） -->
+  <link rel="stylesheet" href="/assets/main.css">
+
+  <!-- 自前のナビ用 CSS -->
+  <link rel="stylesheet" href="/assets/custom.css">
+
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+
+<body>
+
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ（全ページ共通） -->
+    <nav style="min-width:220px; position:sticky; top:1rem; padding-right:1rem; border-right:1px solid #ddd;">
+      <h2>QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0;">
+        <li><a href="/"><strong>Introduction</strong></a> </li>
+        <li><a href="/HUBO_QUBO"><strong>HUBO and QUBO</strong></a> </li>
+        <li><a href="/QUICK"><strong>Quick Start</strong></a> </li>
+        <li><a href="/WSL"><strong>Quick Start for Windows</strong></a> </li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/CASE_STUDIES"><strong>Case Studies</strong></a></li>
+        <li><a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Release</strong></a></li>
+      </ul>
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="solving-expressions-using-easy-solver-and-exhaustive-solver">Solving Expressions using Easy Solver and Exhaustive Solver</h1>
+
+<p>QUBO++ provides the <strong>Easy Solver</strong> and the <strong>Exhaustive Solver</strong> for QUBO/HUBO expressions.<br />
+They run in parallel on multicore CPUs using <strong>Intel Threading Building Blocks (oneTBB)</strong>.</p>
+
+<ul>
+  <li><strong>Easy Solver</strong>
+    <ul>
+      <li>Runs a heuristic algorithm based on simulated annealing.</li>
+      <li>Does not guarantee optimality.</li>
+    </ul>
+  </li>
+  <li><strong>Exhaustive Solver</strong>
+    <ul>
+      <li>Explores all possible solutions.</li>
+      <li>Guarantees optimality of the returned solution.</li>
+      <li>Is computationally feasible only when the number of binary variables is about 30–40 or fewer.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Both solvers are used in two steps:</p>
+<ol>
+  <li>Create a solver object, <strong><code class="language-plaintext highlighter-rouge">qbpp::easy_solver::EasySolver</code></strong> or <strong><code class="language-plaintext highlighter-rouge">qbpp::exhaustive_solver::ExhaustiveSolver</code></strong>.</li>
+  <li>Call the <strong><code class="language-plaintext highlighter-rouge">search()</code></strong> member function on the solver object. It returns a <strong><code class="language-plaintext highlighter-rouge">qbpp::Sol</code></strong> object that stores the obtained solution.</li>
+</ol>
+
+<h2 id="easy-solver">Easy Solver</h2>
+<p>To use the <strong>Easy Solver</strong>, include the header file <strong><code class="language-plaintext highlighter-rouge">qbpp_easy_solver.hpp</code></strong>.
+It is defined in the namespace <strong><code class="language-plaintext highlighter-rouge">qbpp::easy_solver</code></strong>.</p>
+
+<p>We use the following expression $f(a,b,c,d)$ as an example:</p>
+
+\[\begin{aligned}
+f(a,b,c,d,e) &amp;= (a+2b+3c+4d-5)^2
+\end{aligned}\]
+
+<p>Clearly, this expression attains its minimum value $f=0$
+when $a+2b+3c+4d=5$.
+Therefore, it has two optimal solutions, $(a,b,c,d)=(0,1,1,0)$ and $(1,0,0,1)$.</p>
+
+<p>In the following program, expression <code class="language-plaintext highlighter-rouge">f</code> is created using the symbolic computation.
+Note that the function <strong><code class="language-plaintext highlighter-rouge">qbpp::sqr()</code></strong> returns the square of the argument.
+We then construct an instance of the class <code class="language-plaintext highlighter-rouge">qbpp::easy_solver::EasySolver</code>
+by passing <code class="language-plaintext highlighter-rouge">f</code> to its constructor.
+Before doing so, <code class="language-plaintext highlighter-rouge">f</code> must be simplified for binary variables by calling <strong><code class="language-plaintext highlighter-rouge">simplify_as_binary()</code></strong>.
+The constructor returns an <code class="language-plaintext highlighter-rouge">EasySolver</code> object named <strong><code class="language-plaintext highlighter-rouge">solver</code></strong>.
+Since we know that the optimal value is $f=0$, we set the target energy to $0$ by calling the <strong><code class="language-plaintext highlighter-rouge">target_energy()</code></strong> member function.
+Calling the <strong><code class="language-plaintext highlighter-rouge">search()</code></strong> member function on <code class="language-plaintext highlighter-rouge">solver</code> returns a solution instance <strong><code class="language-plaintext highlighter-rouge">sol</code></strong>  of
+class <strong><code class="language-plaintext highlighter-rouge">qbpp::Sol</code></strong>, which is printed using <code class="language-plaintext highlighter-rouge">std::cout</code>.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
+#include</span> <span class="cpf">"qbpp_easy_solver.hpp"</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">a</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"a"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">b</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"b"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">c</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"c"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">d</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"d"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sqr</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">b</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">c</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">d</span> <span class="o">-</span> <span class="mi">5</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">easy_solver</span><span class="o">::</span><span class="n">EasySolver</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+  <span class="n">solver</span><span class="p">.</span><span class="n">target_energy</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">sol</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search</span><span class="p">();</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>The output of this program is as follows:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>f = 25 -9*a -16*b -21*c -24*d +4*a*b +6*a*c +8*a*d +12*b*c +16*b*d +24*c*d
+0:{{a,1},{b,0},{c,0},{d,1}}
+</code></pre></div></div>
+
+<p>One of the optimal solutions is correctly output.</p>
+
+<h2 id="exhaustive-solver">Exhaustive Solver</h2>
+<p>To use the <strong>Exhaustive Solver</strong>, include the header file <strong><code class="language-plaintext highlighter-rouge">qbpp_exhaustive_solver.hpp</code></strong>.<br />
+It is defined in the namespace <strong><code class="language-plaintext highlighter-rouge">qbpp::exhaustive_solver</code></strong>.</p>
+
+<p>We construct an instance <strong><code class="language-plaintext highlighter-rouge">solver</code></strong> of the class <strong><code class="language-plaintext highlighter-rouge">qbpp::exhaustive_solver::ExhaustiveSolver</code></strong>
+by passing <code class="language-plaintext highlighter-rouge">f</code> to its constructor.
+Calling the <strong><code class="language-plaintext highlighter-rouge">search()</code></strong> member function on <code class="language-plaintext highlighter-rouge">solver</code> returns a solution instance <strong><code class="language-plaintext highlighter-rouge">sol</code></strong> of
+class <strong><code class="language-plaintext highlighter-rouge">qbpp::Sol</code></strong>, which is printed using <code class="language-plaintext highlighter-rouge">std::cout</code>.
+Since the Exhaustive Solver explores all possible assignments, it is guaranteed that <code class="language-plaintext highlighter-rouge">sol</code>
+stores an optimal solution.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
+#include</span> <span class="cpf">"qbpp_exhaustive_solver.hpp"</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">a</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"a"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">b</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"b"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">c</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"c"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">d</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"d"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sqr</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">b</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">c</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">d</span> <span class="o">-</span> <span class="mi">5</span><span class="p">);</span>
+  <span class="n">f</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">exhaustive_solver</span><span class="o">::</span><span class="n">ExhaustiveSolver</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">sol</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search</span><span class="p">();</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>The output of this program is as follows:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0:{{a,0},{b,1},{c,1},{d,0}}
+</code></pre></div></div>
+
+<p>All optimal solutions can be obtained by the <strong><code class="language-plaintext highlighter-rouge">search_optimal_solutions()</code></strong> member function as follows:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="k">auto</span> <span class="n">sol</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search_optimal_solutions</span><span class="p">();</span>
+</code></pre></div></div>
+<p>The output is as follows:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(0) 0:{{a,0},{b,1},{c,1},{d,0}}
+(1) 0:{{a,1},{b,0},{c,0},{d,1}}
+</code></pre></div></div>
+
+<p>Furthermore, all solutions including non-optimal ones can be obtained by the
+<strong><code class="language-plaintext highlighter-rouge">search_all_solutions()</code></strong> member function as follows:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="k">auto</span> <span class="n">sol</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search_all_solutions</span><span class="p">();</span>
+</code></pre></div></div>
+<p>The output is as follows:</p>
+
+<pre><code class="language-txt">(0) 0:{{a,0},{b,1},{c,1},{d,0}}
+(1) 0:{{a,1},{b,0},{c,0},{d,1}}
+(2) 1:{{a,0},{b,0},{c,0},{d,1}}
+(3) 1:{{a,0},{b,1},{c,0},{d,1}}
+(4) 1:{{a,1},{b,0},{c,1},{d,0}}
+(5) 1:{{a,1},{b,1},{c,1},{d,0}}
+(6) 4:{{a,0},{b,0},{c,1},{d,0}}
+(7) 4:{{a,0},{b,0},{c,1},{d,1}}
+(8) 4:{{a,1},{b,1},{c,0},{d,0}}
+(9) 4:{{a,1},{b,1},{c,0},{d,1}}
+(10) 9:{{a,0},{b,1},{c,0},{d,0}}
+(11) 9:{{a,1},{b,0},{c,1},{d,1}}
+(12) 16:{{a,0},{b,1},{c,1},{d,1}}
+(13) 16:{{a,1},{b,0},{c,0},{d,0}}
+(14) 25:{{a,0},{b,0},{c,0},{d,0}}
+(15) 25:{{a,1},{b,1},{c,1},{d,1}}
+</code></pre>
+
+<p>The Exhaustive Solver is very useful for analyzing small expressions and for debugging.</p>
+
+      <hr style="margin: 2rem 0 1rem 0;">
+<div style="font-size: 0.9em; color: #666;">
+  Last updated: 2026.02.04
+</div>
+    </main>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>LABS Problem - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Minima テーマの main.css（ハイライト含む） -->
+  <link rel="stylesheet" href="/assets/main.css">
+
+  <!-- 自前のナビ用 CSS -->
+  <link rel="stylesheet" href="/assets/custom.css">
+
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+
+<body>
+
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ（全ページ共通） -->
+    <nav style="min-width:220px; position:sticky; top:1rem; padding-right:1rem; border-right:1px solid #ddd;">
+      <h2>QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0;">
+        <li><a href="/"><strong>Introduction</strong></a> </li>
+        <li><a href="/HUBO_QUBO"><strong>HUBO and QUBO</strong></a> </li>
+        <li><a href="/QUICK"><strong>Quick Start</strong></a> </li>
+        <li><a href="/WSL"><strong>Quick Start for Windows</strong></a> </li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/CASE_STUDIES"><strong>Case Studies</strong></a></li>
+        <li><a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Release</strong></a></li>
+      </ul>
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="low-autocorrelation-binary-sequence-labs-problem">Low-Autocorrelation Binary Sequence (LABS) Problem</h1>
+
+<p>The <strong>Low Autocorrelation Binary Sequence (LABS)</strong> problem aims to find a spin sequence$S=(s_i)$ ($s_i=\pm, 0\leq i\leq n-1$) 
+that minimizes its autocorrelation.
+The autocorrelation of $S$ with alignment $d$ is defined as</p>
+
+\[\left(\sum_{i=0}^{n-d-1}s_is_{i+d}\right)^2\]
+
+<p>The LABS objective function is the sum of these autocorrelations over all alignments:</p>
+
+\[\begin{aligned}
+\text{LABS}(S) &amp;= \sum_{d=1}^{n-1}\left(\sum_{i=0}^{n-d-1}s_is_{i+d}\right)^2
+\end{aligned}\]
+
+<p>The LABS problem is to find a sequence $S$ that minimizes $\text{LABS}(S)$.</p>
+
+<h2 id="spin-to-binary-conversion">Spin-to-binary conversion</h2>
+<p>Since the solvers bundled with QUBO++ do not support spin variables directly,
+we convert the spin variables to binary variables using the following transformation:</p>
+
+\[\begin{aligned}
+ s_i &amp;\leftarrow 2s_i - 1
+\end{aligned}\]
+
+<p>After this conversion, each $s_i$ can be treated as a binary variable,
+and HUBO solvers for binary variables can be used to find a solution to $\text{LABS}(S)$.</p>
+
+<p>QUBO++ provides this conversion through the spin_to_binary() function.</p>
+
+<h2 id="qubo-program-for-the-labs">QUBO++ program for the LABS</h2>
+<p>The following QUBO++ program formulates and solves the LABS problem:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
+#include</span> <span class="cpf">"qbpp_easy_solver.hpp"</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">const</span> <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">30</span><span class="p">;</span>
+
+  <span class="k">auto</span> <span class="n">s</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"s"</span><span class="p">,</span> <span class="n">n</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">labs</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">expr</span><span class="p">();</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">d</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">d</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">d</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">auto</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">expr</span><span class="p">();</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span> <span class="o">-</span> <span class="n">d</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">temp</span> <span class="o">+=</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">s</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="n">d</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="n">labs</span> <span class="o">+=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sqr</span><span class="p">(</span><span class="n">temp</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="n">labs</span><span class="p">.</span><span class="n">spin_to_binary</span><span class="p">();</span>
+  <span class="n">labs</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">easy_solver</span><span class="o">::</span><span class="n">EasySolver</span><span class="p">(</span><span class="n">labs</span><span class="p">);</span>
+  <span class="n">solver</span><span class="p">.</span><span class="n">time_limit</span><span class="p">(</span><span class="mf">10.0</span><span class="p">);</span>
+  <span class="n">solver</span><span class="p">.</span><span class="n">enable_best_energy_sols</span><span class="p">();</span>
+  <span class="k">auto</span> <span class="n">sols</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search</span><span class="p">();</span>
+  <span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">sol</span> <span class="o">:</span> <span class="n">sols</span><span class="p">.</span><span class="n">best_sols</span><span class="p">())</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">i</span><span class="o">++</span> <span class="o">&lt;&lt;</span> <span class="s">": LABS = "</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">.</span><span class="n">energy</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">" : "</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">n</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">sol</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="o">?</span> <span class="s">"+"</span> <span class="o">:</span> <span class="s">"-"</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>In this program, <code class="language-plaintext highlighter-rouge">s</code> stores a vector of <code class="language-plaintext highlighter-rouge">n</code> variables.
+The <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> object <code class="language-plaintext highlighter-rouge">labs</code> is constructed using a nested loop,
+directly following the mathematical definition of the LABS objective.</p>
+
+<p>Afterward, <code class="language-plaintext highlighter-rouge">labs</code> is converted into an expression over binary variables
+using the <code class="language-plaintext highlighter-rouge">spin_to_binary()</code> function and simplified by
+<code class="language-plaintext highlighter-rouge">simplify_as_binary()</code>.</p>
+
+<p>The Easy Solver is then executed with a time limit of 10 seconds.
+Since <code class="language-plaintext highlighter-rouge">enable_best_energy_sols()</code> is enabled, all solutions achieving
+the minimum energy are stored in sols.</p>
+
+<p>Using a range-based for loop, all best-energy solutions are printed.
+A typical output of this program is:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>0: LABS = 59 : -----+++++-++-++-+-+-+++--+++-
+1: LABS = 59 : -+-++-+-+---+++-------+--++-++
+2: LABS = 59 : -+-+--+-+---+++-------+--++-++
+3: LABS = 59 : +-+-++-+-+++---+++++++-++--+--
+4: LABS = 59 : --+--++-+++++++---+++-+-++-+-+
+5: LABS = 59 : ----++++++-++-++-+-+-+++--+++-
+6: LABS = 59 : +-+--+-+-+++---+++++++-++--+--
+7: LABS = 59 : ++-++--+-------+++---+-+-++-+-
+8: LABS = 59 : -+++--+++-+-+-++-++-++++++----
+9: LABS = 59 : +---++---+-+-+--+--+-----+++++
+</code></pre></div></div>
+<p>In this run, multiple solutions achieving the same minimum LABS value are obtained.</p>
+
+      <hr style="margin: 2rem 0 1rem 0;">
+<div style="font-size: 0.9em; color: #666;">
+  Last updated: 2026.02.04
+</div>
+    </main>
+  </div>
+</body>
+
+</html>

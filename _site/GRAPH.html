@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>QUBO++ Simple Graph Drawing Library and Solving the Maximum Independent Set (MIS) Problem - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Minima テーマの main.css（ハイライト含む） -->
+  <link rel="stylesheet" href="/assets/main.css">
+
+  <!-- 自前のナビ用 CSS -->
+  <link rel="stylesheet" href="/assets/custom.css">
+
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+
+<body>
+
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ -->
+    <nav style="width:max-content; position:sticky; top:1rem; padding:0 1rem 0 0; border-right:1px solid #ddd;">
+      
+      <h2 style="margin-left:0;">QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/"><strong>Introduction</strong></a> </li>
+        <li><a href="/HUBO_QUBO"><strong>HUBO and QUBO</strong></a> </li>
+        <li><a href="/QUICK"><strong>Quick Start</strong></a>
+          <ul style="list-style:none; padding-left:1.2em; margin:0.2em 0 0.2em;">
+            <li><a href="/WSL"><strong>for Windows</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/CASE_STUDIES"><strong>Case Studies</strong></a></li>
+        <li><a href="/DEMOS"><strong>Demos</strong></a></li>
+        <li><a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Release</strong></a></li>
+      </ul>
+      <hr style="margin:1rem 0;">
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/python/"><strong>PyQUBO++ &rarr;</strong></a></li>
+      </ul>
+      
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="qubo-simple-graph-drawing-library-and-solving-the-maximum-independent-set-mis-problem">QUBO++ Simple Graph Drawing Library and Solving the Maximum Independent Set (MIS) Problem</h1>
+
+<h2 id="qubo-simple-graph-drawing-library">QUBO++ Simple Graph Drawing Library</h2>
+<p>QUBO++ bundles a simple graph drawing library to visualize results obtained from graph-theoretic problems.
+It is a wrapper around Graphviz, which you can install on Ubuntu as follows:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>apt <span class="nb">install </span>graphviz
+</code></pre></div></div>
+
+<p>To use this library, include <code class="language-plaintext highlighter-rouge">qbpp/graph.hpp</code>:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">&lt;qbpp/graph.hpp&gt;</span><span class="cp">
+</span></code></pre></div></div>
+
+<p>The library generates DOT input and invokes <code class="language-plaintext highlighter-rouge">neato</code> to render graphs.</p>
+
+<blockquote>
+  <p><strong>WARNING</strong>: This header-only library is intended for visualizing results produced by QUBO++ sample programs.
+Its API and behavior may change without notice, and it should not be used in mission-critical applications.</p>
+</blockquote>
+
+<h2 id="maximum-independent-set-mis-problem">Maximum Independent Set (MIS) Problem</h2>
+
+<p>An independent set of an undirected graph $G=(V,E)$ is a subset of vertices $S\subseteq V$ such that no two vertices in $S$ are connected by an edge in $E$.
+The Maximum Independent Set (MIS) problem asks for an independent set with maximum cardinality.</p>
+
+<p>The MIS problem can be formulated as a QUBO as follows.
+Assume that $G$ has $n$ vertices indexed from $0$ to $n-1$.
+We introduce $n$ binary variables $x_i$ $(0\le i\le n-1)$, where $x_i=1$ if and only if vertex $i$ is included in $S$.
+Since we want to maximize $|S|=\sum_{i=0}^{n-1}x_i$, we minimize the following objective:</p>
+
+\[\begin{aligned}
+\text{objective} = -\sum_{i=0}^{n-1} x_i .
+\end{aligned}\]
+
+<p>To enforce independence, for every edge $(i,j)\in E$ we must not select both endpoints simultaneously.
+This can be penalized by</p>
+
+\[\begin{aligned}
+\text{constraint} = \sum_{(i,j)\in E} x_i x_j .
+\end{aligned}\]
+
+<p>Combining the objective and the penalty yields the QUBO function</p>
+
+\[\begin{aligned}
+f = \text{objective} + 2\times\text{constraint}.
+\end{aligned}\]
+
+<p>The penalty coefficient $2$ is sufficient to prioritize feasibility over increasing the set size.</p>
+
+<h2 id="qubo-program-for-the-mis-problem">QUBO++ Program for the MIS Problem</h2>
+<p>Based on the QUBO formulation of the MIS problem described above, the following QUBO++ program solves an instance with 16 nodes. The edges are stored in <code class="language-plaintext highlighter-rouge">edges</code>, and the obtained solution is visualized using the QUBO++ graph drawing library:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#define MAXDEG 2
+#include</span> <span class="cpf">&lt;qbpp/qbpp.hpp&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;qbpp/exhaustive_solver.hpp&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;qbpp/graph.hpp&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">const</span> <span class="kt">size_t</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">16</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="p">,</span> <span class="kt">size_t</span><span class="o">&gt;&gt;</span> <span class="n">edges</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span>   <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span>   <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span>   <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">},</span>   <span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">},</span>  <span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">},</span>
+      <span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mi">7</span><span class="p">},</span>   <span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mi">13</span><span class="p">},</span>  <span class="p">{</span><span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">},</span>   <span class="p">{</span><span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="p">},</span>   <span class="p">{</span><span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">},</span>  <span class="p">{</span><span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">},</span>
+      <span class="p">{</span><span class="mi">6</span><span class="p">,</span> <span class="mi">14</span><span class="p">},</span>  <span class="p">{</span><span class="mi">7</span><span class="p">,</span> <span class="mi">14</span><span class="p">},</span>  <span class="p">{</span><span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">},</span>   <span class="p">{</span><span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">},</span>  <span class="p">{</span><span class="mi">9</span><span class="p">,</span> <span class="mi">12</span><span class="p">},</span> <span class="p">{</span><span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">},</span>
+      <span class="p">{</span><span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">},</span> <span class="p">{</span><span class="mi">11</span><span class="p">,</span> <span class="mi">13</span><span class="p">},</span> <span class="p">{</span><span class="mi">12</span><span class="p">,</span> <span class="mi">14</span><span class="p">},</span> <span class="p">{</span><span class="mi">13</span><span class="p">,</span> <span class="mi">15</span><span class="p">},</span> <span class="p">{</span><span class="mi">14</span><span class="p">,</span> <span class="mi">15</span><span class="p">}};</span>
+
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">,</span> <span class="n">N</span><span class="p">);</span>
+
+  <span class="k">auto</span> <span class="n">objective</span> <span class="o">=</span> <span class="o">-</span><span class="n">qbpp</span><span class="o">::</span><span class="n">sum</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">constraint</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">toExpr</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">e</span> <span class="o">:</span> <span class="n">edges</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">constraint</span> <span class="o">+=</span> <span class="n">x</span><span class="p">[</span><span class="n">e</span><span class="p">.</span><span class="n">first</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">e</span><span class="p">.</span><span class="n">second</span><span class="p">];</span>
+  <span class="p">}</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">objective</span> <span class="o">+</span> <span class="n">constraint</span> <span class="o">*</span> <span class="mi">2</span><span class="p">;</span>
+  <span class="n">f</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">exhaustive_solver</span><span class="o">::</span><span class="n">ExhaustiveSolver</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">sol</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search</span><span class="p">();</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"objective = "</span> <span class="o">&lt;&lt;</span> <span class="n">objective</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"constraint = "</span> <span class="o">&lt;&lt;</span> <span class="n">constraint</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+  <span class="n">qbpp</span><span class="o">::</span><span class="n">graph</span><span class="o">::</span><span class="n">GraphDrawer</span> <span class="n">graph</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">graph</span><span class="p">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">qbpp</span><span class="o">::</span><span class="n">graph</span><span class="o">::</span><span class="n">Node</span><span class="p">(</span><span class="n">i</span><span class="p">).</span><span class="n">color</span><span class="p">(</span><span class="n">sol</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">])));</span>
+  <span class="p">}</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">e</span> <span class="o">:</span> <span class="n">edges</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">graph</span><span class="p">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">qbpp</span><span class="o">::</span><span class="n">graph</span><span class="o">::</span><span class="n">Edge</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">first</span><span class="p">,</span> <span class="n">e</span><span class="p">.</span><span class="n">second</span><span class="p">));</span>
+  <span class="p">}</span>
+  <span class="n">graph</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="s">"mis.svg"</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>For a vector <code class="language-plaintext highlighter-rouge">x</code> of <code class="language-plaintext highlighter-rouge">N = 16</code> binary variables, the expressions <code class="language-plaintext highlighter-rouge">objective</code>, <code class="language-plaintext highlighter-rouge">constraint</code>, and <code class="language-plaintext highlighter-rouge">f</code> are constructed according to the above QUBO formulation.
+The Exhaustive Solver is then used to find an optimal solution for <code class="language-plaintext highlighter-rouge">f</code>, which is stored in <code class="language-plaintext highlighter-rouge">sol</code>. The values of <code class="language-plaintext highlighter-rouge">objective</code> and <code class="language-plaintext highlighter-rouge">constraint</code> evaluated at <code class="language-plaintext highlighter-rouge">sol</code> are printed.</p>
+
+<p>A <code class="language-plaintext highlighter-rouge">qbpp::graph::GraphDrawer</code> object, <code class="language-plaintext highlighter-rouge">graph</code>, is created next. In the loop over <code class="language-plaintext highlighter-rouge">i</code>, a <code class="language-plaintext highlighter-rouge">qbpp::graph::Node</code> object is created with label <code class="language-plaintext highlighter-rouge">i</code>, and its color is set to 0 or 1 depending on the value of <code class="language-plaintext highlighter-rouge">x[i]</code> in <code class="language-plaintext highlighter-rouge">sol</code> via the <code class="language-plaintext highlighter-rouge">color()</code> member function. Each node is added to graph using <code class="language-plaintext highlighter-rouge">add_node()</code>.</p>
+
+<p>Similarly, in the loop over edges, an <code class="language-plaintext highlighter-rouge">qbpp::graph::Edge(e.first, e.second)</code> object is created for each edge and added to graph using <code class="language-plaintext highlighter-rouge">add_edge()</code>. Finally, <code class="language-plaintext highlighter-rouge">graph.write("mis.svg")</code> renders the graph and writes the resulting image to <code class="language-plaintext highlighter-rouge">mis.svg</code>.</p>
+
+<p>This program produces the following output:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>objective = -7
+constraint = 0
+</code></pre></div></div>
+<p>This implies that the obtained solution selects 7 nodes and satisfies all constraints. The rendered image is saved as <code class="language-plaintext highlighter-rouge">mis.svg</code>:</p>
+
+<p align="center">
+  <img src="images/mis.svg" alt="The solution of the MIS problem." width="80%" />
+</p>
+
+<h2 id="api-of-the-qubo-simple-graph-drawing-library">API of the QUBO++ Simple Graph Drawing Library</h2>
+<p>The QUBO++ Simple Graph Drawing Library provides the following classes:</p>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">qbpp::graph::Node</code></strong>:
+Stores node information such as the label, color, pen width, and position.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">qbpp::graph::Edge</code></strong>:
+Stores edge information such as the two endpoint nodes, whether the edge is directed or undirected, its color, and pen width.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">qbpp::graph::GraphDrawing</code></strong>:
+Stores vectors of <code class="language-plaintext highlighter-rouge">qbpp::graph::Node</code> and <code class="language-plaintext highlighter-rouge">qbpp::graph::Edge</code> that together constitute a graph.</li>
+</ul>
+
+<h3 id="qbppgraphnode"><code class="language-plaintext highlighter-rouge">qbpp::graph::Node</code></h3>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">Node(std::string s)</code></strong>:
+Constructs a node whose label is s.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">Node(size_t i)</code></strong>
+Constructs a node whose label is <code class="language-plaintext highlighter-rouge">std::to_string(i)</code>.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">color(std::string s)</code></strong>
+Sets the node color to s, which must be in the form <code class="language-plaintext highlighter-rouge">#RRGGBB</code>.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">color(int i)</code></strong>:
+Sets the node color to the <code class="language-plaintext highlighter-rouge">i</code>-th entry in the color palette. The default color 0 is white.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">penwidth(float f)</code></strong>:
+Sets the pen width to <code class="language-plaintext highlighter-rouge">f</code> for drawing the node outline.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">position(float x, float y)</code></strong>:
+Sets the node position to <code class="language-plaintext highlighter-rouge">(x, y)</code>.</li>
+</ul>
+
+<h3 id="qbppgraphedge"><code class="language-plaintext highlighter-rouge">qbpp::graph::Edge</code></h3>
+<p>The following constructors and member functions are supported:</p>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">Edge(std::string from, std::string to)</code></strong>:
+Constructs an edge connecting the nodes labeled from and to.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">Edge(size_t from, size_t to)</code></strong>;
+Constructs an edge connecting the node labeled <code class="language-plaintext highlighter-rouge">std::to_string(from)</code> to the node labeled <code class="language-plaintext highlighter-rouge">std::to_string(to)</code>.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">directed()</code></strong>:
+Configures the edge as directed.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">color(std::string s)</code></strong>:
+Sets the edge color to <code class="language-plaintext highlighter-rouge">s</code>, which must be in the form <code class="language-plaintext highlighter-rouge">#RRGGBB</code>.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">color(int i)</code></strong>:
+Sets the edge color to the i-th entry in the color palette. The default color 0 is black.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">penwidth(float f)</code></strong>:
+Sets the pen width to <code class="language-plaintext highlighter-rouge">f</code> for drawing the edge.</li>
+</ul>
+
+<h3 id="qbppgraphgraphdrawing"><code class="language-plaintext highlighter-rouge">qbpp::graph::GraphDrawing</code></h3>
+<p>The following member functions are supported:</p>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">add_node(const Node&amp; node)</code></strong>:
+Appends node to the graph.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">add_edge(const Edge&amp; edge)</code></strong>:
+Appends edge to the graph.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">write(std::string file_name)</code></strong>:
+Renders the graph and writes it to <code class="language-plaintext highlighter-rouge">file_name</code>.
+Supported formats include <code class="language-plaintext highlighter-rouge">svg</code>, <code class="language-plaintext highlighter-rouge">png</code>, <code class="language-plaintext highlighter-rouge">jpg</code>, and <code class="language-plaintext highlighter-rouge">pdf</code> (via Graphviz).
+The output format is determined by the file extension.</li>
+</ul>
+
+      <hr style="margin: 2rem 0 1rem 0;">
+<div style="font-size: 0.9em; color: #666;">
+  Last updated: 2026.03.05
+</div>
+    </main>
+  </div>
+</body>
+
+</html>

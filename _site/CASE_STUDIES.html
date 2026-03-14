@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Case Studies - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Minima テーマの main.css（ハイライト含む） -->
+  <link rel="stylesheet" href="/assets/main.css">
+
+  <!-- 自前のナビ用 CSS -->
+  <link rel="stylesheet" href="/assets/custom.css">
+
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+
+<body>
+
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ -->
+    <nav style="width:max-content; position:sticky; top:1rem; padding:0 1rem 0 0; border-right:1px solid #ddd;">
+      
+      <h2 style="margin-left:0;">QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/"><strong>Introduction</strong></a> </li>
+        <li><a href="/HUBO_QUBO"><strong>HUBO and QUBO</strong></a> </li>
+        <li><a href="/QUICK"><strong>Quick Start</strong></a>
+          <ul style="list-style:none; padding-left:1.2em; margin:0.2em 0 0.2em;">
+            <li><a href="/WSL"><strong>for Windows</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/CASE_STUDIES"><strong>Case Studies</strong></a></li>
+        <li><a href="/DEMOS"><strong>Demos</strong></a></li>
+        <li><a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Release</strong></a></li>
+      </ul>
+      <hr style="margin:1rem 0;">
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/python/"><strong>PyQUBO++ &rarr;</strong></a></li>
+      </ul>
+      
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="case-studies">Case Studies</h1>
+<p>This section provides examples of solving optimization, mathematical, and graph problems using QUBO++.</p>
+
+<h2 id="math-problems">Math Problems</h2>
+<ol>
+  <li><a href="PYTHAGOREAN">Pythagorean Triples</a> (Easy)</li>
+  <li><a href="REMAINDER">Remainder Problem</a> (Easy)</li>
+  <li><a href="SQRT">Square Root</a> (Medium)</li>
+  <li><a href="GCD">Greatest Common Divisor (GCD)</a> (Easy)</li>
+  <li><a href="3INTEGERS">Math Problem: Find Three Integers</a> (Easy)</li>
+  <li><a href="3DIGIT_MATH">3-Digit Math Problem</a> (Easy)</li>
+  <li><a href="CUBIC_EQUATION">Cubic Equation</a> (Easy)</li>
+</ol>
+
+<h2 id="graph-problems">Graph Problems</h2>
+<ol>
+  <li><a href="GRAPH">Graph Drawing Library and MIS Problem</a> (Easy)</li>
+  <li><a href="MAXCUT">Max-Cut Problem</a> (Easy)</li>
+  <li><a href="MAX_MATCHING">Maximum Matching Problem</a> (Easy)</li>
+  <li><a href="MAX_CLIQUE">Maximum Clique Problem</a> (Easy)</li>
+  <li><a href="VERTEX_COVER">Minimum Vertex Cover Problem</a> (Easy)</li>
+  <li><a href="DOMINATING">Minimum Dominating Set Problem</a> (Medium)</li>
+  <li><a href="SUBGRAPH_ISOMORPHISM">Subgraph Isomorphism Problem</a> (Hard)</li>
+  <li><a href="SETCOVER">Minimum Set Cover Problem</a> (Medium)</li>
+  <li><a href="MINMAX_MATCHING">Minimum Maximal Matching Problem</a> (Medium)</li>
+  <li><a href="GRAPH_COLOR">Graph Coloring Problem</a> (Easy)</li>
+  <li><a href="EDGE_COLOR">Graph Edge Coloring Problem</a> (Easy)</li>
+  <li><a href="CVRP">Capacitated Vehicle Routing Problem (CVRP)</a> (Hard)</li>
+  <li><a href="TSP">Traveling Salesman Problem</a> (Medium)</li>
+</ol>
+
+<h2 id="combinatorial-optimization-problems">Combinatorial optimization problems</h2>
+<ol>
+  <li><a href="KNAPSACK">Knapsack Problem</a> (Medium)</li>
+  <li><a href="SHIFT_SCHEDULING">Shift Scheduling Problem</a> (Hard)</li>
+  <li><a href="LABS">LABS problem</a> (Medium)</li>
+  <li><a href="BAR_CUTTING">Bar Cutting Problem</a> (Hard)</li>
+  <li><a href="ILP">Integer Linear Programming</a> (Easy)</li>
+  <li><a href="ISSP">Interval Subset Sum Problem (ISSP)</a> (Hard)</li>
+</ol>
+
+<h2 id="puzzle">Puzzle</h2>
+<ol>
+  <li><a href="MAGIC">Magic Square</a> (Hard)</li>
+  <li><a href="QUEENS">N-Queens Problem</a> (Medium)</li>
+  <li><a href="SEND_MORE_MONEY">SEND + MORE = MONEY Problem</a> (Hard)</li>
+</ol>
+
+<h2 id="circuit-simulation">Circuit simulation</h2>
+<ol>
+  <li><a href="ADDER">Adder Simulation</a> (Medium)</li>
+  <li><a href="MULTIPLIER">Multiplier Simulation and Factorization</a> (Hard)</li>
+</ol>
+
+      <hr style="margin: 2rem 0 1rem 0;">
+<div style="font-size: 0.9em; color: #666;">
+  Last updated: 2026.02.06
+</div>
+    </main>
+  </div>
+</body>
+
+</html>

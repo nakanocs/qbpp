@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Knapsack Problem - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Minima テーマの main.css（ハイライト含む） -->
+  <link rel="stylesheet" href="/assets/main.css">
+
+  <!-- 自前のナビ用 CSS -->
+  <link rel="stylesheet" href="/assets/custom.css">
+
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+
+<body>
+
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ（全ページ共通） -->
+    <nav style="min-width:220px; position:sticky; top:1rem; padding-right:1rem; border-right:1px solid #ddd;">
+      <h2>QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0;">
+        <li><a href="/"><strong>Introduction</strong></a> </li>
+        <li><a href="/HUBO_QUBO"><strong>HUBO and QUBO</strong></a> </li>
+        <li><a href="/QUICK"><strong>Quick Start</strong></a> </li>
+        <li><a href="/WSL"><strong>Quick Start for Windows</strong></a> </li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/CASE_STUDIES"><strong>Case Studies</strong></a></li>
+        <li><a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Release</strong></a></li>
+      </ul>
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="knapsack-problem">Knapsack Problem</h1>
+<p>Given a set of items, each with a weight and a value, and a knapsack with a limited weight capacity, <strong>the knapsack problem</strong> aims to select a subset of items that maximizes the total value while keeping the total weight within the capacity.</p>
+
+<p>Let $w_i$ and $v_i$ ($0\leq i\leq n-1$) denote the weight and value of item 
+$i$, respectively.
+Let $S\in \lbrace 0, 1, \ldots n-1\rbrace$ be the set of selected items.</p>
+
+\[\begin{aligned}
+\text{Maximize:} &amp; \sum_{i\in S} v_i \\
+\text{Subject to:} &amp; \sum_{i\in S} w_i \leq W
+\end{aligned}\]
+
+<p>where $W$ is the weight capacity of the knapsack.</p>
+
+<h2 id="qubo-formulation">QUBO formulation</h2>
+<p>To formulate this problem as a QUBO, we introduce a set 
+$X$ of $n$ binary variables $x_i\in\lbrace 0,1\rbrace$ ($0\leq i\leq n-1$),
+where item $i$ is selected if and only if $x_i=1$.</p>
+
+<p>The above formulation can be rewritten as:</p>
+
+\[\begin{aligned}
+\text{Maximize:} &amp; \sum_{i=0}^{n-1} v_ix_i \\
+\text{Subject to:} &amp; \sum_{i=0}^{n-1} w_ix_i \leq W
+\end{aligned}\]
+
+<h2 id="qubo-program">QUBO++ program</h2>
+<p>The constraint can be expressed using <strong>the range operator</strong> provided by QUBO++.
+The resulting QUBO objective function is defined as:</p>
+
+\[\begin{aligned}
+f(X) &amp;= -\sum_{i=0}^{n-1} v_ix_i + P\times (0\leq \sum_{i=0}^{n-1} w_ix_i \leq W)
+\end{aligned}\]
+
+<p>Since QUBO solvers minimize the objective function, the original maximization objective is negated.
+The constant $P$ is a sufficiently large penalty parameter to enforce the constraint.</p>
+
+<p>The following QUBO++ program solves a knapsack problem with 10 items using the Exhaustive Solver:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
+#include</span> <span class="cpf">"qbpp_exhaustive_solver.hpp"</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">qbpp</span><span class="o">::</span><span class="n">Vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">w</span> <span class="o">=</span> <span class="p">{</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">18</span><span class="p">};</span>
+  <span class="n">qbpp</span><span class="o">::</span><span class="n">Vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">v</span> <span class="o">=</span> <span class="p">{</span><span class="mi">60</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">110</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">160</span><span class="p">};</span>
+  <span class="kt">int</span> <span class="n">capacity</span> <span class="o">=</span> <span class="mi">50</span><span class="p">;</span>
+
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">,</span> <span class="n">w</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+
+  <span class="k">auto</span> <span class="n">constraint</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sum</span><span class="p">(</span><span class="n">w</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">capacity</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">objective</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sum</span><span class="p">(</span><span class="n">v</span> <span class="o">*</span> <span class="n">x</span><span class="p">);</span>
+
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="o">-</span><span class="n">objective</span> <span class="o">+</span> <span class="mi">1000</span> <span class="o">*</span> <span class="n">constraint</span><span class="p">;</span>
+  <span class="n">f</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">exhaustive_solver</span><span class="o">::</span><span class="n">ExhaustiveSolver</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">sols</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search_optimal_solutions</span><span class="p">();</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">sols</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="k">auto</span> <span class="n">sol</span> <span class="o">=</span> <span class="n">sols</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"[Solution "</span> <span class="o">&lt;&lt;</span> <span class="n">i</span> <span class="o">&lt;&lt;</span> <span class="s">"]"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Energy = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">.</span><span class="n">energy</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Constraint  = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="o">*</span><span class="n">constraint</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Objective  = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">objective</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">w</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">sol</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Item "</span> <span class="o">&lt;&lt;</span> <span class="n">j</span> <span class="o">&lt;&lt;</span> <span class="s">": weight = "</span> <span class="o">&lt;&lt;</span> <span class="n">w</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                  <span class="o">&lt;&lt;</span> <span class="s">", value =  "</span> <span class="o">&lt;&lt;</span> <span class="n">v</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>In this program, the expressions <code class="language-plaintext highlighter-rouge">constraint</code> and <code class="language-plaintext highlighter-rouge">objective</code> are constructed separately and combined into the final QUBO expression <code class="language-plaintext highlighter-rouge">f</code> using a penalty coefficient of <code class="language-plaintext highlighter-rouge">1000</code>.
+The Exhaustive Solver is then applied to <code class="language-plaintext highlighter-rouge">f</code> to enumerate all optimal solutions.</p>
+
+<p>The following output shows the optimal solutions, including the energy, constraint value, and objective value:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[Solution 0]
+Energy = -480
+Constraint  = 50
+Objective  = 480
+Item 3: weight = 5, value =  60
+Item 5: weight = 15, value =  150
+Item 6: weight = 12, value =  110
+Item 9: weight = 18, value =  160
+[Solution 1]
+Energy = -480
+Constraint  = 50
+Objective  = 480
+Item 3: weight = 5, value =  60
+Item 4: weight = 8, value =  80
+Item 6: weight = 12, value =  110
+Item 7: weight = 7, value =  70
+Item 9: weight = 18, value =  160
+</code></pre></div></div>
+<p>We can observe that this instance has two optimal solutions, both achieving a total value of <code class="language-plaintext highlighter-rouge">480</code> while exactly satisfying the capacity constraint.</p>
+
+      <hr style="margin: 2rem 0 1rem 0;">
+<div style="font-size: 0.9em; color: #666;">
+  Last updated: 2026.01.02
+</div>
+    </main>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Quick Start - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Minima テーマの main.css（ハイライト含む） -->
+  <link rel="stylesheet" href="/assets/main.css">
+
+  <!-- 自前のナビ用 CSS -->
+  <link rel="stylesheet" href="/assets/custom.css">
+
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+
+<body>
+
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ -->
+    <nav style="width:max-content; position:sticky; top:1rem; padding:0 1rem 0 0; border-right:1px solid #ddd;">
+      
+      <h2 style="margin-left:0;">QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/"><strong>Introduction</strong></a> </li>
+        <li><a href="/HUBO_QUBO"><strong>HUBO and QUBO</strong></a> </li>
+        <li><a href="/QUICK"><strong>Quick Start</strong></a>
+          <ul style="list-style:none; padding-left:1.2em; margin:0.2em 0 0.2em;">
+            <li><a href="/WSL"><strong>for Windows</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/CASE_STUDIES"><strong>Case Studies</strong></a></li>
+        <li><a href="/DEMOS"><strong>Demos</strong></a></li>
+        <li><a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Release</strong></a></li>
+      </ul>
+      <hr style="margin:1rem 0;">
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/python/"><strong>PyQUBO++ &rarr;</strong></a></li>
+      </ul>
+      
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="quick-start">Quick Start</h1>
+<p>This page provides an overview of the Quick Start procedure.
+More detailed instructions for installing QUBO++ on WSL on Windows 11 are available in <a href="WSL">Quick Start for Windows (WSL)</a>.</p>
+
+<h2 id="download-and-installation">Download and Installation</h2>
+<p>Download the latest <code class="language-plaintext highlighter-rouge">tar.gz</code> from <a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Releases</strong></a> and extract it:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">tar </span>xf qbpp_&lt;<span class="nb">arch</span><span class="o">&gt;</span>_&lt;version&gt;.tar.gz
+</code></pre></div></div>
+<p>QUBO++ will be extracted into a directory such as <strong><code class="language-plaintext highlighter-rouge">qbpp_&lt;arch&gt;_&lt;version&gt;</code></strong>.</p>
+
+<h2 id="set-environment-variable">Set Environment Variable</h2>
+<p>Set the environment variables as follows:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">export </span><span class="nv">QBPP_PATH</span><span class="o">=[</span>QUBO++ <span class="nb">install </span>directory]
+<span class="nv">$ </span><span class="nb">export </span><span class="nv">CPLUS_INCLUDE_PATH</span><span class="o">=</span><span class="nv">$QBPP_PATH</span>/include:<span class="nv">$CPLUS_INCLUDE_PATH</span>
+<span class="nv">$ </span><span class="nb">export </span><span class="nv">LIBRARY_PATH</span><span class="o">=</span><span class="nv">$QBPP_PATH</span>/lib:<span class="nv">$LIBRARY_PATH</span>
+<span class="nv">$ </span><span class="nb">export </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="nv">$QBPP_PATH</span>/lib:<span class="nv">$LD_LIBRARY_PATH</span>
+</code></pre></div></div>
+<p>These environment variables are used for license management and for compiling, linking, and executing QUBO++ programs.</p>
+
+<h2 id="compile-and-execute-a-sample-program">Compile and execute a sample program</h2>
+<h3 id="create-a-qubo-sample-program">Create a QUBO++ sample program</h3>
+<p>Create a QUBO++ sample program below and save as file <strong><code class="language-plaintext highlighter-rouge">test.cpp</code></strong>:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#define MAXDEG 2
+#include</span> <span class="cpf">&lt;qbpp/qbpp.hpp&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;qbpp/exhaustive_solver.hpp&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var_int</span><span class="p">(</span><span class="s">"x"</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var_int</span><span class="p">(</span><span class="s">"y"</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="o">==</span> <span class="mi">10</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">g</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">y</span> <span class="o">==</span> <span class="mi">28</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">h</span> <span class="o">=</span> <span class="n">f</span> <span class="o">+</span> <span class="n">g</span><span class="p">;</span>
+  <span class="n">h</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">exhaustive_solver</span><span class="o">::</span><span class="n">ExhaustiveSolver</span><span class="p">(</span><span class="n">h</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">sol</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search</span><span class="p">();</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"sol = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"x = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">", y = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="compile-the-program">Compile the program</h3>
+<p>Compile <strong><code class="language-plaintext highlighter-rouge">test.cpp</code></strong> to generate the executable <strong><code class="language-plaintext highlighter-rouge">test</code></strong>:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>g++ test.cpp <span class="nt">-o</span> <span class="nb">test</span> <span class="nt">-std</span><span class="o">=</span>c++17 <span class="nt">-lqbpp</span> <span class="nt">-ltbb</span>
+</code></pre></div></div>
+<p>This command creates an executable file named test.
+The compiler options mean the following:</p>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">-std=c++17</code></strong>: Use the C++17 standard.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">-lqbpp</code></strong>: Link against the QUBO++ shared library.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">-ltbb</code></strong>: Link against the oneTBB shared library.</li>
+</ul>
+
+<h3 id="execute-the-program">Execute the program</h3>
+<p>Run <code class="language-plaintext highlighter-rouge">test</code> as follows:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>./test
+sol <span class="o">=</span> 0:<span class="o">{{</span>x[0],0<span class="o">}</span>,<span class="o">{</span>x[1],1<span class="o">}</span>,<span class="o">{</span>x[2],1<span class="o">}</span>,<span class="o">{</span>x[3],0<span class="o">}</span>,<span class="o">{</span>y[0],0<span class="o">}</span>,<span class="o">{</span>y[1],0<span class="o">}</span>,<span class="o">{</span>y[2],1<span class="o">}</span>,<span class="o">{</span>y[3],0<span class="o">}}</span>
+x <span class="o">=</span> 6, y <span class="o">=</span> 4
+</code></pre></div></div>
+
+<h2 id="next-steps">Next steps</h2>
+<ol>
+  <li>Activate the Anonymous Trial license or your license key. See Installation in <strong>Installation</strong> in <a href="DOCUMENT"><strong>QUBO++ Document</strong></a>.</li>
+  <li>Learn the basics of QUBO++. Start with<strong>Basics</strong> in <a href="DOCUMENT"><strong>QUBO++ Document</strong></a>.</li>
+  <li>Explore example QUBO++ programs in the <a href="CASE_STUDIES"><strong>Case Stidies</strong></a></li>
+</ol>
+
+      <hr style="margin: 2rem 0 1rem 0;">
+<div style="font-size: 0.9em; color: #666;">
+  Last updated: 2026.03.05
+</div>
+    </main>
+  </div>
+</body>
+
+</html>

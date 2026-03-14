@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Variable and Expression Classes - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Minima テーマの main.css（ハイライト含む） -->
+  <link rel="stylesheet" href="/assets/main.css">
+
+  <!-- 自前のナビ用 CSS -->
+  <link rel="stylesheet" href="/assets/custom.css">
+
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+
+<body>
+
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ（全ページ共通） -->
+    <nav style="min-width:220px; position:sticky; top:1rem; padding-right:1rem; border-right:1px solid #ddd;">
+      <h2>QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0;">
+        <li><a href="/"><strong>Introduction</strong></a> </li>
+        <li><a href="/HUBO_QUBO"><strong>HUBO and QUBO</strong></a> </li>
+        <li><a href="/QUICK"><strong>Quick Start</strong></a> </li>
+        <li><a href="/WSL"><strong>Quick Start for Windows</strong></a> </li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/CASE_STUDIES"><strong>Case Studies</strong></a></li>
+        <li><a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Release</strong></a></li>
+      </ul>
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="variable-and-expression-classes">Variable and Expression Classes</h1>
+
+<h2 id="qbppvar-qbppterm-and-qbppexpr-classes">qbpp::Var, qbpp::Term, and qbpp::Expr classes</h2>
+
+<p>QUBO++ provides the following fundamental classes:</p>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">qbpp::Var</code></strong>: Represents a variable symbolically and is associated with a string used for display.
+Internally, a 32-bit unsigned integer is used as its identifier.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">qbpp::Term</code></strong>: Represents a product term consisting of an integer coefficient and one or more <code class="language-plaintext highlighter-rouge">qbpp::Var</code> objects.
+The data type of the integer coefficient is defined by the <code class="language-plaintext highlighter-rouge">COEFF_TYPE</code> macro, whose default value is <code class="language-plaintext highlighter-rouge">int32_t</code>.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">qbpp::Expr</code></strong>: Represents an expanded expression consisting of an integer constant term and zero or more <code class="language-plaintext highlighter-rouge">qbpp::Term</code> objects.
+The data type of the integer constant term is defined by the <code class="language-plaintext highlighter-rouge">ENERGY_TYPE</code> macro, whose default value is <code class="language-plaintext highlighter-rouge">int64_t</code>.</li>
+</ul>
+
+<p>In the following program, <strong><code class="language-plaintext highlighter-rouge">x</code></strong> and <strong><code class="language-plaintext highlighter-rouge">y</code></strong> are <code class="language-plaintext highlighter-rouge">qbpp::Var</code> objects, <strong><code class="language-plaintext highlighter-rouge">t</code></strong> is a <code class="language-plaintext highlighter-rouge">qbpp::Term</code> object, and <strong><code class="language-plaintext highlighter-rouge">f</code></strong> is a <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> object:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">y</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"y"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">t</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">t</span> <span class="o">-</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"x = "</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"y = "</span> <span class="o">&lt;&lt;</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"t = "</span> <span class="o">&lt;&lt;</span> <span class="n">t</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>This program produces the following output:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>x = x
+y = y
+t = 2*x*y
+f = 1 -x +2*x*y
+</code></pre></div></div>
+<p>If the data types are to be explicitly specified, the program can be rewritten as follows:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">qbpp</span><span class="o">::</span><span class="n">Var</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">);</span>
+  <span class="n">qbpp</span><span class="o">::</span><span class="n">Var</span> <span class="n">y</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"y"</span><span class="p">);</span>
+  <span class="n">qbpp</span><span class="o">::</span><span class="n">Term</span> <span class="n">t</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="p">;</span>
+  <span class="n">qbpp</span><span class="o">::</span><span class="n">Expr</span> <span class="n">f</span> <span class="o">=</span> <span class="n">t</span> <span class="o">-</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"x = "</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"y = "</span> <span class="o">&lt;&lt;</span> <span class="n">y</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"t = "</span> <span class="o">&lt;&lt;</span> <span class="n">t</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p><code class="language-plaintext highlighter-rouge">qbpp::Var</code> objects are <strong>immutable</strong> and cannot be updated after creation.
+In contrast, <code class="language-plaintext highlighter-rouge">qbpp::Term</code> and <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> objects are <strong>mutable</strong> and can be updated via assignment.</p>
+
+<p>For example, as shown in the following program, compound assignment operators can be used to update <code class="language-plaintext highlighter-rouge">qbpp::Term</code> and <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> objects:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">qbpp</span><span class="o">::</span><span class="n">Var</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">);</span>
+  <span class="n">qbpp</span><span class="o">::</span><span class="n">Var</span> <span class="n">y</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"y"</span><span class="p">);</span>
+  <span class="n">qbpp</span><span class="o">::</span><span class="n">Term</span> <span class="n">t</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="p">;</span>
+  <span class="n">qbpp</span><span class="o">::</span><span class="n">Expr</span> <span class="n">f</span> <span class="o">=</span> <span class="n">t</span> <span class="o">-</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"t = "</span> <span class="o">&lt;&lt;</span> <span class="n">t</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+  <span class="n">t</span> <span class="o">*=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">x</span><span class="p">;</span>
+  <span class="n">f</span> <span class="o">+=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">y</span><span class="p">;</span>
+  
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"t = "</span> <span class="o">&lt;&lt;</span> <span class="n">t</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>This program prints the following output:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>t = 2*x*y
+f = 1 -x +2*x*y
+t = 6*x*y*x
+f = 1 -x +2*x*y +2*y
+</code></pre></div></div>
+<p>In most cases, there is no need to explicitly use <code class="language-plaintext highlighter-rouge">qbpp::Term</code> objects.
+They should only be used when maximum performance optimization is required.</p>
+
+<p>However, note that <code class="language-plaintext highlighter-rouge">auto</code> type deduction may create a <code class="language-plaintext highlighter-rouge">qbpp::Term</code> object, which cannot store general expressions.
+For example, the following program results in a compilation error because an expression is assigned to a <code class="language-plaintext highlighter-rouge">qbpp::Term</code> object:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">y</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"y"</span><span class="p">);</span>
+
+  <span class="k">auto</span> <span class="n">t</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="p">;</span>
+  <span class="n">t</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>If a <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> object is intended, <strong><code class="language-plaintext highlighter-rouge">qbpp::toExpr()</code></strong> can be used to explicitly construct one, as shown below:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">y</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"y"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">t</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">toExpr</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">toExpr</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+
+  <span class="n">t</span> <span class="o">+=</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="n">f</span> <span class="o">+=</span> <span class="n">t</span><span class="p">;</span>
+  
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"t = "</span> <span class="o">&lt;&lt;</span> <span class="n">t</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>In this program, both <strong><code class="language-plaintext highlighter-rouge">t</code></strong> and <strong><code class="language-plaintext highlighter-rouge">f</code></strong> are <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> objects and can store general expressions.
+In particular, <code class="language-plaintext highlighter-rouge">f</code> is created as a <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> object containing only a constant term with value <code class="language-plaintext highlighter-rouge">1</code> and no product terms.</p>
+
+<h2 id="coeff_type-and-energy_type">COEFF_TYPE and ENERGY_TYPE</h2>
+<p>The macros <strong><code class="language-plaintext highlighter-rouge">COEFF_TYPE</code></strong> and <strong><code class="language-plaintext highlighter-rouge">ENERGY_TYPE</code></strong> define the data types used for coefficients and energy values in expressions.
+The <code class="language-plaintext highlighter-rouge">ENERGY_TYPE</code> macro is also used as the data type for the integer constant term of a <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> object.
+By default, <code class="language-plaintext highlighter-rouge">COEFF_TYPE</code> and <code class="language-plaintext highlighter-rouge">ENERGY_TYPE</code> are defined as <strong><code class="language-plaintext highlighter-rouge">int32_t</code></strong> and <strong><code class="language-plaintext highlighter-rouge">int64_t</code></strong>, respectively.
+They can be changed either by compiler options or by using <code class="language-plaintext highlighter-rouge">#define</code> directives in the source code.</p>
+
+<p>The following data types are supported:</p>
+<ul>
+  <li>
+    <p><strong>Standard integer types</strong>:
+<strong><code class="language-plaintext highlighter-rouge">int8_t</code></strong>, <strong><code class="language-plaintext highlighter-rouge">int16_t</code></strong>, <strong><code class="language-plaintext highlighter-rouge">int32_t</code></strong>, and <strong><code class="language-plaintext highlighter-rouge">int64_t</code></strong></p>
+  </li>
+  <li>
+    <p><strong>Boost.Multiprecision integer types</strong>:
+<strong><code class="language-plaintext highlighter-rouge">qbpp::int128_t</code></strong>, <strong><code class="language-plaintext highlighter-rouge">qbpp::int256_t</code></strong>, <strong><code class="language-plaintext highlighter-rouge">qbpp::int512_t</code></strong>, <strong><code class="language-plaintext highlighter-rouge">qbpp::int1024_t</code></strong>, and <strong><code class="language-plaintext highlighter-rouge">qbpp::cpp_int</code></strong></p>
+  </li>
+</ul>
+
+<p>The type <strong><code class="language-plaintext highlighter-rouge">qbpp::cpp_int</code></strong> represents an integer with an arbitrary number of digits.
+Constant values of this type can be specified using string literals.</p>
+
+<p>For example, the following program creates a <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> object with very large coefficient and constant terms:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#define COEFF_TYPE qbpp::cpp_int
+#define ENERGY_TYPE qbpp::cpp_int
+</span>
+<span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">cpp_int</span><span class="p">(</span><span class="s">"123456789012345678901234567890"</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span>
+           <span class="n">qbpp</span><span class="o">::</span><span class="n">cpp_int</span><span class="p">(</span><span class="s">"987654321098765432109876543210"</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>This program produces the following output:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>f = 987654321098765432109876543210 +123456789012345678901234567890*x
+</code></pre></div></div>
+
+      <hr style="margin: 2rem 0 1rem 0;">
+<div style="font-size: 0.9em; color: #666;">
+  Last updated: 2026.01.17
+</div>
+    </main>
+  </div>
+</body>
+
+</html>

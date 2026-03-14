@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>ABS3 - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Minima テーマの main.css（ハイライト含む） -->
+  <link rel="stylesheet" href="/assets/main.css">
+
+  <!-- 自前のナビ用 CSS -->
+  <link rel="stylesheet" href="/assets/custom.css">
+
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+
+<body>
+
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ -->
+    <nav style="width:max-content; position:sticky; top:1rem; padding:0 1rem 0 0; border-right:1px solid #ddd;">
+      
+      <h2 style="margin-left:0;">QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/"><strong>Introduction</strong></a> </li>
+        <li><a href="/HUBO_QUBO"><strong>HUBO and QUBO</strong></a> </li>
+        <li><a href="/QUICK"><strong>Quick Start</strong></a>
+          <ul style="list-style:none; padding-left:1.2em; margin:0.2em 0 0.2em;">
+            <li><a href="/WSL"><strong>for Windows</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/CASE_STUDIES"><strong>Case Studies</strong></a></li>
+        <li><a href="/DEMOS"><strong>Demos</strong></a></li>
+        <li><a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Release</strong></a></li>
+      </ul>
+      <hr style="margin:1rem 0;">
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/python/"><strong>PyQUBO++ &rarr;</strong></a></li>
+      </ul>
+      
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="abs3-solver-usage">ABS3 Solver Usage</h1>
+<p>Solving an expression <code class="language-plaintext highlighter-rouge">f</code> using the ABS3 Solver involves the following three steps:</p>
+<ol>
+  <li>Create an ABS3 Solver (or <strong><code class="language-plaintext highlighter-rouge">qbpp::abs3::ABS3Solver</code></strong>) object for the expression <code class="language-plaintext highlighter-rouge">f</code>.</li>
+  <li>Create a parameter object (or <strong><code class="language-plaintext highlighter-rouge">qbpp::abs3::Params</code></strong>) and set the options for solution search.</li>
+  <li>Call the <strong><code class="language-plaintext highlighter-rouge">search()</code></strong> member function of the ABS3 Solver object, which returns the obtained solution.</li>
+</ol>
+
+<h2 id="solving-labs-problem-using-the-abs3-solver">Solving LABS problem using the ABS3 Solver</h2>
+<p>The following QUBO++ program solves the <strong>Low Autocorrelation Binary Sequence (LABS)</strong> problem using the ABS3 Solver:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#define MAXDEG 4
+#include</span> <span class="cpf">&lt;qbpp/qbpp.hpp&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;qbpp/abs3_solver.hpp&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">const</span> <span class="kt">size_t</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">,</span> <span class="n">size</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">expr</span><span class="p">();</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">d</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">d</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">;</span> <span class="o">++</span><span class="n">d</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">auto</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">expr</span><span class="p">();</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span> <span class="o">-</span> <span class="n">d</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">temp</span> <span class="o">+=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="n">d</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">f</span> <span class="o">+=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sqr</span><span class="p">(</span><span class="n">temp</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">f</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">abs3</span><span class="o">::</span><span class="n">ABS3Solver</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">params</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">abs3</span><span class="o">::</span><span class="n">Params</span><span class="p">();</span>
+  <span class="n">params</span><span class="p">(</span><span class="s">"time_limit"</span><span class="p">,</span> <span class="s">"10.0"</span><span class="p">);</span>
+  <span class="n">params</span><span class="p">(</span><span class="s">"enable_callback"</span><span class="p">,</span> <span class="s">"1"</span><span class="p">);</span>
+
+  <span class="k">auto</span> <span class="n">sol</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search</span><span class="p">(</span><span class="n">params</span><span class="p">);</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">.</span><span class="n">energy</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">": "</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">val</span> <span class="o">:</span> <span class="n">sol</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">val</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span> <span class="s">"-"</span> <span class="o">:</span> <span class="s">"+"</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>In this program, an ABS3 Solver object <strong><code class="language-plaintext highlighter-rouge">solver</code></strong> is first created for the expression <code class="language-plaintext highlighter-rouge">f</code>.
+Next, a parameter object <strong><code class="language-plaintext highlighter-rouge">params</code></strong> is created, and the options <code class="language-plaintext highlighter-rouge">time_limit</code> and <code class="language-plaintext highlighter-rouge">enable_callback</code> are set.
+The <code class="language-plaintext highlighter-rouge">time_limit</code> option specifies the maximum search time in seconds, while <code class="language-plaintext highlighter-rouge">enable_callback</code> enables a callback function that reports newly found best solutions during the search.
+The <strong><code class="language-plaintext highlighter-rouge">search()</code></strong> member function of the <code class="language-plaintext highlighter-rouge">solver</code> is then invoked with <code class="language-plaintext highlighter-rouge">params</code> as its argument.
+This function returns the best solution found within the given time limit, which is stored in <code class="language-plaintext highlighter-rouge">sol</code>.</p>
+
+<p>The program prints the energy of the solution and the corresponding binary sequence, where “+” represents 1 and “-“ represents 0.</p>
+
+<p>This program produces the following output:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>TTS = 0.002s Energy = 1218
+TTS = 0.002s Energy = 1170
+TTS = 0.002s Energy = 994
+TTS = 0.015s Energy = 958
+TTS = 0.018s Energy = 922
+TTS = 0.034s Energy = 874
+TTS = 4.364s Energy = 834
+834: -+--+---++-++-+---++-++--+++--+-+-+++++----+++-+-+---++-+--+-----+--+----++----+-+--++++++---+------
+</code></pre></div></div>
+
+<h2 id="abs3-solver-object">ABS3 Solver object</h2>
+<p>An ABS3 Solver (or <code class="language-plaintext highlighter-rouge">qbpp::abs3::ABS3Solver</code>) object is created for a given expression.
+When the solver object is constructed, the expression is converted into an internal data format and loaded into GPU memory.
+Therefore, the number of GPU devices to be used can be specified as a second argument:</p>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">qbpp::abs3::ABS3Solver(expression, device_count)</code></strong>:
+If <code class="language-plaintext highlighter-rouge">device_count</code> is omitted, all available GPUs are used by default.</li>
+</ul>
+
+<p>A parameter object (or <code class="language-plaintext highlighter-rouge">qbpp::abs3::Params</code>) stores the options used by the ABS3 Solver during solution search.
+Each option is specified as a key–value pair of strings.
+In the example above:</p>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">params("time_limit", "10.0")</code></strong>: Sets the time limit to 10.0 seconds.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">params("enable_callback", "1")</code></strong>: Enables the callback function, which reports the energy of newly obtained solutions.</li>
+</ul>
+
+<h2 id="abs3-parameters">ABS3 Parameters</h2>
+<p>A parameter (or <code class="language-plaintext highlighter-rouge">qbpp::abs3::Param()</code>) object stores parameter options used when the ABS3 Solver searches a solution.
+Options consists of the key and the value as strings.
+In the program above, <code class="language-plaintext highlighter-rouge">params("time_limit", "10.0")</code> set the time limit to 10.0 seconds
+and <code class="language-plaintext highlighter-rouge">params("enable_callback", "1")</code> enables the callback function, which displays the energy of newly obtained solution.</p>
+
+<h3 id="basic-options">Basic Options</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Value</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong><code class="language-plaintext highlighter-rouge">time_limit</code></strong></td>
+      <td>time limit in seconds</td>
+      <td>Terminates the search when the time limit is reached</td>
+    </tr>
+    <tr>
+      <td><strong><code class="language-plaintext highlighter-rouge">target_energy</code></strong></td>
+      <td>target enagy value</td>
+      <td>Terminates the search when the target energy is achieved</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="advanced-options">Advanced Options</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Key</th>
+      <th>Value</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong><code class="language-plaintext highlighter-rouge">enable_callback</code></strong></td>
+      <td>“1”</td>
+      <td>Enables the callback function</td>
+    </tr>
+    <tr>
+      <td><strong><code class="language-plaintext highlighter-rouge">block_count</code></strong></td>
+      <td>CUDA block count per GPU</td>
+      <td>Number of CUDA blocks launched by the solver kernel</td>
+    </tr>
+    <tr>
+      <td><strong><code class="language-plaintext highlighter-rouge">thread_count</code></strong></td>
+      <td>thread count per CUDA block</td>
+      <td>Number of threads per CUDA block</td>
+    </tr>
+  </tbody>
+</table>
+
+      <hr style="margin: 2rem 0 1rem 0;">
+<div style="font-size: 0.9em; color: #666;">
+  Last updated: 2026.03.05
+</div>
+    </main>
+  </div>
+</body>
+
+</html>

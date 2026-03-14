@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Magic Square - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Minima テーマの main.css（ハイライト含む） -->
+  <link rel="stylesheet" href="/assets/main.css">
+
+  <!-- 自前のナビ用 CSS -->
+  <link rel="stylesheet" href="/assets/custom.css">
+
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+
+<body>
+
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ（全ページ共通） -->
+    <nav style="min-width:220px; position:sticky; top:1rem; padding-right:1rem; border-right:1px solid #ddd;">
+      <h2>QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0;">
+        <li><a href="/"><strong>Introduction</strong></a> </li>
+        <li><a href="/HUBO_QUBO"><strong>HUBO and QUBO</strong></a> </li>
+        <li><a href="/QUICK"><strong>Quick Start</strong></a> </li>
+        <li><a href="/WSL"><strong>Quick Start for Windows</strong></a> </li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/CASE_STUDIES"><strong>Case Studies</strong></a></li>
+        <li><a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Release</strong></a></li>
+      </ul>
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="magic-square">Magic Square</h1>
+<p>A 3-by-3 magic square is a 3-by-3 matrix that contains each integer from 1 to 9 exactly once, such that the sum of every row, every column, and the two diagonals is 15.
+An example is shown below:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>8 1 6 
+3 5 7 
+4 9 2 
+</code></pre></div></div>
+
+<h2 id="a-formulation-for-finding-magic-square">A formulation for finding magic square</h2>
+<p>We formulate the problem of finding a 3-by-3 magic square 
+$S=(s_{i,j})$ ($0\leq i,j\leq 2$) using one-hot encoding.
+We introduce binary variables $x_{i,j,k}$ ($0\leq i,j\leq 2, 0\leq k\leq 8$), where:</p>
+
+\[\begin{aligned}
+x_{i,j,k}=1 &amp;\Longleftrightarrow &amp; s_{i,j}=k+1
+\end{aligned}\]
+
+<p>Thus, $X=(x_{i,j,k})$ is a $3\times 3\times 9$ binary array.
+We impose the following four constraints.</p>
+
+<ol>
+  <li>One-hot constraint (one value per cell):
+For each cell $(i,j)$, exactly one of $x_{i,j,0}, x_{i,j,1}, \ldots,x _{i,j,8}$ must be 1:</li>
+</ol>
+
+\[\begin{aligned}
+c_1(i,j): &amp; \sum_{k=0}^8 x _{i,j,k}=1 &amp; (0\leq i,j\leq 2)
+\end{aligned}\]
+
+<ol>
+  <li>Each value $k+1$ must appear in exactly one cell:</li>
+</ol>
+
+\[\begin{aligned}
+c_2(k): &amp; \sum_{i=0}^2\sum_{j=0}^2x _{i,j,k}=1 &amp; (0\leq k\leq 8)
+\end{aligned}\]
+
+<ol>
+  <li>
+    <p>The sum of each row and each column must be 15:
+\(\begin{aligned}
+c_3(i): &amp; \sum_{j=0}^2\sum_{k=0}^8  (k+1)x _{i,j,k} = 15  &amp;(0\leq i\leq 2)\\
+c_3(j): &amp; \sum_{i=0}^2\sum_{k=0}^8 (k+1)x _{i,j,k} = 15 &amp;(0\leq j\leq 2)
+\end{aligned}\)</p>
+  </li>
+  <li>
+    <p>The sums of diagonal and anti-diagonal
+The two diagonal sums must also be 15:
+\(\begin{aligned}
+c_4: &amp;  \sum_{k=0}^8 (k+1) (x_{0,0,k}+x_{1,1,k}+x_{2,2,k}) = 15 \\
+c_4:  &amp; \sum_{k=0}^8 (k+1) (x_{0,2,k}+x_{1,1,k}+x_{2,0,k}) = 15 
+\end{aligned}\)</p>
+  </li>
+</ol>
+
+<p>When all constraints are satisfied, the assignment $X=(x_{i,j,k})$ represents a valid 3-by-3 magic square.</p>
+
+<h2 id="qubo-prgram-for-the-magic-square">QUBO++ prgram for the magic square</h2>
+<p>The following QUBO++ program implements these constraints and finds a magic square:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
+#include</span> <span class="cpf">"qbpp_easy_solver.hpp"</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">9</span><span class="p">);</span>
+
+  <span class="k">auto</span> <span class="n">c1</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sum</span><span class="p">(</span><span class="n">qbpp</span><span class="o">::</span><span class="n">vector_sum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">);</span>
+
+  <span class="k">auto</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">expr</span><span class="p">(</span><span class="mi">9</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="mi">9</span><span class="p">;</span> <span class="o">++</span><span class="n">k</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">temp</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">+=</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="n">k</span><span class="p">];</span>
+      <span class="p">}</span>
+  <span class="k">auto</span> <span class="n">c2</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sum</span><span class="p">(</span><span class="n">temp</span> <span class="o">==</span> <span class="mi">1</span><span class="p">);</span>
+
+  <span class="k">auto</span> <span class="n">row</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">expr</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">column</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">expr</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="mi">9</span><span class="p">;</span> <span class="o">++</span><span class="n">k</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">row</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="n">k</span><span class="p">];</span>
+        <span class="n">column</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">+=</span> <span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="n">k</span><span class="p">];</span>
+      <span class="p">}</span>
+  <span class="k">auto</span> <span class="n">c3</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sum</span><span class="p">(</span><span class="n">row</span> <span class="o">==</span> <span class="mi">15</span><span class="p">)</span> <span class="o">+</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sum</span><span class="p">(</span><span class="n">column</span> <span class="o">==</span> <span class="mi">15</span><span class="p">);</span>
+
+  <span class="k">auto</span> <span class="n">diag</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">Expr</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="mi">9</span><span class="p">;</span> <span class="o">++</span><span class="n">k</span><span class="p">)</span>
+    <span class="n">diag</span> <span class="o">+=</span> <span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">2</span><span class="p">][</span><span class="n">k</span><span class="p">]);</span>
+  <span class="k">auto</span> <span class="n">anti_diag</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">Expr</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="mi">9</span><span class="p">;</span> <span class="o">++</span><span class="n">k</span><span class="p">)</span>
+    <span class="n">anti_diag</span> <span class="o">+=</span> <span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">k</span><span class="p">]);</span>
+  <span class="k">auto</span> <span class="n">c4</span> <span class="o">=</span> <span class="p">(</span><span class="n">diag</span> <span class="o">==</span> <span class="mi">15</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">anti_diag</span> <span class="o">==</span> <span class="mi">15</span><span class="p">);</span>
+
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">c1</span> <span class="o">+</span> <span class="n">c2</span> <span class="o">+</span> <span class="n">c3</span> <span class="o">+</span> <span class="n">c4</span><span class="p">;</span>
+  <span class="n">f</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">easy_solver</span><span class="o">::</span><span class="n">EasySolver</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+  <span class="n">solver</span><span class="p">.</span><span class="n">target_energy</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">sol</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search</span><span class="p">();</span>
+  <span class="k">auto</span> <span class="n">result</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">onehot_to_int</span><span class="p">(</span><span class="n">sol</span><span class="p">(</span><span class="n">x</span><span class="p">));</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="s">" "</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>In this program, we define a $3\times 3\times9$ array of binary variables <code class="language-plaintext highlighter-rouge">x</code>.
+We then build four constraint expressions <code class="language-plaintext highlighter-rouge">c1</code>, <code class="language-plaintext highlighter-rouge">c2</code>, <code class="language-plaintext highlighter-rouge">c3</code>, and <code class="language-plaintext highlighter-rouge">c4</code>, and combine them into <code class="language-plaintext highlighter-rouge">f</code>.
+The expression <code class="language-plaintext highlighter-rouge">f</code> achieves the minimum energy 0 when all constraints are satisfied.</p>
+
+<p>We create an Easy Solver object solver for <code class="language-plaintext highlighter-rouge">f</code> and set the target energy to 0, so the search terminates as soon as a feasible (optimal) solution is found.
+The returned solution is stored in <code class="language-plaintext highlighter-rouge">sol</code>.
+Finally, we convert the one-hot representation into integers using <code class="language-plaintext highlighter-rouge">qbpp::onehot_to_int()</code>, which returns a $3\times 3$ array of integers in 
+${0,1, \ldots, 8}$. We print the resulting square by adding $1$ to each entry.</p>
+
+<p>This program produces the following output:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>8 1 6 
+3 5 7 
+4 9 2 
+</code></pre></div></div>
+
+<h2 id="fixing-variable-partially">Fixing variable partially</h2>
+<p>Suppose we want to find a solution in which the top-left cell is assigned the value 2.
+In the one-hot encoding, the value 2 corresponds to $k=1$, so we fix</p>
+
+\[\begin{aligned}
+ x_{0,0,k} &amp;=1 &amp; {\rm if\,\,} k=1\\
+ x_{0,0,k} &amp;=0 &amp; {\rm if\,\,} k\neq 1
+\end{aligned}\]
+
+<p>Moreover, since constraint $c_2$ enforces that each number $k+1$ appears exactly once, fixing 
+immediately implies that no other cell can take the value 2.
+Therefore, we can also fix:</p>
+
+\[\begin{aligned}
+ x_{i,j,1} &amp;=0 &amp; {\rm if\,\,} (i,j)\neq (0,0)\\
+\end{aligned}\]
+
+<p>These fixed assignments reduce the number of remaining binary variables, which is often beneficial for local-search-based solvers.</p>
+
+<h2 id="qubo-program-for-the-magic-square-with-fixing-variable-partially">QUBO++ program for the magic square with fixing variable partially</h2>
+<p>We modify the program above as follows:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">qbpp</span><span class="o">::</span><span class="n">MapList</span> <span class="n">ml</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="mi">9</span><span class="p">;</span> <span class="o">++</span><span class="n">k</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">k</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+      <span class="n">ml</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">k</span><span class="p">],</span> <span class="mi">1</span><span class="p">});</span>
+    <span class="k">else</span>
+      <span class="n">ml</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">k</span><span class="p">],</span> <span class="mi">0</span><span class="p">});</span>
+  <span class="p">}</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">j</span> <span class="o">==</span> <span class="mi">0</span><span class="p">))</span> <span class="p">{</span>
+        <span class="n">ml</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="mi">0</span><span class="p">});</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+  <span class="n">qbpp</span><span class="o">::</span><span class="n">Sol</span> <span class="nf">full_sol</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+  <span class="n">f</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="n">ml</span><span class="p">);</span>
+  <span class="n">f</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">easy_solver</span><span class="o">::</span><span class="n">EasySolver</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+  <span class="n">solver</span><span class="p">.</span><span class="n">target_energy</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">sol</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search</span><span class="p">();</span>
+  <span class="n">full_sol</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">sol</span><span class="p">);</span>
+  <span class="n">full_sol</span><span class="p">.</span><span class="n">set</span><span class="p">(</span><span class="n">ml</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">result</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">onehot_to_int</span><span class="p">(</span><span class="n">full_sol</span><span class="p">(</span><span class="n">x</span><span class="p">));</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="s">" "</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+</code></pre></div></div>
+
+<p>In this code, we create a <code class="language-plaintext highlighter-rouge">qbpp::MapList</code> object <code class="language-plaintext highlighter-rouge">ml</code> and add fixed assignments using <code class="language-plaintext highlighter-rouge">push_back()</code>.
+We then create <code class="language-plaintext highlighter-rouge">full_sol</code>, a solution object for the original expression <code class="language-plaintext highlighter-rouge">f</code>.
+Calling <code class="language-plaintext highlighter-rouge">f.replace(ml)</code> substitutes the fixed values into <code class="language-plaintext highlighter-rouge">f</code> in place, so the variables listed in <code class="language-plaintext highlighter-rouge">ml</code> disappear from <code class="language-plaintext highlighter-rouge">f</code>.
+As a result, the solution <code class="language-plaintext highlighter-rouge">sol</code> returned by the solver does not include those fixed variables.
+Finally, we reconstruct a complete assignment by merging <code class="language-plaintext highlighter-rouge">sol</code> and <code class="language-plaintext highlighter-rouge">ml</code> into <code class="language-plaintext highlighter-rouge">full_sol</code> via <code class="language-plaintext highlighter-rouge">set()</code>.
+The reconstructed solution <code class="language-plaintext highlighter-rouge">full_sol</code> represents the full magic square.</p>
+
+<p>This program produces the following output:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>2 7 6 
+9 5 1 
+4 3 8 
+</code></pre></div></div>
+<p>We can confirm that the top-left cell is 2, as intended.</p>
+
+      <hr style="margin: 2rem 0 1rem 0;">
+<div style="font-size: 0.9em; color: #666;">
+  Last updated: 2026.02.04
+</div>
+    </main>
+  </div>
+</body>
+
+</html>

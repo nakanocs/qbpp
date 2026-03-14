@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Subgraph Isomorphism Problem - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Minima テーマの main.css（ハイライト含む） -->
+  <link rel="stylesheet" href="/assets/main.css">
+
+  <!-- 自前のナビ用 CSS -->
+  <link rel="stylesheet" href="/assets/custom.css">
+
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+
+<body>
+
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ（全ページ共通） -->
+    <nav style="min-width:220px; position:sticky; top:1rem; padding-right:1rem; border-right:1px solid #ddd;">
+      <h2>QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0;">
+        <li><a href="/"><strong>Introduction</strong></a> </li>
+        <li><a href="/HUBO_QUBO"><strong>HUBO and QUBO</strong></a> </li>
+        <li><a href="/QUICK"><strong>Quick Start</strong></a> </li>
+        <li><a href="/WSL"><strong>Quick Start for Windows</strong></a> </li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/CASE_STUDIES"><strong>Case Studies</strong></a></li>
+        <li><a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Release</strong></a></li>
+      </ul>
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="subgraph-isomorphism-problem">Subgraph Isomorphism Problem</h1>
+<p>Given two undirected graphs $G_H=(V_H,E_H)$ (the host graph) and 
+$G_G=(V_G,E_G)$ (the guest graph), the <strong>subgraph isomorphism problem</strong> asks whether 
+$G_H$ contains a subgraph that is isomorphic to $G_G$.</p>
+
+<p>More formally, the goal is to find an <strong>injective mapping</strong> $\sigma:V_G\rightarrow V_H$
+such that, for every edge $(u,v)\in E_G$, the pair $(\sigma(u),\sigma(v))$ is also an edge of the host graph, i.e., $(\sigma(u),\sigma(v))\in E_H$.</p>
+
+<p>For example, consider the following host and guest graphs:</p>
+<p align="center">
+  <img src="images/host_graph.svg" alt="Host Graph" width="80%" /><br />
+  An example of the host graph $G_H=(V_H,E_H)$ with 10 nodes
+</p>
+
+<p align="center">
+  <img src="images/guest_graph.svg" alt="Guest Graph" width="40%" /><br />
+  An example of the guest graph $G_G=(V_G,E_G)$ with 6 nodes
+</p>
+
+<p>One solution $\sigma$ is:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>node $i$ in $G_G$</th>
+      <th>0</th>
+      <th>1</th>
+      <th>2</th>
+      <th>3</th>
+      <th>4</th>
+      <th>5</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>node $\sigma(i)$ in $G_H$</td>
+      <td>1</td>
+      <td>4</td>
+      <td>6</td>
+      <td>7</td>
+      <td>9</td>
+      <td>8</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>This solution is visualized as follows:</p>
+
+<p align="center">
+  <img src="images/subgraph_isomorphism.svg" alt="The solution of the subgraph isomorphism problem" width="80%" /><br />
+  A solution to the subgraph isomorphism problem
+</p>
+
+<h2 id="qubo-formulation-of-the-subgraph-isomorphic-problem">QUBO formulation of the subgraph isomorphic problem</h2>
+<p>Assume that the g<strong>uest graph</strong> $G_G=(V_G,E_G)$ has $m$ nodes labeled $0, 1, \ldots m-1$, and
+and the <strong>host graph</strong> $G_H=(V_H,E_H) $ has $n$ nodes labeled $0, 1, \ldots n-1$.
+We introduce an $m\times n$ <strong>binary matrix</strong> $X=(x_{i,j})$ ($0\leq i\leq m-1, 0\leq j\leq n-1$) with $mn$ binary variables.
+This matrix represents an injective mapping $\sigma:V_G\rightarrow V_H$
+such that $x_{i,j}=1$ if and only if $\sigma(i)=j$.</p>
+
+<p>For example, the solution of the subgraph isomorphism problem can be represented by the following  $6\times 10$ binary matrix:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">$i$</th>
+      <th style="text-align: center">$\sigma(i)$</th>
+      <th style="text-align: center">0</th>
+      <th style="text-align: center">1</th>
+      <th style="text-align: center">2</th>
+      <th style="text-align: center">3</th>
+      <th style="text-align: center">4</th>
+      <th style="text-align: center">5</th>
+      <th style="text-align: center">6</th>
+      <th style="text-align: center">7</th>
+      <th style="text-align: center">8</th>
+      <th style="text-align: center">9</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">4</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">2</td>
+      <td style="text-align: center">6</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">3</td>
+      <td style="text-align: center">7</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">4</td>
+      <td style="text-align: center">9</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">1</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">5</td>
+      <td style="text-align: center">8</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Because $X$ represents an injective mapping, it must satisfy the following constraints:</p>
+<ul>
+  <li><strong>Row constraint</strong>: Each guest node is mapped to exactly one host node, i.e., the sum of each row is 1.</li>
+  <li><strong>Column constraint</strong>: Each host node is used by at most one guest node, i.e., the sum of each column is 0 or 1.</li>
+</ul>
+
+<p>These can be combined into the following <strong>QUBO++-style constraint</strong>, which attains its minimum value when all constraints are satisfied:</p>
+
+\[\begin{aligned}
+\text{constraint} &amp;= \sum_{i=0}^{m-1}\Bigl(\sum_{j=0}^{n-1}x_{i,j} = 1\Bigr)+\sum_{j=0}^{m-1}\Bigl(0\leq \sum_{i=0}^{n-1}x_{i,j} \leq 1\Bigr)
+\end{aligned}\]
+
+<p>In QUBO form, we can express the same constraints as:</p>
+
+\[\begin{aligned}
+\text{constraint} 
+ &amp;=  \sum_{i=0}^{m-1}\Bigl(\sum_{j=0}^{n-1}x_{i,j} - 1\Bigr)^2+\sum_{j=0}^{m-1}\sum_{i=0}^{n-1}x_{i,j}\Bigl(\sum_{i=0}^{n-1}x_{i,j}-1\Bigr)
+\end{aligned}\]
+
+<p>Next, we define the objective as the number of guest edges that are mapped to host edges:</p>
+
+\[\begin{aligned}
+\text{objective} &amp;= \sum_{(u_G,v_G)\in E_G}\sum_{(u_H,v_H)\in E_H} (x_{u_G,u_H}x_{v_G,v_H}+x_{u_G,v_H}x_{v_G,u_H})
+\end{aligned}\]
+
+<p>Here, an undirected guest edge $(u_G,v_G)\in E_G$ can correspond to a host edge $(u_H,v_H)\in E_H$  in two symmetric ways:</p>
+<ul>
+  <li>$(u_G, v_G)\mapsto (u_H,v_H)$</li>
+  <li>$(u_G, v_G)\mapsto (v_H,u_H)$</li>
+</ul>
+
+<p>Therefore, we include both quadratic terms $x_{u_G,u_H}x_{v_G,v_H}$ and $x_{u_G,v_H}x_{v_G,u_H}$.</p>
+
+<p>Finally, we combine the objective and the constraint into a single QUBO expression:</p>
+
+\[\begin{aligned}
+f  &amp;= -\text{objective} + mn\times \text{constraint}
+\end{aligned}\]
+
+<p>The penalty coefficient $mn$ is chosen so that satisfying the constraints is prioritized over improving the objective.
+The best possible value of $f$ is attained when the constraint term is zero and the objective equals the number of guest edges.</p>
+
+<h2 id="qubo-program-of-the-subgraph-isomorphic-problem">QUBO++ program of the subgraph isomorphic problem</h2>
+<p>Based on the QUBO formulation above, the following QUBO++ program solves the subgraph isomorphism problem for a guest graph with $M=6$ nodes and a host graph with $N=10$ nodes:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
+#include</span> <span class="cpf">"qbpp_easy_solver.hpp"</span><span class="cp">
+#include</span> <span class="cpf">"qbpp_graph.hpp"</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">const</span> <span class="kt">size_t</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="p">,</span> <span class="kt">size_t</span><span class="o">&gt;&gt;</span> <span class="n">host</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">},</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">},</span> <span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">},</span> <span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mi">7</span><span class="p">},</span> <span class="p">{</span><span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">},</span>
+      <span class="p">{</span><span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="p">},</span> <span class="p">{</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">},</span> <span class="p">{</span><span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">},</span> <span class="p">{</span><span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">},</span> <span class="p">{</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">},</span> <span class="p">{</span><span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">},</span> <span class="p">{</span><span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">}};</span>
+
+  <span class="k">const</span> <span class="kt">size_t</span> <span class="n">M</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="p">,</span> <span class="kt">size_t</span><span class="o">&gt;&gt;</span> <span class="n">guest</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">},</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span> <span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">},</span> <span class="p">{</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">},</span> <span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">},</span> <span class="p">{</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">}};</span>
+
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">N</span><span class="p">);</span>
+
+  <span class="k">auto</span> <span class="n">host_assigned</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">vector_sum</span><span class="p">(</span><span class="n">qbpp</span><span class="o">::</span><span class="n">transpose</span><span class="p">(</span><span class="n">x</span><span class="p">));</span>
+
+  <span class="k">auto</span> <span class="n">constraint</span> <span class="o">=</span>
+      <span class="n">qbpp</span><span class="o">::</span><span class="n">sum</span><span class="p">(</span><span class="n">qbpp</span><span class="o">::</span><span class="n">vector_sum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sum</span><span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">host_assigned</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">);</span>
+
+  <span class="k">auto</span> <span class="n">objective</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">toExpr</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">e_g</span> <span class="o">:</span> <span class="n">guest</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">e_h</span> <span class="o">:</span> <span class="n">host</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">objective</span> <span class="o">+=</span> <span class="n">x</span><span class="p">[</span><span class="n">e_g</span><span class="p">.</span><span class="n">first</span><span class="p">][</span><span class="n">e_h</span><span class="p">.</span><span class="n">first</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">e_g</span><span class="p">.</span><span class="n">second</span><span class="p">][</span><span class="n">e_h</span><span class="p">.</span><span class="n">second</span><span class="p">]</span> <span class="o">+</span>
+                   <span class="n">x</span><span class="p">[</span><span class="n">e_g</span><span class="p">.</span><span class="n">first</span><span class="p">][</span><span class="n">e_h</span><span class="p">.</span><span class="n">second</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">e_g</span><span class="p">.</span><span class="n">second</span><span class="p">][</span><span class="n">e_h</span><span class="p">.</span><span class="n">first</span><span class="p">];</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="o">-</span><span class="n">objective</span> <span class="o">+</span> <span class="n">constraint</span> <span class="o">*</span> <span class="p">(</span><span class="n">M</span> <span class="o">*</span> <span class="n">N</span><span class="p">);</span>
+
+  <span class="n">f</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">easy_solver</span><span class="o">::</span><span class="n">EasySolver</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+  <span class="n">solver</span><span class="p">.</span><span class="n">target_energy</span><span class="p">(</span><span class="o">-</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">guest</span><span class="p">.</span><span class="n">size</span><span class="p">()));</span>
+  <span class="k">auto</span> <span class="n">sol</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search</span><span class="p">();</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"sol(x) = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"sol(objective) = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">objective</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"sol(constraint) = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">(</span><span class="n">constraint</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+  <span class="k">auto</span> <span class="n">guest_to_host</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">onehot_to_int</span><span class="p">(</span><span class="n">sol</span><span class="p">(</span><span class="n">x</span><span class="p">));</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"guest_to_host = "</span> <span class="o">&lt;&lt;</span> <span class="n">guest_to_host</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+  <span class="k">auto</span> <span class="n">host_to_guest</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">onehot_to_int</span><span class="p">(</span><span class="n">sol</span><span class="p">(</span><span class="n">qbpp</span><span class="o">::</span><span class="n">transpose</span><span class="p">(</span><span class="n">x</span><span class="p">)));</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"host_to_guest = "</span> <span class="o">&lt;&lt;</span> <span class="n">host_to_guest</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+  <span class="n">qbpp</span><span class="o">::</span><span class="n">graph</span><span class="o">::</span><span class="n">GraphDrawer</span> <span class="n">guest_graph</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">M</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">guest_graph</span><span class="p">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">qbpp</span><span class="o">::</span><span class="n">graph</span><span class="o">::</span><span class="n">Node</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+  <span class="p">}</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">e</span> <span class="o">:</span> <span class="n">guest</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">guest_graph</span><span class="p">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">qbpp</span><span class="o">::</span><span class="n">graph</span><span class="o">::</span><span class="n">Edge</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">first</span><span class="p">,</span> <span class="n">e</span><span class="p">.</span><span class="n">second</span><span class="p">));</span>
+  <span class="p">}</span>
+  <span class="n">guest_graph</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="s">"guest_graph.svg"</span><span class="p">);</span>
+
+  <span class="n">qbpp</span><span class="o">::</span><span class="n">graph</span><span class="o">::</span><span class="n">GraphDrawer</span> <span class="n">host_graph</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">host_graph</span><span class="p">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">qbpp</span><span class="o">::</span><span class="n">graph</span><span class="o">::</span><span class="n">Node</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+  <span class="p">}</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">e</span> <span class="o">:</span> <span class="n">host</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">host_graph</span><span class="p">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">qbpp</span><span class="o">::</span><span class="n">graph</span><span class="o">::</span><span class="n">Edge</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">first</span><span class="p">,</span> <span class="n">e</span><span class="p">.</span><span class="n">second</span><span class="p">));</span>
+  <span class="p">}</span>
+  <span class="n">host_graph</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="s">"host_graph.svg"</span><span class="p">);</span>
+
+  <span class="n">qbpp</span><span class="o">::</span><span class="n">graph</span><span class="o">::</span><span class="n">GraphDrawer</span> <span class="n">graph</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">graph</span><span class="p">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">qbpp</span><span class="o">::</span><span class="n">graph</span><span class="o">::</span><span class="n">Node</span><span class="p">(</span><span class="n">i</span><span class="p">).</span><span class="n">color</span><span class="p">(</span><span class="n">sol</span><span class="p">(</span><span class="n">host_assigned</span><span class="p">[</span><span class="n">i</span><span class="p">])));</span>
+  <span class="p">}</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;&gt;</span> <span class="n">guest_adj</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="nb">false</span><span class="p">));</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">]</span> <span class="o">:</span> <span class="n">guest</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">guest_adj</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">guest_adj</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="n">u</span><span class="p">]</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">e_h</span> <span class="o">:</span> <span class="n">host</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">auto</span> <span class="n">u</span> <span class="o">=</span> <span class="n">host_to_guest</span><span class="p">[</span><span class="n">e_h</span><span class="p">.</span><span class="n">first</span><span class="p">];</span>
+    <span class="k">auto</span> <span class="n">v</span> <span class="o">=</span> <span class="n">host_to_guest</span><span class="p">[</span><span class="n">e_h</span><span class="p">.</span><span class="n">second</span><span class="p">];</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">u</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">&amp;&amp;</span> <span class="n">v</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">&amp;&amp;</span>
+        <span class="n">guest_adj</span><span class="p">[</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">u</span><span class="p">)][</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v</span><span class="p">)])</span> <span class="p">{</span>
+      <span class="n">graph</span><span class="p">.</span><span class="n">add_edge</span><span class="p">(</span>
+          <span class="n">qbpp</span><span class="o">::</span><span class="n">graph</span><span class="o">::</span><span class="n">Edge</span><span class="p">(</span><span class="n">e_h</span><span class="p">.</span><span class="n">first</span><span class="p">,</span> <span class="n">e_h</span><span class="p">.</span><span class="n">second</span><span class="p">).</span><span class="n">color</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="n">penwidth</span><span class="p">(</span><span class="mf">2.0f</span><span class="p">));</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+      <span class="n">graph</span><span class="p">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">qbpp</span><span class="o">::</span><span class="n">graph</span><span class="o">::</span><span class="n">Edge</span><span class="p">(</span><span class="n">e_h</span><span class="p">.</span><span class="n">first</span><span class="p">,</span> <span class="n">e_h</span><span class="p">.</span><span class="n">second</span><span class="p">));</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="n">graph</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="s">"subgraph_isomorphism.svg"</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>The guest and host graphs are given as the edge lists guest and host, respectively.
+We define an $M\times N$ binary matrix <code class="language-plaintext highlighter-rouge">x</code>, and then construct the expressions <code class="language-plaintext highlighter-rouge">constraint</code>, <code class="language-plaintext highlighter-rouge">objective</code>, and <code class="language-plaintext highlighter-rouge">f</code> according to the formulation above.</p>
+
+<p>An Easy Solver instance is created for <code class="language-plaintext highlighter-rouge">f</code>, and the target energy is set to 
+$−∣E_G|$ (the negative number of guest edges), which is the best possible value of <code class="language-plaintext highlighter-rouge">-objective</code> when all guest edges are mapped to host edges.
+The obtained solution is stored in <code class="language-plaintext highlighter-rouge">sol</code>.
+The values of <code class="language-plaintext highlighter-rouge">x</code>, <code class="language-plaintext highlighter-rouge">objective</code>, and <code class="language-plaintext highlighter-rouge">constraint</code> under <code class="language-plaintext highlighter-rouge">sol</code> are then printed.</p>
+
+<p>Using the function <strong><code class="language-plaintext highlighter-rouge">qbpp::onehot_to_int()</code></strong>, the program also outputs the mappings from guest nodes to host nodes (<code class="language-plaintext highlighter-rouge">guest_to_host</code>, $\sigma$) and from host nodes to guest nodes (<code class="language-plaintext highlighter-rouge">host_to_guest</code>,$\sigma^{-1}$).</p>
+
+<p>The guest and host graphs are saved as <code class="language-plaintext highlighter-rouge">guest_graph.svg</code> and <code class="language-plaintext highlighter-rouge">host_graph.svg</code>, respectively.
+Finally, the solution is visualized in <code class="language-plaintext highlighter-rouge">subgraph_isomorphism.svg</code>, where the host nodes selected by the mapping and the host edges corresponding to guest edges are highlighted.</p>
+
+<p>This program produces the following output:</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sol</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">=</span> <span class="p">{{</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">},{</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">},{</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">},{</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">},{</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">},{</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">}}</span>
+<span class="n">sol</span><span class="p">(</span><span class="n">objective</span><span class="p">)</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">sol</span><span class="p">(</span><span class="n">constraint</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">guest_to_host</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">8</span><span class="p">}</span>
+<span class="n">host_to_guest</span> <span class="o">=</span> <span class="p">{</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">4</span><span class="p">}</span>
+</code></pre></div></div>
+
+<p>The objective value equals the number of guest edges ($|E_G|=8$), and all constraints are satisfied (<code class="language-plaintext highlighter-rouge">constraint</code> = 0).
+Therefore, the program finds an optimal solution that corresponds to a valid subgraph isomorphism.
+Note that an entry of host_to_guest is <code class="language-plaintext highlighter-rouge">-1</code> if the corresponding host node is not mapped from any guest node.</p>
+
+      <hr style="margin: 2rem 0 1rem 0;">
+<div style="font-size: 0.9em; color: #666;">
+  Last updated: 2026.02.03
+</div>
+    </main>
+  </div>
+</body>
+
+</html>

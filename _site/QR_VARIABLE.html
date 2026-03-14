@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Reference Variables - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Minima テーマの main.css（ハイライト含む） -->
+  <link rel="stylesheet" href="/assets/main.css">
+
+  <!-- 自前のナビ用 CSS -->
+  <link rel="stylesheet" href="/assets/custom.css">
+
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+
+<body>
+
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ -->
+    <nav style="width:max-content; position:sticky; top:1rem; padding:0 1rem 0 0; border-right:1px solid #ddd;">
+      
+      <h2 style="margin-left:0;">QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/"><strong>Introduction</strong></a> </li>
+        <li><a href="/HUBO_QUBO"><strong>HUBO and QUBO</strong></a> </li>
+        <li><a href="/QUICK"><strong>Quick Start</strong></a>
+          <ul style="list-style:none; padding-left:1.2em; margin:0.2em 0 0.2em;">
+            <li><a href="/WSL"><strong>for Windows</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/CASE_STUDIES"><strong>Case Studies</strong></a></li>
+        <li><a href="/DEMOS"><strong>Demos</strong></a></li>
+        <li><a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Release</strong></a></li>
+      </ul>
+      <hr style="margin:1rem 0;">
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/python/"><strong>PyQUBO++ &rarr;</strong></a></li>
+      </ul>
+      
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="quick-reference-variables-and-expressions">Quick Reference: Variables and Expressions</h1>
+
+<h2 id="data-types-used-in-qbppexpr">Data types used in <code class="language-plaintext highlighter-rouge">qbpp::Expr</code></h2>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">coeff_t</code></strong>:<br />
+The integer data type used for coefficients in <code class="language-plaintext highlighter-rouge">qbpp::Term</code> objects.<br />
+The default type is <code class="language-plaintext highlighter-rouge">int32_t</code>.<br />
+To change this type, define the <code class="language-plaintext highlighter-rouge">COEFF_TYPE</code> macro at compile time, for example:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-DCOEFF_TYPE=int16_t
+</code></pre></div>    </div>
+  </li>
+  <li><strong><code class="language-plaintext highlighter-rouge">energy_t</code></strong>:<br />
+The integer data type used to compute energy values of <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> objects,<br />
+as well as for integer constant terms in <code class="language-plaintext highlighter-rouge">qbpp::Expr</code>.<br />
+The default type is <code class="language-plaintext highlighter-rouge">int64_t</code>.<br />
+To change this type, define the <code class="language-plaintext highlighter-rouge">ENERGY_TYPE</code> macro at compile time, for example:
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-DENERGY_TYPE=int32_t
+</code></pre></div>    </div>
+    <p>The bit width of <code class="language-plaintext highlighter-rouge">energy_t</code> is guaranteed to be equal to or larger than that of <code class="language-plaintext highlighter-rouge">coeff_t</code>.</p>
+  </li>
+  <li><strong><code class="language-plaintext highlighter-rouge">vindex_t</code></strong>:<br />
+Defined as <code class="language-plaintext highlighter-rouge">uint32_t</code> and used to store a unique integer ID for each <code class="language-plaintext highlighter-rouge">qbpp::Var</code> object.<br />
+In most cases, it is not necessary to change this data type.</li>
+</ul>
+
+<h2 id="degree-of-terms">Degree of terms</h2>
+<p>To specify the maximum degree of terms, define either <code class="language-plaintext highlighter-rouge">MAXDEG</code> or <code class="language-plaintext highlighter-rouge">BASEDEG</code>.</p>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">MAXDEG</code></strong>
+Variables in each term are stored in a fixed-size array.
+<code class="language-plaintext highlighter-rouge">MAXDEG</code> sets the size of this array, and an error occurs if a term contains more variables than the array can hold.
+If you are working with QUBO, set <code class="language-plaintext highlighter-rouge">MAXDEG</code> to 2.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">BASEDEG</code></strong>
+Variables in each term are stored using a fixed-size array plus a variable-size array.
+<code class="language-plaintext highlighter-rouge">BASEDEG</code> sets the size of the fixed array.
+A term can store an unlimited number of variables; when the number of variables in a term exceeds <code class="language-plaintext highlighter-rouge">BASEDEG</code>, the variable-size array is used.</li>
+</ul>
+
+<p>You can define these macros via compiler options (e.g., <code class="language-plaintext highlighter-rouge">-DMAXDEG=2</code>) or in your source code (e.g., <code class="language-plaintext highlighter-rouge">#define MAXDEG 2</code>) before <code class="language-plaintext highlighter-rouge">#include &lt;qbpp/qbpp.hpp&gt;</code>.</p>
+
+<h2 id="available-integer-data-types">Available integer data types</h2>
+<ul>
+  <li>
+    <p><strong>Standard integer types</strong>:<br />
+<code class="language-plaintext highlighter-rouge">int8_t</code>, <code class="language-plaintext highlighter-rouge">int16_t</code>, <code class="language-plaintext highlighter-rouge">int32_t</code>, <code class="language-plaintext highlighter-rouge">int64_t</code></p>
+  </li>
+  <li>
+    <p><strong>Multiprecision integer types</strong> (implemented using the Boost.Multiprecision library):<br />
+<code class="language-plaintext highlighter-rouge">qbpp::int128_t</code>, <code class="language-plaintext highlighter-rouge">qbpp::int256_t</code>, <code class="language-plaintext highlighter-rouge">qbpp::int512_t</code>, <code class="language-plaintext highlighter-rouge">qbpp::int1024_t</code>, <code class="language-plaintext highlighter-rouge">qbpp::cpp_int</code></p>
+  </li>
+  <li>
+    <p><strong><code class="language-plaintext highlighter-rouge">qbpp::cpp_int</code></strong>:<br />
+An integer type with unlimited precision.</p>
+  </li>
+</ul>
+
+<blockquote>
+  <p><strong>WARNING</strong><br />
+To maximize performance, QUBO++ does not check for arithmetic overflow.<br />
+During development and testing, it is recommended to use wider bit widths for
+<code class="language-plaintext highlighter-rouge">coeff_t</code> and <code class="language-plaintext highlighter-rouge">energy_t</code>.<br />
+If the required bit widths are unclear, use <code class="language-plaintext highlighter-rouge">qbpp::cpp_int</code> to ensure correctness,
+and switch to fixed-width integer types after validation.</p>
+</blockquote>
+
+<h2 id="printing-class-objects">Printing class objects</h2>
+<p>Most classes in QUBO++ can be printed using the <code class="language-plaintext highlighter-rouge">&lt;&lt;</code> operator with <code class="language-plaintext highlighter-rouge">std::ostream</code>,
+which is useful for debugging.
+For example, an object <code class="language-plaintext highlighter-rouge">obj</code> in QUBO++ can be printed to <code class="language-plaintext highlighter-rouge">std::cout</code> as follows:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">obj</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+</code></pre></div></div>
+<p>This invokes either <code class="language-plaintext highlighter-rouge">obj.str()</code> or <code class="language-plaintext highlighter-rouge">str(obj)</code>, which returns a std::string
+containing a textual representation of obj.
+This design allows easy inspection of internal states without relying on a debugger.</p>
+
+<h2 id="variable-classes">Variable classes</h2>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">qbpp::Var</code></strong>:
+A class that holds a unique 32-bit integer ID.
+The variable name is stored in a global registry and can be retrieved via <code class="language-plaintext highlighter-rouge">x.str()</code>.</li>
+</ul>
+
+<blockquote>
+  <p><strong>NOTE</strong><br />
+A <code class="language-plaintext highlighter-rouge">qbpp::Var</code> object represents a variable symbolically.<br />
+No specific data type is associated with it.<br />
+It can be used to represent binary, spin, or other types of variables.</p>
+</blockquote>
+
+<h3 id="variable-creation-functions">Variable creation functions</h3>
+<p>The following functions are provided to create variables:</p>
+
+<ul>
+  <li>
+    <p><strong><code class="language-plaintext highlighter-rouge">qbpp::var("name")</code></strong>:<br />
+Creates a <code class="language-plaintext highlighter-rouge">qbpp::Var</code> object with the given name <code class="language-plaintext highlighter-rouge">"name"</code>.</p>
+  </li>
+  <li>
+    <p><strong><code class="language-plaintext highlighter-rouge">qbpp::var("name", s1)</code></strong>:<br />
+Creates a one-dimensional array (vector) of <code class="language-plaintext highlighter-rouge">qbpp::Var</code> objects with the base name <code class="language-plaintext highlighter-rouge">"name"</code>.<br />
+Each element is represented as <code class="language-plaintext highlighter-rouge">name[i]</code>.<br />
+The resulting type is <code class="language-plaintext highlighter-rouge">qbpp::Vector&lt;qbpp::Var&gt;</code>.</p>
+  </li>
+  <li>
+    <p><strong><code class="language-plaintext highlighter-rouge">qbpp::var("name", s1, s2)</code></strong>:<br />
+Creates a two-dimensional array (matrix) of <code class="language-plaintext highlighter-rouge">qbpp::Var</code> objects with the base name <code class="language-plaintext highlighter-rouge">"name"</code>.<br />
+Each element is represented as <code class="language-plaintext highlighter-rouge">name[i][j]</code>.<br />
+The resulting type is <code class="language-plaintext highlighter-rouge">qbpp::Vector&lt;qbpp::Vector&lt;qbpp::Var&gt;&gt;</code>.</p>
+  </li>
+  <li>
+    <p><strong><code class="language-plaintext highlighter-rouge">qbpp::var("name", s1, s2, ...)</code></strong>:<br />
+Creates a higher-dimensional array of <code class="language-plaintext highlighter-rouge">qbpp::Var</code> objects with the base name <code class="language-plaintext highlighter-rouge">"name"</code>.<br />
+Each element is represented as <code class="language-plaintext highlighter-rouge">name[i][j]...</code>.<br />
+The resulting type is a nested <code class="language-plaintext highlighter-rouge">qbpp::Vector</code>.</p>
+  </li>
+</ul>
+
+<blockquote>
+  <p><strong>NOTE</strong><br />
+If <code class="language-plaintext highlighter-rouge">"name"</code> is omitted, numbered names such as <code class="language-plaintext highlighter-rouge">"{0}"</code>, <code class="language-plaintext highlighter-rouge">"{1}"</code>, … are automatically assigned in creation order.</p>
+</blockquote>
+
+<h2 id="qbppvar-member-functions"><code class="language-plaintext highlighter-rouge">qbpp::Var</code> member functions</h2>
+<p>For a <code class="language-plaintext highlighter-rouge">qbpp::Var</code> instance <code class="language-plaintext highlighter-rouge">x</code>, the following member functions are available:</p>
+
+<ul>
+  <li>
+    <p><strong><code class="language-plaintext highlighter-rouge">std::string x.str()</code></strong>:<br />
+Returns the name of <code class="language-plaintext highlighter-rouge">x</code>.</p>
+  </li>
+  <li>
+    <p><strong><code class="language-plaintext highlighter-rouge">vindex_t x.index()</code></strong>:<br />
+Returns the unique integer ID of <code class="language-plaintext highlighter-rouge">x</code>.</p>
+  </li>
+</ul>
+
+<p>Usually, there is no need to call these member functions explicitly in QUBO++ programs.</p>
+
+<h2 id="integer-variable-class">Integer variable class</h2>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">qbpp::VarInt</code></strong>:<br />
+A class derived from <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> that represents an integer variable with a specified range.</li>
+</ul>
+
+<h3 id="integer-variable-creation-functions">Integer variable creation functions</h3>
+<p>The following functions are provided to create integer variables:</p>
+
+<ul>
+  <li>
+    <p><strong><code class="language-plaintext highlighter-rouge">qbpp::var_int("name")</code></strong>:<br />
+Returns an internally used helper object and does not create a <code class="language-plaintext highlighter-rouge">qbpp::VarInt</code> by itself.<br />
+To define a <code class="language-plaintext highlighter-rouge">qbpp::VarInt</code>, the range must be specified using the <code class="language-plaintext highlighter-rouge">&lt;=</code> operator, as shown below.</p>
+  </li>
+  <li>
+    <p><strong><code class="language-plaintext highlighter-rouge">l &lt;= qbpp::var_int("name") &lt;= u</code></strong>:<br />
+Here, <code class="language-plaintext highlighter-rouge">l</code> and <code class="language-plaintext highlighter-rouge">u</code> must be integers.<br />
+This expression creates a <code class="language-plaintext highlighter-rouge">qbpp::VarInt</code> object with the name <code class="language-plaintext highlighter-rouge">"name"</code>,<br />
+which internally contains a <code class="language-plaintext highlighter-rouge">qbpp::Expr</code> object representing all integers in the range <code class="language-plaintext highlighter-rouge">[l, u]</code>.<br />
+Internally, this also creates <code class="language-plaintext highlighter-rouge">qbpp::Var</code> objects used in the underlying expression.</p>
+  </li>
+  <li>
+    <p><strong><code class="language-plaintext highlighter-rouge">l &lt;= qbpp::var_int("name", s1) &lt;= u</code></strong>:<br />
+Creates a one-dimensional array (vector) of <code class="language-plaintext highlighter-rouge">qbpp::VarInt</code> objects with the base name <code class="language-plaintext highlighter-rouge">"name"</code><br />
+and the same range <code class="language-plaintext highlighter-rouge">[l, u]</code>.<br />
+Each element is represented as <code class="language-plaintext highlighter-rouge">name[i]</code>.<br />
+The resulting type is <code class="language-plaintext highlighter-rouge">qbpp::Vector&lt;qbpp::VarInt&gt;</code>.<br />
+Higher-dimensional arrays of <code class="language-plaintext highlighter-rouge">qbpp::VarInt</code> objects can be created in the same way as <code class="language-plaintext highlighter-rouge">qbpp::Var</code> objects.</p>
+  </li>
+</ul>
+
+<h3 id="integer-variable-member-functions">Integer variable member functions</h3>
+<p>For a <code class="language-plaintext highlighter-rouge">qbpp::VarInt</code> instance <code class="language-plaintext highlighter-rouge">x</code>, the following member functions are available:</p>
+
+<ul>
+  <li>
+    <p><strong><code class="language-plaintext highlighter-rouge">std::string x.name()</code></strong>:<br />
+Returns the name of <code class="language-plaintext highlighter-rouge">x</code>.</p>
+  </li>
+  <li>
+    <p><strong><code class="language-plaintext highlighter-rouge">std::string x.str()</code></strong>:<br />
+Returns the string representation of the underlying expression.</p>
+  </li>
+  <li>
+    <p><strong><code class="language-plaintext highlighter-rouge">energy_t x.min_val()</code></strong>:<br />
+Returns the minimum value <code class="language-plaintext highlighter-rouge">l</code> of <code class="language-plaintext highlighter-rouge">x</code>.</p>
+  </li>
+  <li>
+    <p><strong><code class="language-plaintext highlighter-rouge">energy_t x.max_val()</code></strong>:<br />
+Returns the maximum value <code class="language-plaintext highlighter-rouge">u</code> of <code class="language-plaintext highlighter-rouge">x</code>.</p>
+  </li>
+  <li>
+    <p><strong><code class="language-plaintext highlighter-rouge">const qbpp::Vector&lt;qbpp::Var&gt;&amp; x.vars()</code></strong>:<br />
+Returns the const reference of the <code class="language-plaintext highlighter-rouge">qbpp::Var</code> object vector used to represent the integer variable.</p>
+  </li>
+  <li>
+    <p><strong><code class="language-plaintext highlighter-rouge">qbpp::Vector&lt;coeff_t&gt; x.coeffs()</code></strong>:
+Returns a copy of the integer coefficient vector.</p>
+  </li>
+</ul>
+
+<p>The following expression is equivalent to the expression stored in <code class="language-plaintext highlighter-rouge">x</code>:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">x</span><span class="p">.</span><span class="n">min_val</span><span class="p">()</span> <span class="o">+</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sum</span><span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="n">coeffs</span><span class="p">()</span> <span class="o">*</span> <span class="n">x</span><span class="p">.</span><span class="n">vars</span><span class="p">())</span>
+</code></pre></div></div>
+
+      <hr style="margin: 2rem 0 1rem 0;">
+<div style="font-size: 0.9em; color: #666;">
+  Last updated: 2026.03.05
+</div>
+    </main>
+  </div>
+</body>
+
+</html>

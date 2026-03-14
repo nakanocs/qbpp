@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>CVRP - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Minima テーマの main.css（ハイライト含む） -->
+  <link rel="stylesheet" href="/assets/main.css">
+
+  <!-- 自前のナビ用 CSS -->
+  <link rel="stylesheet" href="/assets/custom.css">
+
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+
+<body>
+
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ -->
+    <nav style="width:max-content; position:sticky; top:1rem; padding:0 1rem 0 0; border-right:1px solid #ddd;">
+      
+      <h2 style="margin-left:0;">QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/"><strong>Introduction</strong></a> </li>
+        <li><a href="/HUBO_QUBO"><strong>HUBO and QUBO</strong></a> </li>
+        <li><a href="/QUICK"><strong>Quick Start</strong></a>
+          <ul style="list-style:none; padding-left:1.2em; margin:0.2em 0 0.2em;">
+            <li><a href="/WSL"><strong>for Windows</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/CASE_STUDIES"><strong>Case Studies</strong></a></li>
+        <li><a href="/DEMOS"><strong>Demos</strong></a></li>
+        <li><a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Release</strong></a></li>
+      </ul>
+      <hr style="margin:1rem 0;">
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/python/"><strong>PyQUBO++ &rarr;</strong></a></li>
+      </ul>
+      
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="capacitated-vehicle-routing-problem-cvrp">Capacitated Vehicle Routing Problem (CVRP)</h1>
+<p>The <strong>Capacitated Vehicle Routing Problem (CVRP)</strong> aims to find a set of routes for $V$ <strong>vehicles</strong> that start and end at a single <strong>depot</strong> and collectively serve all <strong>customers</strong>.
+We index the <strong>locations</strong> by $i \in \lbrace 0,1,\ldots,N-1\rbrace$, where location 0 denotes the depot and locations $1,\ldots,N-1$ are customers.<br />
+Each customer $i\in \lbrace 1,\ldots,N-1\rbrace$ has a demand $d_i$ to be delivered (and we set $d_0=0$ for the depot).<br />
+Each vehicle $v \in \lbrace 0,\ldots,V-1\rbrace$ departs from the depot, visits a subset of customers, and returns to the depot, subject to the capacity constraint that the total delivered demand on its route does not exceed the vehicle capacity $q_v$.
+The objective is to minimize the total travel cost over all vehicles.</p>
+
+<p>We assume that locations are points in the two-dimensional plane and that the travel cost between two locations is the Euclidean distance.
+Let $c_{i,j}$ denote the distance (cost) between locations $i$ and $j$.</p>
+
+<h2 id="qubo-formulation-array-of-binary-variables">QUBO++ formulation: array of binary variables</h2>
+<p>We use a $V\times N\times N$ array $A=(a_{v,t,i})$ ($0\leq v\leq V, 0\leq t,i\leq N-1$) of binary variables to formulate the CVRP as a QUBO expression,
+where $a_{v,t,i}$ is 1 if and only if the $t$-th visited location of vehicle $v$ is location $i$.</p>
+
+<p>Below is an example assignment of $A=(a_{v,t,i})$ with $V=3$ and $N=10$ representing
+a solution of the CVRP.
+Each vehicle starts from the depot (location 0), visits some customers, and then returns to the depot.
+After a vehicle returns to the depot, it stays at the depot for the remaining time steps.
+Each customer $1, \ldots, 9$ is visited exactly once by exactly one vehicle, so this array represents a feasible CVRP solution.</p>
+
+<h3 id="vehicle-v0">Vehicle $v=0$</h3>
+<p>Representing tour: $0\rightarrow 4\rightarrow 0$</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">t \ i</th>
+      <th style="text-align: center">0</th>
+      <th style="text-align: center">1</th>
+      <th style="text-align: center">2</th>
+      <th style="text-align: center">3</th>
+      <th style="text-align: center">4</th>
+      <th style="text-align: center">5</th>
+      <th style="text-align: center">6</th>
+      <th style="text-align: center">7</th>
+      <th style="text-align: center">8</th>
+      <th style="text-align: center">9</th>
+      <th style="text-align: center">onehot value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">4</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">2</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">3</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">4</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">5</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">6</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">7</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">8</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">9</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="vehicle-v1">Vehicle $v=1$</h3>
+<p>Representing tour: $0\rightarrow 6\rightarrow 5\rightarrow 8\rightarrow  0$</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">t \ i</th>
+      <th style="text-align: center">0</th>
+      <th style="text-align: center">1</th>
+      <th style="text-align: center">2</th>
+      <th style="text-align: center">3</th>
+      <th style="text-align: center">4</th>
+      <th style="text-align: center">5</th>
+      <th style="text-align: center">6</th>
+      <th style="text-align: center">7</th>
+      <th style="text-align: center">8</th>
+      <th style="text-align: center">9</th>
+      <th style="text-align: center">onehot value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">6</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">2</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">5</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">3</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">8</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">4</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">5</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">6</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">7</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">8</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">9</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="vehicle-v2">Vehicle $v=2$</h3>
+
+<p>Representing tour: $0\rightarrow 7\rightarrow 9\rightarrow 1\rightarrow  3\rightarrow  2\rightarrow  0$</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">t \ i</th>
+      <th style="text-align: center">0</th>
+      <th style="text-align: center">1</th>
+      <th style="text-align: center">2</th>
+      <th style="text-align: center">3</th>
+      <th style="text-align: center">4</th>
+      <th style="text-align: center">5</th>
+      <th style="text-align: center">6</th>
+      <th style="text-align: center">7</th>
+      <th style="text-align: center">8</th>
+      <th style="text-align: center">9</th>
+      <th style="text-align: center">onehot value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">7</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">2</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">9</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">3</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">1</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">4</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">3</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">5</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">2</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">6</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">7</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">8</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">9</td>
+      <td style="text-align: center">1</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+      <td style="text-align: center">0</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="constraints-for-qub-formulation">Constraints for QUB++ formulation</h2>
+
+<h3 id="row-constraint-one-hot-at-each-time">Row constraint (one-hot at each time)</h3>
+<p>Each vehicle must be at exactly one location at each time $t$.
+We impose the one-hot constraint:</p>
+
+\[\begin{aligned}
+\text{row}\_\text{constraint} &amp; = \sum_{v=0}^{V-1}\sum_{t=0}^{N-1}\bigr(\sum_{i=0}^{N-1} a_{v,t,i} = 1\bigl)\\
+ &amp;= \sum_{v=0}^{V-1}\sum_{t=0}^{N-1}\bigr(1-\sum_{i=0}^{N-1} a_{v,t,i}\bigl)^2
+\end{aligned}\]
+
+<p><strong>row_constraint</strong> attains its minimum value $0$
+if and only if every row is one-hot.</p>
+
+<p>We also fix the first position to be the depot:</p>
+
+\[\begin{aligned}
+a_{v,0,0}&amp; = 1 &amp;&amp; (0\leq v\leq V-1) \\
+a_{v,0,i}&amp; = 0 &amp;&amp; (0\leq v\leq V-1, 1\leq i\leq N-1)
+\end{aligned}\]
+
+<p>These can be enforced by fixing variables.</p>
+
+<h3 id="consecutive-depot-constraint-no-leaving-the-depot-again">Consecutive-depot constraint (no “leaving the depot again”)</h3>
+<p>We disallow patterns where a vehicle returns to the depot and later visits customers again.
+Using the depot-indicator variable $a_{v,t,0}$, we require that the sequence</p>
+
+\[a_{v,1,0}, a_{v,2,0}, \ldots, a_{v,N-1,0}\]
+
+<p>consists of consecutive 0’s followed by consecutive 1’s (i.e., once it becomes 1, it stays 1).
+This is enforced by penalizing the forbidden transition $1\rightarrow 0$:</p>
+
+\[\begin{aligned}
+\text{consecutive}\_\text{constraint} &amp;= \sum_{v=0}^{V-1}\sum_{t=1}^{N-2} (1-a_{v,t})a_{v,t+1}
+\end{aligned}\]
+
+<p><strong>consecutive_constraint</strong> attains 0 if and only if the depot indicators are monotone nondecreasing in 
+$t$ ($1\leq t\leq N-1$).</p>
+
+<p>This constraint is redundant if the distance metric satisfies the triangle inequality (such “leave again” solutions cannot be optimal), but it often helps solvers avoid such non-optimal structures.</p>
+
+<h3 id="column-constraint">Column constraint</h3>
+<p>Each customer must be visited exactly once by exactly one vehicle at exactly one time:</p>
+
+\[\begin{aligned}
+\text{column}\_\text{constraint}
+&amp; = \sum_{i=1}^{N-1}\bigr(\sum_{v=0}^{V-1}\sum_{t=0}^{N-1} a_{v,t,i} = 1\bigl)\\
+ &amp;= \sum_{i=1}^{N-1}\bigr(1-\sum_{v=0}^{V-1}\sum_{t=0}^{N-1} a_{v,t,i}\bigl)^2
+\end{aligned}\]
+
+<p><strong>column_constraint</strong> is 0 if and only if every customer $i = 1, \dots ,N−1$ is visited exactly once.</p>
+
+<h3 id="capacity-constraint">Capacity constraint</h3>
+<p>For each vehicle $v$, the total delivered demand is</p>
+
+\[\sum_{t=1}^{N-1}\sum_{i=1}^{N-1}d_ix_{t,i},\]
+
+<p>which must be at most $q_v$.
+Then the following constraint must be 0:</p>
+
+\[\begin{aligned}
+\text{capacity}\_\text{constraint} &amp;= \sum_{v=0}^{V-1}\Bigr(0\leq \sum_{t=1}^{N-1}\sum_{i=1}^{N-1}d_ix_{t,i}\leq q_v\Bigl)
+\end{aligned}\]
+
+<p><strong>capacity_constraint</strong> is 0 if and only if all vehicles do not exceed their capacity.</p>
+
+<h2 id="objective-for-qubo-formulation">Objective for QUBO formulation</h2>
+
+<p>The total tour cost is computed from consecutive visited locations:</p>
+
+\[\begin{aligned}
+\text{objective} &amp;= \sum_{v=0}^{V-1}\sum_{t=0}^{N-1}\sum_{i=0}^{N-1}\sum_{j=0}^{N-1}c_{i,j}x_{v,t,i}x_{v,(t+1)\bmod N, j}
+\end{aligned}\]
+
+<p>If vehicle $v$ visits location $i$ at time step $t$ and then moves to location $j$ at time step $(t+1)\bmod N$, we have $x_{v,t,i}=x_{v,(t+1)\bmod N, j}=1$.
+In this case, the corresponding term contributes $c_{i,j}$ to the sum. Therefore, when all constraints are satisfied (so that each $(v,t)$ has exactly one active location), 
+$\text{objective}$ equals the total travel cost of all vehicles.</p>
+
+<p>Under the Euclidean metric, we have $c_{i,i}=0$ for all $i$, so staying at the same location does not add extra cost.</p>
+
+<h2 id="qubo-formulation-for-the-cvrp">QUBO formulation for the CVRP</h2>
+
+<p>Combining the objective and constraints, we obtain the QUBO:</p>
+
+\[\begin{aligned}
+f &amp;= \text{objective} + P\cdot (\text{row}\_\text{constraint}+\text{consecutive}\_\text{constraint}+\text{column}\_\text{constraint}+\text{capacity}\_\text{constraint}),
+\end{aligned}\]
+
+<p>where $P$ is a sufficiently large constant so that feasibility (constraints) is prioritized over cost minimization.</p>
+
+<h2 id="qubo-program">QUBO++ program</h2>
+<p>The following QUBO++ program finds a solution to the CVRP instance with $N=10$ locations and $V=3$ vehicles.
+The vector <code class="language-plaintext highlighter-rouge">locations</code> stores triples <code class="language-plaintext highlighter-rouge">(x,y,d)</code>, where  <code class="language-plaintext highlighter-rouge">(x,y)</code> is the 2D coordinate of the location and  <code class="language-plaintext highlighter-rouge">d</code> is the customer demand (with demand 0 for the depot).
+The vector <code class="language-plaintext highlighter-rouge">vehicle_capacity</code> stores the capacities of the $V=3$ vehicles.
+In this example, it is set to <code class="language-plaintext highlighter-rouge">{100, 200, 300}</code>, so vehicles 0, 1, and 2 have small, medium, and large capacities, respectively.</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#define MAXDEG 2
+#include</span> <span class="cpf">&lt;qbpp/qbpp.hpp&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;qbpp/easy_solver.hpp&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;qbpp/graph.hpp&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">tuple</span><span class="o">&lt;</span><span class="kt">float</span><span class="p">,</span> <span class="kt">float</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;&gt;</span> <span class="n">locations</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="p">{</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">0</span><span class="p">},</span>  <span class="p">{</span><span class="mi">247</span><span class="p">,</span> <span class="mi">296</span><span class="p">,</span> <span class="mi">44</span><span class="p">},</span> <span class="p">{</span><span class="mi">31</span><span class="p">,</span> <span class="mi">393</span><span class="p">,</span> <span class="mi">57</span><span class="p">},</span> <span class="p">{</span><span class="mi">96</span><span class="p">,</span> <span class="mi">398</span><span class="p">,</span> <span class="mi">94</span><span class="p">},</span>
+      <span class="p">{</span><span class="mi">391</span><span class="p">,</span> <span class="mi">230</span><span class="p">,</span> <span class="mi">91</span><span class="p">},</span> <span class="p">{</span><span class="mi">118</span><span class="p">,</span> <span class="mi">95</span><span class="p">,</span> <span class="mi">66</span><span class="p">},</span>  <span class="p">{</span><span class="mi">197</span><span class="p">,</span> <span class="mi">99</span><span class="p">,</span> <span class="mi">59</span><span class="p">},</span> <span class="p">{</span><span class="mi">224</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">},</span>
+      <span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">52</span><span class="p">},</span>    <span class="p">{</span><span class="mi">281</span><span class="p">,</span> <span class="mi">379</span><span class="p">,</span> <span class="mi">83</span><span class="p">}};</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">vehicle_capacity</span> <span class="o">=</span> <span class="p">{</span><span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">300</span><span class="p">};</span>
+
+  <span class="k">const</span> <span class="kt">size_t</span> <span class="n">N</span> <span class="o">=</span> <span class="n">locations</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+
+  <span class="k">const</span> <span class="kt">size_t</span> <span class="n">V</span> <span class="o">=</span> <span class="n">vehicle_capacity</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+
+  <span class="k">auto</span> <span class="n">a</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"a"</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">N</span><span class="p">);</span>
+
+  <span class="k">auto</span> <span class="n">row_constraint</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sum</span><span class="p">(</span><span class="n">qbpp</span><span class="o">::</span><span class="n">vector_sum</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">);</span>
+
+  <span class="k">auto</span> <span class="n">column_sum</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">expr</span><span class="p">(</span><span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">v</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">v</span> <span class="o">&lt;</span> <span class="n">V</span><span class="p">;</span> <span class="o">++</span><span class="n">v</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">t</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">t</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">column_sum</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">a</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="n">t</span><span class="p">][</span><span class="n">i</span><span class="p">];</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">auto</span> <span class="n">column_constraint</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sum</span><span class="p">(</span><span class="n">column_sum</span> <span class="o">==</span> <span class="mi">1</span><span class="p">);</span>
+
+  <span class="k">auto</span> <span class="n">consecutive_constraint</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">toExpr</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">v</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">v</span> <span class="o">&lt;</span> <span class="n">V</span><span class="p">;</span> <span class="o">++</span><span class="n">v</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">t</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="o">++</span><span class="n">t</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">consecutive_constraint</span> <span class="o">+=</span> <span class="n">a</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="n">t</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">a</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="n">t</span> <span class="o">+</span> <span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">auto</span> <span class="n">vehicle_load</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">expr</span><span class="p">(</span><span class="n">V</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">capacity_constraint</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">toExpr</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">v</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">v</span> <span class="o">&lt;</span> <span class="n">V</span><span class="p">;</span> <span class="o">++</span><span class="n">v</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">t</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">t</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">const</span> <span class="k">auto</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">locations</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="n">vehicle_load</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">+=</span> <span class="n">a</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="n">t</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">q</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">capacity_constraint</span> <span class="o">+=</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">vehicle_load</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">vehicle_capacity</span><span class="p">[</span><span class="n">v</span><span class="p">];</span>
+  <span class="p">}</span>
+
+  <span class="k">auto</span> <span class="n">objective</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">toExpr</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">v</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">v</span> <span class="o">&lt;</span> <span class="n">V</span><span class="p">;</span> <span class="o">++</span><span class="n">v</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">t</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">t</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">auto</span> <span class="n">next_t</span> <span class="o">=</span> <span class="p">(</span><span class="n">t</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">N</span><span class="p">;</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">const</span> <span class="k">auto</span> <span class="p">[</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">q1</span><span class="p">]</span> <span class="o">=</span> <span class="n">locations</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">j</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">const</span> <span class="k">auto</span> <span class="p">[</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">q2</span><span class="p">]</span> <span class="o">=</span> <span class="n">locations</span><span class="p">[</span><span class="n">j</span><span class="p">];</span>
+          <span class="kt">int</span> <span class="n">dist</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span>
+              <span class="n">std</span><span class="o">::</span><span class="n">sqrt</span><span class="p">((</span><span class="n">x1</span> <span class="o">-</span> <span class="n">x2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">x1</span> <span class="o">-</span> <span class="n">x2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">y1</span> <span class="o">-</span> <span class="n">y2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">y1</span> <span class="o">-</span> <span class="n">y2</span><span class="p">)));</span>
+          <span class="n">objective</span> <span class="o">+=</span> <span class="n">dist</span> <span class="o">*</span> <span class="n">a</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="n">t</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">a</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="n">next_t</span><span class="p">][</span><span class="n">j</span><span class="p">];</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">objective</span> <span class="o">+</span> <span class="mi">100000</span> <span class="o">*</span> <span class="p">(</span><span class="n">row_constraint</span> <span class="o">+</span> <span class="n">column_constraint</span> <span class="o">+</span>
+                                 <span class="n">consecutive_constraint</span> <span class="o">+</span> <span class="n">capacity_constraint</span><span class="p">);</span>
+
+  <span class="n">qbpp</span><span class="o">::</span><span class="n">MapList</span> <span class="n">ml</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">v</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">v</span> <span class="o">&lt;</span> <span class="n">V</span><span class="p">;</span> <span class="o">++</span><span class="n">v</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">ml</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">a</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">});</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">ml</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">a</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">],</span> <span class="mi">0</span><span class="p">});</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">auto</span> <span class="n">g</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">replace</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">ml</span><span class="p">);</span>
+  <span class="n">f</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+  <span class="n">g</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">easy_solver</span><span class="o">::</span><span class="n">EasySolver</span><span class="p">(</span><span class="n">g</span><span class="p">);</span>
+
+  <span class="k">auto</span> <span class="n">sol</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search</span><span class="p">();</span>
+
+  <span class="k">auto</span> <span class="n">full_sol</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">Sol</span><span class="p">(</span><span class="n">f</span><span class="p">).</span><span class="n">set</span><span class="p">(</span><span class="n">sol</span><span class="p">).</span><span class="n">set</span><span class="p">(</span><span class="n">ml</span><span class="p">);</span>
+
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"row_constraint = "</span> <span class="o">&lt;&lt;</span> <span class="n">row_constraint</span><span class="p">(</span><span class="n">full_sol</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"column_constraint = "</span> <span class="o">&lt;&lt;</span> <span class="n">column_constraint</span><span class="p">(</span><span class="n">full_sol</span><span class="p">)</span>
+            <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"consecutive_constraint = "</span> <span class="o">&lt;&lt;</span> <span class="n">consecutive_constraint</span><span class="p">(</span><span class="n">full_sol</span><span class="p">)</span>
+            <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"capacity_constraint = "</span> <span class="o">&lt;&lt;</span> <span class="n">capacity_constraint</span><span class="p">(</span><span class="n">full_sol</span><span class="p">)</span>
+            <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"objective = "</span> <span class="o">&lt;&lt;</span> <span class="n">objective</span><span class="p">(</span><span class="n">full_sol</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+  <span class="k">auto</span> <span class="n">tour</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">onehot_to_int</span><span class="p">(</span><span class="n">full_sol</span><span class="p">(</span><span class="n">a</span><span class="p">));</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">v</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">v</span> <span class="o">&lt;</span> <span class="n">V</span><span class="p">;</span> <span class="o">++</span><span class="n">v</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"Vehicle "</span> <span class="o">&lt;&lt;</span> <span class="n">v</span> <span class="o">&lt;&lt;</span> <span class="s">" : load = "</span> <span class="o">&lt;&lt;</span> <span class="n">vehicle_load</span><span class="p">[</span><span class="n">v</span><span class="p">](</span><span class="n">full_sol</span><span class="p">)</span>
+              <span class="o">&lt;&lt;</span> <span class="s">" / "</span> <span class="o">&lt;&lt;</span> <span class="n">vehicle_capacity</span><span class="p">[</span><span class="n">v</span><span class="p">];</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">" : 0 "</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">t</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">t</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">auto</span> <span class="n">node</span> <span class="o">=</span> <span class="n">tour</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="n">t</span><span class="p">];</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">node</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"-&gt; "</span> <span class="o">&lt;&lt;</span> <span class="n">node</span> <span class="o">&lt;&lt;</span> <span class="s">"("</span>
+                  <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">get</span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span><span class="p">(</span><span class="n">locations</span><span class="p">[</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">size_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">node</span><span class="p">)])</span> <span class="o">&lt;&lt;</span> <span class="s">") "</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"-&gt; 0"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="n">qbpp</span><span class="o">::</span><span class="n">graph</span><span class="o">::</span><span class="n">GraphDrawer</span> <span class="n">graph</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">locations</span><span class="p">.</span><span class="n">size</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">const</span> <span class="k">auto</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">locations</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+    <span class="n">graph</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">qbpp</span><span class="o">::</span><span class="n">graph</span><span class="o">::</span><span class="n">Node</span><span class="p">(</span><span class="n">i</span><span class="p">).</span><span class="n">position</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">).</span><span class="n">xlabel</span><span class="p">(</span>
+        <span class="n">q</span> <span class="o">!=</span> <span class="mi">0</span> <span class="o">?</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">q</span><span class="p">)</span> <span class="o">:</span> <span class="s">""</span><span class="p">));</span>
+  <span class="p">}</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">v</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">v</span> <span class="o">&lt;</span> <span class="n">V</span><span class="p">;</span> <span class="o">++</span><span class="n">v</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kt">int</span> <span class="n">from</span> <span class="o">=</span> <span class="n">tour</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="n">i</span><span class="p">];</span>
+      <span class="kt">int</span> <span class="n">to</span> <span class="o">=</span> <span class="n">tour</span><span class="p">[</span><span class="n">v</span><span class="p">][(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">N</span><span class="p">];</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">from</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">to</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">from</span> <span class="o">==</span> <span class="n">to</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
+      <span class="n">graph</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">qbpp</span><span class="o">::</span><span class="n">graph</span><span class="o">::</span><span class="n">Edge</span><span class="p">(</span><span class="n">from</span><span class="p">,</span> <span class="n">to</span><span class="p">).</span><span class="n">color</span><span class="p">(</span><span class="n">v</span> <span class="o">+</span> <span class="mi">1</span><span class="p">).</span><span class="n">penwidth</span><span class="p">(</span><span class="mf">2.0</span><span class="n">f</span><span class="p">));</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="n">graph</span><span class="p">.</span><span class="n">draw</span><span class="p">();</span>
+  <span class="n">graph</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="s">"cvrp.svg"</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>This program defines a $V\times N\times N$ array <code class="language-plaintext highlighter-rouge">a</code> of binary variables.
+It then defines the objective term <code class="language-plaintext highlighter-rouge">objective</code> and the constraint terms
+<code class="language-plaintext highlighter-rouge">row_constraint</code>, <code class="language-plaintext highlighter-rouge">column_constraint</code>. <code class="language-plaintext highlighter-rouge">consecutive_constraint</code> and <code class="language-plaintext highlighter-rouge">capacity_constraint</code>
+according to the formulation described above, and combines them into the penalized objective
+<code class="language-plaintext highlighter-rouge">f = objective + 100000 * ( row_constraint + column_constraint + consecutive_constraint + capacity_constraint )</code>.</p>
+
+<p>To fix the first visited location ($t=0$)
+of every vehicle to the depot (location 0), the program constructs a mapping <code class="language-plaintext highlighter-rouge">ml</code> and applies it to <code class="language-plaintext highlighter-rouge">f</code> using <code class="language-plaintext highlighter-rouge">qbpp::replace()</code>.
+The resulting expression is stored in <code class="language-plaintext highlighter-rouge">g</code>.
+The Easy Solver is then used to search for an assignment <code class="language-plaintext highlighter-rouge">sol</code> that minimizes <code class="language-plaintext highlighter-rouge">g</code>.</p>
+
+<p>Since <code class="language-plaintext highlighter-rouge">g</code> does not contain the variables fixed by <code class="language-plaintext highlighter-rouge">ml</code>, the program merges <code class="language-plaintext highlighter-rouge">sol</code> and <code class="language-plaintext highlighter-rouge">ml</code> into <code class="language-plaintext highlighter-rouge">full_sol</code>, which assigns values to all variables in <code class="language-plaintext highlighter-rouge">a</code>.
+Using <code class="language-plaintext highlighter-rouge">full_sol</code>, it prints the values of each <code class="language-plaintext highlighter-rouge">constraint</code> term and the <code class="language-plaintext highlighter-rouge">objective</code> value, and also prints the resulting tours of the $V=3$ vehicles.</p>
+
+<p>For example, the program prints the following results:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>row_constraint = 0
+column_constraint = 0
+consecutive_constraint = 0
+vehicle_constraint = 0
+objective = 2142
+Vehicle 0 : load = 91 / 100 : 0 -&gt; 4(91) -&gt; 0
+Vehicle 1 : load = 177 / 200 : 0 -&gt; 6(59) -&gt; 5(66) -&gt; 8(52) -&gt; 0
+Vehicle 2 : load = 288 / 300 : 0 -&gt; 7(10) -&gt; 9(83) -&gt; 1(44) -&gt; 3(94) -&gt; 2(57) -&gt; 0
+</code></pre></div></div>
+<p>Finally, the program visualizes the obtained solution as a graph and writes it to <code class="language-plaintext highlighter-rouge">cvrp.svg</code>:</p>
+
+<p align="center">
+  <img src="images/cvrp.svg" alt="A solution of the CVRP instance." width="80%" />
+</p>
+
+
+      <hr style="margin: 2rem 0 1rem 0;">
+<div style="font-size: 0.9em; color: #666;">
+  Last updated: 2026.03.05
+</div>
+    </main>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Easy Solver - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Minima テーマの main.css（ハイライト含む） -->
+  <link rel="stylesheet" href="/assets/main.css">
+
+  <!-- 自前のナビ用 CSS -->
+  <link rel="stylesheet" href="/assets/custom.css">
+
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+
+<body>
+
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ -->
+    <nav style="width:max-content; position:sticky; top:1rem; padding:0 1rem 0 0; border-right:1px solid #ddd;">
+      
+      <h2 style="margin-left:0;">QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/"><strong>Introduction</strong></a> </li>
+        <li><a href="/HUBO_QUBO"><strong>HUBO and QUBO</strong></a> </li>
+        <li><a href="/QUICK"><strong>Quick Start</strong></a>
+          <ul style="list-style:none; padding-left:1.2em; margin:0.2em 0 0.2em;">
+            <li><a href="/WSL"><strong>for Windows</strong></a></li>
+          </ul>
+        </li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/CASE_STUDIES"><strong>Case Studies</strong></a></li>
+        <li><a href="/DEMOS"><strong>Demos</strong></a></li>
+        <li><a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Release</strong></a></li>
+      </ul>
+      <hr style="margin:1rem 0;">
+      <ul class="nav-large" style="list-style:none; padding-left:0; margin-left:0;">
+        <li><a href="/python/"><strong>PyQUBO++ &rarr;</strong></a></li>
+      </ul>
+      
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="easy-solver-usage">Easy Solver Usage</h1>
+<p>The <strong>Easy Solver</strong> is a heuristic solver for QUBO/HUBO expressions.</p>
+
+<p>Solving a problem with the Easy Solver consists of the following three steps:</p>
+<ol>
+  <li>Create an Easy Solver (or <code class="language-plaintext highlighter-rouge">qbpp::easy_solver::EasySolver</code>) object.</li>
+  <li>Set search options by calling member functions of the solver object.</li>
+  <li>Search for solutions by calling the <code class="language-plaintext highlighter-rouge">search()</code> member function, which returns a solution (or <code class="language-plaintext highlighter-rouge">qbpp::Sol</code>) object.</li>
+</ol>
+
+<h2 id="creating-easy-solver-object">Creating Easy Solver object</h2>
+<p>To use the Easy Solver, an Easy Solver object (or <code class="language-plaintext highlighter-rouge">qbpp::easy_solver::EasySolver</code>) is constructed with an expression (or <code class="language-plaintext highlighter-rouge">qbpp::Expr</code>) object as follows:</p>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">qbpp::easy_solver::EasySolver(const qbpp::Expr&amp; f)</code></strong></li>
+</ul>
+
+<p>Here, <code class="language-plaintext highlighter-rouge">f</code> is the expression to be solved.
+It must be simplified as a binary expression in advance by calling the <code class="language-plaintext highlighter-rouge">simplify_as_binary()</code> function.
+This function converts the given expression <code class="language-plaintext highlighter-rouge">f</code> into an internal format that is used during the solution search.</p>
+
+<h2 id="setting-easy-solver-options">Setting Easy Solver Options</h2>
+<p>For a created Easy Solver object, the following member functions can be specified:</p>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">time_limit(double time)</code></strong>: 
+Specifies the time limit in seconds.
+The Easy Solver terminates the search when the elapsed time reaches the specified limit.
+The default value is 10.0 seconds.
+If the time limit is set to 0, the solver never terminates due to the time limit.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">target_energy(energy_t energy)</code></strong>
+Specifies the target energy.
+The Easy Solver terminates the search when a solution whose energy is
+less than or equal to the specified value is found.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">enable_default_callback()</code></strong>
+Enables the default callback function, which prints newly obtained best solutions.</li>
+</ul>
+
+<h2 id="searching-solutions">Searching Solutions</h2>
+<p>The Easy Solver searches for solutions by simply calling the <strong><code class="language-plaintext highlighter-rouge">search()</code></strong> member function of the Easy Solver object.</p>
+
+<h2 id="program-example">Program Example</h2>
+<p>The following program searches for a solution to the Low Autocorrelation Binary Sequences (LABS) problem using the Easy Solver:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#define MAXDEG 4
+#include</span> <span class="cpf">&lt;qbpp/qbpp.hpp&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;qbpp/easy_solver.hpp&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kt">size_t</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">,</span> <span class="n">size</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">expr</span><span class="p">();</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">d</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">d</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">;</span> <span class="o">++</span><span class="n">d</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">auto</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">expr</span><span class="p">();</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span> <span class="o">-</span> <span class="n">d</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">temp</span> <span class="o">+=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="n">d</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">f</span> <span class="o">+=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sqr</span><span class="p">(</span><span class="n">temp</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">f</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">easy_solver</span><span class="o">::</span><span class="n">EasySolver</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+  <span class="n">solver</span><span class="p">.</span><span class="n">time_limit</span><span class="p">(</span><span class="mf">5.0</span><span class="p">);</span>
+  <span class="n">solver</span><span class="p">.</span><span class="n">target_energy</span><span class="p">(</span><span class="mi">900</span><span class="p">);</span>
+  <span class="n">solver</span><span class="p">.</span><span class="n">enable_default_callback</span><span class="p">();</span>
+  <span class="k">auto</span> <span class="n">sol</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search</span><span class="p">();</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">.</span><span class="n">energy</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">": "</span><span class="p">;</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">val</span> <span class="o">:</span> <span class="n">sol</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">val</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span> <span class="s">"-"</span> <span class="o">:</span> <span class="s">"+"</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>In this example, the following options are set:</p>
+<ul>
+  <li>a 5.0-second time limit,</li>
+  <li>a target energy of 900, and</li>
+  <li>the default callback is enabled.</li>
+</ul>
+
+<p>Therefore, the solver terminates either when the elapsed time reaches 5.0 seconds
+or when a solution with energy 900 or less is found.</p>
+
+<p>For example, this program produces the following output:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>TTS = 0.000s Energy = 300162 thread = 0 Random
+TTS = 0.000s Energy = 273350 thread = 0 Random(neighbor)
+TTS = 0.000s Energy = 248706 thread = 0 Greedy(neighbor)
+TTS = 0.000s Energy = 226086 thread = 0 Greedy(neighbor)
+TTS = 0.000s Energy = 205274 thread = 0 Greedy(neighbor)
+TTS = 0.000s Energy = 186142 thread = 0 Greedy(neighbor)
+TTS = 0.000s Energy = 168442 thread = 0 Greedy(neighbor)
+TTS = 0.000s Energy = 152134 thread = 0 Greedy(neighbor)
+TTS = 0.000s Energy = 137162 thread = 0 Greedy(neighbor)
+TTS = 0.000s Energy = 123374 thread = 0 Greedy(neighbor)
+TTS = 0.001s Energy = 110650 thread = 0 Greedy(neighbor)
+TTS = 0.001s Energy = 98990 thread = 0 Greedy(neighbor)
+TTS = 0.001s Energy = 88346 thread = 0 Greedy(neighbor)
+TTS = 0.001s Energy = 78678 thread = 0 Greedy(neighbor)
+TTS = 0.001s Energy = 69802 thread = 0 Greedy(neighbor)
+TTS = 0.001s Energy = 61798 thread = 0 Greedy(neighbor)
+TTS = 0.001s Energy = 54626 thread = 0 Greedy(neighbor)
+TTS = 0.001s Energy = 47982 thread = 0 Greedy(neighbor)
+TTS = 0.001s Energy = 42034 thread = 0 Greedy(neighbor)
+TTS = 0.001s Energy = 36598 thread = 0 Greedy(neighbor)
+TTS = 0.001s Energy = 31778 thread = 0 Greedy(neighbor)
+TTS = 0.001s Energy = 27446 thread = 0 Greedy(neighbor)
+TTS = 0.001s Energy = 23658 thread = 0 Greedy(neighbor)
+TTS = 0.002s Energy = 20286 thread = 0 Greedy(neighbor)
+TTS = 0.002s Energy = 17250 thread = 0 Greedy(neighbor)
+TTS = 0.002s Energy = 14614 thread = 0 Greedy(neighbor)
+TTS = 0.002s Energy = 12306 thread = 0 Greedy(neighbor)
+TTS = 0.002s Energy = 10350 thread = 0 Greedy(neighbor)
+TTS = 0.002s Energy = 8682 thread = 0 Greedy(neighbor)
+TTS = 0.002s Energy = 7214 thread = 0 Greedy(neighbor)
+TTS = 0.002s Energy = 5994 thread = 0 Greedy(neighbor)
+TTS = 0.002s Energy = 4990 thread = 0 Greedy(neighbor)
+TTS = 0.002s Energy = 4130 thread = 0 Greedy(neighbor)
+TTS = 0.002s Energy = 3478 thread = 0 Greedy(neighbor)
+TTS = 0.003s Energy = 2882 thread = 0 Greedy(neighbor)
+TTS = 0.003s Energy = 2414 thread = 0 Greedy(neighbor)
+TTS = 0.003s Energy = 2122 thread = 0 Greedy(neighbor)
+TTS = 0.003s Energy = 1822 thread = 0 Greedy(neighbor)
+TTS = 0.003s Energy = 1706 thread = 0 Greedy(neighbor)
+TTS = 0.003s Energy = 1574 thread = 0 Greedy(neighbor)
+TTS = 0.003s Energy = 1442 thread = 0 Greedy(neighbor)
+TTS = 0.003s Energy = 1350 thread = 0 Greedy(neighbor)
+TTS = 0.007s Energy = 1306 thread = 7 MoveTo
+TTS = 0.008s Energy = 1274 thread = 12 Greedy
+TTS = 0.008s Energy = 1262 thread = 12 Greedy(neighbor)
+TTS = 0.008s Energy = 1202 thread = 12 Greedy(neighbor)
+TTS = 0.016s Energy = 1170 thread = 20 PosMin
+TTS = 0.018s Energy = 1166 thread = 23 PosMin
+TTS = 0.018s Energy = 994 thread = 23 PosMin(neighbor)
+TTS = 0.066s Energy = 986 thread = 7 Greedy
+TTS = 0.066s Energy = 982 thread = 7 Greedy(neighbor)
+TTS = 0.184s Energy = 954 thread = 10 PosMin
+TTS = 0.371s Energy = 942 thread = 12 PosMin
+TTS = 0.912s Energy = 930 thread = 4 PosMin
+TTS = 0.913s Energy = 902 thread = 4 PosMin(neighbor)
+TTS = 2.691s Energy = 898 thread = 15 PosMin
+898: ++-++-----+--+--++++++---++-+-+--++-------++-++-+-+-+-+-++-++++-++-+++++-+-+--++++++---+++--+++---++
+</code></pre></div></div>
+
+<h2 id="advanced-usage">Advanced Usage</h2>
+
+<h3 id="keeping-multiple-top-k-solutions">Keeping multiple top-k solutions</h3>
+<p>The Easy Solver can store <strong>multiple top-k solutions</strong> found during the search.
+To enable this feature, call the following member function:</p>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">enable_topk_sols(size_t topk_count)</code></strong>: Stores up to topk_count best solutions.</li>
+</ul>
+
+<p>Once this function is enabled, the solution object returned by <code class="language-plaintext highlighter-rouge">search()</code> contains the stored top-k solutions.
+For the returned object sols, you can access the stored solutions using either indices or iterators:</p>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">sols[i]</code></strong>: Returns the <code class="language-plaintext highlighter-rouge">i</code>-th <code class="language-plaintext highlighter-rouge">qbpp::Sol</code> object.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">size()</code></strong>: Returns the number of stored solutions.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">begin()</code></strong>, <strong><code class="language-plaintext highlighter-rouge">end()</code></strong>, <strong><code class="language-plaintext highlighter-rouge">cbegin()</code></strong>, <strong><code class="language-plaintext highlighter-rouge">cend()</code></strong>: Iterators that allow you to access each solution in turn using a range-based for loop.</li>
+</ul>
+
+<p>The following program solves the Low Autocorrelation Binary Sequence (LABS) problem using the Easy Solver.
+Since <strong><code class="language-plaintext highlighter-rouge">enable_topk_sols(20)</code></strong> is called, the solver keeps <strong>up to 20 top-k solutions</strong>.
+The program prints each stored solution using a range-based for loop.</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#define MAXDEG 4
+#include</span> <span class="cpf">&lt;qbpp/qbpp.hpp&gt;</span><span class="cp">
+#include</span> <span class="cpf">&lt;qbpp/easy_solver.hpp&gt;</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kt">size_t</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">x</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"x"</span><span class="p">,</span> <span class="n">size</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">expr</span><span class="p">();</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">d</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">d</span> <span class="o">&lt;</span> <span class="n">size</span><span class="p">;</span> <span class="o">++</span><span class="n">d</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">auto</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">expr</span><span class="p">();</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">size</span> <span class="o">-</span> <span class="n">d</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">temp</span> <span class="o">+=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="n">d</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">f</span> <span class="o">+=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">sqr</span><span class="p">(</span><span class="n">temp</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">f</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">easy_solver</span><span class="o">::</span><span class="n">EasySolver</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+  <span class="n">solver</span><span class="p">.</span><span class="n">time_limit</span><span class="p">(</span><span class="mf">5.0</span><span class="p">);</span>
+  <span class="n">solver</span><span class="p">.</span><span class="n">enable_topk_sols</span><span class="p">(</span><span class="mi">20</span><span class="p">);</span>
+  
+  <span class="k">auto</span> <span class="n">sols</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search</span><span class="p">();</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">sol</span> <span class="o">:</span> <span class="n">sols</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span><span class="p">.</span><span class="n">energy</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="s">": "</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="n">val</span> <span class="o">:</span> <span class="n">sol</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="p">{</span>
+      <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">val</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span> <span class="s">"-"</span> <span class="o">:</span> <span class="s">"+"</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>This program desiplays the following output:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>26: -----+-+++-+--+++--+
+26: +--+++--+-+++-+-----
+26: -+-+----+----++-++--
+26: --++-++----+----+-+-
+26: -++---++-+---+-+++++
+34: ---+++++-+++-++-+-++
+34: +-+-+++++----++--++-
+34: -+++++---+---+-+--+-
+34: +++-----+---+--+-+--
+34: --++--++-+--+-+-----
+34: -+--+-+---+---+++++-
+34: ---+++-+-+----+--+--
+38: -++-++-+-+---++-----
+38: --++++--+-+--+---+--
+38: -+-+---++------++-++
+38: ++++-++-+--+++-+---+
+38: ----+--+-++---+-+++-
+42: -+++++++--++-+-+-++-
+42: -+-+----+++++-++--++
+42: ++-----+---+--+-+--+
+</code></pre></div></div>
+
+<h3 id="keeping-multiple-best-energy-solutions">Keeping multiple best-energy solutions</h3>
+<p>The Easy Solver can store multiple solutions that share the best (minimum) energy found during the search.
+To enable this feature, call the following member function:</p>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">enable_best_energy_sols(size_t best_sol_count)</code></strong>:
+Stores up to <code class="language-plaintext highlighter-rouge">best_sol_count</code> solutions with the best energy.
+If the argument is omitted, the number of stored solutions is unlimited.</li>
+</ul>
+
+<p>The usage is the same as that of <code class="language-plaintext highlighter-rouge">enable_topk_sols()</code>.
+Therefore, to enable this feature in a QUBO++ program above, you can replace
+<code class="language-plaintext highlighter-rouge">enable_topk_sols(20)</code> with <code class="language-plaintext highlighter-rouge">enable_best_energy_sols(20)</code> as follows:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">solver</span><span class="p">.</span><span class="n">enable_best_energy_sols</span><span class="p">();</span>
+</code></pre></div></div>
+<p>With this option enabled, the solver stores only the solutions whose energy is equal to the best energy found.
+The resulting program produces the following solutions, all of which have the best energy value of 26:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>26: +++++-+---+-++---++-
+26: ++--+--++++-++++-+-+
+26: -+-+----+----++-++--
+26: +-+-++++-++++--+--++
+26: -++---++-+---+-+++++
+26: --++-++----+----+-+-
+</code></pre></div></div>
+
+      <hr style="margin: 2rem 0 1rem 0;">
+<div style="font-size: 0.9em; color: #666;">
+  Last updated: 2026.03.05
+</div>
+    </main>
+  </div>
+</body>
+
+</html>

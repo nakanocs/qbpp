@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Comparison Operators - QUBO++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Minima テーマの main.css（ハイライト含む） -->
+  <link rel="stylesheet" href="/assets/main.css">
+
+  <!-- 自前のナビ用 CSS -->
+  <link rel="stylesheet" href="/assets/custom.css">
+
+  <!-- ここに MathJax 関連をまとめて入れる -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+
+
+<body>
+
+  <div style="display:flex; align-items:flex-start; gap:2rem; padding:1rem;">
+
+    <!-- 左ナビ（全ページ共通） -->
+    <nav style="min-width:220px; position:sticky; top:1rem; padding-right:1rem; border-right:1px solid #ddd;">
+      <h2>QUBO++<br> Information</h2>
+      <ul class="nav-large" style="list-style:none; padding-left:0;">
+        <li><a href="/"><strong>Introduction</strong></a> </li>
+        <li><a href="/HUBO_QUBO"><strong>HUBO and QUBO</strong></a> </li>
+        <li><a href="/QUICK"><strong>Quick Start</strong></a> </li>
+        <li><a href="/WSL"><strong>Quick Start for Windows</strong></a> </li>
+        <li><a href="/DOCUMENT"><strong>Document</strong></a></li>
+        <li><a href="/CASE_STUDIES"><strong>Case Studies</strong></a></li>
+        <li><a href="https://github.com/nakanocs/qbpp/releases/latest"><strong>Latest Release</strong></a></li>
+      </ul>
+    </nav>
+
+    <!-- 右側：ページごとの本文 -->
+    <main style="flex:1;min-width:0;">
+      <h1 id="comparison-operators">Comparison Operators</h1>
+<p>QUBO++ supports two types of operators for creating constraints:</p>
+
+<ul>
+  <li><strong>Equality operator</strong>: $f=n$, where $f$ is an expression and $n$ is an integer.</li>
+  <li><strong>Range operator</strong>: $l\leq f\leq u$, where $f$ is an expression and 
+$l$ and $u$ ($l\leq u$) are integers.</li>
+</ul>
+
+<p>These operators return an expression that attains <strong>the minimum value of 0 if and only if the corresponding constraints are satisfied</strong>.</p>
+
+<h2 id="equality-operator">Equality operator</h2>
+<p>The equality operator $f=n$ creates the following expression:</p>
+
+\[(f−n)^2\]
+
+<p>This expression attains the minimum value of 0 if and only if the equality $f=n$ is satisfied.</p>
+
+<p>The following QUBO++ program searches for all solutions satisfying
+$a+2b+3c=3$ using the Exhaustive Solver:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
+#include</span> <span class="cpf">"qbpp_exhaustive_solver.hpp"</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">a</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"a"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">b</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"b"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">c</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"c"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">b</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">c</span> <span class="o">==</span> <span class="mi">3</span><span class="p">;</span>
+  <span class="n">f</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"*f = "</span> <span class="o">&lt;&lt;</span> <span class="o">*</span><span class="n">f</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">exhaustive_solver</span><span class="o">::</span><span class="n">ExhaustiveSolver</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">sols</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search_optimal_solutions</span><span class="p">();</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">sol</span> <span class="o">:</span> <span class="n">sols</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"a = "</span> <span class="o">&lt;&lt;</span> <span class="n">a</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">", b = "</span> <span class="o">&lt;&lt;</span> <span class="n">b</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">", c = "</span> <span class="o">&lt;&lt;</span> <span class="n">c</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span>
+              <span class="o">&lt;&lt;</span> <span class="s">", f = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">", *f = "</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">)(</span><span class="n">sol</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>In this program, <code class="language-plaintext highlighter-rouge">f</code> internally holds two qbpp::Expr objects:</p>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">f</code></strong>: $(a+2b+3c−3)^2$, which attains the minimum value of 0 if the equality $a+2b+3c=3$ is satisfied.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">*f</code></strong>: the left-hand side of the equality, $a+2b+3c$.</li>
+</ul>
+
+<p>Using the Exhaustive Solver object created for <code class="language-plaintext highlighter-rouge">f</code>, all optimal solutions are stored in <strong><code class="language-plaintext highlighter-rouge">sols</code></strong>.
+By iterating over <code class="language-plaintext highlighter-rouge">sols</code>, all solutions and the values of <code class="language-plaintext highlighter-rouge">f</code> and <code class="language-plaintext highlighter-rouge">*f</code> are printed as follows:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>f = 9 -5*a -8*b -9*c +4*a*b +6*a*c +12*b*c
+*f = a +2*b +3*c
+a = 0, b = 0, c = 1, f = 0, *f = 3
+a = 1, b = 1, c = 0, f = 0, *f = 3
+</code></pre></div></div>
+<p>These results confirm that two optimal solutions attain <code class="language-plaintext highlighter-rouge">f = 0</code> and satisfy <code class="language-plaintext highlighter-rouge">*f = 3</code>.</p>
+
+<h2 id="notes-on-supported-equality-forms">Notes on Supported Equality Forms</h2>
+<p>QUBO++ supports the equality operator only in the following form:</p>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">expression == integer</code></strong>.</li>
+</ul>
+
+<p>The following forms are not supported:</p>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">integer == expression</code></strong></li>
+  <li><strong><code class="language-plaintext highlighter-rouge">expression1 == expression2</code></strong></li>
+</ul>
+
+<p>Instead of <code class="language-plaintext highlighter-rouge">expression1 == expression2</code>, you can rewrite the constraint as:</p>
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">expression1 - expression2 == 0</code></strong></li>
+</ul>
+
+<p>which is fully supported.</p>
+
+<h2 id="range-operator">Range operator</h2>
+<p>The range operator of the form $l\leq f \leq u$ ($l\leq u$) creates an expression that attains the minimum value of 0 if and only if the constraint is satisfied.</p>
+
+<p>We consider the following cases depending on the values of $l$ and $u$.</p>
+<ul>
+  <li><strong>Case 1</strong>: <strong>$u=l$</strong></li>
+  <li><strong>Case 2</strong>: <strong>$u=l+1$</strong></li>
+  <li><strong>Case 3</strong>: <strong>$u=l+2$</strong></li>
+  <li><strong>Case 4</strong>: <strong>$u\geq l+3$</strong>.</li>
+</ul>
+
+<h3 id="case-1-ul">Case 1: $u=l$</h3>
+<p>If $u=l$, the range constraint reduces to the equality constraint $f=l$,
+which can be implemented directly using the equality operator.</p>
+
+<h3 id="case-2-ul1">Case 2: $u=l+1$</h3>
+<p>If $u=l+1$, the following expression is created:</p>
+
+\[(f-l)(f-u)\]
+
+<p>Since there is no integer strictly between $l$ and $u$, this expression attains the minimum value of 0 if and only if 
+$f=l$ or $f=u$.</p>
+
+<h3 id="case-3-ul2">Case 3: $u=l+2$</h3>
+<p>We introduce an <strong>auxiliary binary variable</strong> $a \in \lbrace 0,1\rbrace$
+and use the following expression:</p>
+
+\[\begin{aligned}
+(f-l-a)(f-l-(a+1))
+\end{aligned}\]
+
+<p>This expression evaluates as follows for for $f=l$, $l+1$, and $l+2$</p>
+
+\[\begin{aligned}
+(f-l-a)(f-l-(a+1)) &amp;= (-a)(-(a+1)) &amp;&amp; \text{if } f=l \\
+                   &amp;= (1-a)(-a) &amp;&amp; \text{if } f=l+1 \\
+                   &amp;=(2-a)(1-a)  &amp;&amp; \text{if } f=l+2
+\end{aligned}\]
+
+<p>In all cases, the minimum value 0 is attainable by an appropriate choice of $a$.
+Therefore, the expression takes the minimum value of 0 if $l\leq f\leq u$ is satisfied.</p>
+
+<p>Let $g = f-l-a$.
+Then We have,</p>
+
+\[\begin{aligned}
+(f-l-a)(f-l-(a+1)) &amp;= g(g-1)
+\end{aligned}\]
+
+<p>which is always positive if $g\leq -1$ or $g\geq 2$.
+Hence, the expression attains the minimum value of 0 if and only if  $l\leq f\leq u$ is satisfied.</p>
+
+<h3 id="case-4-ugeq-l3">Case 4: $u\geq l+3$</h3>
+<p>We introduce an auxiliary integer variable $a$ that takes integer values in the range $[l,u−1]$.
+Such an integer variable can be defined using multiple binary variables, as described in <a href="INTEGER">Integer Variables and Solving Simultaneous Equations</a>.</p>
+
+<p>The expression for this case is:</p>
+
+\[\begin{aligned}
+(f-a)(f-(a+1))
+\end{aligned}\]
+
+<p>Similarly to Case 3, we can show that this expression is always positive if $f$ is not in $[l,u]$.</p>
+
+<p>Suppose that $f$ takes an integer value in the range  $[l,u]$.
+If we choose $a=f$, then</p>
+
+\[\begin{aligned}
+f-a &amp;= 0 &amp; {\rm if\,\,} f\in [l,u-1]\\
+f-(a+1) &amp;= 0&amp; {\rm if\,\,} f\in [l+1,u]
+\end{aligned}\]
+
+<p>Thus, either $f−a=0$ or $f−(a+1)=0$ holds for any $f\in[l,u]$.
+Therefore, $(f−a)(f−(a+1))$ attains the minimum value of 0
+if and only if $l\leq f\leq u$.</p>
+
+<h3 id="reducing-the-number-of-binary-variables">Reducing the number of binary variables</h3>
+<p>In <a href="INTEGER">Integer Variables and Solving Simultaneous Equations</a>,
+an integer variable $a\in [l,u]$ is represented using 
+$n$ binary variables $x_0, x_1, \ldots, x_{n-1}$ as follows:</p>
+
+\[\begin{aligned}
+a &amp; = l+2^0x_0+2^1x_1+\cdots +2^{n-2}x_{n-2}+dx_{n-1}
+\end{aligned}\]
+
+<p>This expression can represent all integers from $l$ to $l+2^{n-1}+d-1$.
+Thus, we can choose $n$ and $d$ such that</p>
+
+\[\begin{aligned}
+u-1&amp;=l+2^{n-1}+d-1.
+\end{aligned}\]
+
+<p>For Case 4, QUBO++ instead uses the following linear expression with $n-1$ binary variables $x_1, \ldots, x_{n-1}$:</p>
+
+\[\begin{aligned}
+a &amp;= l+2^1x_1+\cdots +2^{n-2}x_{n-2}+dx_{n-1}
+\end{aligned}\]
+
+<p>This expression represents integers from $l$ to $l+2^{n-1}+d-2$.
+Accordingly, we select $n$ and $d$ so that</p>
+
+\[\begin{aligned}
+u-1&amp;=l+2^{n-1}+d-2.
+\end{aligned}\]
+
+<p>We call such an integer variable $a$ a <strong>unit-gap integer variable</strong>.
+Although some values in $[l,u]$ cannot be taken by $a$,
+for any $k\in[l,u]$ that cannot be represented, 
+$k−1$ can be represented.
+Therefore, either $a$ or $a+1$ can take any value in the range 
+$[l,u]$, which is sufficient for enforcing the range constraint.</p>
+
+<h3 id="qubo-program-for-the-four-cases">QUBO++ program for the four cases</h3>
+<p>The following program demonstrates how the four cases are implemented in QUBO++:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">toExpr</span><span class="p">(</span><span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"f"</span><span class="p">));</span>
+  <span class="k">auto</span> <span class="n">f1</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">f</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">f2</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">f</span> <span class="o">&lt;=</span> <span class="mi">2</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">f3</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">f</span> <span class="o">&lt;=</span> <span class="mi">3</span><span class="p">;</span>
+  <span class="k">auto</span> <span class="n">f4</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">&lt;=</span> <span class="n">f</span> <span class="o">&lt;=</span> <span class="mi">5</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f1 = "</span> <span class="o">&lt;&lt;</span> <span class="n">f1</span><span class="p">.</span><span class="n">simplify</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f2 = "</span> <span class="o">&lt;&lt;</span> <span class="n">f2</span><span class="p">.</span><span class="n">simplify</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f3 = "</span> <span class="o">&lt;&lt;</span> <span class="n">f3</span><span class="p">.</span><span class="n">simplify</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"f4 = "</span> <span class="o">&lt;&lt;</span> <span class="n">f4</span><span class="p">.</span><span class="n">simplify</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>This program produces the following output:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>f1 = 1 -2*f +f*f
+f2 = 2 -3*f +f*f
+f3 = 2 -3*f +3*{0} +f*f -2*f*{0} +{0}*{0}
+f4 = 2 -3*f +6*{1}[0] +3*{1}[1] +f*f -4*f*{1}[0] -2*f*{1}[1] +4*{1}[0]*{1}[0] +4*{1}[0]*{1}[1] +{1}[1]*{1}[1]
+</code></pre></div></div>
+<p>These outputs correspond to the following expressions:</p>
+
+\[\begin{aligned}
+f_1 &amp;= (f-1)^2\\
+f_2 &amp;= (f-1)(f-2)\\
+f_3 &amp;= (f-x_0)(f-(x_0+1))\\
+f_4 &amp;= (f-(2x_{1,0}+x_{1,1}+1))(f-(2x_{1,0}+x_{1,1}+2))
+\end{aligned}\]
+
+<h3 id="qubo-program-using-the-range-operator">QUBO++ program using the range operator</h3>
+<p>The following program demonstrates the use of the range operator in QUBO++:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
+#include</span> <span class="cpf">"qbpp_exhaustive_solver.hpp"</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">a</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"a"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">b</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"b"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">c</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"c"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">&lt;=</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">a</span> <span class="o">+</span> <span class="mi">9</span> <span class="o">*</span> <span class="n">b</span> <span class="o">+</span> <span class="mi">15</span> <span class="o">*</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="mi">14</span><span class="p">;</span>
+  <span class="n">f</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">exhaustive_solver</span><span class="o">::</span><span class="n">ExhaustiveSolver</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">sols</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search_optimal_solutions</span><span class="p">();</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">sol</span> <span class="o">:</span> <span class="n">sols</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"a = "</span> <span class="o">&lt;&lt;</span> <span class="n">a</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">", b = "</span> <span class="o">&lt;&lt;</span> <span class="n">b</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">", c = "</span> <span class="o">&lt;&lt;</span> <span class="n">c</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span>
+              <span class="o">&lt;&lt;</span> <span class="s">", f = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">", *f = "</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">)(</span><span class="n">sol</span><span class="p">)</span>
+              <span class="o">&lt;&lt;</span> <span class="s">", sol = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>For three binary variables $a$, $b$, and $c$,
+this program searches for solutions satisfying the constraint</p>
+
+\[\begin{aligned}
+5\leq 4a+9b+15c \leq 15
+\end{aligned}\]
+
+<p>This program produces the following output:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>a = 0, b = 1, c = 0, f = 0, *f = 9, sol = 0:{{a,0},{b,1},{c,0},{{0}[0],0},{{0}[1],1},{{0}[2],0}}
+a = 0, b = 1, c = 0, f = 0, *f = 9, sol = 0:{{a,0},{b,1},{c,0},{{0}[0],1},{{0}[1],0},{{0}[2],1}}
+a = 1, b = 1, c = 0, f = 0, *f = 13, sol = 0:{{a,1},{b,1},{c,0},{{0}[0],1},{{0}[1],1},{{0}[2],1}}
+</code></pre></div></div>
+
+<h2 id="lower-and-upper-bound-operators">Lower and upper bound operators</h2>
+<p>QUBO++ does not directly support the following <strong>one-sided bound operators</strong>:</p>
+<ul>
+  <li><strong>Lower-bound operator</strong>: $l\leq f$</li>
+  <li><strong>Upper-bound operator</strong>: $f\leq u$</li>
+</ul>
+
+<p>Instead, QUBO++ provides a symbolic representation of <strong>infinity</strong> ($\infty$)
+and these constraints are implemented using <strong>the range operator</strong> as follows:</p>
+<ul>
+  <li><strong>Lower-bound operator</strong>: $l\leq f\leq +\infty$</li>
+  <li><strong>Upper-bound operator</strong>: $-\infty \leq f\leq u$</li>
+</ul>
+
+<p>Since the range operator internally introduces auxiliary variables,
+true infinite values cannot be represented explicitly.
+Therefore, QUBO++ estimates <strong>finite maximum and minimum values</strong> of the expression 
+$f$ and substitutes them for $+\infty$ and $-\infty$, respectively.</p>
+
+<p>For example, consider the expression</p>
+
+\[\begin{aligned}
+f=4a + 9 b + 11 c
+\end{aligned}\]
+
+<p>where $a$, $b$, and $c$ are binary variables.
+The minimum and maximum possible values of $f$ are 0 and 24, respectively.
+Thus, QUBO++ uses 0 and 24 as substitutes for $-\infty$ and $+\infty$
+when constructing the corresponding range constraints.</p>
+
+<blockquote>
+  <p><strong>NOTE</strong>
+QUBO++ intentionally requires both lower and upper bounds to be specified in inequality constraints.
+This avoids ambiguity between <strong>MIP-style interpretations</strong> (e.g., 
+$f\leq u$ meaning $0\leq f\leq u$) and <strong>QUBO-style interpretations</strong> (e.g., $f\leq u$ meaning $-\infty\leq f\leq u$),
+which could otherwise lead to subtle modeling errors.</p>
+</blockquote>
+
+<h3 id="qubo-program-for-lower-and-upper-bound-operators">QUBO++ program for lower and upper bound operators</h3>
+<p>In QUBO++, an infinite value is represented by <strong><code class="language-plaintext highlighter-rouge">qbpp::inf</code></strong>.</p>
+
+<p>The following program demonstrates <strong>the lower-bound operator</strong>:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include</span> <span class="cpf">"qbpp.hpp"</span><span class="cp">
+#include</span> <span class="cpf">"qbpp_exhaustive_solver.hpp"</span><span class="cp">
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">a</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"a"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">b</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"b"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">c</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"c"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="mi">14</span> <span class="o">&lt;=</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">a</span> <span class="o">+</span> <span class="mi">9</span> <span class="o">*</span> <span class="n">b</span> <span class="o">+</span> <span class="mi">11</span> <span class="o">*</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="o">+</span><span class="n">qbpp</span><span class="o">::</span><span class="n">inf</span><span class="p">;</span>
+  <span class="n">f</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">exhaustive_solver</span><span class="o">::</span><span class="n">ExhaustiveSolver</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">sols</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search_optimal_solutions</span><span class="p">();</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">sol</span> <span class="o">:</span> <span class="n">sols</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"a = "</span> <span class="o">&lt;&lt;</span> <span class="n">a</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">", b = "</span> <span class="o">&lt;&lt;</span> <span class="n">b</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">", c = "</span> <span class="o">&lt;&lt;</span> <span class="n">c</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span>
+              <span class="o">&lt;&lt;</span> <span class="s">", f = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">", *f = "</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">)(</span><span class="n">sol</span><span class="p">)</span>
+              <span class="o">&lt;&lt;</span> <span class="s">", sol = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>In this program, <strong><code class="language-plaintext highlighter-rouge">+qbpp::inf</code></strong> represents a positive infinite value,
+which is automatically replaced by 24.</p>
+
+<p>This program produces the following output:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>a = 0, b = 1, c = 1, f = 0, *f = 20, sol = 0:{{a,0},{b,1},{c,1},{{0}[0],1},{{0}[1],0},{{0}[2],1}}
+a = 0, b = 1, c = 1, f = 0, *f = 20, sol = 0:{{a,0},{b,1},{c,1},{{0}[0],1},{{0}[1],1},{{0}[2],0}}
+a = 1, b = 0, c = 1, f = 0, *f = 15, sol = 0:{{a,1},{b,0},{c,1},{{0}[0],0},{{0}[1],0},{{0}[2],0}}
+a = 1, b = 1, c = 1, f = 0, *f = 24, sol = 0:{{a,1},{b,1},{c,1},{{0}[0],1},{{0}[1],1},{{0}[2],1}}
+</code></pre></div></div>
+
+<p>The following program demonstrates <strong>the upper-bound operator</strong>:</p>
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">auto</span> <span class="n">a</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"a"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">b</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"b"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">c</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">var</span><span class="p">(</span><span class="s">"c"</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">f</span> <span class="o">=</span> <span class="o">-</span><span class="n">qbpp</span><span class="o">::</span><span class="n">inf</span> <span class="o">&lt;=</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">a</span> <span class="o">+</span> <span class="mi">9</span> <span class="o">*</span> <span class="n">b</span> <span class="o">+</span> <span class="mi">11</span> <span class="o">*</span> <span class="n">c</span> <span class="o">&lt;=</span> <span class="mi">14</span><span class="p">;</span>
+  <span class="n">f</span><span class="p">.</span><span class="n">simplify_as_binary</span><span class="p">();</span>
+  <span class="k">auto</span> <span class="n">solver</span> <span class="o">=</span> <span class="n">qbpp</span><span class="o">::</span><span class="n">exhaustive_solver</span><span class="o">::</span><span class="n">ExhaustiveSolver</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+  <span class="k">auto</span> <span class="n">sols</span> <span class="o">=</span> <span class="n">solver</span><span class="p">.</span><span class="n">search_optimal_solutions</span><span class="p">();</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">sol</span> <span class="o">:</span> <span class="n">sols</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"a = "</span> <span class="o">&lt;&lt;</span> <span class="n">a</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">", b = "</span> <span class="o">&lt;&lt;</span> <span class="n">b</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">", c = "</span> <span class="o">&lt;&lt;</span> <span class="n">c</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span>
+              <span class="o">&lt;&lt;</span> <span class="s">", f = "</span> <span class="o">&lt;&lt;</span> <span class="n">f</span><span class="p">(</span><span class="n">sol</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="s">", *f = "</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="o">*</span><span class="n">f</span><span class="p">)(</span><span class="n">sol</span><span class="p">)</span>
+              <span class="o">&lt;&lt;</span> <span class="s">", sol = "</span> <span class="o">&lt;&lt;</span> <span class="n">sol</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>In this program, <strong><code class="language-plaintext highlighter-rouge">-qbpp::inf</code></strong> represents a negative infinite value,
+which is automatically replaced by 0.</p>
+
+<p>This program produces the following output:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>a = 0, b = 0, c = 0, f = 0, *f = 0, sol = 0:{{a,0},{b,0},{c,0},{{0}[0],0},{{0}[1],0},{{0}[2],0}}
+a = 0, b = 0, c = 1, f = 0, *f = 11, sol = 0:{{a,0},{b,0},{c,1},{{0}[0],0},{{0}[1],1},{{0}[2],1}}
+a = 0, b = 1, c = 0, f = 0, *f = 9, sol = 0:{{a,0},{b,1},{c,0},{{0}[0],1},{{0}[1],0},{{0}[2],1}}
+a = 1, b = 0, c = 0, f = 0, *f = 4, sol = 0:{{a,1},{b,0},{c,0},{{0}[0],0},{{0}[1],1},{{0}[2],0}}
+a = 1, b = 1, c = 0, f = 0, *f = 13, sol = 0:{{a,1},{b,1},{c,0},{{0}[0],1},{{0}[1],1},{{0}[2],1}}
+</code></pre></div></div>
+
+      <hr style="margin: 2rem 0 1rem 0;">
+<div style="font-size: 0.9em; color: #666;">
+  Last updated: 2026.02.04
+</div>
+    </main>
+  </div>
+</body>
+
+</html>
