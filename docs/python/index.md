@@ -1,58 +1,50 @@
 ---
 layout: default
-title: "PyQBPP"
+title: "PyQBPP (Python)"
 nav_order: 50
 has_children: true
 ---
-# PyQBPP: Python Interface for QUBO++
+# PyQBPP Document
+This documentation for PyQBPP (Python binding of QUBO++) is currently under development.
+Some pages may contain incomplete or provisional information.
 
-PyQBPP is a Python wrapper for the QUBO++ library,
-allowing you to model and solve combinatorial optimization problems
-using QUBO/HUBO formulations directly from Python.
+## Basics
+This section provides a step-by-step introduction to PyQBPP.
+By reading the pages in order, you will learn how to define variables and expressions,
+model optimization problems, and solve them using PyQBPP.
+After completing this tutorial, you should be able to use PyQBPP for most typical applications.
 
-> **Note:** PyQBPP is currently in alpha.
-> The API may change without notice, and there may be bugs.
-> Please report any issues to the author.
+1. [Defining Variables and Creating Expressions](VARIABLE)
+2. [Solving Expressions](SOLVE)
+3. [Vector of Variables and Vector Functions](VECTOR)
+4. [Solving Partitioning Problem Using Vector of Variables](PARTITION)
+5. [Permutation Matrix and Solving Assignment Problem](PERMUTATION)
+6. [Integer Variables and Solving Simultaneous Equations](INTEGER)
+7. [Factorization Through HUBO Expression](FACTORIZATION)
+8. [Range Constraints and Solving Integer Linear Programming](RANGE)
 
-## Features
-- Symbolic construction of QUBO/HUBO expressions in Python
-- Access to QUBO++ solvers (Easy Solver, Exhaustive Solver, ABS3)
-- Familiar Python syntax with the full power of the QUBO++ engine
+## Topics
+This section provides topic-wise explanations of selected features of PyQBPP.
+Each page focuses on a specific topic and offers deeper insights into design decisions,
+usage patterns, and, where appropriate, internal implementations.
 
-For installation instructions, see [**Installation**](INSTALL).
+1. [Data Types of Variables and Expressions](VAREXPR)
+2. [Basic Operators and Functions](OPERATOR)
+3. [Basic Operators and Functions for Vectors](OPVECTOR)
+4. [Multi-dimensional Variables and Expressions](MULTIDIM)
+5. [Comparison Operators](COMPARISON)
+6. [Expression Classes](EXPRESSION)
+7. [Evaluating Expressions](EVAL)
+8. [Replace Functions](REPLACE)
+9. [Sum Functions for Multi-dimensional Arrays](SUM)
+10. [Easy Solver Usage](EASYSOLVER)
+11. [Exhaustive Solver Usage](EXHAUSTIVE)
+12. [ABS3 Solver Usage](ABS3)
 
-## Quick Example
+> **NOTE**
+> The Gurobi Solver is not available in the Python binding.
+> For Gurobi usage, please refer to the [QUBO++ (C++) documentation](../GUROBI).
 
-The following program finds an 8×8 binary matrix where each row and each column contains exactly one 1 (a one-hot constraint).
-
-```python
-from pyqbpp import EasySolver, var, sum, vector_sum
-
-n = 8
-x = var("x", n, n)
-
-# Each row and column has exactly one 1
-f = sum(vector_sum(x, 0) == 1) + sum(vector_sum(x, 1) == 1)
-
-f.simplify_as_binary()
-
-solver = EasySolver(f)
-solver.target_energy(0)
-sol = solver.search()
-
-for i in range(n):
-    print([sol(x[i][j]) for j in range(n)])
-```
-
-Example output:
-```
-[0, 0, 0, 0, 0, 1, 0, 0]
-[1, 0, 0, 0, 0, 0, 0, 0]
-[0, 0, 0, 1, 0, 0, 0, 0]
-[0, 0, 1, 0, 0, 0, 0, 0]
-[0, 0, 0, 0, 0, 0, 1, 0]
-[0, 1, 0, 0, 0, 0, 0, 0]
-[0, 0, 0, 0, 1, 0, 0, 0]
-[0, 0, 0, 0, 0, 0, 0, 1]
-```
-
+## Quick References
+1. [Variables and Expressions](QR_VARIABLE)
+2. [Operators and Functions](QR_OPERATION)
