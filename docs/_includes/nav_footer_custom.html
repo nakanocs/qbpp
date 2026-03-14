@@ -13,7 +13,7 @@
 <script>
 if (!window._qbppNavInit) {
   window._qbppNavInit = true;
-  document.addEventListener('DOMContentLoaded', function() {
+  function doInit() {
     // Find the visible site-nav (desktop or mobile)
     var navEls = document.querySelectorAll('#site-nav, .site-nav');
     var cppItems = [];
@@ -77,6 +77,25 @@ if (!window._qbppNavInit) {
     } else {
       showMode('cpp');
     }
-  });
+  }
+  // Retry until nav items are found (just-the-docs.js may build nav dynamically)
+  function tryInit() {
+    var navEls = document.querySelectorAll('#site-nav, .site-nav');
+    var found = false;
+    for (var n = 0; n < navEls.length; n++) {
+      var ul = navEls[n].querySelector('ul.nav-list');
+      if (ul && ul.children.length > 0) { found = true; break; }
+    }
+    if (found) {
+      doInit();
+    } else {
+      setTimeout(tryInit, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() { setTimeout(tryInit, 50); });
+  } else {
+    setTimeout(tryInit, 50);
+  }
 }
 </script>
