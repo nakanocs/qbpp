@@ -19,7 +19,7 @@ using QUBO/HUBO formulations directly from Python.
 - Access to QUBO++ solvers (Easy Solver, Exhaustive Solver, ABS3)
 - Familiar Python syntax with the full power of the QUBO++ engine
 
-For installation instructions, see [**Installation**](../INSTALL).
+For installation instructions, see [**Installation**](INSTALL).
 
 ## Quick Example
 
