@@ -2,7 +2,7 @@
 layout: default
 title: "Exhaustive Solver"
 nav_order: 20
-parent: "PyQBPP"
+parent: "PyQBPP (Python)"
 ---
 # Exhaustive Solver Usage
 The **Exhaustive Solver** is a complete-search solver for QUBO/HUBO expressions.

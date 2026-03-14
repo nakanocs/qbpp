@@ -2,7 +2,7 @@
 layout: default
 title: "Expression Classes"
 nav_order: 15
-parent: "PyQBPP"
+parent: "PyQBPP (Python)"
 ---
 # Expression Classes
 The most important feature of PyQBPP is its ability to create expressions for solving combinatorial optimization problems.

@@ -2,7 +2,7 @@
 layout: default
 title: "Replace Functions"
 nav_order: 17
-parent: "PyQBPP"
+parent: "PyQBPP (Python)"
 ---
 # Replace Functions
 

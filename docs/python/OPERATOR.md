@@ -2,7 +2,7 @@
 layout: default
 title: "Operators and Functions"
 nav_order: 11
-parent: "PyQBPP"
+parent: "PyQBPP (Python)"
 ---
 # Basic Operators and Functions
 

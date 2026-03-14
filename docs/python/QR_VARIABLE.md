@@ -2,7 +2,7 @@
 layout: default
 title: "QR: Variables"
 nav_order: 30
-parent: "PyQBPP"
+parent: "PyQBPP (Python)"
 ---
 # Quick Reference: Variables and Expressions (PyQBPP)
 

@@ -2,7 +2,7 @@
 layout: default
 title: "Variables and Expressions"
 nav_order: 2
-parent: "PyQBPP"
+parent: "PyQBPP (Python)"
 ---
 # Defining Variables and Creating Expressions
 

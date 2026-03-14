@@ -2,7 +2,7 @@
 layout: default
 title: "Vectors"
 nav_order: 4
-parent: "PyQBPP"
+parent: "PyQBPP (Python)"
 ---
 # Vector of variables and vector functions
 

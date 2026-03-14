@@ -2,7 +2,7 @@
 layout: default
 title: "ABS3 Solver"
 nav_order: 21
-parent: "PyQBPP"
+parent: "PyQBPP (Python)"
 ---
 # ABS3 Solver Usage
 Solving an expression `f` using the ABS3 Solver involves the following three steps:

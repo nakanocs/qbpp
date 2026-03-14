@@ -2,7 +2,7 @@
 layout: default
 title: "Evaluating Expressions"
 nav_order: 16
-parent: "PyQBPP"
+parent: "PyQBPP (Python)"
 ---
 # Evaluating Expressions
 

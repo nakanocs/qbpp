@@ -2,7 +2,7 @@
 layout: default
 title: "Solving Expressions"
 nav_order: 3
-parent: "PyQBPP"
+parent: "PyQBPP (Python)"
 ---
 # Solving Expressions using Easy Solver and Exhaustive Solver
 

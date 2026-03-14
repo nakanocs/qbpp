@@ -2,7 +2,7 @@
 layout: default
 title: "Vector Operations"
 nav_order: 12
-parent: "PyQBPP"
+parent: "PyQBPP (Python)"
 ---
 # Basic Operators and Functions for Vectors
 Operators and functions for vectors operate element-wise.

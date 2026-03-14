@@ -2,7 +2,7 @@
 layout: default
 title: "Comparison Operators"
 nav_order: 14
-parent: "PyQBPP"
+parent: "PyQBPP (Python)"
 ---
 # Comparison Operators
 PyQBPP supports two types of operators for creating constraints:

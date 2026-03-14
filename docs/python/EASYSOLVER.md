@@ -2,7 +2,7 @@
 layout: default
 title: "Easy Solver"
 nav_order: 19
-parent: "PyQBPP"
+parent: "PyQBPP (Python)"
 ---
 # Easy Solver Usage
 The **Easy Solver** is a heuristic solver for QUBO/HUBO expressions.

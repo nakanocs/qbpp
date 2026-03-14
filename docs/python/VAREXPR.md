@@ -2,7 +2,7 @@
 layout: default
 title: "Data Types"
 nav_order: 10
-parent: "PyQBPP"
+parent: "PyQBPP (Python)"
 ---
 # Variable and Expression Classes
 
