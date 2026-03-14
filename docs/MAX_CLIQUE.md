@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Maximum Clique"
 nav_order: 12
-parent: "Case Studies"
 ---
 # Maximum Clique  Problem
 

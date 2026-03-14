@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "LABS Problem"
 nav_order: 32
-parent: "Case Studies"
 ---
 # Low-Autocorrelation Binary Sequence (LABS) Problem
 

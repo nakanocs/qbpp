@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Permutation Matrix"
 nav_order: 6
-parent: "PyQBPP (Python)"
 ---
 # Permutation matrix generation
 

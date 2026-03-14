@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Factorization Through HUBO Expression"
 nav_order: 7
-parent: "QUBO++ (C++)"
 ---
 
 # Factorization Through HUBO Expression

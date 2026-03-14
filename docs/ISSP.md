@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Interval Subset Sum"
 nav_order: 35
-parent: "Case Studies"
 ---
 # Interval Subset Sum Problem (ISSP)
 The **Interval Subset Sum Problem (ISSP)** is a generalization of the **Subset Sum Problem**.

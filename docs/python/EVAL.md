@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Evaluating Expressions"
 nav_order: 16
-parent: "PyQBPP (Python)"
 ---
 # Evaluating Expressions
 

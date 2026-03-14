@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Partitioning Problem"
 nav_order: 5
-parent: "PyQBPP (Python)"
 ---
 # Solving Partitioning Problem Using Vector of variables
 

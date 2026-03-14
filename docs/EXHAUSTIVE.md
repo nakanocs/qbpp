@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Exhaustive Solver"
 nav_order: 20
-parent: "QUBO++ (C++)"
 ---
 # Exhaustive Solver Usage
 The **Exhaustive Solver** is a complete-search solver for QUBO/HUBO expressions.

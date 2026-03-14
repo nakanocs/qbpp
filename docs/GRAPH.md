@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Graph Library"
 nav_order: 8
-parent: "Case Studies"
 ---
 # QUBO++ Simple Graph Drawing Library and Solving the Maximum Independent Set (MIS) Problem
 

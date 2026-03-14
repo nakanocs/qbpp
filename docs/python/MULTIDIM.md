@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Multi-dimensional Variables"
 nav_order: 13
-parent: "PyQBPP (Python)"
 ---
 # Multi-dimensional Variables and Expressions
 

@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Square Root"
 nav_order: 3
-parent: "Case Studies"
 ---
 # Square Root
 

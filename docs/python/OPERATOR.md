@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Operators and Functions"
 nav_order: 11
-parent: "PyQBPP (Python)"
 ---
 # Basic Operators and Functions
 

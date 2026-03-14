@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Comparison Operators"
 nav_order: 14
-parent: "QUBO++ (C++)"
 ---
 # Comparison Operators
 QUBO++ supports two types of operators for creating constraints:

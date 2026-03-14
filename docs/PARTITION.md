@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Partitioning Problem"
 nav_order: 4
-parent: "QUBO++ (C++)"
 ---
 # Solving Partitioning Problem Using Vector of variables
 

@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Edge Coloring"
 nav_order: 19
-parent: "Case Studies"
 ---
 # Graph Edge Coloring Problem
 Given an undirected graph $G=(V,E)$, the **graph edge coloring problem** aims to assign a color to each edge so that no two edges of the same color share a common endpoint.

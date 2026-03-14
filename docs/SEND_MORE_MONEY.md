@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "SEND+MORE=MONEY"
 nav_order: 42
-parent: "Case Studies"
 ---
 # Math Puzzle: SEND MORE MONEY
 

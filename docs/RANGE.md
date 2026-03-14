@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Range Constraints"
 nav_order: 8
-parent: "QUBO++ (C++)"
 ---
 # Range Constraints and Solving Integer Linear Programming
 

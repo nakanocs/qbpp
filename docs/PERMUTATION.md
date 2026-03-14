@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Permutation Matrix"
 nav_order: 5
-parent: "QUBO++ (C++)"
 ---
 # Permutation matrix generation
 

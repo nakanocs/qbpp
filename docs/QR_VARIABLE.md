@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Reference Variables"
 nav_order: 30
-parent: "QUBO++ (C++)"
 ---
 
 # Quick Reference: Variables and Expressions

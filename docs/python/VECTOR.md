@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Vectors"
 nav_order: 4
-parent: "PyQBPP (Python)"
 ---
 # Vector of variables and vector functions
 

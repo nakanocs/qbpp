@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "3-Digit Math"
 nav_order: 6
-parent: "Case Studies"
 ---
 # 3-Digit Math Problem
 

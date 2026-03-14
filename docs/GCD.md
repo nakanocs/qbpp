@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Greatest Common Divisor"
 nav_order: 4
-parent: "Case Studies"
 ---
 # Greatest Common Divisor (GCD)
 Let $P$ and $Q$ be two positive integers.

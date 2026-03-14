@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Pythagorean Triples"
 nav_order: 1
-parent: "Case Studies"
 ---
 # Pythagorean Triples
 

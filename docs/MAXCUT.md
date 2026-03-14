@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Max-Cut"
 nav_order: 10
-parent: "Case Studies"
 ---
 # Max-Cut Problem
 

@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Data Types"
 nav_order: 10
-parent: "PyQBPP (Python)"
 ---
 # Variable and Expression Classes
 

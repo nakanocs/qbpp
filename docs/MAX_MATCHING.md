@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Maximum Matching"
 nav_order: 11
-parent: "Case Studies"
 ---
 # Maximum Matching Problem
 

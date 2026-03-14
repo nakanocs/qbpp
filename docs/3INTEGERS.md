@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Find Three Integers"
 nav_order: 5
-parent: "Case Studies"
 ---
 # Math Problem: Find Three Intgers
 

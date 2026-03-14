@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Set Cover"
 nav_order: 16
-parent: "Case Studies"
 ---
 # Minimum Set Cover Problem
 Let $U$ be a universe set, and let ${\cal 𝐹}=\{S_0, S_1, \ldots S_{m-1}\}$ be a family of subsets of $U$.

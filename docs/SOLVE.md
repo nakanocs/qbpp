@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Solving Expressions"
 nav_order: 2
-parent: "QUBO++ (C++)"
 ---
 # Solving Expressions using Easy Solver and Exhaustive Solver
 

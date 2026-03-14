@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Bar Cutting"
 nav_order: 33
-parent: "Case Studies"
 ---
 # Bar Cutting Problem
 Suppose that we are given $M$ identical bars of fixed length $L$, and a set of $N$ orders specified by pairs $(l_j,c_j)$

@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Knapsack"
 nav_order: 30
-parent: "Case Studies"
 ---
 # Knapsack Problem
 Given a set of items, each with a weight and a value, and a knapsack with a limited weight capacity, **the knapsack problem** aims to select a subset of items that maximizes the total value while keeping the total weight within the capacity.

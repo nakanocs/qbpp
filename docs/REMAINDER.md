@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Remainder Problem"
 nav_order: 2
-parent: "Case Studies"
 ---
 # Remainder Problem
 The following problem can be solved using QUBO++.

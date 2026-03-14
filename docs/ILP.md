@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Integer Linear Programming"
 nav_order: 34
-parent: "Case Studies"
 ---
 # Integer Linear Programming (ILP)
 **Integer Linear Programming (ILP)** can be converted into a QUBO expression using QUBO++.

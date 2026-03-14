@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Factorization"
 nav_order: 8
-parent: "PyQBPP (Python)"
 ---
 # Factorization Through HUBO Expression
 

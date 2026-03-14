@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Min-Max Matching"
 nav_order: 17
-parent: "Case Studies"
 ---
 # Minimum Maximal Matching Problem
 

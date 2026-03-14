@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Variables and Expressions"
 nav_order: 1
-parent: "QUBO++ (C++)"
 ---
 # Defining Variables and Expressions
 

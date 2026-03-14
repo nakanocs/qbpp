@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Multiplier Simulation"
 nav_order: 51
-parent: "Case Studies"
 ---
 # Multiplier Simulation and Factorization
 Multiplication of two integers can be performed using additions.

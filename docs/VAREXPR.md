@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Variable and Expression Classes"
 nav_order: 10
-parent: "QUBO++ (C++)"
 ---
 
 

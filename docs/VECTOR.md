@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Vectors"
 nav_order: 3
-parent: "QUBO++ (C++)"
 ---
 # Vector of variables and vector functions
 

@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Range Constraints"
 nav_order: 9
-parent: "PyQBPP (Python)"
 ---
 # Range Constraints and Solving Integer Linear Programming
 

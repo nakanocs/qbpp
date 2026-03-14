@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Integer Variables"
 nav_order: 7
-parent: "PyQBPP (Python)"
 ---
 # Integer Variables and Solving Simultaneous Equations
 

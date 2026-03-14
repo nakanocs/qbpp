@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Replace Functions"
 nav_order: 17
-parent: "QUBO++ (C++)"
 ---
 # Replace functions
 

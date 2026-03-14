@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Vector Operations"
 nav_order: 12
-parent: "QUBO++ (C++)"
 ---
 # Basic Operators and Functions for Vectors
 Basically, operators and functions for vectors operate element-wise.

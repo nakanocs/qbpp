@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Vertex Cover"
 nav_order: 13
-parent: "Case Studies"
 ---
 # Minimum Vertex Cover Problem
 A **vertex cover** of an undirected graph $G=(V,E)$ is a subset 

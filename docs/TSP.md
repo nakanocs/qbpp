@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "TSP"
 nav_order: 21
-parent: "Case Studies"
 ---
 # Traveling Salesman Problem
 The Traveling Salesman Problem (TSP) asks for the shortest tour that visits every node exactly once and returns to the start.

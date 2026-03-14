@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Graph Coloring"
 nav_order: 18
-parent: "Case Studies"
 ---
 # Graph Coloring Problem
 Given an undirected graph $G=(V,E)$, the **graph coloring problem** aims to assign a color to each node so that adjacent nodes receive different colors.

@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Subgraph Isomorphism"
 nav_order: 15
-parent: "Case Studies"
 ---
 # Subgraph Isomorphism Problem
 Given two undirected graphs $G_H=(V_H,E_H)$ (the host graph) and 

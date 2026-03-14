@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Solving Expressions"
 nav_order: 3
-parent: "PyQBPP (Python)"
 ---
 # Solving Expressions using Easy Solver and Exhaustive Solver
 

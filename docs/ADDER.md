@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Adder Simulation"
 nav_order: 50
-parent: "Case Studies"
 ---
 # Adder Simulation
 

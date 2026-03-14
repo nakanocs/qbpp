@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "QR: Operations"
 nav_order: 31
-parent: "PyQBPP (Python)"
 ---
 # Quick Reference: Operators and Functions for Expressions (PyQBPP)
 

@@ -1,8 +1,8 @@
 ---
 layout: default
+nav_exclude: true
 title: "Expression Classes"
 nav_order: 15
-parent: "QUBO++ (C++)"
 ---
 # Expression Classes
 The most important feature of QUBO++ is its ability to create expressions for solving combinatorial optimization problems.
