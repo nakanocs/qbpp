@@ -36,7 +36,10 @@
             if (txt === shared[s]) { isShared = true; break; }
           }
           if (isShared) continue;
-          var href = a.href || window.location.href;
+          var rawHref = a.getAttribute('href');
+          var resolvedHref = a.href;
+          var href = resolvedHref || window.location.href;
+          console.log('[nav-v3] txt="' + txt + '" raw=' + rawHref + ' resolved="' + resolvedHref + '" final="' + href + '"');
           if (txt === 'PyQBPP (Python)' || href.indexOf('/python/') !== -1) {
             pythonItems.push(lis[i]);
           } else {
