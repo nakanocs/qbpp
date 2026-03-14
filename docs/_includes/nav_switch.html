@@ -99,14 +99,15 @@
     } else {
       showMode('cpp');
     }
-    // Language toggle (EN/JA) — inject next to search box
-    var searchForm = document.querySelector('.search-input-wrap') || document.querySelector('.search');
+    // Language toggle (EN/JA) — inject into main-header next to search
+    var mainHeader = document.getElementById('main-header');
     var btnEn, btnJa;
-    if (searchForm) {
-      var wrapper = searchForm.parentNode;
-      wrapper.style.display = 'flex';
-      wrapper.style.alignItems = 'center';
-      wrapper.style.gap = '0.4rem';
+    if (mainHeader) {
+      mainHeader.style.display = 'flex';
+      mainHeader.style.alignItems = 'center';
+      mainHeader.style.gap = '0.4rem';
+      var searchDiv = mainHeader.querySelector('.search');
+      if (searchDiv) searchDiv.style.flex = '1';
       var langDiv = document.createElement('div');
       langDiv.style.cssText = 'display:flex; gap:0.2rem; flex-shrink:0;';
       var mkBtn = function(label) {
@@ -119,7 +120,7 @@
       btnJa = mkBtn('JA');
       langDiv.appendChild(btnEn);
       langDiv.appendChild(btnJa);
-      wrapper.appendChild(langDiv);
+      mainHeader.appendChild(langDiv);
     }
     var showLang = function(lang) {
       var enEls = document.querySelectorAll('.main-content .lang-en');
