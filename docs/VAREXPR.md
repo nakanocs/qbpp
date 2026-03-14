@@ -134,13 +134,27 @@ They can be changed either by compiler options or by using `#define` directives 
 
 The following data types are supported:
 - **Standard integer types**:
-**`int8_t`**, **`int16_t`**, **`int32_t`**, and **`int64_t`**
+**`int16_t`**, **`int32_t`**, and **`int64_t`**
 
-- **Boost.Multiprecision integer types**:
-**`qbpp::int128_t`**, **`qbpp::int256_t`**, **`qbpp::int512_t`**, **`qbpp::int1024_t`**, and **`qbpp::cpp_int`**
+- **Extended integer types**:
+**`qbpp::int128_t`** (128-bit integer) and **`qbpp::cpp_int`** (arbitrary precision)
 
 The type **`qbpp::cpp_int`** represents an integer with an arbitrary number of digits.
 Constant values of this type can be specified using string literals.
+
+The solvers (EasySolver, ABS3, ExhaustiveSolver) support the following `(COEFF_TYPE, ENERGY_TYPE)` combinations:
+
+| COEFF_TYPE | ENERGY_TYPE | Variant |
+|---|---|---|
+| `int16_t` | `int32_t` | c16e32 |
+| `int32_t` | `int32_t` | c32e32 |
+| `int32_t` | `int64_t` | c32e64 (default) |
+| `int64_t` | `int64_t` | c64e64 |
+| `int64_t` | `qbpp::int128_t` | c64e128 |
+| `qbpp::int128_t` | `qbpp::int128_t` | c128e128 |
+| `cpp_int` | `cpp_int` | cppint |
+
+Using an unsupported combination will result in a compile-time error.
 
 For example, the following program creates a `qbpp::Expr` object with very large coefficient and constant terms:
 ```cpp

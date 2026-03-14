@@ -1,98 +1,76 @@
 <hr style="margin: 1rem 0;">
 <div style="padding: 0 1rem 1rem; text-align: center;">
-  <button id="switch-cpp" onclick="switchNav('cpp')"
+  <button id="switch-cpp"
     style="font-weight:bold; padding:0.4rem 0.8rem; cursor:pointer; border:1px solid #ccc; border-radius:4px; margin-right:0.3rem;">
     QUBO++ (C++)
   </button>
-  <button id="switch-python" onclick="switchNav('python')"
+  <button id="switch-python"
     style="font-weight:bold; padding:0.4rem 0.8rem; cursor:pointer; border:1px solid #ccc; border-radius:4px;">
     PyQBPP
   </button>
 </div>
 
 <script>
-(function() {
-  function getTopLevelItems() {
-    // Find all ul.nav-list inside .site-nav
-    var siteNav = document.querySelector('nav.site-nav');
-    if (!siteNav) return { cpp: [], python: [] };
+document.addEventListener('DOMContentLoaded', function() {
+  var siteNav = document.getElementById('site-nav');
+  if (!siteNav) return;
 
-    // Get all ul.nav-list and find the one whose direct children are top-level pages
-    var uls = siteNav.querySelectorAll('ul.nav-list');
-    var topUl = null;
-    for (var i = 0; i < uls.length; i++) {
-      // The top-level ul contains the "Home" link
-      var links = uls[i].querySelectorAll('li > a.nav-list-link');
-      for (var j = 0; j < links.length; j++) {
-        if (links[j].textContent.trim() === 'Home') {
-          topUl = uls[i];
-          break;
-        }
-      }
-      if (topUl) break;
-    }
-    if (!topUl) return { cpp: [], python: [] };
+  // Collect top-level li elements
+  var firstUl = siteNav.querySelector('ul.nav-list');
+  if (!firstUl) return;
 
-    var cpp = [], python = [];
-    var children = topUl.children;
-    for (var i = 0; i < children.length; i++) {
-      var li = children[i];
-      if (li.tagName !== 'LI') continue;
-      // Get the first nav-list-link in this li
-      var link = li.querySelector('a.nav-list-link');
-      if (!link) continue;
-      var text = link.textContent.trim();
-      if (text === 'PyQBPP') {
-        python.push(li);
-      } else {
-        cpp.push(li);
-      }
-    }
-    return { cpp: cpp, python: python };
-  }
-
-  function setButtonStyle(activeId, inactiveId) {
-    var active = document.getElementById(activeId);
-    var inactive = document.getElementById(inactiveId);
-    if (active) {
-      active.style.background = '#7253ed';
-      active.style.color = '#fff';
-      active.style.borderColor = '#7253ed';
-    }
-    if (inactive) {
-      inactive.style.background = '';
-      inactive.style.color = '';
-      inactive.style.borderColor = '#ccc';
-    }
-  }
-
-  window.switchNav = function(mode) {
-    var nav = getTopLevelItems();
-    if (nav.cpp.length === 0 && nav.python.length === 0) return;
-    var i;
-    if (mode === 'python') {
-      for (i = 0; i < nav.cpp.length; i++) nav.cpp[i].style.display = 'none';
-      for (i = 0; i < nav.python.length; i++) nav.python[i].style.display = '';
-      setButtonStyle('switch-python', 'switch-cpp');
+  var cppItems = [];
+  var pythonItems = [];
+  var lis = firstUl.children;
+  for (var i = 0; i < lis.length; i++) {
+    if (lis[i].tagName !== 'LI') continue;
+    var a = lis[i].querySelector('a');
+    if (a && a.textContent.trim() === 'PyQBPP') {
+      pythonItems.push(lis[i]);
     } else {
-      for (i = 0; i < nav.python.length; i++) nav.python[i].style.display = 'none';
-      for (i = 0; i < nav.cpp.length; i++) nav.cpp[i].style.display = '';
-      setButtonStyle('switch-cpp', 'switch-python');
+      cppItems.push(lis[i]);
     }
-    try { localStorage.setItem('qbpp-nav-mode', mode); } catch(e) {}
-  };
-
-  function init() {
-    var saved = null;
-    try { saved = localStorage.getItem('qbpp-nav-mode'); } catch(e) {}
-    var onPython = window.location.pathname.indexOf('/python') !== -1;
-    switchNav(onPython ? 'python' : (saved || 'cpp'));
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
+  var btnCpp = document.getElementById('switch-cpp');
+  var btnPython = document.getElementById('switch-python');
+
+  function showCpp() {
+    for (var i = 0; i < cppItems.length; i++) cppItems[i].style.display = '';
+    for (var i = 0; i < pythonItems.length; i++) pythonItems[i].style.display = 'none';
+    btnCpp.style.background = '#7253ed';
+    btnCpp.style.color = '#fff';
+    btnCpp.style.borderColor = '#7253ed';
+    btnPython.style.background = '';
+    btnPython.style.color = '';
+    btnPython.style.borderColor = '#ccc';
+    try { localStorage.setItem('qbpp-nav-mode', 'cpp'); } catch(e) {}
+  }
+
+  function showPython() {
+    for (var i = 0; i < pythonItems.length; i++) pythonItems[i].style.display = '';
+    for (var i = 0; i < cppItems.length; i++) cppItems[i].style.display = 'none';
+    btnPython.style.background = '#7253ed';
+    btnPython.style.color = '#fff';
+    btnPython.style.borderColor = '#7253ed';
+    btnCpp.style.background = '';
+    btnCpp.style.color = '';
+    btnCpp.style.borderColor = '#ccc';
+    try { localStorage.setItem('qbpp-nav-mode', 'python'); } catch(e) {}
+  }
+
+  btnCpp.addEventListener('click', showCpp);
+  btnPython.addEventListener('click', showPython);
+
+  // Auto-detect mode
+  var saved = null;
+  try { saved = localStorage.getItem('qbpp-nav-mode'); } catch(e) {}
+  if (window.location.pathname.indexOf('/python') !== -1) {
+    showPython();
+  } else if (saved === 'python') {
+    showPython();
   } else {
-    init();
+    showCpp();
   }
-})();
+});
 </script>

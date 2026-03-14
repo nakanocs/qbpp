@@ -46,19 +46,22 @@ If neither `MAXDEG` nor `BASEDEG` is defined, the behavior is the same as `BASED
 You can define these macros via compiler options (e.g., `-DMAXDEG=2`) or in your source code (e.g., `#define MAXDEG 2`) before `#include <qbpp/qbpp.hpp>`.
 
 ## Available integer data types
-- **Standard integer types**:  
-`int8_t`, `int16_t`, `int32_t`, `int64_t`
+- **Standard integer types**:
+`int16_t`, `int32_t`, `int64_t`
 
-- **Multiprecision integer types** (implemented using the Boost.Multiprecision library):  
-`qbpp::int128_t`, `qbpp::int256_t`, `qbpp::int512_t`, `qbpp::int1024_t`, `qbpp::cpp_int`
+- **Extended integer types**:
+`qbpp::int128_t` (128-bit integer), `qbpp::cpp_int` (arbitrary precision)
 
-- **`qbpp::cpp_int`**:  
-An integer type with unlimited precision.
+The solvers support the following `(COEFF_TYPE, ENERGY_TYPE)` combinations:
+`(int16_t, int32_t)`, `(int32_t, int32_t)`, `(int32_t, int64_t)`,
+`(int64_t, int64_t)`, `(int64_t, qbpp::int128_t)`, `(qbpp::int128_t, qbpp::int128_t)`,
+`(cpp_int, cpp_int)`.
+Using an unsupported combination will result in a compile-time error.
 
-> **WARNING**  
-> To maximize performance, QUBO++ does not check for arithmetic overflow.  
+> **WARNING**
+> To maximize performance, QUBO++ does not check for arithmetic overflow.
 > During development and testing, it is recommended to use wider bit widths for
-> `coeff_t` and `energy_t`.  
+> `coeff_t` and `energy_t`.
 > If the required bit widths are unclear, use `qbpp::cpp_int` to ensure correctness,
 > and switch to fixed-width integer types after validation.
 
