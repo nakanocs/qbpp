@@ -2,7 +2,7 @@ title: "QUBO++"
 description: "QUBO++ is a C++ library and Python package (PyQBPP) for constructing and solving QUBO/HUBO combinatorial optimization problems."
 
 markdown: kramdown
-remote_theme: just-the-docs/just-the-docs
+theme: just-the-docs
 
 highlighter: rouge
 
@@ -14,7 +14,6 @@ kramdown:
 
 safe: false
 plugins:
-  - jekyll-remote-theme
   - jekyll-last-modified-at
   - jekyll-seo-tag
   - jekyll-sitemap
