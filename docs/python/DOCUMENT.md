@@ -8,12 +8,6 @@ parent: "PyQBPP"
 This documentation for PyQBPP (Python binding of QUBO++) is currently under development.
 Some pages may contain incomplete or provisional information.
 
-## Installation
-PyQBPP can be installed via pip:
-```bash
-pip install pyqbpp
-```
-
 ## Basics
 This section provides a step-by-step introduction to PyQBPP.
 By reading the pages in order, you will learn how to define variables and expressions,

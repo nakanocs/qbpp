@@ -19,31 +19,7 @@ using QUBO/HUBO formulations directly from Python.
 - Access to QUBO++ solvers (Easy Solver, Exhaustive Solver, ABS3)
 - Familiar Python syntax with the full power of the QUBO++ engine
 
-## Supported Environment
-- Linux (Ubuntu 20.04 or later)
-- x86_64 or arm64 (aarch64) CPUs
-- Python 3.8 or later
-
-## Installation
-
-PyQBPP is available on [PyPI](https://pypi.org/project/pyqbpp/).
-We recommend using a Python virtual environment (venv) to install PyQBPP.
-No sudo privileges are required.
-
-```bash
-python3 -m venv ~/qbpp-env
-source ~/qbpp-env/bin/activate
-pip install pyqbpp
-```
-
-After installation, activate your QUBO++ license.
-Set the `QBPP_LICENSE_KEY` environment variable to your license key and run `qbpp-license -a`.
-If `QBPP_LICENSE_KEY` is not set, an anonymous trial license will be activated.
-
-```bash
-export QBPP_LICENSE_KEY=[Your QUBO++ license key]
-qbpp-license -a
-```
+For installation instructions, see [**Installation**](../INSTALL).
 
 ## Quick Example
 

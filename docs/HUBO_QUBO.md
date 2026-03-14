@@ -1,7 +1,7 @@
 ---
 layout: default
 title: "HUBO and QUBO"
-nav_order: 3
+nav_order: 2
 ---
 # HUBO and QUBO
 A **High-Order Unconstrained Binary Optimization (HUBO)** problem is defined by a polynomial over binary variables.
@@ -31,3 +31,5 @@ Furthermore, because constraints can be encoded into the objective function usin
 **QUBO++** is a **model-and-solve tool** implemented in C++.
 It allows users to formulate combinatorial optimization problems as HUBO or QUBO polynomials and then solve them.
 QUBO++ also includes three built-in solvers.
+
+**PyQBPP** is a Python wrapper for the QUBO++ library, providing the same modeling and solving capabilities from Python.

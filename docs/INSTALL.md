@@ -1,20 +1,20 @@
 ---
 layout: default
 title: "Installation"
-nav_order: 2
+nav_order: 3
 ---
 # Installation
 
 ## Supported Environment
 
-QUBO++ runs on Linux-based systems with the following CPUs:
+QUBO++ and PyQBPP run on Linux-based systems with the following CPUs:
 * **amd64**: 64-bit Intel and AMD processors
 * **arm64**: 64-bit ARM processors
 
 Ubuntu 20.04 or later is recommended.
 For Windows users, QUBO++ can be used through [WSL (Windows Subsystem for Linux)](WSL).
 
-## Installation
+## QUBO++ (C++) Installation
 
 There are two ways to install QUBO++:
 - **Method 1: apt (recommended)** — Simple installation with automatic path configuration
@@ -78,6 +78,20 @@ export PATH=$QBPP_PATH/bin:$PATH
 
 export QBPP_LICENSE_KEY=[Your QUBO++ license key]
 ```
+
+## PyQBPP (Python) Installation
+
+PyQBPP is available on [PyPI](https://pypi.org/project/pyqbpp/).
+We recommend using a Python virtual environment (venv) to install PyQBPP.
+No sudo privileges are required.
+
+```bash
+python3 -m venv ~/qbpp-env
+source ~/qbpp-env/bin/activate
+pip install pyqbpp
+```
+
+Python 3.8 or later is required.
 
 ## License Activation
 

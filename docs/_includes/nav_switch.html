@@ -23,14 +23,20 @@
       var firstUl = navEls[n].querySelector('ul.nav-list');
       if (!firstUl) continue;
       var lis = firstUl.children;
+      var shared = ['Home', 'HUBO and QUBO', 'Installation', 'License Management', 'Latest Release'];
       for (var i = 0; i < lis.length; i++) {
         if (lis[i].tagName !== 'LI') continue;
         var a = lis[i].querySelector('a');
         if (!a) continue;
         var txt = a.textContent.trim();
+        var isShared = false;
+        for (var s = 0; s < shared.length; s++) {
+          if (txt === shared[s]) { isShared = true; break; }
+        }
+        if (isShared) continue;
         if (txt === 'PyQBPP') {
           pythonItems.push(lis[i]);
-        } else if (txt !== 'Latest Release') {
+        } else {
           cppItems.push(lis[i]);
         }
       }
