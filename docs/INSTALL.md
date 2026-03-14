@@ -20,7 +20,7 @@ There are two ways to install QUBO++:
 - **Method 1: apt (recommended)** — Simple installation with automatic path configuration
 - **Method 2: tar.gz** — Manual installation without requiring apt repository setup
 
-### Method 1: Install via apt (recommended)
+## Method 1: Install via apt (recommended)
 
 First, add the QUBO++ apt repository:
 ```bash
@@ -42,8 +42,7 @@ To compile and run them:
 ```bash
 cp -r /usr/local/share/qbpp/samples ~/qbpp_samples
 cd ~/qbpp_samples
-make
-./nqueen_easy
+make nqueen_easy
 ```
 
 To upgrade to a new version:
@@ -57,7 +56,7 @@ To uninstall:
 sudo apt remove qbpp
 ```
 
-### Method 2: Install via tar.gz
+## Method 2: Install via tar.gz
 
 Download the `.tar.gz` file of the latest QUBO++ release from the [**Latest Releases**](https://github.com/nakanocs/qbpp/releases/latest) page.
 Extract the archive as follows:
@@ -65,7 +64,7 @@ Extract the archive as follows:
 tar xf qbpp_<arch>_<version>.tar.gz
 ```
 
-#### Setting Environment Variables
+### Setting Environment Variables
 To compile and run QUBO++ programs, set the following environment variables.
 Add these lines to the end of your **`~/.bashrc`** so that they are automatically set when a shell starts:
 ```bash
@@ -89,7 +88,7 @@ qbpp-license -a
 
 If you have a license key, set it before activation:
 ```bash
-export QBPP_LICENSE_KEY=XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX
+export QBPP_LICENSE_KEY=XXXXXX-XXXXXX-XXXXXX-XXXXXX
 qbpp-license -a
 ```
 

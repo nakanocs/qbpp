@@ -100,6 +100,59 @@ and `params("enable_default_callback", "1")` enables the built-in callback funct
 | **`block_count`** | CUDA block count per GPU | Number of CUDA blocks launched by the solver kernel |
 | **`thread_count`** | thread count per CUDA block | Number of threads per CUDA block |
 | **`topk_sols`** | number of solutions | Returns the top-K solutions with the best energies |
+| **`best_energy_sols`** | max count ("0" = unlimited) | Returns all solutions with the best energy found |
+
+## Collecting Multiple Solutions
+
+The ABS3 Solver can collect multiple solutions during the search.
+Two modes are available:
+
+### Top-K Solutions (`topk_sols`)
+
+The `topk_sols` parameter collects the top-K solutions sorted by energy in ascending order.
+
+```cpp
+params.add("topk_sols", "10");  // collect up to 10 best solutions
+```
+
+### Best Energy Solutions (`best_energy_sols`)
+
+The `best_energy_sols` parameter collects all solutions that share the best energy found.
+Whenever a better energy is discovered, the pool is cleared and only solutions with the new best energy are kept.
+
+```cpp
+solver.enable_best_energy_sols();  // collect all best-energy solutions (unlimited)
+```
+
+Alternatively, `best_energy_sols` can be set as a parameter with a maximum count ("0" means unlimited):
+```cpp
+params.add("best_energy_sols", "0");  // unlimited
+params.add("best_energy_sols", "100");  // collect up to 100
+```
+
+Note that `topk_sols` and `best_energy_sols` share the same internal pool.
+If both are specified, the last one takes effect.
+
+### Accessing Collected Solutions
+
+The `search()` method returns an `ABS3Sols` object, which provides access to the collected solutions:
+
+```cpp
+auto result = solver.search(params);
+
+std::cout << "Best energy: " << result.energy() << std::endl;
+std::cout << "Number of solutions: " << result.size() << std::endl;
+
+for (const auto& sol : result.best_sols()) {
+  std::cout << "Energy = " << sol.energy() << " TTS = " << sol.tts() << "s" << std::endl;
+}
+```
+
+The `ABS3Sols` object supports:
+- **`size()`** — number of collected solutions
+- **`best_sols()`** / **`sols()`** — access the solution vector
+- **`operator[](i)`** — access the i-th solution
+- Range-based for loop iteration
 
 ## Custom Callback
 
@@ -114,9 +167,10 @@ The callback is invoked with one of the following events:
 | `CallbackEvent::BestUpdated` | Called whenever a new best solution is found |
 | `CallbackEvent::Timer` | Called periodically at a configurable interval |
 
-Inside the callback, the following accessor methods are available:
+Inside the callback, the following methods are available:
 - **`best_sol()`** — returns `const qbpp::Sol&` to the current best solution. Use `.energy()`, `.tts()`, `.get(var)`, etc.
-- **`current_event()`** — the event that triggered this callback
+- **`event()`** — returns the event that triggered this callback
+- **`hint(sol)`** — provides a hint solution to the solver during the search (see [Solution Hint](#solution-hint))
 
 ### Timer Control
 
@@ -139,11 +193,11 @@ class MySolver : public qbpp::abs3::ABS3Solver {
  public:
   using ABS3Solver::ABS3Solver;
 
-  void callback(qbpp::abs3::CallbackEvent event) const override {
-    if (event == qbpp::abs3::CallbackEvent::Start) {
+  void callback() const override {
+    if (event() == qbpp::abs3::CallbackEvent::Start) {
       timer(1.0);  // enable timer callback every 1 second
     }
-    if (event == qbpp::abs3::CallbackEvent::BestUpdated) {
+    if (event() == qbpp::abs3::CallbackEvent::BestUpdated) {
       std::cout << "New best: energy=" << best_sol().energy()
                 << " TTS=" << best_sol().tts() << "s" << std::endl;
     }
@@ -164,61 +218,30 @@ int main() {
 }
 ```
 
-## Solution Injection
+## Solution Hint
 
-The `inject()` method allows you to inject an external solution into the solver during a callback.
-This is useful for warm-starting a search with a previously found solution.
-The injected bit array is evaluated internally by the solver, and if its energy is better than the current best, it replaces it.
+A hint solution allows warm-starting a search with a previously found solution.
 
-Another important use case is running an external solver (e.g., Gurobi) concurrently with the ABS3 solver.
-The external solver runs in a separate thread, and whenever it finds a good solution, the solution is injected into the ABS3 solver via the `Timer` callback.
+The simplest way is to call **`params.hint(sol)`** before `search()`:
+```cpp
+params.hint(sol);  // provide a hint solution for the search
+auto result = solver.search(params);
+```
+The solution is written directly to the solver's internal data structure before the search begins.
+
+For advanced use cases such as running an external solver (e.g., Gurobi) concurrently, you can also call **`hint(sol)`** during a callback to feed solutions dynamically.
 In this scenario, setting up a periodic timer (e.g., `timer(1.0)`) is recommended so that the callback is invoked regularly to check for new external solutions.
 
-Two overloads are available:
-- **`inject(const uint64_t* bitarray)`** — inject a raw bit array
-- **`inject(const qbpp::Sol& sol)`** — inject a `Sol` object
-
-The `inject()` method can be called during any callback event, but the most common usage is to inject at `CallbackEvent::Start` to warm-start the search, or during `CallbackEvent::Timer` to periodically feed solutions from an external solver.
-
-### Example: Injecting a Previous Solution
+### Example: Providing a Hint Solution
 
 The following example solves a factorization problem twice.
 The first run finds the optimal solution normally.
-The second run injects the first solution at the start of the search, causing the solver to converge much faster.
+The second run provides the first solution as a hint via `params.hint(sol)`, causing the solver to converge much faster.
 
 ```cpp
 #define MAXDEG 4
 #include <qbpp/qbpp.hpp>
 #include <qbpp/abs3_solver.hpp>
-#include <vector>
-
-class InjectSolver : public qbpp::abs3::ABS3Solver {
- public:
-  using ABS3Solver::ABS3Solver;
-
-  void set_inject_solution(const std::vector<uint64_t>& bitarray) {
-    inject_bitarray_ = bitarray;
-    has_inject_ = true;
-  }
-
-  void callback(qbpp::abs3::CallbackEvent event) const override {
-    if (event == qbpp::abs3::CallbackEvent::Start) {
-      timer(1.0);
-      if (has_inject_) {
-        inject(inject_bitarray_.data());
-        has_inject_ = false;
-      }
-    }
-    if (event == qbpp::abs3::CallbackEvent::BestUpdated) {
-      std::cout << "  energy=" << best_sol().energy()
-                << " TTS=" << best_sol().tts() << "s" << std::endl;
-    }
-  }
-
- private:
-  mutable std::vector<uint64_t> inject_bitarray_;
-  mutable bool has_inject_ = false;
-};
 
 int main() {
   auto p = 2 <= qbpp::var_int("p") <= 1000;
@@ -226,26 +249,23 @@ int main() {
   auto f = p * q == 899 * 997;
   f.simplify_as_binary();
 
-  auto solver = InjectSolver(f);
+  auto solver = qbpp::abs3::ABS3Solver(f);
 
   // Run 1: normal search
   auto params1 = qbpp::abs3::Params();
   params1.add("target_energy", "0");
   params1.add("time_limit", "10");
+  params1.add("enable_default_callback", "1");
   const auto sol1 = solver.search(params1);
   std::cout << "Run 1: p=" << sol1(p) << " q=" << sol1(q)
             << " energy=" << sol1.energy() << std::endl;
 
-  // Save solution for injection
-  size_t size64 = (static_cast<size_t>(qbpp::all_var_count()) + 63) / 64;
-  std::vector<uint64_t> bits(sol1.bit_vector().bits_ptr(),
-                             sol1.bit_vector().bits_ptr() + size64);
-  solver.set_inject_solution(bits);
-
-  // Run 2: inject previous solution at Start
+  // Run 2: provide previous solution as a hint
   auto params2 = qbpp::abs3::Params();
   params2.add("target_energy", "0");
   params2.add("time_limit", "10");
+  params2.add("enable_default_callback", "1");
+  params2.hint(sol1);
   const auto sol2 = solver.search(params2);
   std::cout << "Run 2: p=" << sol2(p) << " q=" << sol2(q)
             << " energy=" << sol2.energy()
@@ -253,5 +273,5 @@ int main() {
 }
 ```
 
-Note that the `inject()` method only sets the initial state of the solver.
-The solver continues searching from the injected solution and may find better solutions.
+The hint solution is written directly to the solver's internal data structure before the search begins.
+The solver evaluates its energy and uses it as the initial state, then continues searching for better solutions.

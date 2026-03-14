@@ -3,10 +3,7 @@ layout: default
 title: "QUBO++ (C++)"
 nav_order: 5
 ---
-# QUBO++ Document
-This documentation for QUBO++ is currently under development.
-Some pages may contain incomplete or provisional information.
-Feedback and contributions are welcome as the documentation continues to evolve.
+# QUBO++ (C++) Documentation
 
 ## Installation
 This section explains how to install QUBO++ and set up the required environment.

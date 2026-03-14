@@ -44,6 +44,10 @@ usage patterns, and, where appropriate, internal implementations.
 > The Gurobi Solver is not available in the Python binding.
 > For Gurobi usage, please refer to the [QUBO++ (C++) documentation](../GUROBI).
 
+## Case Studies
+This section provides examples of solving optimization, mathematical, and graph problems using PyQBPP.
+See the [Case Studies](CASE_STUDIES) page for the full list.
+
 ## Quick References
 1. [Variables and Expressions](QR_VARIABLE)
 2. [Operators and Functions](QR_OPERATION)

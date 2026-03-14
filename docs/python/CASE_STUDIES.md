@@ -1,0 +1,53 @@
+---
+layout: default
+nav_exclude: true
+title: "Case Studies"
+nav_order: 35
+---
+# Case Studies
+This section provides examples of solving optimization, mathematical, and graph problems using PyQBPP.
+
+## Math Problems
+1. [Pythagorean Triples](PYTHAGOREAN) (Easy)
+2. [Remainder Problem](REMAINDER) (Easy)
+3. [Square Root](SQRT) (Medium)
+4. [Greatest Common Divisor (GCD)](GCD) (Easy)
+5. [Math Problem: Find Three Integers](3INTEGERS) (Easy)
+6. [3-Digit Math Problem](3DIGIT_MATH) (Easy)
+7. [Cubic Equation](CUBIC_EQUATION) (Easy)
+
+## Graph Problems
+1. [Maximum Independent Set (MIS) Problem](GRAPH) (Easy)
+2. [Max-Cut Problem](MAXCUT) (Easy)
+3. [Maximum Matching Problem](MAX_MATCHING) (Easy)
+4. [Maximum Clique Problem](MAX_CLIQUE) (Easy)
+5. [Minimum Vertex Cover Problem](VERTEX_COVER) (Easy)
+6. [Minimum Dominating Set Problem](DOMINATING) (Medium)
+7. [Subgraph Isomorphism Problem](SUBGRAPH_ISOMORPHISM) (Hard)
+8. [Minimum Set Cover Problem](SETCOVER) (Medium)
+9. [Minimum Maximal Matching Problem](MINMAX_MATCHING) (Medium)
+10. [Graph Coloring Problem](GRAPH_COLOR) (Easy)
+11. [Graph Edge Coloring Problem](EDGE_COLOR) (Easy)
+12. [Capacitated Vehicle Routing Problem (CVRP)](CVRP) (Hard)
+13. [Traveling Salesman Problem](TSP) (Medium)
+
+## Combinatorial Optimization Problems
+1. [Knapsack Problem](KNAPSACK) (Medium)
+2. [Shift Scheduling Problem](SHIFT_SCHEDULING) (Hard)
+3. [LABS Problem](LABS) (Medium)
+4. [Bar Cutting Problem](BAR_CUTTING) (Hard)
+5. [Integer Linear Programming](ILP) (Easy)
+6. [Interval Subset Sum Problem (ISSP)](ISSP) (Hard)
+
+## Puzzle
+1. [Magic Square](MAGIC) (Hard)
+2. [N-Queens Problem](QUEENS) (Medium)
+3. [SEND + MORE = MONEY Problem](SEND_MORE_MONEY) (Hard)
+
+## Circuit Simulation
+1. [Adder Simulation](ADDER) (Medium)
+2. [Multiplier Simulation and Factorization](MULTIPLIER) (Hard)
+
+> **NOTE**
+> Graph case studies include visualization code using `matplotlib` and `networkx`.
+> Install them with: `pip install matplotlib networkx`

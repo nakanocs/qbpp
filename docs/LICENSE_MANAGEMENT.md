@@ -26,7 +26,7 @@ QUBO++ offers several license types with different variable count limits and val
 - **Professional License**: For production use with GPU acceleration (ABS3 Solver, Exhaustive Solver).
 - **Fallback Mode**: When no valid license is found or the license has expired, QUBO++ runs with a 100-variable limit.
 
-## Setting the License Key
+## Setting and Activating the License Key
 
 If you have a license key, set it using one of the following methods.
 
@@ -50,19 +50,6 @@ Set the `QBPP_LICENSE_KEY` environment variable. This is useful for Docker/CI en
 export QBPP_LICENSE_KEY=XXXXXX-XXXXXX-XXXXXX-XXXXXX
 ```
 
-### Method 3: In C++ Code
-
-Set the key programmatically before creating variables:
-
-```cpp
-#include <qbpp/qbpp.hpp>
-
-int main() {
-    qbpp::license_key("XXXXXX-XXXXXX-XXXXXX-XXXXXX");
-    // ... your QUBO++ code ...
-}
-```
-
 ### Priority
 
 When multiple methods are used, the following priority applies:
@@ -72,18 +59,6 @@ When multiple methods are used, the following priority applies:
 3. **Cached key** (lowest)
 
 > **Note**: For Anonymous Trial, no license key is needed. Simply run `qbpp-license -a` without setting a key.
-
-## Activating a License
-
-A license must be activated on each machine before QUBO++ programs can use it. Activation is **node-locked** -- the license is tied to the specific machine.
-
-```bash
-qbpp-license -a
-```
-
-- This contacts the license server and registers the current machine.
-- Each activation consumes one slot from the license's activation limit.
-- If the license is already activated on this machine, running `-a` again does **not** consume an additional slot.
 
 ## Checking License Status
 
@@ -103,11 +78,11 @@ To move a license to another machine, first deactivate it on the current machine
 qbpp-license -d
 ```
 
+- Each license key has a limited number of allowed activations. 
 - Deactivation frees up one activation slot.
 - **Anonymous Trial** licenses cannot be deactivated.
 - There is a **24-hour cooldown** between consecutive deactivations to prevent abuse.
 
-> **Warning**: Each license key has a limited number of allowed activations and deactivations. Once the total reaches this limit, you will no longer be able to activate or deactivate that license. Plan your activations carefully.
 
 ## Command Reference
 
@@ -138,7 +113,7 @@ Options:
 - **`qbpp-license` command**: Always contacts the license server to get the latest status. This may take a few seconds depending on network conditions.
 - **QUBO++ programs**: Verify the license using the **local cache** and do not block on server communication. The server is contacted only when the cache needs to be refreshed (e.g., after a long period without synchronization).
 - **License key storage**: When a license is activated, the key is encrypted and cached locally. This allows subsequent runs without setting the key again.
-- **Offline use**: Once activated, the license works offline using the cached credentials. No persistent internet connection is required for running QUBO++ programs.
+
 
 ## Network and Timeout
 
@@ -152,33 +127,13 @@ qbpp-license -t 60 -a
 
 If the server is unreachable, QUBO++ falls back to the cached license status. If no cache exists, QUBO++ runs in **Fallback Mode** (100-variable limit).
 
-## Troubleshooting
-
-### "License server timed out"
-
-- Check your internet connection.
-- Increase the timeout: `qbpp-license -t 60`
-- If you are behind a corporate firewall or proxy, ensure outbound HTTPS traffic is allowed.
-
-### "Activation limit reached"
-
-- Each license has a limited number of activation/deactivation slots.
-- Deactivate on machines you no longer use: `qbpp-license -d`
-- Contact the license administrator to increase the activation limit if needed.
-
-### "License expired"
-
-- Trial licenses have a fixed validity period (7 days for Anonymous, 30 days for Registered).
-- Contact the distributor to renew or upgrade your license.
-- QUBO++ continues to work in Fallback Mode (100-variable limit) after expiry.
-
 ### Programs work but with limited variables
 
 - QUBO++ may be running in Fallback Mode. Check the license status:
   ```bash
   $ qbpp-license
   ```
-- Ensure the license key is set correctly via `qbpp-license -k KEY -a`, `QBPP_LICENSE_KEY`, or `qbpp::license_key()`.
+- Ensure the license key is set correctly via `qbpp-license -k KEY -a` or `QBPP_LICENSE_KEY`.
 - Re-activate if necessary: `qbpp-license -a`
 
 ### "Deactivation cooldown"
@@ -190,7 +145,6 @@ If the server is unreachable, QUBO++ falls back to the cached license status. If
 
 Floating licenses allow shared access across multiple machines within an organization. Instead of being permanently locked to a machine, a floating license uses a **lease-based** mechanism.
 
-- A floating license key is prefixed with `F-` (e.g., `F-XXXXXX-XXXXXX-XXXXXX-XXXXXX`).
 - When a QUBO++ program starts, it acquires a lease from the license server.
 - The lease is automatically renewed while the program is running.
 - When the program exits, the lease is released, making the slot available for other machines.
