@@ -68,22 +68,10 @@ library itself does not require linking against TBB for the default use cases.
 
 # QUBO++ Licensing
 
-To start using QUBO++, activate the license after installation:
-```bash
-qbpp-license -a
-```
+QUBO++ can be used without a license key.
+If no license key is set, an **Anonymous Trial** (7 days, 1,000 variables) is automatically activated, allowing you to try QUBO++ immediately.
 
-If no license key is set, an **Anonymous Trial** (7 days, 1,000 variables) is activated.
-
-| License Type | Key Required | Validity | CPU Variables | GPU Variables |
-|---|---|---|---|---|
-| **Anonymous Trial** | No | 7 days | 1,000 | 1,000 |
-| **Registered Trial** | Yes  | 30 days | 10,000 | 10,000 |
-| **Standard** | Yes  | Agreement term | $2^{31} - 1$ | 1,000 |
-| **Professional** | Yes | Agreement term | $2^{31} - 1$ | $2^{31} - 1$ |
-| **Fallback** | N/A | Always | 100 | 100 |
-
-For details on license activation, deactivation, key configuration, troubleshooting, and terms and conditions, see **[License Management](LICENSE_MANAGEMENT)**.
+For details on license activation, license types, and terms, see **[License Management](LICENSE_MANAGEMENT)**.
 
 # Third-Party Libraries
 
