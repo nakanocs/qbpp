@@ -1,5 +1,76 @@
 <hr style="margin: 1rem 0;">
-<div style="padding: 0 1rem 1rem;">
-  <a href="{{ '/' | relative_url }}" style="display:block; font-weight:bold; margin-bottom:0.3rem;">QUBO++ (C++)</a>
-  <a href="{{ '/python/' | relative_url }}" style="display:block; font-weight:bold;">PyQBPP (Python)</a>
+<div style="padding: 0 1rem 1rem; text-align: center;">
+  <button id="switch-cpp" onclick="switchNav('cpp')"
+    style="font-weight:bold; padding:0.4rem 0.8rem; cursor:pointer; border:1px solid #ccc; border-radius:4px; margin-right:0.3rem;">
+    QUBO++ (C++)
+  </button>
+  <button id="switch-python" onclick="switchNav('python')"
+    style="font-weight:bold; padding:0.4rem 0.8rem; cursor:pointer; border:1px solid #ccc; border-radius:4px;">
+    PyQBPP
+  </button>
 </div>
+
+<script>
+(function() {
+  var pythonTitle = 'PyQBPP';
+
+  function getNavItems() {
+    var navList = document.querySelector('.nav-list');
+    if (!navList) return { cpp: [], python: [] };
+    var items = navList.children;
+    var cpp = [], python = [];
+    for (var i = 0; i < items.length; i++) {
+      var link = items[i].querySelector('a');
+      if (!link) continue;
+      var title = link.textContent.trim();
+      if (title === pythonTitle) {
+        python.push(items[i]);
+        // Include all children of PyQBPP
+        var children = items[i].querySelectorAll('.nav-list-item');
+        for (var j = 0; j < children.length; j++) {
+          python.push(children[j]);
+        }
+      } else {
+        cpp.push(items[i]);
+      }
+    }
+    return { cpp: cpp, python: python };
+  }
+
+  function isOnPythonPage() {
+    return window.location.pathname.indexOf('/python') !== -1;
+  }
+
+  window.switchNav = function(mode) {
+    var nav = getNavItems();
+    if (mode === 'python') {
+      nav.cpp.forEach(function(el) { el.style.display = 'none'; });
+      nav.python.forEach(function(el) { el.style.display = ''; });
+      document.getElementById('switch-python').style.background = '#7253ed';
+      document.getElementById('switch-python').style.color = '#fff';
+      document.getElementById('switch-python').style.borderColor = '#7253ed';
+      document.getElementById('switch-cpp').style.background = '';
+      document.getElementById('switch-cpp').style.color = '';
+      document.getElementById('switch-cpp').style.borderColor = '#ccc';
+    } else {
+      nav.python.forEach(function(el) { el.style.display = 'none'; });
+      nav.cpp.forEach(function(el) { el.style.display = ''; });
+      document.getElementById('switch-cpp').style.background = '#7253ed';
+      document.getElementById('switch-cpp').style.color = '#fff';
+      document.getElementById('switch-cpp').style.borderColor = '#7253ed';
+      document.getElementById('switch-python').style.background = '';
+      document.getElementById('switch-python').style.color = '';
+      document.getElementById('switch-python').style.borderColor = '#ccc';
+    }
+    try { localStorage.setItem('qbpp-nav-mode', mode); } catch(e) {}
+  };
+
+  // Auto-detect on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    var saved = null;
+    try { saved = localStorage.getItem('qbpp-nav-mode'); } catch(e) {}
+    var mode = isOnPythonPage() ? 'python' : (saved || 'cpp');
+    switchNav(mode);
+  });
+})();
+</script>
