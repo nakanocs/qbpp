@@ -11,11 +11,12 @@
 </div>
 
 <script>
-if (!window._qbppNavInit) {
+(function() {
+  if (window._qbppNavInit) return;
   window._qbppNavInit = true;
-  function doInit() {
-    // Find the visible site-nav (desktop or mobile)
-    var navEls = document.querySelectorAll('#site-nav, .site-nav');
+
+  var doInit = function() {
+    var navEls = document.querySelectorAll('.site-nav');
     var cppItems = [];
     var pythonItems = [];
 
@@ -26,19 +27,20 @@ if (!window._qbppNavInit) {
       for (var i = 0; i < lis.length; i++) {
         if (lis[i].tagName !== 'LI') continue;
         var a = lis[i].querySelector('a');
-        if (a && a.textContent.trim() === 'PyQBPP') {
+        if (!a) continue;
+        var txt = a.textContent.trim();
+        if (txt === 'PyQBPP') {
           pythonItems.push(lis[i]);
-        } else {
+        } else if (txt !== 'Latest Release') {
           cppItems.push(lis[i]);
         }
       }
     }
 
-    // Get ALL switch buttons (there may be 2 copies: mobile + desktop)
     var btnsCpp = document.querySelectorAll('.qbpp-switch-cpp');
     var btnsPython = document.querySelectorAll('.qbpp-switch-python');
 
-    function showMode(mode) {
+    var showMode = function(mode) {
       var i;
       if (mode === 'python') {
         for (i = 0; i < cppItems.length; i++) cppItems[i].style.display = 'none';
@@ -58,7 +60,7 @@ if (!window._qbppNavInit) {
         btnsPython[i].style.borderColor = mode === 'python' ? '#7253ed' : '#ccc';
       }
       try { localStorage.setItem('qbpp-nav-mode', mode); } catch(e) {}
-    }
+    };
 
     for (var i = 0; i < btnsCpp.length; i++) {
       btnsCpp[i].addEventListener('click', function() { showMode('cpp'); });
@@ -67,7 +69,6 @@ if (!window._qbppNavInit) {
       btnsPython[i].addEventListener('click', function() { showMode('python'); });
     }
 
-    // Auto-detect
     var saved = null;
     try { saved = localStorage.getItem('qbpp-nav-mode'); } catch(e) {}
     if (window.location.pathname.indexOf('/python') !== -1) {
@@ -77,10 +78,10 @@ if (!window._qbppNavInit) {
     } else {
       showMode('cpp');
     }
-  }
-  // Retry until nav items are found (just-the-docs.js may build nav dynamically)
-  function tryInit() {
-    var navEls = document.querySelectorAll('#site-nav, .site-nav');
+  };
+
+  var tryInit = function() {
+    var navEls = document.querySelectorAll('.site-nav');
     var found = false;
     for (var n = 0; n < navEls.length; n++) {
       var ul = navEls[n].querySelector('ul.nav-list');
@@ -91,11 +92,12 @@ if (!window._qbppNavInit) {
     } else {
       setTimeout(tryInit, 100);
     }
-  }
+  };
+
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function() { setTimeout(tryInit, 50); });
   } else {
     setTimeout(tryInit, 50);
   }
-}
+})();
 </script>
