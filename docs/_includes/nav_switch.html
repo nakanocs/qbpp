@@ -113,9 +113,9 @@
   };
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() { setTimeout(tryInit, 50); });
+    document.addEventListener('DOMContentLoaded', tryInit);
   } else {
-    setTimeout(tryInit, 50);
+    tryInit();
   }
 })();
 </script>
