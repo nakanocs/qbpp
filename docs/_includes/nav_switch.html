@@ -12,38 +12,30 @@
 
 <script>
 (function() {
-  if (window._qbppNavInit) return;
-  window._qbppNavInit = true;
-
-  var doInit = function() {
+  // C++/Python nav toggle
+  function initNav() {
     var navEls = document.querySelectorAll('.site-nav');
-    try { doInitInner(navEls); } catch(e) { console.error('nav_switch error:', e); }
-    for (var n = 0; n < navEls.length; n++) {
-      navEls[n].style.visibility = 'visible';
-    }
-  };
-  var doInitInner = function(navEls) {
-    var cppItems = [];
-    var pythonItems = [];
+    if (!navEls.length) return false;
+    var ul = navEls[0].querySelector('ul.nav-list');
+    if (!ul || !ul.children.length) return false;
 
-    var releaseLinks = [];
+    var cppItems = [], pythonItems = [], releaseLinks = [];
+    var shared = ['Home', 'HUBO and QUBO', 'License Management', 'Demos', 'Latest Release'];
+
     for (var n = 0; n < navEls.length; n++) {
-      var allUls = navEls[n].querySelectorAll('ul.nav-list');
-      for (var u = 0; u < allUls.length; u++) {
-        var lis = allUls[u].children;
+      var uls = navEls[n].querySelectorAll('ul.nav-list');
+      for (var u = 0; u < uls.length; u++) {
+        var lis = uls[u].children;
         for (var i = 0; i < lis.length; i++) {
           if (lis[i].tagName !== 'LI') continue;
           var a = lis[i].querySelector('a');
           if (!a) continue;
-          var txt = a.childNodes[0] ? a.childNodes[0].textContent.trim() : a.textContent.trim();
-          if (txt === 'Latest Release') { releaseLinks.push(a); }
-          var shared = ['Home', 'HUBO and QUBO', 'License Management', 'Demos', 'Latest Release'];
+          var txt = (a.childNodes[0] ? a.childNodes[0].textContent : a.textContent).trim();
+          if (txt === 'Latest Release') releaseLinks.push(a);
           var isShared = false;
-          for (var s = 0; s < shared.length; s++) {
-            if (txt === shared[s]) { isShared = true; break; }
-          }
+          for (var s = 0; s < shared.length; s++) { if (txt === shared[s]) { isShared = true; break; } }
           if (isShared) continue;
-          var href = a.href || window.location.href;
+          var href = a.href || '';
           if (txt === 'PyQBPP (Python)' || href.indexOf('/python/') !== -1) {
             pythonItems.push(lis[i]);
           } else {
@@ -56,109 +48,86 @@
     var btnsCpp = document.querySelectorAll('.qbpp-switch-cpp');
     var btnsPython = document.querySelectorAll('.qbpp-switch-python');
 
-    var showMode = function(mode) {
-      var i;
-      if (mode === 'python') {
-        for (i = 0; i < cppItems.length; i++) cppItems[i].style.display = 'none';
-        for (i = 0; i < pythonItems.length; i++) pythonItems[i].style.display = '';
-      } else {
-        for (i = 0; i < pythonItems.length; i++) pythonItems[i].style.display = 'none';
-        for (i = 0; i < cppItems.length; i++) cppItems[i].style.display = '';
-      }
-      for (i = 0; i < btnsCpp.length; i++) {
+    function showMode(mode) {
+      for (var i = 0; i < cppItems.length; i++) cppItems[i].style.display = mode === 'cpp' ? '' : 'none';
+      for (var i = 0; i < pythonItems.length; i++) pythonItems[i].style.display = mode === 'python' ? '' : 'none';
+      for (var i = 0; i < btnsCpp.length; i++) {
         btnsCpp[i].style.background = mode === 'cpp' ? '#7253ed' : '';
         btnsCpp[i].style.color = mode === 'cpp' ? '#fff' : '';
         btnsCpp[i].style.borderColor = mode === 'cpp' ? '#7253ed' : '#ccc';
       }
-      for (i = 0; i < btnsPython.length; i++) {
+      for (var i = 0; i < btnsPython.length; i++) {
         btnsPython[i].style.background = mode === 'python' ? '#7253ed' : '';
         btnsPython[i].style.color = mode === 'python' ? '#fff' : '';
         btnsPython[i].style.borderColor = mode === 'python' ? '#7253ed' : '#ccc';
       }
-      for (i = 0; i < releaseLinks.length; i++) {
+      for (var i = 0; i < releaseLinks.length; i++) {
         releaseLinks[i].setAttribute('href', mode === 'python'
           ? 'https://pypi.org/project/pyqbpp/'
           : 'https://github.com/nakanocs/qbpp/releases/latest');
       }
       try { localStorage.setItem('qbpp-nav-mode', mode); } catch(e) {}
-    };
-
-    for (var i = 0; i < btnsCpp.length; i++) {
-      btnsCpp[i].addEventListener('click', function() { showMode('cpp'); });
-    }
-    for (var i = 0; i < btnsPython.length; i++) {
-      btnsPython[i].addEventListener('click', function() { showMode('python'); });
     }
 
-    var saved = null;
-    try { saved = localStorage.getItem('qbpp-nav-mode'); } catch(e) {}
-    if (window.location.pathname.indexOf('/python') !== -1) {
-      showMode('python');
-    } else if (saved === 'python') {
-      showMode('python');
-    } else {
-      showMode('cpp');
+    for (var i = 0; i < btnsCpp.length; i++) btnsCpp[i].onclick = function() { showMode('cpp'); };
+    for (var i = 0; i < btnsPython.length; i++) btnsPython[i].onclick = function() { showMode('python'); };
+
+    var saved = '';
+    try { saved = localStorage.getItem('qbpp-nav-mode') || ''; } catch(e) {}
+    if (window.location.pathname.indexOf('/python') !== -1) showMode('python');
+    else if (saved === 'python') showMode('python');
+    else showMode('cpp');
+
+    for (var n = 0; n < navEls.length; n++) navEls[n].style.visibility = 'visible';
+    return true;
+  }
+
+  // EN/JA language toggle
+  function initLang() {
+    var header = document.getElementById('main-header');
+    if (!header) return;
+    header.style.display = 'flex';
+    header.style.alignItems = 'center';
+    header.style.gap = '0.4rem';
+    var sd = header.querySelector('.search');
+    if (sd) sd.style.flex = '1';
+
+    var div = document.createElement('div');
+    div.style.cssText = 'display:flex;gap:0.2rem;flex-shrink:0;';
+    function mkBtn(label) {
+      var b = document.createElement('button');
+      b.textContent = label;
+      b.style.cssText = 'font-weight:bold;padding:0.2rem 0.5rem;cursor:pointer;border:1px solid #ccc;border-radius:4px;font-size:0.75rem;';
+      return b;
     }
-    // Language toggle (EN/JA) — inject into main-header next to search
-    var mainHeader = document.getElementById('main-header');
-    var btnEn, btnJa;
-    if (mainHeader) {
-      mainHeader.style.display = 'flex';
-      mainHeader.style.alignItems = 'center';
-      mainHeader.style.gap = '0.4rem';
-      var searchDiv = mainHeader.querySelector('.search');
-      if (searchDiv) searchDiv.style.flex = '1';
-      var langDiv = document.createElement('div');
-      langDiv.style.cssText = 'display:flex; gap:0.2rem; flex-shrink:0;';
-      var mkBtn = function(label) {
-        var b = document.createElement('button');
-        b.textContent = label;
-        b.style.cssText = 'font-weight:bold; padding:0.2rem 0.5rem; cursor:pointer; border:1px solid #ccc; border-radius:4px; font-size:0.75rem; white-space:nowrap;';
-        return b;
-      };
-      btnEn = mkBtn('EN');
-      btnJa = mkBtn('JA');
-      langDiv.appendChild(btnEn);
-      langDiv.appendChild(btnJa);
-      mainHeader.appendChild(langDiv);
-    }
-    var showLang = function(lang) {
-      var enEls = document.querySelectorAll('.main-content .lang-en');
-      var jaEls = document.querySelectorAll('.main-content .lang-ja');
-      for (var i = 0; i < enEls.length; i++) enEls[i].style.display = lang === 'en' ? '' : 'none';
-      for (var i = 0; i < jaEls.length; i++) jaEls[i].style.display = lang === 'ja' ? '' : 'none';
-      if (btnEn) {
-        btnEn.style.background = lang === 'en' ? '#7253ed' : '';
-        btnEn.style.color = lang === 'en' ? '#fff' : '';
-        btnEn.style.borderColor = lang === 'en' ? '#7253ed' : '#ccc';
-      }
-      if (btnJa) {
-        btnJa.style.background = lang === 'ja' ? '#7253ed' : '';
-        btnJa.style.color = lang === 'ja' ? '#fff' : '';
-        btnJa.style.borderColor = lang === 'ja' ? '#7253ed' : '#ccc';
-      }
+    var bEn = mkBtn('EN'), bJa = mkBtn('JA');
+    div.appendChild(bEn); div.appendChild(bJa);
+    header.appendChild(div);
+
+    function showLang(lang) {
+      var en = document.querySelectorAll('.main-content .lang-en');
+      var ja = document.querySelectorAll('.main-content .lang-ja');
+      for (var i = 0; i < en.length; i++) en[i].style.display = lang === 'en' ? '' : 'none';
+      for (var i = 0; i < ja.length; i++) ja[i].style.display = lang === 'ja' ? '' : 'none';
+      bEn.style.background = lang === 'en' ? '#7253ed' : '';
+      bEn.style.color = lang === 'en' ? '#fff' : '';
+      bEn.style.borderColor = lang === 'en' ? '#7253ed' : '#ccc';
+      bJa.style.background = lang === 'ja' ? '#7253ed' : '';
+      bJa.style.color = lang === 'ja' ? '#fff' : '';
+      bJa.style.borderColor = lang === 'ja' ? '#7253ed' : '#ccc';
       try { localStorage.setItem('qbpp-lang', lang); } catch(e) {}
-    };
-    if (btnEn) btnEn.addEventListener('click', function() { showLang('en'); });
-    if (btnJa) btnJa.addEventListener('click', function() { showLang('ja'); });
-    var savedLang = null;
-    try { savedLang = localStorage.getItem('qbpp-lang'); } catch(e) {}
-    showLang(savedLang === 'ja' ? 'ja' : 'en');
-  };
+    }
+    bEn.onclick = function() { showLang('en'); };
+    bJa.onclick = function() { showLang('ja'); };
+    var s = '';
+    try { s = localStorage.getItem('qbpp-lang') || ''; } catch(e) {}
+    showLang(s === 'ja' ? 'ja' : 'en');
+  }
 
-  var tryInit = function() {
-    var navEls = document.querySelectorAll('.site-nav');
-    var found = false;
-    for (var n = 0; n < navEls.length; n++) {
-      var ul = navEls[n].querySelector('ul.nav-list');
-      if (ul && ul.children.length > 0) { found = true; break; }
-    }
-    if (found) {
-      doInit();
-    } else {
-      setTimeout(tryInit, 100);
-    }
-  };
+  function tryInit() {
+    if (!initNav()) { setTimeout(tryInit, 50); return; }
+    initLang();
+  }
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', tryInit);
