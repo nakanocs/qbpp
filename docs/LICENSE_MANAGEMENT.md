@@ -30,25 +30,24 @@ QUBO++ offers several license types with different variable count limits and val
 
 If you have a license key, set it using one of the following methods.
 
-### Method 1: Environment Variable (recommended)
+### Method 1: Activate with `qbpp-license` (recommended)
 
-Add the following line to your `~/.bashrc`:
-
-```bash
-export QBPP_LICENSE_KEY=XXXXXX-XXXXXX-XXXXXX-XXXXXX
-```
-
-Then reload the shell:
-```bash
-source ~/.bashrc
-```
-
-### Method 2: Command-Line Option
-
-Pass the key directly to `qbpp-license`:
+Run the following command once per machine:
 
 ```bash
 qbpp-license -k XXXXXX-XXXXXX-XXXXXX-XXXXXX -a
+```
+
+The license key is **cached locally** in `~/.qbpp/` (encrypted). After activation, no environment variable or `-k` option is needed for subsequent runs — QUBO++ programs automatically use the cached key.
+
+To re-activate or change the key, simply run the command again with a new key.
+
+### Method 2: Environment Variable
+
+Set the `QBPP_LICENSE_KEY` environment variable. This is useful for Docker/CI environments where the local cache is not persistent.
+
+```bash
+export QBPP_LICENSE_KEY=XXXXXX-XXXXXX-XXXXXX-XXXXXX
 ```
 
 ### Method 3: In C++ Code
@@ -63,6 +62,14 @@ int main() {
     // ... your QUBO++ code ...
 }
 ```
+
+### Priority
+
+When multiple methods are used, the following priority applies:
+
+1. **`-k` argument** or `qbpp::license_key()` in code (highest)
+2. **`QBPP_LICENSE_KEY` environment variable**
+3. **Cached key** in `~/.qbpp/` (lowest)
 
 > **Note**: For Anonymous Trial, no license key is needed. Simply run `qbpp-license -a` without setting a key.
 
@@ -130,6 +137,7 @@ Options:
 
 - **`qbpp-license` command**: Always contacts the license server to get the latest status. This may take a few seconds depending on network conditions.
 - **QUBO++ programs**: Verify the license using the **local cache** (`~/.qbpp/license_cache`) and do not block on server communication. The server is contacted only when the cache needs to be refreshed (e.g., after a long period without synchronization).
+- **License key storage**: When a license is activated with `-k`, the key is cached locally in `~/.qbpp/`. This allows subsequent runs without setting the key again.
 - **Offline use**: Once activated, the license works offline using the cached credentials. No persistent internet connection is required for running QUBO++ programs.
 
 ## Network and Timeout
@@ -170,7 +178,7 @@ If the server is unreachable, QUBO++ falls back to the cached license status. If
   ```bash
   $ qbpp-license
   ```
-- Ensure the license key is set correctly via `QBPP_LICENSE_KEY` or `qbpp::license_key()`.
+- Ensure the license key is set correctly via `qbpp-license -k KEY -a`, `QBPP_LICENSE_KEY`, or `qbpp::license_key()`.
 - Re-activate if necessary: `qbpp-license -a`
 
 ### "Deactivation cooldown"
@@ -191,7 +199,8 @@ Floating licenses allow shared access across multiple machines within an organiz
 Usage is the same as node-locked licenses:
 
 ```bash
-export QBPP_LICENSE_KEY=F-XXXXXX-XXXXXX-XXXXXX-XXXXXX
-qbpp-license -a
+qbpp-license -k F-XXXXXX-XXXXXX-XXXXXX-XXXXXX -a
 ```
+
+The floating license key is also cached locally, so subsequent runs do not require setting the key again.
 

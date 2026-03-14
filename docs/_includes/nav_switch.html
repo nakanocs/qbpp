@@ -39,8 +39,10 @@
           var href = a.href || a.getAttribute('href') || '';
           if (txt === 'PyQBPP (Python)' || href.indexOf('/python/') !== -1) {
             pythonItems.push(lis[i]);
+            console.log('[nav-v2] PYTHON: "' + txt + '" href="' + href + '"');
           } else {
             cppItems.push(lis[i]);
+            console.log('[nav-v2] CPP: "' + txt + '" href="' + href + '"');
           }
         }
       }
