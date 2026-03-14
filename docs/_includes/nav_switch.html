@@ -1,3 +1,4 @@
+<style>.site-nav { visibility: hidden; }</style>
 <div style="display:flex; flex-direction:column; align-items:center; gap:0.3rem; padding:0.5rem 2rem;">
   <button class="qbpp-switch-cpp"
     style="font-weight:bold; padding:0.4rem 0; cursor:pointer; border:1px solid #ccc; border-radius:4px; font-size:0.85rem; width:100%; white-space:nowrap;">
@@ -91,6 +92,9 @@
       showMode('python');
     } else {
       showMode('cpp');
+    }
+    for (var n = 0; n < navEls.length; n++) {
+      navEls[n].style.visibility = 'visible';
     }
   };
 
