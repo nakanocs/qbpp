@@ -1,76 +1,82 @@
 <hr style="margin: 1rem 0;">
 <div style="padding: 0 1rem 1rem; text-align: center;">
-  <button id="switch-cpp"
+  <button class="qbpp-switch-cpp"
     style="font-weight:bold; padding:0.4rem 0.8rem; cursor:pointer; border:1px solid #ccc; border-radius:4px; margin-right:0.3rem;">
     QUBO++ (C++)
   </button>
-  <button id="switch-python"
+  <button class="qbpp-switch-python"
     style="font-weight:bold; padding:0.4rem 0.8rem; cursor:pointer; border:1px solid #ccc; border-radius:4px;">
     PyQBPP
   </button>
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  var siteNav = document.getElementById('site-nav');
-  if (!siteNav) return;
+if (!window._qbppNavInit) {
+  window._qbppNavInit = true;
+  document.addEventListener('DOMContentLoaded', function() {
+    // Find the visible site-nav (desktop or mobile)
+    var navEls = document.querySelectorAll('#site-nav, .site-nav');
+    var cppItems = [];
+    var pythonItems = [];
 
-  // Collect top-level li elements
-  var firstUl = siteNav.querySelector('ul.nav-list');
-  if (!firstUl) return;
-
-  var cppItems = [];
-  var pythonItems = [];
-  var lis = firstUl.children;
-  for (var i = 0; i < lis.length; i++) {
-    if (lis[i].tagName !== 'LI') continue;
-    var a = lis[i].querySelector('a');
-    if (a && a.textContent.trim() === 'PyQBPP') {
-      pythonItems.push(lis[i]);
-    } else {
-      cppItems.push(lis[i]);
+    for (var n = 0; n < navEls.length; n++) {
+      var firstUl = navEls[n].querySelector('ul.nav-list');
+      if (!firstUl) continue;
+      var lis = firstUl.children;
+      for (var i = 0; i < lis.length; i++) {
+        if (lis[i].tagName !== 'LI') continue;
+        var a = lis[i].querySelector('a');
+        if (a && a.textContent.trim() === 'PyQBPP') {
+          pythonItems.push(lis[i]);
+        } else {
+          cppItems.push(lis[i]);
+        }
+      }
     }
-  }
 
-  var btnCpp = document.getElementById('switch-cpp');
-  var btnPython = document.getElementById('switch-python');
+    // Get ALL switch buttons (there may be 2 copies: mobile + desktop)
+    var btnsCpp = document.querySelectorAll('.qbpp-switch-cpp');
+    var btnsPython = document.querySelectorAll('.qbpp-switch-python');
 
-  function showCpp() {
-    for (var i = 0; i < cppItems.length; i++) cppItems[i].style.display = '';
-    for (var i = 0; i < pythonItems.length; i++) pythonItems[i].style.display = 'none';
-    btnCpp.style.background = '#7253ed';
-    btnCpp.style.color = '#fff';
-    btnCpp.style.borderColor = '#7253ed';
-    btnPython.style.background = '';
-    btnPython.style.color = '';
-    btnPython.style.borderColor = '#ccc';
-    try { localStorage.setItem('qbpp-nav-mode', 'cpp'); } catch(e) {}
-  }
+    function showMode(mode) {
+      var i;
+      if (mode === 'python') {
+        for (i = 0; i < cppItems.length; i++) cppItems[i].style.display = 'none';
+        for (i = 0; i < pythonItems.length; i++) pythonItems[i].style.display = '';
+      } else {
+        for (i = 0; i < pythonItems.length; i++) pythonItems[i].style.display = 'none';
+        for (i = 0; i < cppItems.length; i++) cppItems[i].style.display = '';
+      }
+      for (i = 0; i < btnsCpp.length; i++) {
+        btnsCpp[i].style.background = mode === 'cpp' ? '#7253ed' : '';
+        btnsCpp[i].style.color = mode === 'cpp' ? '#fff' : '';
+        btnsCpp[i].style.borderColor = mode === 'cpp' ? '#7253ed' : '#ccc';
+      }
+      for (i = 0; i < btnsPython.length; i++) {
+        btnsPython[i].style.background = mode === 'python' ? '#7253ed' : '';
+        btnsPython[i].style.color = mode === 'python' ? '#fff' : '';
+        btnsPython[i].style.borderColor = mode === 'python' ? '#7253ed' : '#ccc';
+      }
+      try { localStorage.setItem('qbpp-nav-mode', mode); } catch(e) {}
+    }
 
-  function showPython() {
-    for (var i = 0; i < pythonItems.length; i++) pythonItems[i].style.display = '';
-    for (var i = 0; i < cppItems.length; i++) cppItems[i].style.display = 'none';
-    btnPython.style.background = '#7253ed';
-    btnPython.style.color = '#fff';
-    btnPython.style.borderColor = '#7253ed';
-    btnCpp.style.background = '';
-    btnCpp.style.color = '';
-    btnCpp.style.borderColor = '#ccc';
-    try { localStorage.setItem('qbpp-nav-mode', 'python'); } catch(e) {}
-  }
+    for (var i = 0; i < btnsCpp.length; i++) {
+      btnsCpp[i].addEventListener('click', function() { showMode('cpp'); });
+    }
+    for (var i = 0; i < btnsPython.length; i++) {
+      btnsPython[i].addEventListener('click', function() { showMode('python'); });
+    }
 
-  btnCpp.addEventListener('click', showCpp);
-  btnPython.addEventListener('click', showPython);
-
-  // Auto-detect mode
-  var saved = null;
-  try { saved = localStorage.getItem('qbpp-nav-mode'); } catch(e) {}
-  if (window.location.pathname.indexOf('/python') !== -1) {
-    showPython();
-  } else if (saved === 'python') {
-    showPython();
-  } else {
-    showCpp();
-  }
-});
+    // Auto-detect
+    var saved = null;
+    try { saved = localStorage.getItem('qbpp-nav-mode'); } catch(e) {}
+    if (window.location.pathname.indexOf('/python') !== -1) {
+      showMode('python');
+    } else if (saved === 'python') {
+      showMode('python');
+    } else {
+      showMode('cpp');
+    }
+  });
+}
 </script>
