@@ -1,8 +1,7 @@
 ---
 layout: default
 title: "Installation"
-nav_order: 0
-parent: "PyQBPP"
+nav_order: 3
 ---
 # PyQBPP Installation
 
