@@ -20,7 +20,7 @@ plugins:
   - jekyll-include-cache
 
 # just-the-docs configuration
-color_scheme: default
+color_scheme: light
 search_enabled: true
 search.button: true
 
