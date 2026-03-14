@@ -30,7 +30,7 @@
           if (!a) continue;
           var txt = a.childNodes[0] ? a.childNodes[0].textContent.trim() : a.textContent.trim();
           if (txt === 'Latest Release') { releaseLinks.push(a); }
-          var shared = ['Home', 'HUBO and QUBO', 'License Management', 'Latest Release'];
+          var shared = ['Home', 'HUBO and QUBO', 'License Management', 'Demos', 'Latest Release'];
           var isShared = false;
           for (var s = 0; s < shared.length; s++) {
             if (txt === shared[s]) { isShared = true; break; }
