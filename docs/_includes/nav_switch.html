@@ -9,6 +9,16 @@
     PyQBPP (Python)
   </button>
 </div>
+<div style="display:flex; align-items:center; justify-content:center; gap:0.3rem; padding:0.1rem 2rem 0.3rem;">
+  <button class="qbpp-switch-en"
+    style="font-weight:bold; padding:0.15rem 0; cursor:pointer; border:1px solid #ccc; border-radius:4px; font-size:0.75rem; width:50%; white-space:nowrap;">
+    EN
+  </button>
+  <button class="qbpp-switch-ja"
+    style="font-weight:bold; padding:0.15rem 0; cursor:pointer; border:1px solid #ccc; border-radius:4px; font-size:0.75rem; width:50%; white-space:nowrap;">
+    JA
+  </button>
+</div>
 
 <script>
 (function() {
@@ -93,6 +103,36 @@
     } else {
       showMode('cpp');
     }
+    // Language toggle (EN/JA)
+    var btnsEn = document.querySelectorAll('.qbpp-switch-en');
+    var btnsJa = document.querySelectorAll('.qbpp-switch-ja');
+    var showLang = function(lang) {
+      var enEls = document.querySelectorAll('.lang-en');
+      var jaEls = document.querySelectorAll('.lang-ja');
+      for (var i = 0; i < enEls.length; i++) enEls[i].style.display = lang === 'en' ? '' : 'none';
+      for (var i = 0; i < jaEls.length; i++) jaEls[i].style.display = lang === 'ja' ? '' : 'none';
+      for (var i = 0; i < btnsEn.length; i++) {
+        btnsEn[i].style.background = lang === 'en' ? '#7253ed' : '';
+        btnsEn[i].style.color = lang === 'en' ? '#fff' : '';
+        btnsEn[i].style.borderColor = lang === 'en' ? '#7253ed' : '#ccc';
+      }
+      for (var i = 0; i < btnsJa.length; i++) {
+        btnsJa[i].style.background = lang === 'ja' ? '#7253ed' : '';
+        btnsJa[i].style.color = lang === 'ja' ? '#fff' : '';
+        btnsJa[i].style.borderColor = lang === 'ja' ? '#7253ed' : '#ccc';
+      }
+      try { localStorage.setItem('qbpp-lang', lang); } catch(e) {}
+    };
+    for (var i = 0; i < btnsEn.length; i++) {
+      btnsEn[i].addEventListener('click', function() { showLang('en'); });
+    }
+    for (var i = 0; i < btnsJa.length; i++) {
+      btnsJa[i].addEventListener('click', function() { showLang('ja'); });
+    }
+    var savedLang = null;
+    try { savedLang = localStorage.getItem('qbpp-lang'); } catch(e) {}
+    showLang(savedLang === 'ja' ? 'ja' : 'en');
+
     for (var n = 0; n < navEls.length; n++) {
       navEls[n].style.visibility = 'visible';
     }
