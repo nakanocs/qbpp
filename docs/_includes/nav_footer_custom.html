@@ -13,39 +13,39 @@
 <script>
 (function() {
   function getTopLevelItems() {
-    var siteNav = document.querySelector('.site-nav');
+    // Find all ul.nav-list inside .site-nav
+    var siteNav = document.querySelector('nav.site-nav');
     if (!siteNav) return { cpp: [], python: [] };
-    // Get the first ul.nav-list which contains top-level items
-    var allUls = siteNav.getElementsByClassName('nav-list');
+
+    // Get all ul.nav-list and find the one whose direct children are top-level pages
+    var uls = siteNav.querySelectorAll('ul.nav-list');
     var topUl = null;
-    for (var i = 0; i < allUls.length; i++) {
-      if (allUls[i].parentNode === siteNav || allUls[i].parentNode.classList.contains('site-nav')) {
-        topUl = allUls[i];
-        break;
+    for (var i = 0; i < uls.length; i++) {
+      // The top-level ul contains the "Home" link
+      var links = uls[i].querySelectorAll('li > a.nav-list-link');
+      for (var j = 0; j < links.length; j++) {
+        if (links[j].textContent.trim() === 'Home') {
+          topUl = uls[i];
+          break;
+        }
       }
+      if (topUl) break;
     }
     if (!topUl) return { cpp: [], python: [] };
 
     var cpp = [], python = [];
     var children = topUl.children;
     for (var i = 0; i < children.length; i++) {
-      if (children[i].tagName !== 'LI') continue;
-      var links = children[i].getElementsByTagName('a');
-      if (links.length === 0) continue;
-      // Find the direct link (first a that is nav-list-link)
-      var text = '';
-      var href = '';
-      for (var j = 0; j < links.length; j++) {
-        if (links[j].classList.contains('nav-list-link')) {
-          text = links[j].textContent.trim();
-          href = links[j].getAttribute('href') || '';
-          break;
-        }
-      }
-      if (text === 'PyQBPP' || href.indexOf('/python') !== -1) {
-        python.push(children[i]);
+      var li = children[i];
+      if (li.tagName !== 'LI') continue;
+      // Get the first nav-list-link in this li
+      var link = li.querySelector('a.nav-list-link');
+      if (!link) continue;
+      var text = link.textContent.trim();
+      if (text === 'PyQBPP') {
+        python.push(li);
       } else {
-        cpp.push(children[i]);
+        cpp.push(li);
       }
     }
     return { cpp: cpp, python: python };
@@ -69,13 +69,14 @@
   window.switchNav = function(mode) {
     var nav = getTopLevelItems();
     if (nav.cpp.length === 0 && nav.python.length === 0) return;
+    var i;
     if (mode === 'python') {
-      for (var i = 0; i < nav.cpp.length; i++) nav.cpp[i].style.display = 'none';
-      for (var i = 0; i < nav.python.length; i++) nav.python[i].style.display = '';
+      for (i = 0; i < nav.cpp.length; i++) nav.cpp[i].style.display = 'none';
+      for (i = 0; i < nav.python.length; i++) nav.python[i].style.display = '';
       setButtonStyle('switch-python', 'switch-cpp');
     } else {
-      for (var i = 0; i < nav.python.length; i++) nav.python[i].style.display = 'none';
-      for (var i = 0; i < nav.cpp.length; i++) nav.cpp[i].style.display = '';
+      for (i = 0; i < nav.python.length; i++) nav.python[i].style.display = 'none';
+      for (i = 0; i < nav.cpp.length; i++) nav.cpp[i].style.display = '';
       setButtonStyle('switch-cpp', 'switch-python');
     }
     try { localStorage.setItem('qbpp-nav-mode', mode); } catch(e) {}
@@ -85,8 +86,7 @@
     var saved = null;
     try { saved = localStorage.getItem('qbpp-nav-mode'); } catch(e) {}
     var onPython = window.location.pathname.indexOf('/python') !== -1;
-    var mode = onPython ? 'python' : (saved || 'cpp');
-    switchNav(mode);
+    switchNav(onPython ? 'python' : (saved || 'cpp'));
   }
 
   if (document.readyState === 'loading') {
