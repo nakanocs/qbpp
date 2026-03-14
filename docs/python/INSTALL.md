@@ -3,7 +3,7 @@ layout: default
 title: "Installation"
 nav_order: 3
 ---
-# PyQBPP Installation
+# Installation
 
 ## Supported Environment
 - Linux (Ubuntu 20.04 or later)
