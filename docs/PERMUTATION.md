@@ -1,8 +1,9 @@
 ---
 layout: default
-title: "Permutation matrix generation"
+title: "Permutation Matrix"
+nav_order: 5
+parent: "C++ Document"
 ---
-
 # Permutation matrix generation
 
 Many combinatorial optimization problems are permutation-based in the sense that the objective is to find an optimal permutation.

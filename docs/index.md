@@ -1,8 +1,8 @@
 ---
 layout: default
-title: "QUBO++ documentation"
+title: "Home"
+nav_order: 1
 ---
-
 # QUBO++: A model-and-solve framework for combinatorial optimization via QUBO/HUBO
 
 * A **C++ library** for constructing polynomials of binary variables to solve combinatorial optimization problems.

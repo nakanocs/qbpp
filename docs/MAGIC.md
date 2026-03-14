@@ -1,8 +1,9 @@
 ---
 layout: default
 title: "Magic Square"
+nav_order: 40
+parent: "Case Studies"
 ---
-
 # Magic Square
 A 3-by-3 magic square is a 3-by-3 matrix that contains each integer from 1 to 9 exactly once, such that the sum of every row, every column, and the two diagonals is 15.
 An example is shown below:

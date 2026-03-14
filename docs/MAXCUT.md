@@ -1,8 +1,9 @@
 ---
 layout: default
-title: "Max-Cut Problem"
+title: "Max-Cut"
+nav_order: 10
+parent: "Case Studies"
 ---
-
 # Max-Cut Problem
 
 Given an undirected graph $G=(V,E)$, the **Max-Cut** problem aims to partition the node set $V$ into two disjoint subsets $S$ and $\overline{S}$ so that the number of edges in $E$ that have one endpoint in $S$ and the other in $\overline{S}$ is **maximized**.

@@ -1,8 +1,9 @@
 ---
 layout: default
-title: "PyQBPP Quick Reference: Operators and Functions"
+title: "QR: Operations"
+nav_order: 31
+parent: "PyQBPP"
 ---
-
 # Quick Reference: Operators and Functions for Expressions (PyQBPP)
 
 The table below summarizes the operators and functions available for `pyqbpp.Expr` objects.

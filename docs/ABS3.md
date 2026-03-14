@@ -1,8 +1,9 @@
 ---
 layout: default
-title: "ABS3"
+title: "ABS3 Solver"
+nav_order: 21
+parent: "C++ Document"
 ---
-
 # ABS3 Solver Usage
 Solving an expression `f` using the ABS3 Solver involves the following three steps:
 1. Create an ABS3 Solver (or **`qbpp::abs3::ABS3Solver`**) object for the expression `f`.

@@ -1,9 +1,8 @@
 ---
 layout: default
 title: "Quick Start"
+nav_order: 4
 ---
-
-
 # Quick Start
 This page provides an overview of the Quick Start procedure.
 More detailed instructions for installing QUBO++ on WSL on Windows 11 are available in [Quick Start for Windows (WSL)](WSL).

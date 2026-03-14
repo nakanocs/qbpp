@@ -1,9 +1,9 @@
 ---
-section: python
 layout: default
-title: "RANGE (Python)"
+title: "Range Constraints"
+nav_order: 9
+parent: "PyQBPP"
 ---
-
 # Range Constraints and Solving Integer Linear Programming
 
 ## Polynomial formulation for range constraints

@@ -1,8 +1,9 @@
 ---
 layout: default
-title: "VARIABLE"
+title: "Variables and Expressions"
+nav_order: 1
+parent: "C++ Document"
 ---
-
 # Defining Variables and Expressions
 
 ## Header file and namespace

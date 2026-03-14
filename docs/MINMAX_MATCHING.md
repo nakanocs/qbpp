@@ -1,8 +1,9 @@
 ---
 layout: default
-title: "Minimum Maximal Matching Problem"
+title: "Min-Max Matching"
+nav_order: 17
+parent: "Case Studies"
 ---
-
 # Minimum Maximal Matching Problem
 
 A **matching** in an undirected graph is a set of edges such that no two edges share a common endpoint.

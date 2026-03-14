@@ -1,8 +1,9 @@
 ---
 layout: default
-title: "Minimum Vertex Cover Problem"
+title: "Vertex Cover"
+nav_order: 13
+parent: "Case Studies"
 ---
-
 # Minimum Vertex Cover Problem
 A **vertex cover** of an undirected graph $G=(V,E)$ is a subset 
 $S\subseteq V$ such that, for every edge $(u,v)\in E$, at least one of its endpoints belongs to $S$.

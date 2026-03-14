@@ -1,9 +1,9 @@
 ---
 layout: default
 title: "PyQBPP Document"
-section: python
+nav_order: 1
+parent: "PyQBPP"
 ---
-
 # PyQBPP Document
 This documentation for PyQBPP (Python binding of QUBO++) is currently under development.
 Some pages may contain incomplete or provisional information.

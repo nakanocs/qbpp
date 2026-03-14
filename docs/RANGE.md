@@ -1,8 +1,9 @@
 ---
 layout: default
-title: "RANGE"
+title: "Range Constraints"
+nav_order: 8
+parent: "C++ Document"
 ---
-
 # Range Constraints and Solving Integer Linear Programming
 
 ## Polynomial formulation for range constraints

@@ -1,8 +1,8 @@
 ---
 layout: default
 title: "HUBO and QUBO"
+nav_order: 3
 ---
-
 # HUBO and QUBO
 A **High-Order Unconstrained Binary Optimization (HUBO)** problem is defined by a polynomial over binary variables.
 The goal is to find an assignment of binary values ${0,1}$ to all variables that minimizes the value of the polynomial.

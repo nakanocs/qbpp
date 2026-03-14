@@ -1,9 +1,9 @@
 ---
-section: python
 layout: default
-title: "Replace Functions (Python)"
+title: "Replace Functions"
+nav_order: 17
+parent: "PyQBPP"
 ---
-
 # Replace Functions
 
 PyQBPP provides the following replace function, which can be used to fix variable values in an expression:

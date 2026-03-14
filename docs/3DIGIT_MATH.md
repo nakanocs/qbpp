@@ -1,8 +1,9 @@
 ---
 layout: default
-title: "3-Digit Math Problem"
+title: "3-Digit Math"
+nav_order: 6
+parent: "Case Studies"
 ---
-
 # 3-Digit Math Problem
 
 Let us solve the following math problem using QUBO++.

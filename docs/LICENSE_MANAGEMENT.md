@@ -1,8 +1,8 @@
 ---
 layout: default
 title: "License Management"
+nav_order: 9
 ---
-
 # License Management
 
 This page describes how to manage your QUBO++ license using the **`qbpp-license`** command-line utility.

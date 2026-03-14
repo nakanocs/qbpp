@@ -1,8 +1,9 @@
 ---
 layout: default
-title: "Factorization Through HUBO Expression"
+title: "Factorization"
+nav_order: 7
+parent: "C++ Document"
 ---
-
 # Factorization Through HUBO Expression
 
 ## HUBO for factorizing the product of two prime numbers

@@ -1,8 +1,9 @@
 ---
 layout: default
 title: "Evaluating Expressions"
+nav_order: 16
+parent: "C++ Document"
 ---
-
 # Evaluating Expressions
 
 ## Evaluation using qbpp::Maplist

@@ -1,9 +1,9 @@
 ---
 layout: default
 title: "Pythagorean Triples"
+nav_order: 1
+parent: "Case Studies"
 ---
-
-
 # Pythagorean Triples
 
 Three integers $x$, $y$, and $z$ are **Pythagorean triples** if they satisfy

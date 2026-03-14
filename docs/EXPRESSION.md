@@ -1,8 +1,9 @@
 ---
 layout: default
 title: "Expression Classes"
+nav_order: 15
+parent: "C++ Document"
 ---
-
 # Expression Classes
 The most important feature of QUBO++ is its ability to create expressions for solving combinatorial optimization problems.
 The following three classes are used for this purpose:

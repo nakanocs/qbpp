@@ -1,8 +1,9 @@
 ---
 layout: default
-title: "Interval Subset Sum Problem (ISSP)"
+title: "Interval Subset Sum"
+nav_order: 35
+parent: "Case Studies"
 ---
-
 # Interval Subset Sum Problem (ISSP)
 The **Interval Subset Sum Problem (ISSP)** is a generalization of the **Subset Sum Problem**.
 Given $n$ integer **intervals $[l_i, u_i]$** $(0\leq i\leq n-1)$ and an **upper bound $T$**, the goal is to choose an integer value

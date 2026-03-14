@@ -1,8 +1,9 @@
 ---
 layout: default
-title: "Gurobi Optimizer Usage"
+title: "Gurobi Solver"
+nav_order: 22
+parent: "C++ Document"
 ---
-
 # Gurobi Optimizer Usage
 
 QUBO++ can use the Gurobi Optimizer to solve QUBO expressions.

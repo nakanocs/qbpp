@@ -1,8 +1,9 @@
 ---
 layout: default
-title: "Minimum Set Cover Problem"
+title: "Set Cover"
+nav_order: 16
+parent: "Case Studies"
 ---
-
 # Minimum Set Cover Problem
 Let $U$ be a universe set, and let ${\cal 𝐹}=\{S_0, S_1, \ldots S_{m-1}\}$ be a family of subsets of $U$.
 A subfamily $\cal S\subseteq \cal F$ is called a **set cover** if it covers all elements of $U$, i.e.,

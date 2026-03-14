@@ -1,8 +1,9 @@
 ---
 layout: default
 title: "Adder Simulation"
+nav_order: 50
+parent: "Case Studies"
 ---
-
 # Adder Simulation
 
 ## Full adder and ripple carry adder 

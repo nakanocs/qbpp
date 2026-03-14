@@ -1,8 +1,9 @@
 ---
 layout: default
-title: "Reference Variables"
+title: "QR: Variables"
+nav_order: 30
+parent: "C++ Document"
 ---
-
 # Quick Reference: Variables and Expressions
 
 ## Data types used in `qbpp::Expr`

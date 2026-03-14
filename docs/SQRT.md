@@ -1,8 +1,9 @@
 ---
 layout: default
-title: "RANGE"
+title: "Square Root"
+nav_order: 3
+parent: "Case Studies"
 ---
-
 # Square Root
 
 This example demonstrates how to compute the square root of

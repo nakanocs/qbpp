@@ -1,9 +1,9 @@
 ---
-section: python
 layout: default
-title: "Variable and Expression Classes (Python)"
+title: "Data Types"
+nav_order: 10
+parent: "PyQBPP"
 ---
-
 # Variable and Expression Classes
 
 ## Var, Term, and Expr classes

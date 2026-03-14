@@ -1,8 +1,9 @@
 ---
 layout: default
-title: "REPLACE"
+title: "Replace Functions"
+nav_order: 17
+parent: "C++ Document"
 ---
-
 # Replace functions
 
 QUBO++ provides the following replace function, which can be used to fix variable values in an expression.

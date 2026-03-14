@@ -1,10 +1,9 @@
 ---
-section: python
 layout: default
-title: "Solving Partitioning Problem Using Vector of variables (Python)"
+title: "Partitioning Problem"
+nav_order: 5
+parent: "PyQBPP"
 ---
-
-
 # Solving Partitioning Problem Using Vector of variables
 
 ## Partitioning problem

@@ -1,8 +1,9 @@
 ---
 layout: default
-title: "8-Queens Problem"
+title: "N-Queens"
+nav_order: 41
+parent: "Case Studies"
 ---
-
 # N-Queens Problem
 The **8-Queens problem** aims to place 8 queens on a chessboard so that no two queens attack each other; that is, no two queens share the same row, the same column, or the same diagonal (in either direction).
 The **N-Queens problem** generalizes this: place 

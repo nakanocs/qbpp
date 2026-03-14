@@ -1,9 +1,9 @@
 ---
 layout: default
-title: "Sum Functions for Multi-dimensional Arrays"
+title: "Sum Functions"
+nav_order: 18
+parent: "C++ Document"
 ---
-
-
 # Sum Functions for Multi-dimensional Arrays
 QUBO++ provides two sum functions for multi-dimensional arrays of variables or expressions:
 - **`qbpp::sum()`**: Computes the sum of all elements in the array.

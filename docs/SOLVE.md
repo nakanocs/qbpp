@@ -1,9 +1,9 @@
 ---
 layout: default
-title: "SOLVE"
+title: "Solving Expressions"
+nav_order: 2
+parent: "C++ Document"
 ---
-
-
 # Solving Expressions using Easy Solver and Exhaustive Solver
 
 QUBO++ provides the **Easy Solver** and the **Exhaustive Solver** for QUBO/HUBO expressions.  

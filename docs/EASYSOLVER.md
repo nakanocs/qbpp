@@ -1,8 +1,9 @@
 ---
 layout: default
 title: "Easy Solver"
+nav_order: 19
+parent: "C++ Document"
 ---
-
 # Easy Solver Usage
 The **Easy Solver** is a heuristic solver for QUBO/HUBO expressions.
 

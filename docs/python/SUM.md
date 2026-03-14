@@ -1,9 +1,9 @@
 ---
-section: python
 layout: default
-title: "Sum Functions for Multi-dimensional Arrays (Python)"
+title: "Sum Functions"
+nav_order: 18
+parent: "PyQBPP"
 ---
-
 # Sum Functions for Multi-dimensional Arrays
 PyQBPP provides two sum functions for multi-dimensional arrays of variables or expressions:
 - **`sum()`**: Computes the sum of all elements in the array.

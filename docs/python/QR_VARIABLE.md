@@ -1,8 +1,9 @@
 ---
 layout: default
-title: "PyQBPP Reference Variables"
+title: "QR: Variables"
+nav_order: 30
+parent: "PyQBPP"
 ---
-
 # Quick Reference: Variables and Expressions (PyQBPP)
 
 ## Data types in PyQBPP

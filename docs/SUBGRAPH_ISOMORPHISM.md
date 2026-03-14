@@ -1,8 +1,9 @@
 ---
 layout: default
-title: "Subgraph Isomorphism Problem"
+title: "Subgraph Isomorphism"
+nav_order: 15
+parent: "Case Studies"
 ---
-
 # Subgraph Isomorphism Problem
 Given two undirected graphs $G_H=(V_H,E_H)$ (the host graph) and 
 $G_G=(V_G,E_G)$ (the guest graph), the **subgraph isomorphism problem** asks whether 

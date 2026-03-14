@@ -1,8 +1,8 @@
 ---
 layout: default
 title: "Demos"
+nav_order: 7
 ---
-
 # Demos
 
 > **Note:** These demos run on AWS Lambda with limited resources.

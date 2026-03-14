@@ -1,8 +1,9 @@
 ---
 layout: default
-title: "Maximum Clique Problem"
+title: "Maximum Clique"
+nav_order: 12
+parent: "Case Studies"
 ---
-
 # Maximum Clique  Problem
 
 Given an undirected graph $G=(V,E)$, the Maximum Clique problem aims to find a largest subset 

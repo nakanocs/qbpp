@@ -1,9 +1,9 @@
 ---
 layout: default
-title: "Solving Partitioning Problem Using Vector of variables"
+title: "Partitioning Problem"
+nav_order: 4
+parent: "C++ Document"
 ---
-
-
 # Solving Partitioning Problem Using Vector of variables
 
 ## Partitioning problem

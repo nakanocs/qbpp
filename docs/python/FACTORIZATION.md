@@ -1,9 +1,9 @@
 ---
-section: python
 layout: default
-title: "Factorization Through HUBO Expression (Python)"
+title: "Factorization"
+nav_order: 8
+parent: "PyQBPP"
 ---
-
 # Factorization Through HUBO Expression
 
 ## HUBO for factorizing the product of two prime numbers

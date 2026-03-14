@@ -1,8 +1,9 @@
 ---
 layout: default
 title: "Shift Scheduling"
+nav_order: 31
+parent: "Case Studies"
 ---
-
 # Shift Scheduling Problem
 Consider the following **shift scheduling problem**, which aims to find a schedule that minimizes the total worker cost.
 

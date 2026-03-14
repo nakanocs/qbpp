@@ -1,8 +1,9 @@
 ---
 layout: default
-title: "VECTOR"
+title: "Vectors"
+nav_order: 3
+parent: "C++ Document"
 ---
-
 # Vector of variables and vector functions
 
 QUBO++ supports vector of variables and vector oparations.

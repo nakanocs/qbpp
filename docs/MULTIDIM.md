@@ -1,8 +1,9 @@
 ---
 layout: default
-title: "MULTIDIM"
+title: "Multi-dimensional Variables"
+nav_order: 13
+parent: "C++ Document"
 ---
-
 # Multi-dimensional Variables and Expressions
 
 ## Defining multi-dimensional variables

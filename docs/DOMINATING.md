@@ -1,8 +1,9 @@
 ---
 layout: default
-title: "Minimum Dominating Set Problem"
+title: "Dominating Set"
+nav_order: 14
+parent: "Case Studies"
 ---
-
 # Minimum Dominating Set Problem
 A dominating set of an undirected graph $G=(V,E)$ is a subset $S\subseteq V$ such that every node
 $u\in V$ is either in $S$ or adjacent to a vertex in $S$.

@@ -1,9 +1,9 @@
 ---
-section: python
 layout: default
-title: "Basic Operators and Functions (Python)"
+title: "Operators and Functions"
+nav_order: 11
+parent: "PyQBPP"
 ---
-
 # Basic Operators and Functions
 
 ## Unary and Binary Operators

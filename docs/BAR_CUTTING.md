@@ -1,8 +1,9 @@
 ---
 layout: default
-title: "Bar Cutting Problem"
+title: "Bar Cutting"
+nav_order: 33
+parent: "Case Studies"
 ---
-
 # Bar Cutting Problem
 Suppose that we are given $M$ identical bars of fixed length $L$, and a set of $N$ orders specified by pairs $(l_j,c_j)$
 ($0\leq j\leq N−1$), where $l_j$ is the required length and $c_j$ is the required quantity of order $j$.

@@ -1,8 +1,9 @@
 ---
 layout: default
-title: "Reminder Problem"
+title: "Remainder Problem"
+nav_order: 2
+parent: "Case Studies"
 ---
-
 # Remainder Problem
 The following problem can be solved using QUBO++.
 Find the minimum non-negative integer $x$ such that

@@ -1,8 +1,9 @@
 ---
 layout: default
 title: "LABS Problem"
+nav_order: 32
+parent: "Case Studies"
 ---
-
 # Low-Autocorrelation Binary Sequence (LABS) Problem
 
 The **Low Autocorrelation Binary Sequence (LABS)** problem aims to find a spin sequence$S=(s_i)$ ($s_i=\pm, 0\leq i\leq n-1$) 

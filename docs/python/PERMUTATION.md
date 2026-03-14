@@ -1,9 +1,9 @@
 ---
-section: python
 layout: default
-title: "Permutation matrix generation (Python)"
+title: "Permutation Matrix"
+nav_order: 6
+parent: "PyQBPP"
 ---
-
 # Permutation matrix generation
 
 Many combinatorial optimization problems are permutation-based in the sense that the objective is to find an optimal permutation.

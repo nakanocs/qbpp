@@ -1,9 +1,9 @@
 ---
-section: python
 layout: default
-title: "ABS3 Solver (Python)"
+title: "ABS3 Solver"
+nav_order: 21
+parent: "PyQBPP"
 ---
-
 # ABS3 Solver Usage
 Solving an expression `f` using the ABS3 Solver involves the following three steps:
 1. Create an **`ABS3Solver`** object for the expression `f`.

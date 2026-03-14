@@ -1,8 +1,8 @@
 title: "QUBO++"
-description: "QUBO++ is a C++ library and Python package (PyQBPP) for constructing and solving QUBO/HUBO combinatorial optimization problems. Includes Easy Solver, Exhaustive Solver, and ABS3 GPU Solver."
+description: "QUBO++ is a C++ library and Python package (PyQBPP) for constructing and solving QUBO/HUBO combinatorial optimization problems."
 
 markdown: kramdown
-theme: minima
+theme: just-the-docs
 
 highlighter: rouge
 
@@ -17,3 +17,34 @@ plugins:
   - jekyll-last-modified-at
   - jekyll-seo-tag
   - jekyll-sitemap
+
+# just-the-docs configuration
+color_scheme: default
+search_enabled: true
+search.button: true
+
+heading_anchors: true
+
+# Navigation structure
+nav_external_links:
+  - title: "Latest Release"
+    url: "https://github.com/nakanocs/qbpp/releases/latest"
+
+# Google Analytics
+ga_tracking:
+  - G-5X2BP69THZ
+
+# Footer
+last_edit_timestamp: true
+last_edit_time_format: "%Y.%m.%d"
+
+# Back to top link
+back_to_top: true
+back_to_top_text: "Back to top"
+
+# Aux links (top right)
+aux_links:
+  "GitHub":
+    - "https://github.com/nakanocs/qbpp"
+
+aux_links_new_tab: true

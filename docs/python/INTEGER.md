@@ -1,9 +1,9 @@
 ---
-section: python
 layout: default
-title: "INTEGER (Python)"
+title: "Integer Variables"
+nav_order: 7
+parent: "PyQBPP"
 ---
-
 # Integer Variables and Solving Simultaneous Equations
 
 ## Integer variables

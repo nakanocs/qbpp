@@ -1,9 +1,9 @@
 ---
-section: python
 layout: default
-title: "Multi-dimensional Variables and Expressions (Python)"
+title: "Multi-dimensional Variables"
+nav_order: 13
+parent: "PyQBPP"
 ---
-
 # Multi-dimensional Variables and Expressions
 
 ## Defining multi-dimensional variables

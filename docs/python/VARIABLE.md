@@ -1,9 +1,9 @@
 ---
-section: python
 layout: default
-title: "VARIABLE (Python)"
+title: "Variables and Expressions"
+nav_order: 2
+parent: "PyQBPP"
 ---
-
 # Defining Variables and Creating Expressions
 
 ## Installing PyQBPP

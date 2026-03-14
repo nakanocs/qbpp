@@ -1,10 +1,9 @@
 ---
-section: python
 layout: default
-title: "SOLVE (Python)"
+title: "Solving Expressions"
+nav_order: 3
+parent: "PyQBPP"
 ---
-
-
 # Solving Expressions using Easy Solver and Exhaustive Solver
 
 PyQBPP provides the **Easy Solver** and the **Exhaustive Solver** for QUBO/HUBO expressions.

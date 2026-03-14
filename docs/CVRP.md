@@ -1,8 +1,9 @@
 ---
 layout: default
 title: "CVRP"
+nav_order: 20
+parent: "Case Studies"
 ---
-
 # Capacitated Vehicle Routing Problem (CVRP)
 The **Capacitated Vehicle Routing Problem (CVRP)** aims to find a set of routes for $V$ **vehicles** that start and end at a single **depot** and collectively serve all **customers**.
 We index the **locations** by $i \in \lbrace 0,1,\ldots,N-1\rbrace$, where location 0 denotes the depot and locations $1,\ldots,N-1$ are customers.  

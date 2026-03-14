@@ -1,8 +1,9 @@
 ---
 layout: default
-title: "Math Problem: Find Three Integers"
+title: "Find Three Integers"
+nav_order: 5
+parent: "Case Studies"
 ---
-
 # Math Problem: Find Three Intgers
 
 The following math problem can be solved using QUBO++.

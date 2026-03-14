@@ -1,8 +1,9 @@
 ---
 layout: default
-title: "Basic Operators and Functions"
+title: "Operators and Functions"
+nav_order: 11
+parent: "C++ Document"
 ---
-
 # Basic Operators and Functions
 
 ## Unary and Binary Operators

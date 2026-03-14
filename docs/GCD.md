@@ -1,8 +1,9 @@
 ---
 layout: default
-title: "Greatest Common Divisor (GCD)"
+title: "Greatest Common Divisor"
+nav_order: 4
+parent: "Case Studies"
 ---
-
 # Greatest Common Divisor (GCD)
 Let $P$ and $Q$ be two positive integers.
 The computation of the **greatest common divisor (GCD)** can be formulated as a HUBO problem.

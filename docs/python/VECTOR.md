@@ -1,9 +1,9 @@
 ---
-section: python
 layout: default
-title: "VECTOR (Python)"
+title: "Vectors"
+nav_order: 4
+parent: "PyQBPP"
 ---
-
 # Vector of variables and vector functions
 
 PyQBPP supports vectors of variables and vector operations.

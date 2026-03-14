@@ -1,9 +1,9 @@
 ---
 layout: default
-title: "PyQBPP Introduction"
-section: python
+title: "PyQBPP"
+nav_order: 50
+has_children: true
 ---
-
 # PyQBPP: Python Interface for QUBO++
 
 PyQBPP is a Python wrapper for the QUBO++ library,

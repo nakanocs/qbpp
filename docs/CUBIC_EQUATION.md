@@ -1,8 +1,9 @@
 ---
 layout: default
 title: "Cubic Equation"
+nav_order: 7
+parent: "Case Studies"
 ---
-
 # Cubic Equation
 Cubic equations over the integers can be solved using QUBO++. For example, consider
 

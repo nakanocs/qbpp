@@ -1,8 +1,9 @@
 ---
 layout: default
-title: "Multiplier Simulation and Factorization"
+title: "Multiplier Simulation"
+nav_order: 51
+parent: "Case Studies"
 ---
-
 # Multiplier Simulation and Factorization
 Multiplication of two integers can be performed using additions.
 In this section, we design a multiplier for two 4-bit integers using full adders.

@@ -1,8 +1,9 @@
 ---
 layout: default
-title: "Maximum Matching Problem"
+title: "Maximum Matching"
+nav_order: 11
+parent: "Case Studies"
 ---
-
 # Maximum Matching Problem
 
 A **matching** in an undirected graph is a set of edges such that no two edges share a common node.

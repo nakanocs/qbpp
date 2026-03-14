@@ -1,9 +1,9 @@
 ---
-section: python
 layout: default
-title: "Evaluating Expressions (Python)"
+title: "Evaluating Expressions"
+nav_order: 16
+parent: "PyQBPP"
 ---
-
 # Evaluating Expressions
 
 ## Evaluation using MapList

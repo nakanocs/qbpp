@@ -1,8 +1,9 @@
 ---
 layout: default
-title: "QUBO++ Document"
+title: "C++ Document"
+nav_order: 5
+has_children: true
 ---
-
 # QUBO++ Document
 This documentation for QUBO++ is currently under development.
 Some pages may contain incomplete or provisional information.

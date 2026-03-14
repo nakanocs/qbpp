@@ -1,8 +1,9 @@
 ---
 layout: default
-title: "Basic Operations and Functions for Vectors"
+title: "Vector Operations"
+nav_order: 12
+parent: "C++ Document"
 ---
-
 # Basic Operators and Functions for Vectors
 Basically, operators and functions for vectors operate element-wise.
 

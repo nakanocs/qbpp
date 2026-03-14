@@ -1,8 +1,9 @@
 ---
 layout: default
-title: "INTEGER"
+title: "Integer Variables"
+nav_order: 6
+parent: "C++ Document"
 ---
-
 # Integer Variables and Solving Simultaneous Equations
 
 ## Integer variables

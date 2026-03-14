@@ -1,8 +1,8 @@
 ---
 layout: default
-title: "REFERENCE"
+title: "Reference"
+nav_order: 8
 ---
-
 # QUBO++ Library
 
 **QUBO (Quadratic Unconstrained Binary Optimization) models** use quadratic functions over binary variables {0,1}.

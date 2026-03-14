@@ -1,8 +1,9 @@
 ---
 layout: default
-title: "Quick Reference: Operators and Functions"
+title: "QR: Operations"
+nav_order: 31
+parent: "C++ Document"
 ---
-
 # Quick Reference: Operators and Functions for Expressions
 
 The table below summarizes the operators and functions available for `qbpp::Expr` objects.

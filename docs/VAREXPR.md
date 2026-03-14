@@ -1,9 +1,9 @@
 ---
 layout: default
-title: "Variable and Expression Classes"
+title: "Data Types"
+nav_order: 10
+parent: "C++ Document"
 ---
-
-
 # Variable and Expression Classes
 
 ## qbpp::Var, qbpp::Term, and qbpp::Expr classes

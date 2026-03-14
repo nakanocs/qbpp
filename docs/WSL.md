@@ -1,8 +1,9 @@
 ---
 layout: default
-title: "Quick Start for Windows (WSL)"
+title: "Windows (WSL)"
+nav_order: 1
+parent: "Quick Start"
 ---
-
 # Quick Start for Windows (WSL)
 On Windows 11, QUBO++ can be used through **WSL (Windows Subsystem for Linux)**, which allows Linux programs to run natively on Windows.
 
