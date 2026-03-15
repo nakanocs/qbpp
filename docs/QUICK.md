@@ -6,6 +6,9 @@ nav_order: 4
 <div class="lang-en" markdown="1">
 
 # Quick Start
+
+> **Try without installing:** You can try QUBO++ immediately in the browser using the [**Playground**](PLAYGROUND) — no installation required.
+
 This page provides an overview of the Quick Start procedure.
 More detailed instructions for installing QUBO++ on WSL on Windows 11 are available in [Quick Start for Windows (WSL)](WSL).
 
@@ -69,6 +72,9 @@ x = 6, y = 4
 <div class="lang-ja" markdown="1">
 
 # クイックスタート
+
+> **インストール不要で試す:** [**Playground**](PLAYGROUND) を使えば、ブラウザ上ですぐに QUBO++ を試すことができます。
+
 このページでは、クイックスタートの手順の概要を説明します。
 Windows 11 の WSL 上に QUBO++ をインストールするより詳細な手順は [Windows (WSL) でのクイックスタート](WSL) をご覧ください。
 
