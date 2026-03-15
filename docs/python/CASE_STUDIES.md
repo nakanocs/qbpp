@@ -44,6 +44,10 @@ This section provides examples of solving optimization, mathematical, and graph 
 2. [N-Queens Problem](QUEENS) (Medium)
 3. [SEND + MORE = MONEY Problem](SEND_MORE_MONEY) (Hard)
 
+## Satisfiability
+1. [Boolean Satisfiability Problem (SAT)](SAT) (Easy)
+2. [Not-All-Equal SAT (NAE-SAT)](NAESAT) (Easy)
+
 ## Circuit Simulation
 1. [Adder Simulation](ADDER) (Medium)
 2. [Multiplier Simulation and Factorization](MULTIPLIER) (Hard)
@@ -93,6 +97,10 @@ This section provides examples of solving optimization, mathematical, and graph 
 1. [魔方陣](MAGIC) (Hard)
 2. [Nクイーン問題](QUEENS) (Medium)
 3. [SEND + MORE = MONEY 問題](SEND_MORE_MONEY) (Hard)
+
+## 充足可能性
+1. [充足可能性問題 (SAT)](SAT) (Easy)
+2. [Not-All-Equal SAT (NAE-SAT)](NAESAT) (Easy)
 
 ## 回路シミュレーション
 1. [加算器シミュレーション](ADDER) (Medium)
