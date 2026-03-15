@@ -3,6 +3,7 @@ layout: default
 title: "PyQBPP (Python)"
 nav_order: 5
 ---
+<div class="lang-en" markdown="1">
 # PyQBPP Document
 This documentation for PyQBPP (Python binding of QUBO++) is currently under development.
 Some pages may contain incomplete or provisional information.
@@ -51,3 +52,55 @@ See the [Case Studies](CASE_STUDIES) page for the full list.
 ## Quick References
 1. [Variables and Expressions](QR_VARIABLE)
 2. [Operators and Functions](QR_OPERATION)
+</div>
+
+<div class="lang-ja" markdown="1">
+# PyQBPP ドキュメント
+PyQBPP（QUBO++のPythonバインディング）のドキュメントは現在作成中です。
+一部のページには不完全または暫定的な情報が含まれている場合があります。
+
+## 基礎
+このセクションでは、PyQBPPの段階的な入門を提供します。
+ページを順番に読むことで、変数と式の定義方法、最適化問題のモデル化、
+PyQBPPを使った求解方法を学ぶことができます。
+このチュートリアルを完了すれば、一般的な用途でPyQBPPを使えるようになります。
+
+1. [変数の定義と式の作成](VARIABLE)
+2. [式の求解](SOLVE)
+3. [変数のベクトルとベクトル関数](VECTOR)
+4. [変数ベクトルを用いた分割問題の求解](PARTITION)
+5. [順列行列と割当問題の求解](PERMUTATION)
+6. [整数変数と連立方程式の求解](INTEGER)
+7. [HUBO式による因数分解](FACTORIZATION)
+8. [範囲制約と整数線形計画法の求解](RANGE)
+
+## トピック
+このセクションでは、PyQBPPの特定の機能についてトピックごとに解説します。
+各ページは特定のトピックに焦点を当て、設計上の判断、使用パターン、
+および必要に応じて内部実装について、より深い知見を提供します。
+
+1. [変数と式のデータ型](VAREXPR)
+2. [基本演算子と関数](OPERATOR)
+3. [ベクトル用の基本演算子と関数](OPVECTOR)
+4. [多次元変数と式](MULTIDIM)
+5. [比較演算子](COMPARISON)
+6. [式のクラス](EXPRESSION)
+7. [式の評価](EVAL)
+8. [置換関数](REPLACE)
+9. [多次元配列の和関数](SUM)
+10. [Easy Solverの使い方](EASYSOLVER)
+11. [Exhaustive Solverの使い方](EXHAUSTIVE)
+12. [ABS3 Solverの使い方](ABS3)
+
+> **NOTE**
+> Gurobi SolverはPythonバインディングでは利用できません。
+> Gurobiの使い方については、[QUBO++ (C++) ドキュメント](../GUROBI)を参照してください。
+
+## ケーススタディ
+このセクションでは、PyQBPPを使った最適化問題、数学問題、グラフ問題の解法例を提供します。
+全リストは[ケーススタディ](CASE_STUDIES)ページを参照してください。
+
+## クイックリファレンス
+1. [変数と式](QR_VARIABLE)
+2. [演算子と関数](QR_OPERATION)
+</div>

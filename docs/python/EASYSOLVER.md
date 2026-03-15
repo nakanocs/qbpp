@@ -4,6 +4,7 @@ nav_exclude: true
 title: "Easy Solver"
 nav_order: 19
 ---
+<div class="lang-en" markdown="1">
 # Easy Solver Usage
 The **Easy Solver** is a heuristic solver for QUBO/HUBO expressions.
 
@@ -71,3 +72,74 @@ TTS = 2.691s Energy = 898
 898: ++-++-----+--+--++++++---++-+-+--++-------++-++-+-+-+-+-++-++++-++-+++++-+-+--++++++---+++--+++---++
 ```
 {% endraw %}
+</div>
+
+<div class="lang-ja" markdown="1">
+# Easy Solverの使い方
+**Easy Solver**は、QUBO/HUBO式に対するヒューリスティックソルバーです。
+
+Easy Solverで問題を解くには、以下の3つのステップで行います:
+1. **`EasySolver`** オブジェクトを作成する。
+2. ソルバーオブジェクトのメソッドを呼び出して探索オプションを設定する。
+3. **`search()`** メソッドを呼び出して解を探索する。このメソッドは **`Sol`** オブジェクトを返す。
+
+## Easy Solverオブジェクトの作成
+Easy Solverを使用するには、以下のように式を引数として `EasySolver` オブジェクトを作成します:
+- **`EasySolver(f)`**
+
+ここで、`f` は解くべき式です。
+事前に `simplify_as_binary()` を呼び出してバイナリ式として簡約化しておく必要があります。
+
+## Easy Solverオプションの設定
+- **`time_limit(time)`**: 制限時間を秒単位で指定します。デフォルト値は10.0秒です。
+制限時間を0に設定すると、時間制限による終了は行われません。
+- **`target_energy(energy)`**: 目標エネルギーを指定します。目標以下のエネルギーを持つ解が見つかると、ソルバーは終了します。
+- **`callback(func)`**: 新しい最良解が見つかったときに呼び出されるコールバック関数を設定します。コールバックは2つの引数を受け取ります: `energy`（int）と `tts`（float、解発見までの時間（秒））。
+- **`thread_count(n)`**: スレッド数を設定します。
+
+## 解の探索
+Easy Solverは **`search()`** メソッドを呼び出すことで解を探索します。
+
+## プログラム例
+以下のプログラムは、Easy Solverを使用して
+**Low Autocorrelation Binary Sequences (LABS)** 問題の解を探索します:
+```python
+from pyqbpp import var, expr, sqr, EasySolver
+
+size = 100
+x = var("x", size)
+f = expr()
+for d in range(1, size):
+    temp = expr()
+    for i in range(size - d):
+        temp += (2 * x[i] - 1) * (2 * x[i + d] - 1)
+    f += sqr(temp)
+f.simplify_as_binary()
+
+solver = EasySolver(f)
+solver.time_limit(5.0)
+solver.target_energy(900)
+solver.callback(lambda energy, tts: print(f"TTS = {tts:.3f}s Energy = {energy}"))
+sol = solver.search()
+bits = "".join("-" if sol.get(i) == 0 else "+" for i in range(size))
+print(f"{sol.energy()}: {bits}")
+```
+この例では、以下のオプションが設定されています:
+- 制限時間5.0秒、
+- 目標エネルギー900、
+- 新しい最良解が見つかるたびにエネルギーとTTSを表示するコールバック。
+
+したがって、ソルバーは経過時間が5.0秒に達するか、
+エネルギーが900以下の解が見つかると終了します。
+
+例えば、このプログラムは以下のような出力を生成します:
+{% raw %}
+```txt
+TTS = 0.000s Energy = 300162
+TTS = 0.000s Energy = 273350
+...
+TTS = 2.691s Energy = 898
+898: ++-++-----+--+--++++++---++-+-+--++-------++-++-+-+-+-+-++-++++-++-+++++-+-+--++++++---+++--+++---++
+```
+{% endraw %}
+</div>

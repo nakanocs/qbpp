@@ -3,6 +3,8 @@ layout: default
 title: "Demos"
 nav_order: 7
 ---
+<div class="lang-en" markdown="1">
+
 # Demos
 
 > **Note:** These demos run on AWS Lambda with limited resources.
@@ -12,7 +14,20 @@ nav_order: 7
 > **Note:** PyQBPP is a Python frontend powered by the QUBO++ C++ engine.
 > It is currently under active development and its API may change without notice.
 
+</div>
 
+<div class="lang-ja" markdown="1">
+
+# デモ
+
+> **注意:** これらのデモはリソースが限られた AWS Lambda 上で動作しています。
+> パフォーマンスは通常の PC と比べて**数倍遅く**なります。
+> 最新のデスクトップ PC では、QUBO++ はこれよりも大幅に高速に動作します。
+
+> **注意:** PyQBPP は QUBO++ C++ エンジンを基盤とした Python フロントエンドです。
+> 現在活発に開発中であり、API は予告なく変更される場合があります。
+
+</div>
 
 <div id="demo-tabs" style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:0.8rem;">
   <button class="demo-btn" onclick="loadDemo('https://233dwj2zapcrsk6kvnlhwcc3gu0jydbw.lambda-url.ap-northeast-1.on.aws/', this)">QUBO++ Playground</button>
@@ -59,7 +74,7 @@ function loadDemo(url, btn) {
   btn.classList.add('active');
 }
 
-// Handle save-file requests from demo iframes (showSaveFilePicker blocked in cross-origin iframes)
+/* Handle save-file requests from demo iframes (showSaveFilePicker blocked in cross-origin iframes) */
 window.addEventListener('message', async function(e) {
   if (!e.data || e.data.type !== 'save-file') return;
   var frame = document.getElementById('demo-frame');

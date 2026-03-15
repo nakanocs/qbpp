@@ -3,6 +3,8 @@ layout: default
 title: "License Management"
 nav_order: 4
 ---
+<div class="lang-en" markdown="1">
+
 # License Management
 
 This page describes how to manage your QUBO++ license using the **`qbpp-license`** command-line utility.
@@ -78,7 +80,7 @@ To move a license to another machine, first deactivate it on the current machine
 qbpp-license -d
 ```
 
-- Each license key has a limited number of allowed activations. 
+- Each license key has a limited number of allowed activations.
 - Deactivation frees up one activation slot.
 - **Anonymous Trial** licenses cannot be deactivated.
 - There is a **24-hour cooldown** between consecutive deactivations to prevent abuse.
@@ -158,3 +160,163 @@ qbpp-license -k F-XXXXXX-XXXXXX-XXXXXX-XXXXXX -a
 
 The floating license key is also cached locally, so subsequent runs do not require setting the key again.
 
+</div>
+
+<div class="lang-ja" markdown="1">
+
+# ライセンス管理
+
+このページでは、**`qbpp-license`** コマンドラインユーティリティを使用した QUBO++ ライセンスの管理方法を説明します。
+ライセンスシステムは **QUBO++ (C++)** と **PyQBPP (Python)** で共通です。
+
+## ライセンスの種類
+
+QUBO++ では、変数数の上限と有効期間が異なる複数のライセンスタイプが用意されています。
+
+| ライセンスタイプ | キー必要 | 有効期間 | CPU 変数数 | GPU 変数数 |
+|---|---|---|---|---|
+| **Anonymous Trial** | 不要 | 7日間 | 1,000 | 1,000 |
+| **Registered Trial** | 必要 | 30日間 | 10,000 | 10,000 |
+| **Standard** | 必要 | 契約期間 | 2,147,483,647 | 1,000 |
+| **Professional** | 必要 | 契約期間 | 2,147,483,647 | 2,147,483,647 |
+| **Fallback** | N/A | 常時 | 100 | 100 |
+
+- **Anonymous Trial**: 登録不要。初回使用時に自動的にアクティベートされます。
+- **Registered Trial**: 評価目的の無料ライセンスキーが必要です。
+- **Standard License**: 本番利用向け。大規模な CPU 最適化をサポートします。
+- **Professional License**: GPU アクセラレーション（ABS3 Solver、Exhaustive Solver）を使用した本番利用向けです。
+- **Fallback Mode**: 有効なライセンスが見つからない場合やライセンスが期限切れの場合、QUBO++ は100変数の制限で動作します。
+
+## ライセンスキーの設定とアクティベーション
+
+ライセンスキーをお持ちの場合は、以下のいずれかの方法で設定してください。
+
+### 方法1: `qbpp-license` でアクティベート（推奨）
+
+マシンごとに以下のコマンドを一度実行します：
+
+```bash
+qbpp-license -k XXXXXX-XXXXXX-XXXXXX-XXXXXX -a
+```
+
+ライセンスキーは暗号化されてローカルにキャッシュされます。アクティベーション後、以降の実行では環境変数や `-k` オプションは不要です — QUBO++ プログラムはキャッシュされたキーを自動的に使用します。
+
+再アクティベーションやキーの変更は、新しいキーでコマンドを再度実行するだけです。
+
+### 方法2: 環境変数
+
+`QBPP_LICENSE_KEY` 環境変数を設定します。ローカルキャッシュが永続的でない Docker/CI 環境で便利です。
+
+```bash
+export QBPP_LICENSE_KEY=XXXXXX-XXXXXX-XXXXXX-XXXXXX
+```
+
+### 優先順位
+
+複数の方法が使用されている場合、以下の優先順位が適用されます：
+
+1. **`-k` 引数** またはコード内の `qbpp::license_key()`（最高優先）
+2. **`QBPP_LICENSE_KEY` 環境変数**
+3. **キャッシュされたキー**（最低優先）
+
+> **注意**: Anonymous Trial の場合、ライセンスキーは不要です。キーを設定せずに `qbpp-license -a` を実行するだけです。
+
+## ライセンス状態の確認
+
+変更を加えずに現在のライセンス状態を表示するには：
+
+```bash
+qbpp-license
+```
+
+ライセンスタイプ、有効期限、変数数の上限、アクティベーション使用状況が表示されます。このコマンドはライセンスサーバーに接続して状態を更新します。
+
+## ライセンスのディアクティベーション
+
+ライセンスを別のマシンに移動するには、まず現在のマシンでディアクティベートします：
+
+```bash
+qbpp-license -d
+```
+
+- 各ライセンスキーには許可されたアクティベーション数の上限があります。
+- ディアクティベーションによりアクティベーション枠が1つ解放されます。
+- **Anonymous Trial** ライセンスはディアクティベートできません。
+- 悪用防止のため、連続するディアクティベーション間には **24時間のクールダウン** があります。
+
+
+## コマンドリファレンス
+
+```
+Usage: qbpp-license [options]
+
+Options:
+  -h, --help         ヘルプメッセージを表示して終了
+  -k, --key KEY      ライセンスキーを指定
+  -a, --activate     このマシンでライセンスをアクティベート
+  -d, --deactivate   このマシンでライセンスをディアクティベート
+  -t, --time-out SEC サーバー通信のタイムアウトを設定（デフォルト: 20秒）
+```
+
+### 使用例
+
+| コマンド | 説明 |
+|---|---|
+| `qbpp-license` | 現在のライセンス状態を表示 |
+| `qbpp-license -a` | アクティベート（キー未設定時は Anonymous Trial） |
+| `qbpp-license -k KEY -a` | 指定したキーでアクティベート |
+| `qbpp-license -d` | このマシンでライセンスをディアクティベート |
+| `qbpp-license -t 60` | 60秒のタイムアウトで状態を確認 |
+| `qbpp-license -k KEY -t 60 -a` | キーと延長タイムアウトでアクティベート |
+
+## ライセンス認証の仕組み
+
+- **`qbpp-license` コマンド**: 常にライセンスサーバーに接続して最新の状態を取得します。ネットワーク状況によっては数秒かかることがあります。
+- **QUBO++ プログラム**: **ローカルキャッシュ**を使用してライセンスを検証し、サーバー通信でブロックしません。サーバーへの接続はキャッシュの更新が必要な場合（例：長期間同期されていない場合）のみ行われます。
+- **ライセンスキーの保存**: ライセンスがアクティベートされると、キーは暗号化されてローカルにキャッシュされます。これにより、キーを再設定せずに以降の実行が可能になります。
+
+
+## ネットワークとタイムアウト
+
+ネットワークが遅い場合やファイアウォール/プロキシの背後にある場合、デフォルトの20秒のタイムアウトでは不十分な場合があります。
+
+タイムアウトを延長するには：
+
+```bash
+qbpp-license -t 60 -a
+```
+
+サーバーに到達できない場合、QUBO++ はキャッシュされたライセンス状態にフォールバックします。キャッシュが存在しない場合、QUBO++ は **Fallback Mode**（100変数制限）で動作します。
+
+### プログラムは動作するが変数数が制限される
+
+- QUBO++ が Fallback Mode で動作している可能性があります。ライセンス状態を確認してください：
+  ```bash
+  $ qbpp-license
+  ```
+- `qbpp-license -k KEY -a` または `QBPP_LICENSE_KEY` でライセンスキーが正しく設定されているか確認してください。
+- 必要に応じて再アクティベートしてください：`qbpp-license -a`
+
+### 「ディアクティベーションのクールダウン」
+
+- 連続するディアクティベーション間には24時間の待機期間があります。
+- クールダウン期間が経過してから再試行してください。
+
+## フローティングライセンス
+
+フローティングライセンスは、組織内の複数のマシン間での共有アクセスを可能にします。マシンに永続的にロックされる代わりに、フローティングライセンスは**リースベース**の仕組みを使用します。
+
+- QUBO++ プログラムの起動時に、ライセンスサーバーからリースを取得します。
+- プログラムの実行中、リースは自動的に更新されます。
+- プログラムの終了時にリースが解放され、他のマシンがそのスロットを使用できるようになります。
+- プログラムがクラッシュしたりネットワークが切断された場合、リースはタイムアウト期間後に自動的に失効します。
+
+使い方はノードロックライセンスと同じです：
+
+```bash
+qbpp-license -k F-XXXXXX-XXXXXX-XXXXXX-XXXXXX -a
+```
+
+フローティングライセンスキーもローカルにキャッシュされるため、以降の実行ではキーの再設定は不要です。
+
+</div>

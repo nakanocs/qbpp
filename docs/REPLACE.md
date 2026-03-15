@@ -4,6 +4,7 @@ nav_exclude: true
 title: "Replace Functions"
 nav_order: 17
 ---
+<div class="lang-en" markdown="1">
 # Replace functions
 
 QUBO++ provides the following replace function, which can be used to fix variable values in an expression.
@@ -190,7 +191,7 @@ int main() {
 }
 ```
 {% endraw %}
-In this program, a `qbpp::MapList` object `ml` is used to fix the values of the integer variables 
+In this program, a `qbpp::MapList` object `ml` is used to fix the values of the integer variables
 `p` and `q` in the original expression `f`.
 By applying `qbpp::replace(f, ml)`, the variables `p` and `q` in `f` are replaced with the constants 5 and 7, respectively.
 The resulting expression is stored in `g`, which now contains only the variable `r`.
@@ -246,3 +247,247 @@ This confirms that the division result $q=r/p=7$ is correctly obtained.
 > - **`f.replace(ml)`** updates the expression `f` in place by applying the replacements specified in `ml`.
 > - **`qbpp::replace(f, ml)`** returns a new expression in which the replacements have been applied, without modifying the original expression `f`.
 >  Use `f.replace(ml)` when you want to permanently modify an existing expression, and use `qbpp::replace(f, ml)` when you want to keep the original expression unchanged.
+</div>
+
+<div class="lang-ja" markdown="1">
+# 置換関数
+
+QUBO++は、式中の変数の値を固定するために使用できる以下の置換関数を提供しています。
+- **`qbpp::replace(const qbpp::Expr& f, const qbpp::MapList& ml)`**
+
+`ml` で指定されたマッピングに従って、式 `f` 中の変数の値を置換（固定）します。
+
+## 置換関数を使用した変数値の固定
+[QUBO++の分割問題プログラム](PARTITION)を用いて **`qbpp::replace()`** 関数を説明します。
+このプログラムは、以下のベクトル **`w`** の数値を2つの部分集合 $P$ と $Q$ ($=\overline{P}$) に分割し、それらの和の差が最小となるものを求めます:
+```cpp
+  std::vector<uint32_t> w = {64, 27, 47, 74, 12, 83, 63, 40};
+```
+この分割問題を修正して、64は $P$ に、27は $Q$ に属するようにし、異なる部分集合に配置されることを保証します。
+
+この制約を適用するために、`qbpp::replace()` 関数を使用して `x[0]` と `x[1]` の値をそれぞれ1と0に固定します。
+
+完全なQUBO++プログラムを以下に示します:
+
+{% raw %}
+```cpp
+#define MAXDEG 2
+#include <qbpp/qbpp.hpp>
+#include <qbpp/exhaustive_solver.hpp>
+
+int main() {
+  qbpp::Vector<uint32_t> w = {64, 27, 47, 74, 12, 83, 63, 40};
+  auto x = qbpp::var("x", w.size());
+  auto p = qbpp::sum(w * x);
+  auto q = qbpp::sum(w * (1 - x));
+  auto f = qbpp::sqr(p - q);
+  f.simplify_as_binary();
+
+  qbpp::MapList ml({{x[0], 1}, {x[1], 0}});
+  auto g = qbpp::replace(f, ml);
+  g.simplify_as_binary();
+  auto solver = qbpp::exhaustive_solver::ExhaustiveSolver(g);
+  auto sol = solver.search();
+
+  auto full_sol = qbpp::Sol(f).set(sol).set(ml);
+
+  std::cout << "sol = " << sol << std::endl;
+  std::cout << "ml = " << ml << std::endl;
+  std::cout << "full_sol = " << full_sol << std::endl;
+  std::cout << "f(full_sol) = " << f(full_sol) << std::endl;
+  std::cout << "p(full_sol) = " << p(full_sol) << std::endl;
+  std::cout << "q(full_sol) = " << q(full_sol) << std::endl;
+  std::cout << "P :";
+  for (size_t i = 0; i < w.size(); ++i) {
+    if (x[i](full_sol) == 1) {
+      std::cout << " " << w[i];
+    }
+  }
+  std::cout << std::endl;
+  std::cout << "Q :";
+  for (size_t i = 0; i < w.size(); ++i) {
+    if (x[i](full_sol) == 0) {
+      std::cout << " " << w[i];
+    }
+  }
+  std::cout << std::endl;
+}
+```
+{% endraw %}
+
+まず、変数 `x[0]` と `x[1]` の固定値を指定する `qbpp::MapList` オブジェクト **`ml`** を定義します。
+分割問題の元の式 `f` と qbpp::MapList オブジェクト `ml` が与えられると、**`qbpp::replace()`** 関数により `f` 中の `x[0]` と `x[1]` がそれぞれ定数1と0に置き換えられます。
+結果の式は **`g`** に格納されます。
+
+次に、Exhaustive Solverを `g` に適用して最適解を求め、`sol` に格納します。
+式 `g` にはもはや変数 `x[0]` と `x[1]` が含まれていないため、`sol` にもこれらの変数の割り当ては含まれません。
+
+全ての変数を含む完全な解を構築するために、`f` に対するゼロ初期化された `qbpp::Sol` オブジェクトを作成し、`set()` で `sol` と `ml` を使用してバイナリ値を設定します。
+
+以下の出力から、意図した通り64が $P$ に、27が $Q$ に配置されていることが確認できます:
+{% raw %}
+```
+sol = 4:{{x[2],1},{x[3],0},{x[4],1},{x[5],1},{x[6],0},{x[7],0}}
+ml = {{x[0],1},{x[1],0}}
+full_sol = 4:{{x[0],1},{x[1],0},{x[2],1},{x[3],0},{x[4],1},{x[5],1},{x[6],0},{x[7],0}}
+f(full_sol) = 4
+p(full_sol) = 206
+q(full_sol) = 204
+P : 64 47 12 83
+Q : 27 74 63 40
+```
+{% endraw %}
+## 置換関数による変数の式への置換
+`replace()` 関数は、定数値だけでなく、変数を式に置換することもできます。
+
+ここでは、上述の分割問題において64と27を異なる部分集合に配置するための、より洗練された方法を示します。
+鍵となるアイデアは、式 `f` 中の変数 `x[0]` を式 `1 - x[1]` に置換することです。
+これにより `x[0]` と `x[1]` が常に反対の値をとるという制約が適用され、対応する要素（64と27）が異なる部分集合に属することが保証されます。
+
+以下のC++プログラムはこのアイデアを実装しています:
+{% raw %}
+```cpp
+  qbpp::MapList ml({{x[0], 1 - x[1]}});
+  auto g = qbpp::replace(f, ml);
+  g.simplify_as_binary();
+  auto solver = qbpp::exhaustive_solver::ExhaustiveSolver(g);
+  auto sol = solver.search();
+
+  auto full_sol = qbpp::Sol(f).set(sol, ml);
+```
+{% endraw %}
+このプログラムでは、変数 `x[0]` が式 `1 - x[1]` に置換されるように qbpp::MapList オブジェクト ml を定義しています。
+
+`qbpp::replace()` 関数がこの代入を元の式 `f` に適用し、結果の式は `g` に格納されます。
+その結果、`g` にはもはや変数 `x[0]` が含まれず、`x[0]` の全ての出現が式 `1 - x[1]` に置き換えられています。
+
+次に、Exhaustive Solverを使用して `g` の最適解を求め、`sol` に格納します。
+`x[0]` は `g` に現れないため、解 sol にも `x[0]` の割り当ては含まれません。
+
+`f` の元の変数に対する完全な解を構築するために、ゼロ初期化された `qbpp::Sol(f)` から始め、`set(sol, ml)` を呼び出して値を設定します。
+`sol` と `ml` は `set()` に一緒に渡す必要があることに注意してください。これは `ml` のマッピング（例: `x[0] = 1 - x[1]`）が `sol` に含まれる変数値に依存する場合があるためです。
+
+このプログラムは以下の出力を生成します:
+{% raw %}
+```
+sol = 4:{{x[1],0},{x[2],1},{x[3],0},{x[4],1},{x[5],1},{x[6],0},{x[7],0}}
+ml = {{x[0],1 -x[1]}}
+full_sol = 4:{{x[0],1},{x[1],0},{x[2],1},{x[3],0},{x[4],1},{x[5],1},{x[6],0},{x[7],0}}
+f(full_sol) = 4
+p(full_sol) = 206
+q(full_sol) = 204
+P : 64 47 12 83
+Q : 27 74 63 40
+```
+{% endraw %}
+以下のことが確認できます:
+- 解 `sol` には x[0] が含まれていない、
+- `x[0]` と `x[1]` は反対の値をとっている、
+- 意図した通り、64と27は異なる部分集合に配置されている。
+
+## 整数変数の置換関数
+整数変数は `replace()` 関数を使用して固定の整数値に置換できます。
+
+ここでは、単純な**乗算式**を用いてこの機能を示します。
+$p$, $q$, $r$ を整数変数とし、以下の制約を考えます:
+
+$$
+\begin{aligned}
+p\times q - r &=0
+\end{aligned}
+$$
+
+この式はいくつかの方法で解釈でき、異なる種類の問題につながります:
+- **乗算**: $p$ と $q$ の値を固定し、式を満たす $r$ を求める。
+- **因数分解**: $r$ の値を固定し、式を満たす $p$ と $q$ を求める。
+- **除算**: $p$ と $r$ の値を固定し、式を満たす $q$ を求める。
+
+**`qbpp::replace()`** 関数を使用すると、整数変数を定数値に固定できます。
+`qbpp::replace()` を使用してこれらの問題を解くQUBO++プログラムを示します。
+
+### 乗算
+以下のプログラムは $p=5$ と $q=7$ を固定し、積 $r=35$ を求めます:
+{% raw %}
+```cpp
+#define MAXDEG 4
+#include <qbpp/qbpp.hpp>
+#include <qbpp/easy_solver.hpp>
+
+int main() {
+  auto p = 2 <= qbpp::var_int("p") <= 8;
+  auto q = 2 <= qbpp::var_int("q") <= 8;
+  auto r = 2 <= qbpp::var_int("r") <= 40;
+  auto f = p * q - r == 0;
+  f.simplify_as_binary();
+
+  qbpp::MapList ml({{p, 5}, {q, 7}});
+  auto g = qbpp::replace(f, ml);
+  g.simplify_as_binary();
+  std::cout << "g = " << g << std::endl;
+
+  auto solver = qbpp::easy_solver::EasySolver(g);
+  solver.target_energy(0);
+  auto sol = solver.search();
+
+  auto full_sol = qbpp::Sol(f).set(sol).set(ml);
+  std::cout << "p= " << full_sol(p) << ", q= " << full_sol(q)
+            << ", r= " << full_sol(r) << std::endl;
+}
+```
+{% endraw %}
+このプログラムでは、`qbpp::MapList` オブジェクト `ml` を使用して、元の式 `f` 中の整数変数 `p` と `q` の値を固定しています。
+`qbpp::replace(f, ml)` を適用することで、`f` 中の変数 `p` と `q` がそれぞれ定数5と7に置き換えられます。
+結果の式は `g` に格納され、変数 `r` のみを含みます。
+次にEasy Solverを `g` に適用し、結果の解を `sol` に格納します。
+全ての変数を含む完全な解を構築するために、`f` に対するゼロ初期化された `qbpp::Sol` オブジェクトを作成し、`set()` で `sol` と `ml` を使用してバイナリ値を設定します。
+最後に、`p`、`q`、`r` の値を出力します。
+
+このプログラムは以下の出力を生成し、乗算結果が正しく得られたことが確認できます:
+```
+g = 1089 -65*r[0] -128*r[1] -248*r[2] -464*r[3] -800*r[4] -413*r[5] +4*r[0]*r[1] +8*r[0]*r[2] +16*r[0]*r[3] +32*r[0]*r[4] +14*r[0]*r[5] +16*r[1]*r[2] +32*r[1]*r[3] +64*r[1]*r[4] +28*r[1]*r[5] +64*r[2]*r[3] +128*r[2]*r[4] +56*r[2]*r[5] +256*r[3]*r[4] +112*r[3]*r[5] +224*r[4]*r[5]
+p= 5, q= 7, r= 35
+```
+
+### 因数分解
+$r=35$ の因数分解では、QUBO++プログラム中の `qbpp::MapList` オブジェクト `ml` を以下のように変更します:
+{% raw %}
+```cpp
+  qbpp::MapList ml({{r, 35}});
+```
+{% endraw %}
+$r$ の値を固定することで、ソルバーは以下の制約を満たす $p$ と $q$ の整数値を探索します:
+
+$$
+\begin{aligned}
+p\times q&=35
+\end{aligned}
+$$
+
+
+このプログラムは以下の出力を生成します:
+```
+g = 961 -120*p[0] -232*p[1] -336*p[2] -120*q[0] -232*q[1] -336*q[2] +16*p[0]*p[1] +24*p[0]*p[2] -45*p[0]*q[0] -80*p[0]*q[1] -105*p[0]*q[2] +48*p[1]*p[2] -80*p[1]*q[0] -136*p[1]*q[1] -168*p[1]*q[2] -105*p[2]*q[0] -168*p[2]*q[1] -189*p[2]*q[2] +16*q[0]*q[1] +24*q[0]*q[2] +48*q[1]*q[2] +20*p[0]*p[1]*q[0] +48*p[0]*p[1]*q[1] +84*p[0]*p[1]*q[2] +30*p[0]*p[2]*q[0] +72*p[0]*p[2]*q[1] +126*p[0]*p[2]*q[2] +20*p[0]*q[0]*q[1] +30*p[0]*q[0]*q[2] +60*p[0]*q[1]*q[2] +60*p[1]*p[2]*q[0] +144*p[1]*p[2]*q[1] +252*p[1]*p[2]*q[2] +48*p[1]*q[0]*q[1] +72*p[1]*q[0]*q[2] +144*p[1]*q[1]*q[2] +84*p[2]*q[0]*q[1] +126*p[2]*q[0]*q[2] +252*p[2]*q[1]*q[2] +16*p[0]*p[1]*q[0]*q[1] +24*p[0]*p[1]*q[0]*q[2] +48*p[0]*p[1]*q[1]*q[2] +24*p[0]*p[2]*q[0]*q[1] +36*p[0]*p[2]*q[0]*q[2] +72*p[0]*p[2]*q[1]*q[2] +48*p[1]*p[2]*q[0]*q[1] +72*p[1]*p[2]*q[0]*q[2] +144*p[1]*p[2]*q[1]*q[2]
+p= 5, q= 7, r= 35
+```
+
+### 除算
+$r=35$, $p=5$ として除算 $r/p$ を計算するには、QUBO++プログラム中の qbpp::MapList オブジェクト ml を以下のように変更します:
+{% raw %}
+```cpp
+  qbpp::MapList ml({{p, 5}, {r, 35}});
+```
+{% endraw %}
+このプログラムは以下の出力を生成します:
+```cpp
+g = 625 -225*q[0] -400*q[1] -525*q[2] +100*q[0]*q[1] +150*q[0]*q[2] +300*q[1]*q[2]
+p= 5, q= 7, r= 35
+```
+除算結果 $q=r/p=7$ が正しく得られたことが確認できます。
+
+> **NOTE**
+> QUBO++は式に対する `replace()` のメンバ関数版も提供しています。
+> つまり:
+> - **`f.replace(ml)`** は `ml` で指定された置換を適用して式 `f` をその場で更新します。
+> - **`qbpp::replace(f, ml)`** は置換が適用された新しい式を返し、元の式 `f` は変更しません。
+> 既存の式を恒久的に変更したい場合は `f.replace(ml)` を、元の式を変更せずに保持したい場合は `qbpp::replace(f, ml)` を使用してください。
+</div>

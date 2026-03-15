@@ -4,6 +4,7 @@ nav_exclude: true
 title: "Solving Expressions"
 nav_order: 3
 ---
+<div class="lang-en" markdown="1">
 # Solving Expressions using Easy Solver and Exhaustive Solver
 
 PyQBPP provides the **Easy Solver** and the **Exhaustive Solver** for QUBO/HUBO expressions.
@@ -104,3 +105,104 @@ The output is as follows:
 ```
 
 The Exhaustive Solver is very useful for analyzing small expressions and for debugging.
+</div>
+
+<div class="lang-ja" markdown="1">
+# Easy SolverとExhaustive Solverによる式の求解
+
+PyQBPPはQUBO/HUBO式のための **Easy Solver** と **Exhaustive Solver** を提供しています。
+これらは **Intel Threading Building Blocks (oneTBB)** を使用してマルチコアCPU上で並列実行されます。
+
+- **Easy Solver**
+  - シミュレーテッドアニーリングに基づくヒューリスティックアルゴリズムを実行します。
+  - 最適性は保証しません。
+
+- **Exhaustive Solver**
+  - すべての可能な解を探索します。
+  - 返される解の最適性を保証します。
+  - バイナリ変数の数が約30〜40個以下の場合にのみ計算が現実的です。
+  - CUDA GPUが利用可能な場合、CPUスレッドと併せてGPU高速化が自動的に有効になります。
+
+両方のソルバーは2つのステップで使用します：
+1. **`EasySolver`** または **`ExhaustiveSolver`** のソルバーオブジェクトを作成します。
+2. ソルバーオブジェクトの **`search()`** メソッドを呼び出します。得られた解を格納する **`Sol`** オブジェクトが返されます。
+
+## Easy Solver
+以下の式 $f(a,b,c,d)$ を例として使用します：
+
+$$
+\begin{aligned}
+f(a,b,c,d) &= (a+2b+3c+4d-5)^2
+\end{aligned}
+$$
+
+この式は $a+2b+3c+4d=5$ のとき明らかに最小値 $f=0$ を取ります。
+したがって、2つの最適解 $(a,b,c,d)=(0,1,1,0)$ と $(1,0,0,1)$ があります。
+
+以下のプログラムでは、シンボリック計算を使って式 `f` を作成します。
+関数 **`sqr()`** は引数の二乗を返します。
+次に、`f` をコンストラクタに渡して `EasySolver` のインスタンスを構築します。
+その前に、**`simplify_as_binary()`** を呼び出してバイナリ変数用に `f` を簡約化する必要があります。
+最適値が $f=0$ であることがわかっているため、**`target_energy()`** メソッドを呼び出してターゲットエネルギーを $0$ に設定します。
+`solver` の **`search()`** メソッドを呼び出すと、**`Sol`** クラスの解インスタンス **`sol`** が返されます。
+
+```python
+from pyqbpp import var, sqr, EasySolver
+
+a = var("a")
+b = var("b")
+c = var("c")
+d = var("d")
+f = sqr(a + 2 * b + 3 * c + 4 * d - 5)
+print("f =", f.simplify_as_binary())
+
+solver = EasySolver(f)
+solver.target_energy(0)
+sol = solver.search()
+print(sol)
+```
+
+このプログラムの出力は以下の通りです：
+```
+f = 25 -9*a -16*b -21*c -24*d +4*a*b +6*a*c +8*a*d +12*b*c +16*b*d +24*c*d
+Sol(energy=0, a=1, b=0, c=0, d=1)
+```
+最適解の1つが正しく出力されています。
+
+## Exhaustive Solver
+`f` をコンストラクタに渡して **`ExhaustiveSolver`** のインスタンスを構築します。
+`solver` の **`search()`** メソッドを呼び出すと、**`Sol`** クラスの解インスタンス **`sol`** が返されます。
+Exhaustive Solverはすべての可能な割り当てを探索するため、`sol` が最適解を格納していることが保証されます。
+
+```python
+from pyqbpp import var, sqr, ExhaustiveSolver
+
+a = var("a")
+b = var("b")
+c = var("c")
+d = var("d")
+f = sqr(a + 2 * b + 3 * c + 4 * d - 5)
+f.simplify_as_binary()
+
+solver = ExhaustiveSolver(f)
+sol = solver.search()
+print(sol)
+```
+このプログラムの出力は以下の通りです：
+```
+Sol(energy=0, a=0, b=1, c=1, d=0)
+```
+**`search_optimal_solutions()`** メソッドを使うと、すべての最適解を取得できます：
+```python
+sols = solver.search_optimal_solutions()
+for i, sol in enumerate(sols):
+    print(f"({i}) {sol}")
+```
+出力は以下の通りです：
+```
+(0) Sol(energy=0, a=0, b=1, c=1, d=0)
+(1) Sol(energy=0, a=1, b=0, c=0, d=1)
+```
+
+Exhaustive Solverは、小さな式の解析やデバッグに非常に有用です。
+</div>

@@ -4,6 +4,7 @@ nav_exclude: true
 title: "Replace Functions"
 nav_order: 17
 ---
+<div class="lang-en" markdown="1">
 # Replace Functions
 
 PyQBPP provides the following replace function, which can be used to fix variable values in an expression:
@@ -140,3 +141,142 @@ g.simplify_as_binary()
 > **NOTE**
 > - **`f.replace(ml)`** updates the expression `f` in place.
 > - **`replace(f, ml)`** returns a new expression without modifying the original.
+</div>
+
+<div class="lang-ja" markdown="1">
+# 置換関数
+
+PyQBPPは、式中の変数値を固定するために使用できる以下の置換関数を提供しています：
+- **`replace(f, ml)`**: マッピング `ml` に従って変数を置換した新しい式を返します。
+- **`f.replace(ml)`**: 式 `f` の変数をその場で置換します。
+
+## 置換関数を使った変数値の固定
+[分割問題](PARTITION)を用いて `replace()` 関数を説明します。
+このプログラムは、リスト内の数を2つの部分集合 $P$ と $Q$ に分割し、それらの和の差を最小化します。
+
+この問題を、64が $P$ に、27が $Q$ に属さなければならないように変更します：
+
+```python
+from pyqbpp import var, sum, sqr, replace, MapList, Sol, ExhaustiveSolver
+
+w = [64, 27, 47, 74, 12, 83, 63, 40]
+x = var("x", len(w))
+p = sum([w[i] * x[i] for i in range(len(w))])
+q = sum([w[i] * (1 - x[i]) for i in range(len(w))])
+f = sqr(p - q)
+f.simplify_as_binary()
+
+ml = MapList([(x[0], 1), (x[1], 0)])
+g = replace(f, ml)
+g.simplify_as_binary()
+
+solver = ExhaustiveSolver(g)
+sol = solver.search()
+
+full_sol = Sol(f)
+full_sol.set(sol)
+full_sol.set(ml)
+
+print("energy =", full_sol.comp_energy())
+P = [w[i] for i in range(len(w)) if full_sol.get(x[i]) == 1]
+Q = [w[i] for i in range(len(w)) if full_sol.get(x[i]) == 0]
+print("P:", P)
+print("Q:", Q)
+```
+このプログラムでは、`MapList` オブジェクト **`ml`** が `x[0]=1`（64を $P$ に）と `x[1]=0`（27を $Q$ に）を固定します。
+`replace()` 関数はこれらの値を `f` に代入し、Exhaustive Solverが残りの変数に対する最適な分割を求めます。
+
+このプログラムの出力は以下の通りです：
+```
+energy = 4
+P: [64, 47, 12, 83]
+Q: [27, 74, 63, 40]
+```
+
+## 置換関数を使った変数の式への置換
+`replace()` 関数は変数を式で置換することもできます。
+
+例えば、64と27が異なる部分集合に配置されることを保証するために、
+`x[0]` を `1 - x[1]` で置換して常に反対の値を取るようにします：
+
+```python
+ml = MapList([(x[0], 1 - x[1])])
+g = replace(f, ml)
+g.simplify_as_binary()
+
+solver = ExhaustiveSolver(g)
+sol = solver.search()
+
+full_sol = Sol(f)
+full_sol.set(sol, ml)
+
+print("energy =", full_sol.comp_energy())
+P = [w[i] for i in range(len(w)) if full_sol.get(x[i]) == 1]
+Q = [w[i] for i in range(len(w)) if full_sol.get(x[i]) == 0]
+print("P:", P)
+print("Q:", Q)
+```
+このプログラムの出力は以下の通りです：
+```
+energy = 4
+P: [64, 47, 12, 83]
+Q: [27, 74, 63, 40]
+```
+
+## 整数変数の置換関数
+整数変数は `replace()` 関数を使って固定の整数値で置換できます。
+
+ここでは、簡単な**乗算/素因数分解**の例を使ってこの機能を示します。
+$p$, $q$, $r$ を整数変数とし、制約 $p\times q - r = 0$ を課します。
+
+### 乗算
+$p=5$ と $q=7$ を固定して $r=35$ を求めます：
+```python
+from pyqbpp import var_int, between, replace, MapList, Sol, EasySolver
+
+p = between(var_int("p"), 2, 8)
+q = between(var_int("q"), 2, 8)
+r = between(var_int("r"), 2, 40)
+f = p * q - r == 0
+f.simplify_as_binary()
+
+ml = MapList([(p, 5), (q, 7)])
+g = replace(f, ml)
+g.simplify_as_binary()
+
+solver = EasySolver(g)
+solver.target_energy(0)
+sol = solver.search()
+
+full_sol = Sol(f)
+full_sol.set(sol)
+full_sol.set(ml)
+print(f"p={full_sol.eval(p)}, q={full_sol.eval(q)}, r={full_sol.eval(r)}")
+```
+このプログラムの出力は以下の通りです：
+```
+p=5, q=7, r=35
+```
+
+### 素因数分解
+$r=35$ を固定して $p$ と $q$ を求めます：
+```python
+ml = MapList([(r, 35)])
+g = replace(f, ml)
+g.simplify_as_binary()
+# ... 同じソルバー設定 ...
+```
+
+### 除算
+$p=5$ と $r=35$ を固定して $q=7$ を求めます：
+```python
+ml = MapList([(p, 5), (r, 35)])
+g = replace(f, ml)
+g.simplify_as_binary()
+# ... 同じソルバー設定 ...
+```
+
+> **注意**
+> - **`f.replace(ml)`** は式 `f` をその場で更新します。
+> - **`replace(f, ml)`** は元の式を変更せずに新しい式を返します。
+</div>

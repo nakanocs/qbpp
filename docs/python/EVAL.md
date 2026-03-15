@@ -4,6 +4,7 @@ nav_exclude: true
 title: "Evaluating Expressions"
 nav_order: 16
 ---
+<div class="lang-en" markdown="1">
 # Evaluating Expressions
 
 ## Evaluation using MapList
@@ -86,3 +87,88 @@ sol.flip(z)
 print("comp_energy =", sol.comp_energy())
 print("energy =", sol.energy())
 ```
+</div>
+
+<div class="lang-ja" markdown="1">
+# 式の評価
+
+## MapListを使った評価
+式の値は、すべての変数への値の割り当てをペアのリストとして与えることで計算できます。
+リストは **`MapList`** オブジェクトとして定義できます。
+
+以下のプログラムは、$(x,y,z)=(0,1,1)$ に対して関数 $f(x,y,z)$ を計算します：
+```python
+from pyqbpp import var, sqr, MapList
+
+x = var("x")
+y = var("y")
+z = var("z")
+f = sqr(x + 2 * y + 3 * z - 3)
+
+ml = MapList([(x, 0), (y, 1), (z, 1)])
+print("f(0,1,1) =", f.eval(ml))
+```
+このプログラムでは、$x=0$, $y=1$, $z=1$ の割り当てを持つ `MapList` オブジェクト `ml` を定義しています。
+そして `f.eval(ml)` が $f(0,1,1)$ の値を返します。
+このプログラムの出力は以下の通りです：
+```
+f(0,1,1) = 4
+```
+
+## Solを使った評価
+解オブジェクト（**`Sol`**）も式の値の評価に使用できます。
+そのためには、まず与えられた式に関連付けた `Sol` オブジェクトを構築します。
+新しく作成された `Sol` オブジェクトはすべてゼロの割り当てで初期化されます。
+
+**`set()`** メソッドを使って、個々の変数に値を割り当てることができます。
+そして **`sol.eval(f)`** は `sol` に格納された割り当てのもとでの式 `f` の値を返します。
+
+```python
+from pyqbpp import var, sqr, Sol
+
+x = var("x")
+y = var("y")
+z = var("z")
+f = sqr(x + 2 * y + 3 * z - 3)
+f.simplify_as_binary()
+
+sol = Sol(f)
+sol.set(y, 1)
+sol.set(z, 1)
+
+print("f(0,1,1) =", sol.eval(f))
+```
+
+メソッド **`comp_energy()`** はエネルギー値を計算し、内部にキャッシュします。
+ソルバーから返された解オブジェクトは、既にエネルギーがキャッシュされています。
+キャッシュされたエネルギーを取得するには、**`energy()`** メソッドを使います：
+```python
+from pyqbpp import var, sqr, EasySolver
+
+x = var("x")
+y = var("y")
+z = var("z")
+f = sqr(x + 2 * y + 3 * z - 4)
+f.simplify_as_binary()
+
+solver = EasySolver(f)
+solver.target_energy(0)
+sol = solver.search()
+
+print(sol)
+print("energy =", sol.energy())
+```
+このプログラムの出力は以下の通りです：
+```
+Sol(energy=0, x=1, y=0, z=1)
+energy = 0
+```
+
+解を変更した後（例えば `flip()` を使った後）、キャッシュされたエネルギーは無効になります。
+**`comp_energy()`** を呼び出して明示的に再計算する必要があります：
+```python
+sol.flip(z)
+print("comp_energy =", sol.comp_energy())
+print("energy =", sol.energy())
+```
+</div>

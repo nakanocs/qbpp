@@ -4,6 +4,7 @@ nav_exclude: true
 title: "Easy Solver"
 nav_order: 19
 ---
+<div class="lang-en" markdown="1">
 # Easy Solver Usage
 The **Easy Solver** is a heuristic solver for QUBO/HUBO expressions.
 
@@ -22,7 +23,7 @@ This function converts the given expression `f` into an internal format that is 
 
 ## Setting Easy Solver Options
 For a created Easy Solver object, the following member functions can be specified:
-- **`time_limit(double time)`**: 
+- **`time_limit(double time)`**:
 Specifies the time limit in seconds.
 The Easy Solver terminates the search when the elapsed time reaches the specified limit.
 The default value is 10.0 seconds.
@@ -175,7 +176,7 @@ int main() {
   auto solver = qbpp::easy_solver::EasySolver(f);
   solver.time_limit(5.0);
   solver.enable_topk_sols(20);
-  
+
   auto sols = solver.search();
   for (const auto& sol : sols) {
     std::cout << sol.energy() << ": ";
@@ -233,3 +234,233 @@ The resulting program produces the following solutions, all of which have the be
 26: -++---++-+---+-+++++
 26: --++-++----+----+-+-
 ```
+</div>
+
+<div class="lang-ja" markdown="1">
+# Easy Solverの使い方
+**Easy Solver**はQUBO/HUBO式のためのヒューリスティックソルバーです。
+
+Easy Solverを使って問題を解くには、以下の3つのステップで行います：
+1. Easy Solver（`qbpp::easy_solver::EasySolver`）オブジェクトを作成します。
+2. ソルバーオブジェクトのメンバ関数を呼び出して探索オプションを設定します。
+3. `search()` メンバ関数を呼び出して解を探索します。解（`qbpp::Sol`）オブジェクトが返されます。
+
+## Easy Solverオブジェクトの作成
+Easy Solverを使用するには、式（`qbpp::Expr`）オブジェクトを引数としてEasy Solverオブジェクト（`qbpp::easy_solver::EasySolver`）を以下のように構築します：
+- **`qbpp::easy_solver::EasySolver(const qbpp::Expr& f)`**
+
+ここで、`f` は解くべき式です。
+事前に `simplify_as_binary()` 関数を呼び出してバイナリ式として簡約化しておく必要があります。
+この関数は与えられた式 `f` を解探索中に使用される内部フォーマットに変換します。
+
+## Easy Solverオプションの設定
+作成されたEasy Solverオブジェクトに対して、以下のメンバ関数を指定できます：
+- **`time_limit(double time)`**:
+制限時間を秒単位で指定します。
+Easy Solverは経過時間が指定した制限に達すると探索を終了します。
+デフォルト値は10.0秒です。
+制限時間を0に設定すると、時間制限による終了は行われません。
+- **`target_energy(energy_t energy)`**
+ターゲットエネルギーを指定します。
+Easy Solverはエネルギーが指定値以下の解が見つかると探索を終了します。
+- **`enable_default_callback()`**
+新たに得られた最良解を出力するデフォルトコールバック関数を有効にします。
+
+## 解の探索
+Easy Solverは、Easy Solverオブジェクトの**`search()`**メンバ関数を呼び出すだけで解を探索します。
+
+## プログラム例
+以下のプログラムは、Easy Solverを使用してLow Autocorrelation Binary Sequences (LABS)問題の解を探索します：
+```cpp
+#define MAXDEG 4
+#include <qbpp/qbpp.hpp>
+#include <qbpp/easy_solver.hpp>
+
+int main() {
+  size_t size = 100;
+  auto x = qbpp::var("x", size);
+  auto f = qbpp::expr();
+  for (size_t d = 1; d < size; ++d) {
+    auto temp = qbpp::expr();
+    for (size_t i = 0; i < size - d; ++i) {
+      temp += (2 * x[i] - 1) * (2 * x[i + d] - 1);
+    }
+    f += qbpp::sqr(temp);
+  }
+  f.simplify_as_binary();
+
+  auto solver = qbpp::easy_solver::EasySolver(f);
+  solver.time_limit(5.0);
+  solver.target_energy(900);
+  solver.enable_default_callback();
+  auto sol = solver.search();
+  std::cout << sol.energy() << ": ";
+  for (auto val : sol(x)) {
+    std::cout << (val == 0 ? "-" : "+");
+  }
+  std::cout << std::endl;
+}
+```
+この例では、以下のオプションが設定されています：
+- 制限時間5.0秒、
+- ターゲットエネルギー900、
+- デフォルトコールバックが有効。
+
+したがって、ソルバーは経過時間が5.0秒に達するか、エネルギーが900以下の解が見つかると終了します。
+
+例えば、このプログラムは以下の出力を生成します：
+```
+TTS = 0.000s Energy = 300162 thread = 0 Random
+TTS = 0.000s Energy = 273350 thread = 0 Random(neighbor)
+TTS = 0.000s Energy = 248706 thread = 0 Greedy(neighbor)
+TTS = 0.000s Energy = 226086 thread = 0 Greedy(neighbor)
+TTS = 0.000s Energy = 205274 thread = 0 Greedy(neighbor)
+TTS = 0.000s Energy = 186142 thread = 0 Greedy(neighbor)
+TTS = 0.000s Energy = 168442 thread = 0 Greedy(neighbor)
+TTS = 0.000s Energy = 152134 thread = 0 Greedy(neighbor)
+TTS = 0.000s Energy = 137162 thread = 0 Greedy(neighbor)
+TTS = 0.000s Energy = 123374 thread = 0 Greedy(neighbor)
+TTS = 0.001s Energy = 110650 thread = 0 Greedy(neighbor)
+TTS = 0.001s Energy = 98990 thread = 0 Greedy(neighbor)
+TTS = 0.001s Energy = 88346 thread = 0 Greedy(neighbor)
+TTS = 0.001s Energy = 78678 thread = 0 Greedy(neighbor)
+TTS = 0.001s Energy = 69802 thread = 0 Greedy(neighbor)
+TTS = 0.001s Energy = 61798 thread = 0 Greedy(neighbor)
+TTS = 0.001s Energy = 54626 thread = 0 Greedy(neighbor)
+TTS = 0.001s Energy = 47982 thread = 0 Greedy(neighbor)
+TTS = 0.001s Energy = 42034 thread = 0 Greedy(neighbor)
+TTS = 0.001s Energy = 36598 thread = 0 Greedy(neighbor)
+TTS = 0.001s Energy = 31778 thread = 0 Greedy(neighbor)
+TTS = 0.001s Energy = 27446 thread = 0 Greedy(neighbor)
+TTS = 0.001s Energy = 23658 thread = 0 Greedy(neighbor)
+TTS = 0.002s Energy = 20286 thread = 0 Greedy(neighbor)
+TTS = 0.002s Energy = 17250 thread = 0 Greedy(neighbor)
+TTS = 0.002s Energy = 14614 thread = 0 Greedy(neighbor)
+TTS = 0.002s Energy = 12306 thread = 0 Greedy(neighbor)
+TTS = 0.002s Energy = 10350 thread = 0 Greedy(neighbor)
+TTS = 0.002s Energy = 8682 thread = 0 Greedy(neighbor)
+TTS = 0.002s Energy = 7214 thread = 0 Greedy(neighbor)
+TTS = 0.002s Energy = 5994 thread = 0 Greedy(neighbor)
+TTS = 0.002s Energy = 4990 thread = 0 Greedy(neighbor)
+TTS = 0.002s Energy = 4130 thread = 0 Greedy(neighbor)
+TTS = 0.002s Energy = 3478 thread = 0 Greedy(neighbor)
+TTS = 0.003s Energy = 2882 thread = 0 Greedy(neighbor)
+TTS = 0.003s Energy = 2414 thread = 0 Greedy(neighbor)
+TTS = 0.003s Energy = 2122 thread = 0 Greedy(neighbor)
+TTS = 0.003s Energy = 1822 thread = 0 Greedy(neighbor)
+TTS = 0.003s Energy = 1706 thread = 0 Greedy(neighbor)
+TTS = 0.003s Energy = 1574 thread = 0 Greedy(neighbor)
+TTS = 0.003s Energy = 1442 thread = 0 Greedy(neighbor)
+TTS = 0.003s Energy = 1350 thread = 0 Greedy(neighbor)
+TTS = 0.007s Energy = 1306 thread = 7 MoveTo
+TTS = 0.008s Energy = 1274 thread = 12 Greedy
+TTS = 0.008s Energy = 1262 thread = 12 Greedy(neighbor)
+TTS = 0.008s Energy = 1202 thread = 12 Greedy(neighbor)
+TTS = 0.016s Energy = 1170 thread = 20 PosMin
+TTS = 0.018s Energy = 1166 thread = 23 PosMin
+TTS = 0.018s Energy = 994 thread = 23 PosMin(neighbor)
+TTS = 0.066s Energy = 986 thread = 7 Greedy
+TTS = 0.066s Energy = 982 thread = 7 Greedy(neighbor)
+TTS = 0.184s Energy = 954 thread = 10 PosMin
+TTS = 0.371s Energy = 942 thread = 12 PosMin
+TTS = 0.912s Energy = 930 thread = 4 PosMin
+TTS = 0.913s Energy = 902 thread = 4 PosMin(neighbor)
+TTS = 2.691s Energy = 898 thread = 15 PosMin
+898: ++-++-----+--+--++++++---++-+-+--++-------++-++-+-+-+-+-++-++++-++-+++++-+-+--++++++---+++--+++---++
+```
+
+## 高度な使い方
+
+### 複数のtop-k解の保持
+Easy Solverは探索中に見つかった**複数のtop-k解**を保持できます。
+この機能を有効にするには、以下のメンバ関数を呼び出します：
+- **`enable_topk_sols(size_t topk_count)`**: 最大topk_count個の最良解を保持します。
+
+この関数が有効化されると、`search()` が返す解オブジェクトには保持されたtop-k解が含まれます。
+返されたオブジェクト sols に対して、インデックスまたはイテレータを使用して保持された解にアクセスできます：
+- **`sols[i]`**: `i` 番目の `qbpp::Sol` オブジェクトを返します。
+- **`size()`**: 保持された解の数を返します。
+- **`begin()`**, **`end()`**, **`cbegin()`**, **`cend()`**: 範囲ベースforループを使用して各解に順にアクセスできるイテレータです。
+
+以下のプログラムは、Easy Solverを使用してLow Autocorrelation Binary Sequence (LABS)問題を解きます。
+**`enable_topk_sols(20)`**が呼び出されているため、ソルバーは**最大20個のtop-k解**を保持します。
+プログラムは範囲ベースforループを使用して各保持解を出力します。
+```cpp
+#define MAXDEG 4
+#include <qbpp/qbpp.hpp>
+#include <qbpp/easy_solver.hpp>
+
+int main() {
+  size_t size = 20;
+  auto x = qbpp::var("x", size);
+  auto f = qbpp::expr();
+  for (size_t d = 1; d < size; ++d) {
+    auto temp = qbpp::expr();
+    for (size_t i = 0; i < size - d; ++i) {
+      temp += (2 * x[i] - 1) * (2 * x[i + d] - 1);
+    }
+    f += qbpp::sqr(temp);
+  }
+  f.simplify_as_binary();
+
+  auto solver = qbpp::easy_solver::EasySolver(f);
+  solver.time_limit(5.0);
+  solver.enable_topk_sols(20);
+
+  auto sols = solver.search();
+  for (const auto& sol : sols) {
+    std::cout << sol.energy() << ": ";
+    for (auto val : sol(x)) {
+      std::cout << (val == 0 ? "-" : "+");
+    }
+    std::cout << std::endl;
+  }
+}
+```
+このプログラムは以下の出力を表示します：
+```
+26: -----+-+++-+--+++--+
+26: +--+++--+-+++-+-----
+26: -+-+----+----++-++--
+26: --++-++----+----+-+-
+26: -++---++-+---+-+++++
+34: ---+++++-+++-++-+-++
+34: +-+-+++++----++--++-
+34: -+++++---+---+-+--+-
+34: +++-----+---+--+-+--
+34: --++--++-+--+-+-----
+34: -+--+-+---+---+++++-
+34: ---+++-+-+----+--+--
+38: -++-++-+-+---++-----
+38: --++++--+-+--+---+--
+38: -+-+---++------++-++
+38: ++++-++-+--+++-+---+
+38: ----+--+-++---+-+++-
+42: -+++++++--++-+-+-++-
+42: -+-+----+++++-++--++
+42: ++-----+---+--+-+--+
+```
+
+### 複数の最良エネルギー解の保持
+Easy Solverは探索中に見つかった最良（最小）エネルギーを共有する複数の解を保持できます。
+この機能を有効にするには、以下のメンバ関数を呼び出します：
+- **`enable_best_energy_sols(size_t best_sol_count)`**:
+最良エネルギーを持つ解を最大 `best_sol_count` 個保持します。
+引数を省略した場合、保持される解の数は無制限です。
+
+使い方は `enable_topk_sols()` と同じです。
+したがって、上記のQUBO++プログラムでこの機能を有効にするには、`enable_topk_sols(20)` を以下のように `enable_best_energy_sols(20)` に置き換えます：
+```cpp
+  solver.enable_best_energy_sols();
+```
+このオプションが有効な場合、ソルバーは見つかった最良エネルギーと等しいエネルギーの解のみを保持します。
+結果として得られるプログラムは、すべて最良エネルギー値26を持つ以下の解を生成します：
+```
+26: +++++-+---+-++---++-
+26: ++--+--++++-++++-+-+
+26: -+-+----+----++-++--
+26: +-+-++++-++++--+--++
+26: -++---++-+---+-+++++
+26: --++-++----+----+-+-
+```
+</div>

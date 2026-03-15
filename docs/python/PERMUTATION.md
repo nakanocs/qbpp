@@ -4,6 +4,7 @@ nav_exclude: true
 title: "Permutation Matrix"
 nav_order: 6
 ---
+<div class="lang-en" markdown="1">
 # Permutation matrix generation
 
 Many combinatorial optimization problems are permutation-based in the sense that the objective is to find an optimal permutation.
@@ -158,3 +159,160 @@ c[3][0] = 11
 > **NOTE**
 > For an expression `f` and an integer `m`, `f == m` returns an expression `sqr(f - m)`,
 > which takes the minimum value 0 if and only if the equality `f == m` is satisfied.
+</div>
+
+<div class="lang-ja" markdown="1">
+# 置換行列の生成
+
+多くの組合せ最適化問題は、最適な置換を見つけることが目的であるという意味で、置換に基づいています。
+このような最適化問題を定式化するための基本的な手法として、QUBO定式化ではバイナリ変数の行列が使用されます。
+
+## 置換行列
+$X=(x_{i,j})$ ($0\leq i,j\leq n-1$) を $n\times n$ のバイナリ値の行列とします。
+行列 $X$ が**置換行列**であるとは、すべての行とすべての列にちょうど1つの1のエントリがある場合に限ります。
+
+**置換行列**は $n$ 個の数 $(0,1,\ldots,n-1)$ の置換を表し、$x_{i,j} = 1$ であることと $i$ 番目の要素が $j$ であることが同値です。
+
+## 置換行列のQUBO定式化
+バイナリ変数行列 $X=(x_{i,j})$ ($0\leq i,j\leq n-1$) が置換行列を格納しているのは、各行と各列の合計が1である場合に限ります。
+したがって、以下のQUBO関数は $X$ が置換行列を格納している場合に限り最小値0をとります:
+
+$$
+\begin{aligned}
+f(X) &= \sum_{i=0}^{n-1}\left(1-\sum_{j=0}^{n-1}x_{i,j}\right)^2+\sum_{j=0}^{n-1}\left(1-\sum_{i=0}^{n-1}x_{i,j}\right)^2
+\end{aligned}
+$$
+
+## 置換行列を生成するPyQBPPプログラム
+上記の式 $f(X)$ に基づいて、以下のようにPyQBPPプログラムを設計できます:
+```python
+from pyqbpp import var, expr, sqr, ExhaustiveSolver
+
+x = var("x", 4, 4)
+f = expr()
+
+for i in range(4):
+    s = expr()
+    for j in range(4):
+        s += x[i][j]
+    f += sqr(1 - s)
+
+for j in range(4):
+    s = expr()
+    for i in range(4):
+        s += x[i][j]
+    f += sqr(1 - s)
+
+f.simplify_as_binary()
+solver = ExhaustiveSolver(f)
+sols = solver.search_optimal_solutions()
+for k, sol in enumerate(sols):
+    row = [sol.get_vector(x[i]) for i in range(4)]
+    print(f"Solution {k} : {row}")
+```
+
+このプログラムでは、**`var("x", 4, 4)`** が **`x`** という名前の $4\times 4$ サイズのネストされた `Vector` を返します。
+`Expr` オブジェクト **`f`** に対して、2つの二重forループが $f(X)$ の式を構築します。
+Exhaustive Solverを使用して、すべての最適解が計算され **`sols`** に格納されます。
+`sols` 内のすべての解は `sol.get_vector()` を使用して1つずつ表示されます。
+このプログラムは24個すべての置換を出力します。
+
+## ベクトル関数と演算を使用したQUBO定式化
+**`vector_sum()`** を使用して、バイナリ変数の行列 `x` の行方向および列方向の合計を計算できます:
+- **`vector_sum(x, 1)`**: `x` の各行の合計を計算し、これらの合計を含むサイズ `n` のベクトルを返します。
+- **`vector_sum(x, 0)`**: `x` の各列の合計を計算し、これらの合計を含むサイズ `n` のベクトルを返します。
+
+これら2つのサイズ `n` のベクトルに対して、`sqr()` は各要素を二乗し、`sum()` はすべての要素の合計を計算します。
+
+以下のプログラムは、これらのベクトル関数と演算を使用してQUBO定式化を実装しています:
+```python
+from pyqbpp import var, sum, sqr, vector_sum, EasySolver
+
+x = var("x", 4, 4)
+f = sum(sqr(vector_sum(x, 1) - 1)) + sum(sqr(vector_sum(x, 0) - 1))
+f.simplify_as_binary()
+
+solver = ExhaustiveSolver(f)
+sols = solver.search_optimal_solutions()
+for k, sol in enumerate(sols):
+    perm = []
+    for i in range(4):
+        for j in range(4):
+            if sol.get(x[i][j]) == 1:
+                perm.append(j)
+    print(f"Solution {k}: {perm}")
+```
+
+## 割当問題とそのQUBO定式化
+$C = (c_{i,j})$ をサイズ $n \times n$ のコスト行列とします。
+$C$ に対する**割当問題**は、総コストを最小化する置換
+$p:\lbrace 0,1,\ldots, n-1\rbrace \rightarrow \lbrace 0,1,\ldots, n-1\rbrace$
+を見つける問題です:
+
+$$
+\begin{aligned}
+ g(p) &= \sum_{i=0}^{n-1}c_{i,p(i)}
+\end{aligned}
+$$
+
+この問題のQUBO定式化には、サイズ $n \times n$ の置換行列 $X = (x_{i,j})$ を使用し、以下のように定義します:
+
+$$
+\begin{aligned}
+ g(X) &= \sum_{i=0}^{n-1}\sum_{j=0}^{n-1}c_{i,j}x_{i,j}
+\end{aligned}
+$$
+
+置換制約 $f(X)$ と総コスト $g(X)$ を組み合わせます:
+
+$$
+\begin{aligned}
+ h(X) &= P\cdot f(X)+g(X)
+\end{aligned}
+$$
+
+ここで、$P$ は置換制約を優先するための十分に大きな正の定数です。
+
+## 割当問題のPyQBPPプログラム
+```python
+from pyqbpp import var, sum, sqr, vector_sum, Vector, EasySolver
+
+c = Vector([Vector([58, 73, 91, 44]),
+            Vector([62, 15, 87, 39]),
+            Vector([78, 56, 23, 94]),
+            Vector([11, 85, 68, 72])])
+x = var("x", 4, 4)
+f = sum(vector_sum(x, 1) == 1) + sum(vector_sum(x, 0) == 1)
+g = sum(c * x)
+h = 1000 * f + g
+h.simplify_as_binary()
+
+solver = EasySolver(h)
+solver.time_limit(1.0)
+sol = solver.search()
+print("sol =", sol)
+
+result = []
+for i in range(4):
+    for j in range(4):
+        if sol.get(x[i][j]) == 1:
+            result.append(j)
+print("Result :", result)
+for i in range(len(result)):
+    print(f"c[{i}][{result[i]}] = {c[i][result[i]]}")
+```
+
+Easy Solverを使用して `h` の解を求めます。
+`time_limit()` メソッドを呼び出すことで、探索の制限時間を1.0秒に設定しています。
+このプログラムの出力は以下の通りです:
+```
+Result : [3, 1, 2, 0]
+c[0][3] = 44
+c[1][1] = 15
+c[2][2] = 23
+c[3][0] = 11
+```
+> **NOTE**
+> 式 `f` と整数 `m` に対して、`f == m` は式 `sqr(f - m)` を返します。
+> これは等式 `f == m` が満たされる場合に限り最小値0をとります。
+</div>

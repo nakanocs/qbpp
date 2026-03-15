@@ -4,6 +4,7 @@ nav_exclude: true
 title: "Adder Simulation"
 nav_order: 90
 ---
+<div class="lang-en" markdown="1">
 # Adder Simulation
 
 ## Full adder and ripple carry adder
@@ -167,3 +168,169 @@ sols = solver.search_optimal_solutions()
 print(f"Number of valid solutions: {len(sols)}")
 ```
 This program produces 136 valid solutions (carry-in and carry-out are both fixed to 0, so only pairs with $x + y \leq 15$ are valid).
+</div>
+
+<div class="lang-ja" markdown="1">
+# 加算器シミュレーション
+
+## 全加算器とリプルキャリー加算器
+全加算器は3つの入力ビット $a$、$b$、$i$（キャリーイン）と、
+$o$（キャリーアウト）および $s$（和）を持ちます。
+3つの入力ビットの和は、これら2つの出力ビットで表現されます。
+
+リプルキャリー加算器は、以下に示すように複数の全加算器をカスケード接続して、2つの多ビット整数の和を計算します:
+<p align="center">
+ <img src="../images/adder.svg" alt="4-bit ripple carry adder" width="50%">
+</p>
+
+このリプルキャリー加算器は、2つの4ビット整数 $x_3x_2x_1x_0$ と $y_3y_2y_1y_0$ の和を計算し、4つの全加算器を使って4ビットの和 $z_3z_2z_1z_0$ を出力します。
+対応する5ビットのキャリー信号 $c_4c_3c_2c_1c_0$ も示されています。
+
+## 全加算器の QUBO 定式化
+全加算器は以下の式を用いて定式化できます:
+
+$$
+\begin{aligned}
+fa(a,b,i,c,s) &=((a+b+i)-(2o+s))^2
+\end{aligned}
+$$
+
+この式は、5つの変数が有効な全加算器の動作と矛盾しない値を取る場合に限り、最小値 0 を達成します。
+以下の PyQBPP プログラムは、全探索ソルバーを用いてこの定式化を検証します:
+```python
+from pyqbpp import var, replace, MapList, ExhaustiveSolver
+
+a = var("a")
+b = var("b")
+i = var("i")
+o = var("o")
+s = var("s")
+fa = (a + b + i) - (2 * o + s) == 0
+fa.simplify_as_binary()
+solver = ExhaustiveSolver(fa)
+sols = solver.search_optimal_solutions()
+for idx, sol in enumerate(sols):
+    vals = {v: sol.get(v) for v in [a, b, i, o, s]}
+    print(f"({idx}) {sol.energy()}: a={vals[a]}, b={vals[b]}, i={vals[i]}, o={vals[o]}, s={vals[s]}")
+```
+このプログラムでは、制約 $fa(a,b,i,c,s)$ は等価演算子 `==` を使って実装されており、直感的に制約 $a+b+i=2o+s$ を表現しています。
+プログラムは以下の出力を生成し、この式が全加算器を正しくモデル化していることを確認できます:
+```
+(0) 0: a=0, b=0, i=0, o=0, s=0
+(1) 0: a=0, b=0, i=1, o=0, s=1
+(2) 0: a=0, b=1, i=0, o=0, s=1
+(3) 0: a=0, b=1, i=1, o=1, s=0
+(4) 0: a=1, b=0, i=0, o=0, s=1
+(5) 0: a=1, b=0, i=1, o=1, s=0
+(6) 0: a=1, b=1, i=0, o=1, s=0
+(7) 0: a=1, b=1, i=1, o=1, s=1
+```
+
+一部のビットを固定すると、残りのビットの有効な値を導出できます。
+例えば、3つの入力ビットは `replace()` 関数を使って固定できます:
+```python
+ml = MapList()
+ml.add(a, 1)
+ml.add(b, 1)
+ml.add(i, 0)
+fa2 = replace(fa, ml)
+fa2.simplify_as_binary()
+solver2 = ExhaustiveSolver(fa2)
+sols2 = solver2.search_optimal_solutions()
+for idx, sol in enumerate(sols2):
+    print(f"({idx}) {sol.energy()}: o={sol.get(o)}, s={sol.get(s)}")
+```
+
+プログラムは以下の出力を生成します:
+```
+(0) 0: o=1, s=0
+```
+
+## 複数の全加算器を用いたリプルキャリー加算器のシミュレーション
+全加算器の QUBO 式を用いて、リプルキャリー加算器をシミュレートする QUBO 式を構築できます。
+以下の PyQBPP プログラムは、4つの全加算器を組み合わせて4ビット加算器をシミュレートする QUBO 式を作成します:
+```python
+from pyqbpp import var, replace, MapList, ExhaustiveSolver
+
+a = var("a")
+b = var("b")
+i = var("i")
+o = var("o")
+s = var("s")
+fa = (a + b + i) - (2 * o + s) == 0
+
+x = var("x", 4)
+y = var("y", 4)
+c = var("c", 5)
+z = var("z", 4)
+
+ml0 = MapList()
+ml0.add(a, x[0]); ml0.add(b, y[0]); ml0.add(i, c[0]); ml0.add(o, c[1]); ml0.add(s, z[0])
+fa0 = replace(fa, ml0)
+
+ml1 = MapList()
+ml1.add(a, x[1]); ml1.add(b, y[1]); ml1.add(i, c[1]); ml1.add(o, c[2]); ml1.add(s, z[1])
+fa1 = replace(fa, ml1)
+
+ml2 = MapList()
+ml2.add(a, x[2]); ml2.add(b, y[2]); ml2.add(i, c[2]); ml2.add(o, c[3]); ml2.add(s, z[2])
+fa2 = replace(fa, ml2)
+
+ml3 = MapList()
+ml3.add(a, x[3]); ml3.add(b, y[3]); ml3.add(i, c[3]); ml3.add(o, c[4]); ml3.add(s, z[3])
+fa3 = replace(fa, ml3)
+
+adder = fa0 + fa1 + fa2 + fa3
+adder.simplify_as_binary()
+
+solver = ExhaustiveSolver(adder)
+sols = solver.search_optimal_solutions()
+print(f"Number of valid solutions: {len(sols)}")
+for idx in [0, 1, len(sols)-2, len(sols)-1]:
+    sol = sols[idx]
+    xv = "".join(str(sol.get(x[j])) for j in range(4))
+    yv = "".join(str(sol.get(y[j])) for j in range(4))
+    cv = "".join(str(sol.get(c[j])) for j in range(5))
+    zv = "".join(str(sol.get(z[j])) for j in range(4))
+    print(f"({idx}) x={xv}, y={yv}, c={cv}, z={zv}")
+```
+このプログラムでは、`replace()` 関数を使って4つの全加算器の式を作成し、1つの式 `adder` にまとめています。
+次に全探索ソルバーを使ってすべての最適解を列挙します。
+
+このプログラムは512個の有効な解を生成し、4ビット加算器のすべての入力の組み合わせに対応しています:
+```
+Number of valid solutions: 512
+(0) x=0000, y=0000, c=00000, z=0000
+(1) x=0000, y=0000, c=10000, z=1000
+(510) x=1111, y=1111, c=01111, z=0111
+(511) x=1111, y=1111, c=11111, z=1111
+```
+
+あるいは、Python 関数 `fa` を定義して、より簡潔に全加算器の制約を構築することもできます:
+```python
+from pyqbpp import var, toExpr, replace, MapList, ExhaustiveSolver
+
+def fa(a, b, i, o, s):
+    return (a + b + i) - (2 * o + s) == 0
+
+x = var("x", 4)
+y = var("y", 4)
+c = var("c", 5)
+z = var("z", 4)
+
+adder = toExpr(0)
+for j in range(4):
+    adder += fa(x[j], y[j], c[j], c[j + 1], z[j])
+
+ml = MapList()
+ml.add(c[0], 0)
+ml.add(c[4], 0)
+adder = replace(adder, ml)
+adder.simplify_as_binary()
+
+solver = ExhaustiveSolver(adder)
+sols = solver.search_optimal_solutions()
+print(f"Number of valid solutions: {len(sols)}")
+```
+このプログラムは136個の有効な解を生成します（キャリーインとキャリーアウトの両方が0に固定されているため、$x + y \leq 15$ を満たす組のみが有効です）。
+</div>

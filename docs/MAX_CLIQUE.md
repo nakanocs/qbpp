@@ -4,9 +4,10 @@ nav_exclude: true
 title: "Maximum Clique"
 nav_order: 12
 ---
+<div class="lang-en" markdown="1">
 # Maximum Clique  Problem
 
-Given an undirected graph $G=(V,E)$, the Maximum Clique problem aims to find a largest subset 
+Given an undirected graph $G=(V,E)$, the Maximum Clique problem aims to find a largest subset
 $S\subseteq V$ such that every pair of distinct vertices in $S$ is connected by an edge in $E$.
 
 Assume that the vertices are labeled $0,1,\ldots,n−1$.
@@ -21,13 +22,13 @@ $$
 $$
 
 For $S$ to be a clique, every pair of selected nodes must be connected by an edge.
-Equivalently, for every pair of nodes $i$ and $j$ such that 
+Equivalently, for every pair of nodes $i$ and $j$ such that
 $(i,j)\not\in E$ we cannot select both $i$ and $j$.
 This can be expressed by the constraint:
 
 $$
 \begin{aligned}
-\text{constraint} &= \sum_{(i,j)\not\in E}x_ix_j 
+\text{constraint} &= \sum_{(i,j)\not\in E}x_ix_j
 \end{aligned}
 $$
 
@@ -122,3 +123,122 @@ The result is visualized in `maxclique.svg` as follows:
 <p align="center">
   <img src="images/maxclique.svg" alt="The solution of the Maximum clique problem." width="80%">
 </p>
+</div>
+
+<div class="lang-ja" markdown="1">
+# 最大クリーク問題
+
+無向グラフ $G=(V,E)$ が与えられたとき、最大クリーク問題は、$S$ 内の任意の異なる2頂点が $E$ の辺で結ばれているような最大の部分集合 $S\subseteq V$ を求めることを目的とします。
+
+頂点に $0,1,\ldots,n−1$ のラベルが付いているとします。
+$n$ 個のバイナリ変数 $x_0, x_1, \ldots, x_{n-1}$ を導入し、$x_i=1$ はノード $i$ が $S$ に属することを表します ($0\leq i\leq n−1$)。
+すると、$S$ のサイズは以下で与えられます：
+
+$$
+\begin{aligned}
+\text{objective} &= \sum_{i=0}^{n-1}x_i.
+\end{aligned}
+$$
+
+$S$ がクリークであるためには、選択されたノードのすべてのペアが辺で結ばれている必要があります。
+同等に、$(i,j)\not\in E$ であるすべてのノードペア $i$ と $j$ について、$i$ と $j$ の両方を選択することはできません。
+これは以下の制約で表現できます：
+
+$$
+\begin{aligned}
+\text{constraint} &= \sum_{(i,j)\not\in E}x_ix_j
+\end{aligned}
+$$
+
+実行可能なクリークは $constraint=0$ を満たします。
+したがって、以下の QUBO 定式化 $f$（最小化対象）が得られます：
+
+$$
+\begin{aligned}
+f &= -\text{objective}+2\times \text{constraint}
+\end{aligned}
+$$
+
+ここで 2 はペナルティ係数です。
+
+$f$ を最小化する最適解は最大クリークに対応し、目的関数の値は選択されたノードの数に等しくなります。
+
+## 最大クリーク問題の QUBO++ プログラム
+上記の定式化に基づき、以下の QUBO++ プログラムは 16 ノードのグラフに対する QUBO 式 $f$ を構築し、Exhaustive Solver を用いて解きます：
+
+```cpp
+#define MAXDEG 2
+#include <qbpp/qbpp.hpp>
+#include <qbpp/exhaustive_solver.hpp>
+#include <qbpp/graph.hpp>
+
+int main() {
+  const size_t N = 16;
+  std::vector<std::pair<size_t, size_t>> edges = {
+      {0, 1},   {0, 2},   {1, 3},   {1, 4},   {2, 5},   {2, 6},
+      {3, 7},   {3, 13},  {4, 6},   {4, 7},   {4, 12},  {4, 14},
+      {5, 8},   {6, 8},   {6, 12},  {6, 14},  {7, 14},  {7, 15},
+      {8, 9},   {9, 10},  {9, 12},  {10, 11}, {10, 12}, {11, 13},
+      {11, 15}, {12, 14}, {12, 15}, {13, 15}, {14, 15}};
+  const size_t M = edges.size();
+
+  std::vector<std::vector<bool>> adj(N, std::vector<bool>(N, false));
+  for (auto [u, v] : edges) {
+    adj[u][v] = adj[v][u] = true;
+  }
+
+  auto x = qbpp::var("x", N);
+
+  auto objective = qbpp::sum(x);
+
+  auto constraint = qbpp::Expr(0);
+  for (size_t i = 0; i < N; ++i) {
+    for (size_t j = i + 1; j < N; ++j) {
+      if (!adj[i][j]) {
+        constraint += x[i] * x[j];
+      }
+    }
+  }
+
+  auto f = -objective + N * constraint;
+  f.simplify_as_binary();
+
+  auto solver = qbpp::exhaustive_solver::ExhaustiveSolver(f);
+  auto sol = solver.search();
+
+  std::cout << "objective = " << objective(sol) << std::endl;
+  qbpp::graph::GraphDrawer graph;
+  for (size_t i = 0; i < N; ++i) {
+    graph.add_node(qbpp::graph::Node(i).color(sol(x[i])));
+  }
+  for (size_t i = 0; i < M; ++i) {
+    auto edge = qbpp::graph::Edge(edges[i].first, edges[i].second);
+    if (sol(x[edges[i].first]) && sol(x[edges[i].second])) {
+      edge.color(1).penwidth(2.0);
+    }
+    graph.add_edge(edge);
+  }
+  graph.write("maxclique.svg");
+}
+
+```
+辺リスト `edges` から隣接行列 `adj` を構築し、与えられたノードペアがグラフの辺を形成するかどうかを判定できるようにします。
+`N = 16` 個のバイナリ変数のベクトル `x` に対して、上記の QUBO 定式化に従って式 `objective`、`constraint`、`f` を構築します。
+特に、`adj[i][j]` が false の場合、二次項 `x[i] * x[j]` が `constraint` に追加されます。
+
+Exhaustive Solver を用いて `f` を最小化する最適解を求め、`sol` に格納します。`sol` における `objective` と `constraint` の値が出力されます。
+
+`qbpp::graph::GraphDrawer` オブジェクト `graph` を作成し、選択されたクリークのノードと辺を強調表示します。
+
+このプログラムの出力は以下の通りです：
+```
+objective = 4
+constraint = 0
+```
+この出力から、制約を違反することなく 4 ノードの最大クリークが得られたことがわかります。
+結果は以下のように `maxclique.svg` で可視化されます：
+
+<p align="center">
+  <img src="images/maxclique.svg" alt="最大クリーク問題の解" width="80%">
+</p>
+</div>

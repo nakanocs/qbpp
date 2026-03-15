@@ -4,6 +4,8 @@ nav_exclude: true
 title: "Integer Linear Programming"
 nav_order: 34
 ---
+<div class="lang-en" markdown="1">
+
 # Integer Linear Programming (ILP)
 **Integer Linear Programming (ILP)** can be converted into a QUBO expression using QUBO++.
 As an example, consider the following ILP:
@@ -55,3 +57,61 @@ objective = 24
 *c1 = 12, *c2 = 4, *c3 = 4
 ```
 We observe that a obtained solution with the objective 24 satisfies all constraints.
+
+</div>
+
+<div class="lang-ja" markdown="1">
+
+# 整数線形計画法（ILP）
+**整数線形計画法（ILP）**は、QUBO++を用いてQUBO式に変換できます。
+例として、以下のILPを考えます:
+
+$$
+\begin{aligned}
+\text{Maximize:} && 2x_0 +5x_1+5x_2\\
+\text{Subject to:} && x_0 + 3 x_1 + x_2 &\leq 12 \\
+                &&  x_0 + 2x_2 &\leq 5\\
+                && x_1 + x_2 &\leq 4;
+\end{aligned}
+$$
+
+## QUBO++プログラム
+以下のQUBO++プログラムは、このILPをQUBO式として定式化し、Easy Solver を使って解きます:
+```cpp
+#define MAXDEG 2
+#include <qbpp/qbpp.hpp>
+#include <qbpp/easy_solver.hpp>
+
+int main() {
+  auto x = 0 <= qbpp::var_int("x", 3) <= 5;
+  auto objective = 2 * x[0] + 5 * x[1] + 5 * x[2];
+  auto c1 = 0 <= x[0] + 3 * x[1] + x[2] <= 12;
+  auto c2 = 0 <= x[0] + 2 * x[2] <= 5;
+  auto c3 = 0 <= x[1] + x[2] <= 4;
+
+  auto f = -objective + 100 * (c1 + c2 + c3);
+  f.simplify_as_binary();
+  auto solver = qbpp::easy_solver::EasySolver(f);
+  solver.time_limit(1.0);
+  auto sol = solver.search();
+  std::cout << "x0 = " << sol(x[0]) << ", x1 = " << sol(x[1])
+            << ", x2 = " << sol(x[2]) << std::endl;
+  std::cout << "objective = " << sol(objective) << std::endl;
+  std::cout << "*c1 = " << sol(*c1) << ", *c2 = " << sol(*c2)
+            << ", *c3 = " << sol(*c3) << std::endl;
+}
+```
+このプログラムでは、`x` は3つの `qbpp::VarInt` オブジェクトのベクトルであり、それぞれ $[0, 5]$ の範囲の整数値をとります。
+目的関数と3つの制約は、それぞれ `objective`、`c1`、`c2`、`c3` で表されます。
+これらはペナルティ定数 `100` を用いて制約を強制する1つのQUBO式 `f` にまとめられます。
+
+Easy Solver は `f` の低エネルギー解を探索し、`sol` として返します。
+得られた解と `objective`、`*c1`、`*c2`、`*c3` の値は以下のように出力されます:
+```
+x0 = 2, x1 = 3, x2 = 1
+objective = 24
+*c1 = 12, *c2 = 4, *c3 = 4
+```
+目的関数値24の解が得られ、すべての制約が満たされていることが確認できます。
+
+</div>

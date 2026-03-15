@@ -4,6 +4,7 @@ nav_exclude: true
 title: "Edge Coloring"
 nav_order: 60
 ---
+<div class="lang-en" markdown="1">
 # Graph Edge Coloring Problem
 Given an undirected graph $G=(V,E)$, the **graph edge coloring problem** aims to assign a color to each edge so that no two edges of the same color share a common endpoint.
 
@@ -120,3 +121,121 @@ plt.show()
 ```
 
 Each edge is colored according to its assigned color.
+</div>
+
+<div class="lang-ja" markdown="1">
+# グラフ辺彩色問題
+無向グラフ $G=(V,E)$ が与えられたとき、**グラフ辺彩色問題**は、同じ色の2つの辺が共通の端点を持たないように各辺に色を割り当てることを目的とします。
+
+より具体的には、色の集合 $C$ に対して、同じノードに接続する任意の2つの異なる辺 $e$ と $e'$ について $\sigma(e)\neq \sigma(e')$ を満たす割り当て $\sigma:E\rightarrow C$ を求めます。
+
+$V=\lbrace 0,1,\ldots,n−1\rbrace$、$C=\lbrace 0,1,\ldots,m−1\rbrace$ とします。
+$s=|E|$ 本の辺に一意な ID $0,1,\ldots,s−1$ を割り当てます。
+
+$s\times m$ のバイナリ変数の行列 $X=(x_{i,j})$ を導入し、$x_{i,j}=1$ は辺 $i$ に色 $j$ が割り当てられている場合にのみ成り立ちます。
+
+### One-hot 制約
+$X$ の各行は one-hot でなければなりません：
+
+$$
+\begin{aligned}
+  \text{onehot}&= \sum_{i=0}^{s-1}\bigr(\sum_{j=0}^{m-1}x_{i,j}==1\bigl)
+\end{aligned}
+$$
+
+### 隣接する辺は異なる色
+
+$$
+\begin{aligned}
+  \text{different}&= \sum_{u\in V}\sum_{\substack{i<k\\ i,k\in I(u)}}\sum_{j=0}^{m-1}x_{i,j}x_{k,j}
+\end{aligned}
+$$
+
+ここで $I(u)$ はノード $u$ に接続する辺の ID の集合を表します。
+
+## PyQBPP プログラム
+単純グラフの辺彩色数は $\Delta$ または $\Delta+1$ であることが知られています。ここで $\Delta$ は最大次数です。以下のプログラムは $m=\Delta$ 色での辺彩色を試みます：
+```python
+from pyqbpp import var, sum, Expr, vector_sum, EasySolver
+
+n = 16
+edges = [
+    (0, 1),  (0, 2),  (0, 4),  (1, 3),  (1, 4),  (1, 7),  (2, 5),
+    (2, 6),  (3, 7),  (3, 13), (3, 15), (4, 6),  (4, 7),  (4, 14),
+    (5, 8),  (6, 8),  (6, 14), (7, 14), (7, 15), (8, 9),  (8, 12),
+    (9, 10), (9, 11), (9, 12), (10, 11),(10, 12),(10, 13),(10, 14),
+    (10, 15),(11, 13),(12, 14),(13, 15),(14, 15)]
+
+adj = [[] for _ in range(n)]
+for i, (u, v) in enumerate(edges):
+    adj[u].append(i)
+    adj[v].append(i)
+
+max_degree = max(len(neighbors) for neighbors in adj)
+m = max_degree
+
+s = len(edges)
+x = var("x", s, m)
+
+onehot = sum(vector_sum(x) == 1)
+different = Expr(0)
+for i in range(n):
+    for u in adj[i]:
+        for v in adj[i]:
+            if u < v:
+                different += sum(x[u] * x[v])
+
+f = onehot + different
+
+f.simplify_as_binary()
+solver = EasySolver(f)
+solver.target_energy(0)
+sol = solver.search()
+
+print(f"colors = {m}")
+print(f"onehot = {sol.eval(onehot)}")
+print(f"different = {sol.eval(different)}")
+
+# Extract edge colors
+for i in range(s):
+    for j in range(m):
+        if sol.get(x[i][j]) == 1:
+            print(f"Edge {edges[i]}: color {j}")
+            break
+```
+このプログラムでは、まず接続リスト `adj` を構築します。`adj[i]` にはノード `i` に接続する辺のインデックスが格納されます。
+次に、最大次数 $\Delta$ を計算し、`m=`$\Delta$ と設定します。
+
+このプログラムは以下の出力を生成します：
+```
+colors = 6
+onehot = 0
+different = 0
+```
+したがって、`m = 6` 色を用いた有効な辺彩色が見つかりました。
+
+## matplotlib による可視化
+以下のコードは、辺彩色の解を可視化します：
+```python
+import matplotlib.pyplot as plt
+import networkx as nx
+
+G = nx.Graph()
+G.add_nodes_from(range(n))
+G.add_edges_from(edges)
+pos = nx.spring_layout(G, seed=42)
+
+palette = ["#e74c3c", "#3498db", "#2ecc71", "#f39c12", "#9b59b6", "#1abc9c",
+           "#e67e22", "#2c3e50"]
+edge_color_idx = [next((k for k in range(m) if sol.get(x[i][k]) == 1), 0)
+                  for i in range(len(edges))]
+edge_colors = [palette[c % len(palette)] for c in edge_color_idx]
+nx.draw(G, pos, with_labels=True, node_color="#d5dbdb", node_size=400,
+        font_size=9, edge_color=edge_colors, width=2.5)
+plt.title(f"Edge Coloring ({m} colors)")
+plt.savefig("edge_color.png", dpi=150, bbox_inches="tight")
+plt.show()
+```
+
+各辺は割り当てられた色に従って彩色されます。
+</div>

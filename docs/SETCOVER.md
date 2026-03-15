@@ -4,6 +4,8 @@ nav_exclude: true
 title: "Set Cover"
 nav_order: 16
 ---
+<div class="lang-en" markdown="1">
+
 # Minimum Set Cover Problem
 Let $U$ be a universe set, and let ${\cal 𝐹}=\{S_0, S_1, \ldots S_{m-1}\}$ be a family of subsets of $U$.
 A subfamily $\cal S\subseteq \cal F$ is called a **set cover** if it covers all elements of $U$, i.e.,
@@ -14,16 +16,16 @@ $$
 \end{aligned}
 $$
 
-The **minimum set cover problem** is to find a set cover 
+The **minimum set cover problem** is to find a set cover
 $\cal S$ with the minimum cardinality.
-Here, we consider the weighted version, where each subset 
+Here, we consider the weighted version, where each subset
 $S_j$ has a weight $w_j$, and the goal is to find a **set cover with the minimum total weight**.
 
 ## HUBO formulation of the minimum set cover problem
 We formulate this problem as a HUBO problem.
 Assume that $U=\lbrace 0,1,\ldots, n-1\rbrace$, and $m$ subsets $S_0, S_1, \ldots, S_{m-1}$ are given.
 We introduce $m$ binary variables $x_0, x_1, \ldots, x_{m-1}$,
-where $x_j=1$ if and only if $S_j\in\cal S$.  
+where $x_j=1$ if and only if $S_j\in\cal S$.
 
 For each element $i\in U$, define the following expression:
 
@@ -57,7 +59,7 @@ We can now construct a HUBO objective function for the weighted minimum set cove
 
 $$
 \begin{aligned}
-f &= \text{objective}+P\times\text{constraint}, 
+f &= \text{objective}+P\times\text{constraint},
 \end{aligned}
 $$
 
@@ -116,7 +118,7 @@ int main() {
 ```
 This program defines a vector **`x`** of $m=8$ **binary variables** and constructs a vector **`c`** of $n=10$ **expressions**.
 Each expression `c[j]` corresponds to an element $j\in U$ and is initialized to 1.
-For every subset $S_i$, and for every element $j\in S_i$, we multiply `c[j]` by 
+For every subset $S_i$, and for every element $j\in S_i$, we multiply `c[j]` by
 `(1 − x[i])`.
 As a result, `c[j]` becomes 0 if at least one selected subset covers element `j`, and remains 1 otherwise.
 
@@ -178,12 +180,198 @@ Based on this formulation, the QUBO++ program can be modified as follows:
 
   auto constraint = qbpp::sum(1 <= c <= +qbpp::inf);
 ```
-In this program, the expressions `1 <= c[j] <= +qbpp::inf` are created for all 
+In this program, the expressions `1 <= c[j] <= +qbpp::inf` are created for all
 `j`, and their sum is stored in `constraint`.
 
 > **Remark**.
 > The term `1 <= c[j] <= +qbpp::inf` may introducing auxiliary binary variables
-> internally. As a result, the final expression can be handled by a QUBO solver, 
+> internally. As a result, the final expression can be handled by a QUBO solver,
 > while preserving the intended meaning of the coverage constraint.
 
 With this modification, the program produces the same optimal solution as the HUBO version.
+
+</div>
+
+<div class="lang-ja" markdown="1">
+
+# 最小集合被覆問題
+$U$ を全体集合、${\cal 𝐹}=\{S_0, S_1, \ldots S_{m-1}\}$ を $U$ の部分集合の族とします。
+部分族 $\cal S\subseteq \cal F$ が $U$ のすべての要素を被覆するとき、すなわち
+
+$$
+\begin{aligned}
+\bigcup_{S_j\subseteq \cal S}S_j &= U
+\end{aligned}
+$$
+
+が成り立つとき、$\cal S$ を**集合被覆**と呼びます。
+
+**最小集合被覆問題**は、最小の濃度を持つ集合被覆 $\cal S$ を求める問題です。
+ここでは重み付き版を考えます。各部分集合 $S_j$ に重み $w_j$ が与えられ、**総重みが最小の集合被覆**を求めることが目標です。
+
+## 最小集合被覆問題のHUBO定式化
+この問題をHUBO問題として定式化します。
+$U=\lbrace 0,1,\ldots, n-1\rbrace$ とし、$m$ 個の部分集合 $S_0, S_1, \ldots, S_{m-1}$ が与えられているとします。
+$m$ 個のバイナリ変数 $x_0, x_1, \ldots, x_{m-1}$ を導入し、$x_j=1$ は $S_j\in\cal S$ であることを表します。
+
+各要素 $i\in U$ に対して、次の式を定義します：
+
+$$
+\begin{aligned}
+c_i &=\prod_{j: i\in S_j}(1-x_j) && (0\leq i\leq n-1)
+\end{aligned}
+$$
+
+選択された部分集合のいずれも $i$ を含まない場合、$i$ は被覆されません。
+この場合、$i\in S_j$ であるすべての $j$ に対して $x_j=0$ が成り立ち、$c_i=1$ となります。
+一方、少なくとも1つの選択された部分集合が $i$ を含む場合、$i\in S$ であるある $j$ に対して $x_j=1$ となり、因子 $(1-x_j)$ が0になるため $c_i=0$ となります。
+したがって、次の**制約**はすべての要素が被覆されているときかつそのときに限り0になります：
+
+$$
+\begin{aligned}
+\text{constraint} &=\sum_{i=0}^{n-1}c_i
+\end{aligned}
+$$
+
+**目的関数**は選択された部分集合の総重みを最小化することです：
+
+$$
+\begin{aligned}
+\text{objective} &=\sum_{j=0}^{m-1}w_jx_j
+\end{aligned}
+$$
+
+重み付き最小集合被覆問題のHUBO目的関数を次のように構築できます：
+
+$$
+\begin{aligned}
+f &= \text{objective}+P\times\text{constraint},
+\end{aligned}
+$$
+
+ここで $P$ は実行可能性を目的関数より優先するための十分大きな正の定数です。
+
+## 最小集合被覆問題のQUBO++プログラム
+以下のQUBO++プログラムは、$n=10$ 個の要素と $m=8$ 個の部分集合を持つ重み付き最小集合被覆インスタンスのHUBO式を構築します：
+```cpp
+#include <set>
+
+#define MAXDEG 6
+#include <qbpp/qbpp.hpp>
+#include <qbpp/exhaustive_solver.hpp>
+
+int main() {
+  const size_t n = 10;
+  qbpp::Vector<qbpp::Vector<size_t>> cover = {
+      {0, 1, 2}, {2, 3, 4},       {4, 5, 6},    {6, 7, 8},
+      {9, 0, 1}, {1, 3, 5, 7, 9}, {0, 3, 6, 9}, {1, 4, 7, 8}};
+  qbpp::Vector cost = {3, 4, 3, 2, 3, 4, 3, 3};
+  auto m = cover.size();
+
+  auto x = qbpp::var("x", m);
+
+  auto c = qbpp::expr(n);
+  for (size_t j = 0; j < n; ++j) {
+    c[j] = 1;
+  }
+  for (size_t i = 0; i < m; ++i) {
+    for (size_t j : cover[i]) {
+      c[j] *= (1 - x[i]);
+    }
+  }
+
+  auto objective = qbpp::sum(cost * x);
+
+  auto constraint = qbpp::sum(c);
+
+  auto f = objective + 1000 * constraint;
+
+  f.simplify_as_binary();
+  auto solver = qbpp::exhaustive_solver::ExhaustiveSolver(f);
+
+  auto sol = solver.search();
+
+  std::cout << "objective = " << objective(sol) << std::endl;
+  std::cout << "constraint = " << constraint(sol) << std::endl;
+
+  for (size_t i = 0; i < m; ++i) {
+    if (sol(x[i]) == 1) {
+      std::cout << "Set " << i << ": " << cover[i] << " cost = " << cost[i]
+                << std::endl;
+    }
+  }
+}
+```
+このプログラムは $m=8$ 個の**バイナリ変数**のベクトル **`x`** と、$n=10$ 個の**式**のベクトル **`c`** を定義しています。
+各式 `c[j]` は要素 $j\in U$ に対応し、1で初期化されます。
+各部分集合 $S_i$ と各要素 $j\in S_i$ に対して、`c[j]` に `(1 - x[i])` を乗じます。
+その結果、少なくとも1つの選択された部分集合が要素 `j` を被覆する場合 `c[j]` は0になり、そうでない場合は1のままです。
+
+**`constraint`** は `c` のすべてのエントリの和として定義され、すべての要素が被覆されているときかつそのときに限り0になります。
+重み付き **`objective`** は `cost` と `x` の内積として定義されます。
+これらをHUBO式に結合します：
+
+$$
+\begin{aligned}
+f &= \text{objective} + 1000\times\text{constraint},
+\end{aligned}
+$$
+
+ここでペナルティ定数 1000 は実行可能性を優先するために十分大きく選ばれています。
+
+次に、Exhaustive Solver を用いて最適解 `sol` を求めます。
+プログラムは `objective` と `constraint` の値を出力し、最後に選択されたすべての部分集合を一覧表示します。例えば、出力は以下のようになります：
+```
+objective = 11
+constraint = 0
+Set 0: {0,1,2} cost = 3
+Set 2: {4,5,6} cost = 3
+Set 3: {6,7,8} cost = 2
+Set 6: {0,3,6,9} cost = 3
+```
+この出力は、総コスト11の実行可能な集合被覆が得られたことを示しています。
+
+## 最小集合被覆問題のQUBO定式化
+上記のHUBO定式化は3次以上の項を含む場合があり、必ずしもQUBO式ではありません。
+QUBO定式化を得るために、被覆制約を書き換えます。
+
+各要素 $i\in U$ に対して次を定義します：
+
+$$
+\begin{aligned}
+c_i &=\sum_{j: i\in S_j} x_j && (0\leq i\leq n-1)
+\end{aligned}
+$$
+
+$c_i\geq 1$ であれば、少なくとも1つの選択された部分集合 $S_j$ が $i$ を被覆しています。
+$c_i=0$ であれば、選択された部分集合のいずれも $i$ を被覆していません。
+したがって、被覆制約をQUBO++スタイルで次のように表現できます：
+
+$$
+\begin{aligned}
+\text{constraint} &= \sum_{i=0}^{n-1} (c_i\geq 1)
+\end{aligned}
+$$
+
+この制約はすべての要素が被覆されているときかつそのときに限り最小値0をとります。
+この定式化に基づいて、QUBO++プログラムを次のように修正できます：
+```cpp
+  auto c = qbpp::expr(n);
+  for (size_t i = 0; i < m; ++i) {
+    for (size_t j : cover[i]) {
+      c[j] += x[i];
+    }
+  }
+
+  auto constraint = qbpp::sum(1 <= c <= +qbpp::inf);
+```
+このプログラムでは、すべての `j` に対して式 `1 <= c[j] <= +qbpp::inf` が作成され、その和が `constraint` に格納されます。
+
+> **備考**.
+> 項 `1 <= c[j] <= +qbpp::inf` は内部的に補助バイナリ変数を導入する場合があります。
+> その結果、最終的な式はQUBOソルバーで扱うことができ、
+> 被覆制約の意味は保持されます。
+
+この修正により、プログラムはHUBO版と同じ最適解を生成します。
+
+</div>
