@@ -8,6 +8,11 @@ nav_order: 5
 This documentation for PyQBPP (Python binding of QUBO++) is currently under development.
 Some pages may contain incomplete or provisional information.
 
+## Getting Started
+1. [HUBO and QUBO](../HUBO_QUBO)
+2. [Quick Start](QUICK)
+3. [Installation](INSTALL)
+
 ## Basics
 This section provides a step-by-step introduction to PyQBPP.
 By reading the pages in order, you will learn how to define variables and expressions,
@@ -58,6 +63,11 @@ See the [Case Studies](CASE_STUDIES) page for the full list.
 # PyQBPP ドキュメント
 PyQBPP（QUBO++のPythonバインディング）のドキュメントは現在作成中です。
 一部のページには不完全または暫定的な情報が含まれている場合があります。
+
+## はじめに
+1. [HUBO と QUBO](../HUBO_QUBO)
+2. [クイックスタート](QUICK)
+3. [インストール](INSTALL)
 
 ## 基礎
 このセクションでは、PyQBPPの段階的な入門を提供します。
