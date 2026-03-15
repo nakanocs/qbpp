@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://qbpp-doc.cs.hiroshima-u.ac.jp/sitemap.xml
