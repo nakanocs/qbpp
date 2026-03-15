@@ -31,6 +31,7 @@ This section provides examples of solving optimization, mathematical, and graph 
 11. [Graph Edge Coloring Problem](EDGE_COLOR) (Easy)
 12. [Capacitated Vehicle Routing Problem (CVRP)](CVRP) (Hard)
 13. [Traveling Salesman Problem](TSP) (Medium)
+14. [Minimum Graph Bisection Problem](BISECTION) (Easy)
 
 
 ## Combinatorial optimization problems
@@ -85,6 +86,7 @@ This section provides examples of solving optimization, mathematical, and graph 
 11. [グラフ辺彩色問題](EDGE_COLOR)（Easy）
 12. [容量制約付き配送計画問題 (CVRP)](CVRP)（Hard）
 13. [巡回セールスマン問題](TSP)（Medium）
+14. [最小グラフ二分割問題](BISECTION)（Easy）
 
 
 ## 組合せ最適化問題
