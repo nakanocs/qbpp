@@ -38,7 +38,7 @@ This section provides examples of solving optimization, mathematical, and graph 
 1. [Knapsack Problem](KNAPSACK) (Medium)
 2. [Shift Scheduling Problem](SHIFT_SCHEDULING) (Hard)
 3. [LABS problem](LABS) (Medium)
-4. [Bar Cutting Problem](BAR_CUTTING) (Hard)
+4. [Cutting Stock Problem](BAR_CUTTING) (Hard)
 5. [Integer Linear Programming](ILP) (Easy)
 6. [Interval Subset Sum Problem (ISSP)](ISSP) (Hard)
 
@@ -93,7 +93,7 @@ This section provides examples of solving optimization, mathematical, and graph 
 1. [ナップサック問題](KNAPSACK)（Medium）
 2. [シフトスケジューリング問題](SHIFT_SCHEDULING)（Hard）
 3. [LABS 問題](LABS)（Medium）
-4. [バーカッティング問題](BAR_CUTTING)（Hard）
+4. [切出し問題](BAR_CUTTING)（Hard）
 5. [整数線形計画法](ILP)（Easy）
 6. [区間部分和問題 (ISSP)](ISSP)（Hard）
 

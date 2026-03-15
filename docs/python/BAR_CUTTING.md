@@ -1,14 +1,14 @@
 ---
 layout: default
 nav_exclude: true
-title: "Bar Cutting"
+title: "Cutting Stock"
 nav_order: 73
 ---
 <div class="lang-en" markdown="1">
-# Bar Cutting Problem
+# Cutting Stock Problem
 Suppose that we are given $M$ identical bars of fixed length $L$, and a set of $N$ orders specified by pairs $(l_j,c_j)$
 ($0\leq j\leq N-1$), where $l_j$ is the required length and $c_j$ is the required quantity of order $j$.
-The **bar cutting problem** aims to determine how the $M$ bars can be cut to satisfy all orders.
+The **cutting stock problem** aims to determine how the $M$ bars can be cut to satisfy all orders.
 
 ### Order Constraint:
 For each order $j$, the total number of pieces assigned across all bars must equal $c_j$:
@@ -102,9 +102,9 @@ Order 3 fulfilled = 6, required = 6
 </div>
 
 <div class="lang-ja" markdown="1">
-# 棒材切断問題
+# 切出し問題（Cutting Stock Problem）
 長さ $L$ の同一の棒材が $M$ 本与えられ、$N$ 個の注文がペア $(l_j,c_j)$（$0\leq j\leq N-1$）で指定されているとします。ここで $l_j$ は必要な長さ、$c_j$ は注文 $j$ の必要数量です。
-**棒材切断問題**は、すべての注文を満たすように $M$ 本の棒材をどのように切断するかを決定する問題です。
+**切出し問題**は、すべての注文を満たすように $M$ 本の棒材をどのように切断するかを決定する問題です。
 
 ### 注文制約：
 各注文 $j$ について、すべての棒材に割り当てられた部品の合計数は $c_j$ に等しくなければなりません：

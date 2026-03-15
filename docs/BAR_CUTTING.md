@@ -1,17 +1,17 @@
 ---
 layout: default
 nav_exclude: true
-title: "Bar Cutting"
+title: "Cutting Stock"
 nav_order: 33
 ---
 <div class="lang-en" markdown="1">
 
-# Bar Cutting Problem
+# Cutting Stock Problem
 Suppose that we are given $M$ identical bars of fixed length $L$, and a set of $N$ orders specified by pairs $(l_j,c_j)$
 ($0\leq j\leq N−1$), where $l_j$ is the required length and $c_j$ is the required quantity of order $j$.
-The **bar cutting problem** aims to determine how the $M$ bars can be cut to satisfy all orders.
+The **cutting stock problem** aims to determine how the $M$ bars can be cut to satisfy all orders.
 
-In general, the bar cutting problem is formulated as a minimization problem that seeks to minimize the number of used bars.
+In general, the cutting stock problem is formulated as a minimization problem that seeks to minimize the number of used bars.
 For simplicity, in this example we consider the feasibility problem of determining whether the $M$ bars can fulfill all $N$ orders.
 
 
@@ -45,7 +45,7 @@ $M=6$ bars of length $L=60$ and the following $N=4$ orders:
 | Length $l_j$ | 13 | 23 | 8 | 11 |
 | Quantity $c_j$ | 10 | 4 | 8 | 6 |
 
-The QUBO++ program for this bar cutting problem is as follows:
+The QUBO++ program for this cutting stock problem is as follows:
 ```cpp
 
 #define MAXDEG 2
@@ -139,11 +139,11 @@ Order 3 fulfilled = 5, required = 6
 
 <div class="lang-ja" markdown="1">
 
-# 棒切断問題
+# 切出し問題（Cutting Stock Problem）
 固定長 $L$ の同一の棒が $M$ 本と、ペア $(l_j,c_j)$ ($0\leq j\leq N-1$) で指定される $N$ 件の注文が与えられるとします。ここで $l_j$ は必要な長さ、$c_j$ は注文 $j$ の必要数量です。
-**棒切断問題**は、$M$ 本の棒をどのように切断すればすべての注文を満たせるかを決定することを目的とします。
+**切出し問題**は、$M$ 本の棒をどのように切断すればすべての注文を満たせるかを決定することを目的とします。
 
-一般に、棒切断問題は使用する棒の本数を最小化する最小化問題として定式化されます。
+一般に、切出し問題は使用する棒の本数を最小化する最小化問題として定式化されます。
 簡単のため、この例では $M$ 本の棒で $N$ 件のすべての注文を満たせるかどうかを判定する実行可能性問題を考えます。
 
 
@@ -176,7 +176,7 @@ $$
 | 長さ $l_j$ | 13 | 23 | 8 | 11 |
 | 数量 $c_j$ | 10 | 4 | 8 | 6 |
 
-この棒切断問題のQUBO++プログラムは以下のとおりです：
+この切出し問題のQUBO++プログラムは以下のとおりです：
 ```cpp
 
 #define MAXDEG 2
