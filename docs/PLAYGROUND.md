@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "QUBO++ Playground"
+title: "Playground"
 nav_order: 8
 ---
 <div class="lang-en" markdown="1">
