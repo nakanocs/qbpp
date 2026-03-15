@@ -45,6 +45,9 @@
       }
     }
 
+    console.log('cpp:', cppItems.map(function(li){return li.querySelector('a').textContent.trim();}));
+    console.log('python:', pythonItems.map(function(li){return li.querySelector('a').textContent.trim();}));
+
     var btnsCpp = document.querySelectorAll('.qbpp-switch-cpp');
     var btnsPython = document.querySelectorAll('.qbpp-switch-python');
 
