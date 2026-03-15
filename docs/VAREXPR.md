@@ -143,9 +143,54 @@ The following data types are supported:
 **`qbpp::int128_t`**, **`qbpp::int256_t`**, **`qbpp::int512_t`**, **`qbpp::int1024_t`**, and **`qbpp::cpp_int`**
 
 The type **`qbpp::cpp_int`** represents an integer with an arbitrary number of digits.
-Constant values of this type can be specified using string literals.
 
-For example, the following program creates a `qbpp::Expr` object with very large coefficient and constant terms:
+### Integer ranges and string constructors
+
+The following table summarizes the range and how to specify large constants for each type:
+
+| Type | Range | Large constant syntax |
+|------|-------|-----------------------|
+| `int32_t` | ±2.1×10⁹ | `12345` (integer literal) |
+| `int64_t` | ±9.2×10¹⁸ | `1234567890123456789LL` |
+| `qbpp::int128_t` | ±1.7×10³⁸ | `qbpp::int128_t("12345678901234567890")` |
+| `qbpp::int256_t` | ±5.8×10⁷⁶ | `qbpp::int256_t("...")` |
+| `qbpp::cpp_int` | unlimited | `qbpp::cpp_int("...")` |
+
+For `qbpp::int128_t` and the Boost.Multiprecision types (`int256_t`, `int512_t`, `int1024_t`, `cpp_int`),
+constant values that exceed the 64-bit integer range can be specified using **string constructors**.
+The string is parsed as a decimal number at runtime.
+
+> **Note**:
+> Standard integer literals (e.g., `12345`) and 64-bit literals with the `LL` suffix can be used directly
+> with any type via implicit conversion.
+> String constructors are only needed when the value exceeds the `int64_t` range (±9.2×10¹⁸).
+
+### Example with qbpp::int128_t
+
+The following program creates a `qbpp::Expr` object with coefficients exceeding 64-bit range:
+```cpp
+#define COEFF_TYPE qbpp::int128_t
+#define ENERGY_TYPE qbpp::int128_t
+
+#define MAXDEG 2
+#include <qbpp/qbpp.hpp>
+
+int main() {
+  auto x = qbpp::var("x");
+  auto y = qbpp::var("y");
+  auto f = qbpp::int128_t("12345678901234567890") * x +
+           qbpp::int128_t("98765432109876543210") * y;
+  std::cout << "f = " << f << std::endl;
+}
+```
+This program produces the following output:
+```
+f = 12345678901234567890*x +98765432109876543210*y
+```
+
+### Example with qbpp::cpp_int
+
+The following program creates a `qbpp::Expr` object with very large coefficient and constant terms:
 ```cpp
 #define COEFF_TYPE qbpp::cpp_int
 #define ENERGY_TYPE qbpp::cpp_int
@@ -302,9 +347,54 @@ int main() {
 **`qbpp::int128_t`**、**`qbpp::int256_t`**、**`qbpp::int512_t`**、**`qbpp::int1024_t`**、**`qbpp::cpp_int`**
 
 型 **`qbpp::cpp_int`** は任意桁数の整数を表します。
-この型の定数値は文字列リテラルを使用して指定できます。
 
-例えば、以下のプログラムは非常に大きな係数と定数項を持つ `qbpp::Expr` オブジェクトを作成します。
+### 整数の範囲と文字列コンストラクタ
+
+各型の範囲と大きな定数の指定方法を以下の表にまとめます。
+
+| 型 | 範囲 | 大きな定数の構文 |
+|----|------|-----------------|
+| `int32_t` | ±2.1×10⁹ | `12345`（整数リテラル） |
+| `int64_t` | ±9.2×10¹⁸ | `1234567890123456789LL` |
+| `qbpp::int128_t` | ±1.7×10³⁸ | `qbpp::int128_t("12345678901234567890")` |
+| `qbpp::int256_t` | ±5.8×10⁷⁶ | `qbpp::int256_t("...")` |
+| `qbpp::cpp_int` | 無制限 | `qbpp::cpp_int("...")` |
+
+`qbpp::int128_t` および Boost.Multiprecision の型（`int256_t`、`int512_t`、`int1024_t`、`cpp_int`）では、
+64ビット整数の範囲を超える定数値を**文字列コンストラクタ**で指定できます。
+文字列は実行時に10進数として解析されます。
+
+> **Note**:
+> 標準の整数リテラル（例: `12345`）や `LL` サフィックス付きの64ビットリテラルは、
+> 暗黙の型変換によりどの型でもそのまま使用できます。
+> 文字列コンストラクタが必要になるのは、値が `int64_t` の範囲（±9.2×10¹⁸）を超える場合のみです。
+
+### qbpp::int128_t の例
+
+以下のプログラムは、64ビット範囲を超える係数を持つ `qbpp::Expr` オブジェクトを作成します。
+```cpp
+#define COEFF_TYPE qbpp::int128_t
+#define ENERGY_TYPE qbpp::int128_t
+
+#define MAXDEG 2
+#include <qbpp/qbpp.hpp>
+
+int main() {
+  auto x = qbpp::var("x");
+  auto y = qbpp::var("y");
+  auto f = qbpp::int128_t("12345678901234567890") * x +
+           qbpp::int128_t("98765432109876543210") * y;
+  std::cout << "f = " << f << std::endl;
+}
+```
+このプログラムは以下の出力を生成します。
+```
+f = 12345678901234567890*x +98765432109876543210*y
+```
+
+### qbpp::cpp_int の例
+
+以下のプログラムは、非常に大きな係数と定数項を持つ `qbpp::Expr` オブジェクトを作成します。
 ```cpp
 #define COEFF_TYPE qbpp::cpp_int
 #define ENERGY_TYPE qbpp::cpp_int
