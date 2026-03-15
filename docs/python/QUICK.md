@@ -29,6 +29,7 @@ h.simplify_as_binary()
 
 solver = ExhaustiveSolver(h)
 sol = solver.search()
+print(f"sol = {sol}")
 print(f"x = {sol(x)}, y = {sol(y)}")
 ```
 
@@ -36,6 +37,7 @@ print(f"x = {sol(x)}, y = {sol(y)}")
 Run `test.py` as follows:
 ```bash
 python3 test.py
+sol = Sol(energy=0, x[0]=1, x[1]=1, x[2]=0, x[3]=1, y[0]=0, y[1]=0, y[2]=1, y[3]=0)
 x = 6, y = 4
 ```
 
@@ -70,6 +72,7 @@ h.simplify_as_binary()
 
 solver = ExhaustiveSolver(h)
 sol = solver.search()
+print(f"sol = {sol}")
 print(f"x = {sol(x)}, y = {sol(y)}")
 ```
 
@@ -77,6 +80,7 @@ print(f"x = {sol(x)}, y = {sol(y)}")
 `test.py`を以下のように実行します:
 ```bash
 python3 test.py
+sol = Sol(energy=0, x[0]=1, x[1]=1, x[2]=0, x[3]=1, y[0]=0, y[1]=0, y[2]=1, y[3]=0)
 x = 6, y = 4
 ```
 
