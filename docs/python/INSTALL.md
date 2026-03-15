@@ -35,13 +35,7 @@ pip install --upgrade pyqbpp
 After installation, activate the license to start using PyQBPP:
 
 ```bash
-qbpp-license -a
-```
-
-If you have a license key, set it before activation:
-```bash
-export QBPP_LICENSE_KEY=XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX
-qbpp-license -a
+qbpp-license -k XXXXXX-XXXXXX-XXXXXX-XXXXXX -a
 ```
 
 If no license key is set, an **Anonymous Trial** (7 days, 1,000 variables) is activated.
@@ -81,13 +75,7 @@ pip install --upgrade pyqbpp
 インストール後、ライセンスを有効化してPyQBPPの使用を開始します:
 
 ```bash
-qbpp-license -a
-```
-
-ライセンスキーをお持ちの場合は、有効化の前に設定してください:
-```bash
-export QBPP_LICENSE_KEY=XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX
-qbpp-license -a
+qbpp-license -k XXXXXX-XXXXXX-XXXXXX-XXXXXX -a
 ```
 
 ライセンスキーが設定されていない場合、**匿名トライアル**（7日間、1,000変数）が有効化されます。

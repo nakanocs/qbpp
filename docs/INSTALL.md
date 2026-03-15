@@ -77,7 +77,6 @@ export LIBRARY_PATH=$QBPP_PATH/lib:$LIBRARY_PATH
 export LD_LIBRARY_PATH=$QBPP_PATH/lib:$LD_LIBRARY_PATH
 export PATH=$QBPP_PATH/bin:$PATH
 
-export QBPP_LICENSE_KEY=[Your QUBO++ license key]
 ```
 
 ## License Activation
@@ -85,13 +84,7 @@ export QBPP_LICENSE_KEY=[Your QUBO++ license key]
 After installation, activate the license to start using QUBO++:
 
 ```bash
-qbpp-license -a
-```
-
-If you have a license key, set it before activation:
-```bash
-export QBPP_LICENSE_KEY=XXXXXX-XXXXXX-XXXXXX-XXXXXX
-qbpp-license -a
+qbpp-license -k XXXXXX-XXXXXX-XXXXXX-XXXXXX -a
 ```
 
 If no license key is set, an **Anonymous Trial** (7 days, 1,000 variables) is activated.
@@ -174,7 +167,6 @@ export LIBRARY_PATH=$QBPP_PATH/lib:$LIBRARY_PATH
 export LD_LIBRARY_PATH=$QBPP_PATH/lib:$LD_LIBRARY_PATH
 export PATH=$QBPP_PATH/bin:$PATH
 
-export QBPP_LICENSE_KEY=[QUBO++ ライセンスキー]
 ```
 
 ## ライセンスのアクティベーション
@@ -182,13 +174,7 @@ export QBPP_LICENSE_KEY=[QUBO++ ライセンスキー]
 インストール後、ライセンスをアクティベートして QUBO++ の使用を開始します：
 
 ```bash
-qbpp-license -a
-```
-
-ライセンスキーをお持ちの場合は、アクティベーション前に設定してください：
-```bash
-export QBPP_LICENSE_KEY=XXXXXX-XXXXXX-XXXXXX-XXXXXX
-qbpp-license -a
+qbpp-license -k XXXXXX-XXXXXX-XXXXXX-XXXXXX -a
 ```
 
 ライセンスキーが設定されていない場合、**Anonymous Trial**（7日間、1,000変数）がアクティベートされます。
