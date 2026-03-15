@@ -6,6 +6,8 @@ nav_order: 4
 <div class="lang-en" markdown="1">
 # Quick Start
 
+> **Try without installing:** You can try PyQBPP immediately in the browser using the [**Playground**](../PLAYGROUND) — no installation required.
+
 This page provides an overview of the Quick Start procedure for PyQBPP.
 
 ## Installation
@@ -50,6 +52,8 @@ x = 6, y = 4
 
 <div class="lang-ja" markdown="1">
 # クイックスタート
+
+> **インストール不要で試す:** [**Playground**](../PLAYGROUND) を使えば、ブラウザ上ですぐに PyQBPP を試すことができます。
 
 このページでは、PyQBPPのクイックスタート手順の概要を説明します。
 
