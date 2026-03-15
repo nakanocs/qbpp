@@ -33,8 +33,8 @@ For $n$ binary variables $x_0, x_1, \ldots, x_{n-1}$ and $m$ clauses $C_0, C_1, 
 
 For each clause $C_k = \lbrace x_{i_1}, x_{i_2}, \ldots, x_{i_s} \rbrace$, we define:
 
-- **All-True penalty**: the product $x_{i_1} \cdot x_{i_2} \cdots x_{i_s}$ equals 1 only when all variables in the clause are True.
-- **All-False penalty**: the product $\overline{x}_{i_1} \cdot \overline{x}_{i_2} \cdots \overline{x}_{i_s}$ equals 1 only when all variables are False, where $\overline{x}_i$ denotes the negated literal ($\overline{x}_i = 1 - x_i$).
+- **All-True penalty**: the product $$x_{i_1} \cdot x_{i_2} \cdots x_{i_s}$$ equals 1 only when all variables in the clause are True.
+- **All-False penalty**: the product $$\overline{x}_{i_1} \cdot \overline{x}_{i_2} \cdots \overline{x}_{i_s}$$ equals 1 only when all variables are False, where $$\overline{x}_i$$ denotes the negated literal ($$\overline{x}_i = 1 - x_i$$).
 
 The constraint for the entire instance is:
 
@@ -66,7 +66,7 @@ where $P$ must be large enough (e.g., $P = n^2 + 1$) to ensure that constraint s
 
 ## PyQBPP formulation
 
-PyQBPP handles negated literals $\overline{x}_i$ (written as `~x[i]`) natively, which makes the NAE-SAT formulation natural and efficient.
+PyQBPP handles negated literals $$\overline{x}_i$$ (written as `~x[i]`) natively, which makes the NAE-SAT formulation natural and efficient.
 The following program defines a simple NAE-SAT instance with 5 variables and 4 clauses of size 3, solves it using EasySolver, and verifies the result.
 
 ```python
@@ -143,7 +143,7 @@ The solver finds an assignment where `constraint = 0`, meaning all four clauses 
 The objective value is 1 because $n = 5$ is odd, so a perfect True/False balance (e.g., 3 True and 2 False) gives $(2 \times 3 - 5)^2 = 1$.
 
 ### Key points
-- **Negated literals**: `~x[i]` is used directly in PyQBPP to express $\overline{x}_i$ without expanding to $1 - x_i$. This keeps the HUBO expression compact.
+- **Negated literals**: `~x[i]` is used directly in PyQBPP to express $$\overline{x}_i$$ without expanding to $$1 - x_i$$. This keeps the HUBO expression compact.
 - **Higher-order terms**: Each clause of size $s$ produces degree-$s$ terms (e.g., $x_0 x_1 x_2$ for a 3-literal clause). PyQBPP handles HUBO expressions natively without requiring quadratization.
 - **Penalty weight**: $P = n^2 + 1$ ensures that any constraint violation outweighs the maximum possible objective value.
 
@@ -178,8 +178,8 @@ $n$ 個のバイナリ変数 $x_0, x_1, \ldots, x_{n-1}$ と $m$ 個の節 $C_0,
 
 各節 $C_k = \lbrace x_{i_1}, x_{i_2}, \ldots, x_{i_s} \rbrace$ に対して以下を定義します：
 
-- **全 True ペナルティ**: 積 $x_{i_1} \cdot x_{i_2} \cdots x_{i_s}$ は節内のすべての変数が True のときにのみ 1 になります。
-- **全 False ペナルティ**: 積 $\overline{x}_{i_1} \cdot \overline{x}_{i_2} \cdots \overline{x}_{i_s}$ はすべての変数が False のときにのみ 1 になります。ここで $\overline{x}_i$ は否定リテラル（$\overline{x}_i = 1 - x_i$）を表します。
+- **全 True ペナルティ**: 積 $$x_{i_1} \cdot x_{i_2} \cdots x_{i_s}$$ は節内のすべての変数が True のときにのみ 1 になります。
+- **全 False ペナルティ**: 積 $$\overline{x}_{i_1} \cdot \overline{x}_{i_2} \cdots \overline{x}_{i_s}$$ はすべての変数が False のときにのみ 1 になります。ここで $$\overline{x}_i$$ は否定リテラル（$$\overline{x}_i = 1 - x_i$$）を表します。
 
 インスタンス全体の制約は以下の通りです：
 
@@ -211,7 +211,7 @@ $$
 
 ## PyQBPP による定式化
 
-PyQBPP は否定リテラル $\overline{x}_i$（`~x[i]` と記述）をネイティブに扱えるため、NAE-SAT の定式化が自然かつ効率的に行えます。
+PyQBPP は否定リテラル $$\overline{x}_i$$（`~x[i]` と記述）をネイティブに扱えるため、NAE-SAT の定式化が自然かつ効率的に行えます。
 以下のプログラムは、5 変数・4 節（各節サイズ 3）の簡単な NAE-SAT インスタンスを定義し、EasySolver で解き、結果を検証します。
 
 ```python
@@ -288,7 +288,7 @@ All clauses NAE-satisfied: Yes
 目的関数の値は 1 です。これは $n = 5$ が奇数であるため、最良の True/False バランス（例えば True が 3、False が 2）で $(2 \times 3 - 5)^2 = 1$ となるためです。
 
 ### 要点
-- **否定リテラル**: PyQBPP では `~x[i]` を直接使用して $\overline{x}_i$ を表現でき、$1 - x_i$ に展開する必要がありません。これにより HUBO 式がコンパクトに保たれます。
+- **否定リテラル**: PyQBPP では `~x[i]` を直接使用して $$\overline{x}_i$$ を表現でき、$$1 - x_i$$ に展開する必要がありません。これにより HUBO 式がコンパクトに保たれます。
 - **高次項**: サイズ $s$ の節は次数 $s$ の項を生成します（例えば、3 リテラルの節では $x_0 x_1 x_2$）。PyQBPP は HUBO 式をネイティブに扱えるため、二次化（quadratization）は不要です。
 - **ペナルティ重み**: $P = n^2 + 1$ により、制約違反が目的関数の最大値を必ず上回るようにします。
 

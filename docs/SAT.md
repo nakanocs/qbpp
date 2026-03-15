@@ -24,7 +24,7 @@ A satisfying assignment must make every clause True, i.e., at least one literal 
 We use the convention **True = 0** and **False = 1** for binary variables.
 Under this convention:
 - A positive literal $x_i$ is **False** when $x_i = 1$.
-- A negative literal $\lnot x_i$ is **False** when $x_i = 0$, i.e., when $\tilde{x}_i = 1$ (where $\tilde{x}_i$ denotes the negated literal in QUBO++).
+- A negative literal $$\lnot x_i$$ is **False** when $$x_i = 0$$, i.e., when $$\tilde{x}_i = 1$$ (where $$\tilde{x}_i$$ denotes the negated literal in QUBO++).
 
 A clause is violated (all its literals are False) exactly when the product of the "False indicator" for each literal equals 1.
 For a clause $C_k$, we define the penalty:
@@ -175,7 +175,7 @@ $$
 バイナリ変数の規約として **True = 0**、**False = 1** を用います。
 この規約の下で：
 - 正リテラル $x_i$ は $x_i = 1$ のとき**偽 (False)** です。
-- 負リテラル $\lnot x_i$ は $x_i = 0$ のとき**偽 (False)** です。すなわち $\tilde{x}_i = 1$ のとき（$\tilde{x}_i$ は QUBO++ における否定リテラル）です。
+- 負リテラル $$\lnot x_i$$ は $$x_i = 0$$ のとき**偽 (False)** です。すなわち $$\tilde{x}_i = 1$$ のとき（$$\tilde{x}_i$$ は QUBO++ における否定リテラル）です。
 
 節が違反される（すべてのリテラルが偽）のは、各リテラルの「偽指標」の積が 1 に等しいときです。
 節 $C_k$ に対して、ペナルティを以下のように定義します：
