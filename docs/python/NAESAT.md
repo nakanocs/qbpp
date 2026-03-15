@@ -11,6 +11,18 @@ The **Not-All-Equal Satisfiability (NAE-SAT)** problem is a variant of the Boole
 Given a set of Boolean variables $x_0, x_1, \ldots, x_{n-1}$ and a collection of clauses, each clause is **satisfied** if and only if at least one variable in the clause is True **and** at least one is False.
 In other words, a clause is violated when all its variables have the same value (all True or all False).
 
+For example, for Boolean variables $x_0, x_1, x_2, x_3$, consider the following clauses:
+
+$$
+\begin{aligned}
+C_0 &= \lbrace x_0,x_1,x_2 \rbrace,\\
+C_1 &= \lbrace x_1,x_2,x_3 \rbrace,\\
+C_2 &= \lbrace x_1,x_3 \rbrace
+\end{aligned}
+$$
+
+The assignment $(x_0, x_1, x_2, x_3) = (\text{True}, \text{True}, \text{False}, \text{False})$ is a solution: each clause contains at least one True and at least one False variable.
+
 NAE-SAT is NP-complete and arises in applications such as hypergraph coloring and constraint satisfaction.
 
 ## HUBO formulation
@@ -143,6 +155,18 @@ The objective value is 1 because $n = 5$ is odd, so a perfect True/False balance
 **全不等充足可能性問題 (NAE-SAT: Not-All-Equal Satisfiability)** はブール充足可能性問題 (SAT) の変種です。
 ブール変数 $x_0, x_1, \ldots, x_{n-1}$ と節の集合が与えられたとき、各節は少なくとも1つの変数が True であり、**かつ**少なくとも1つが False である場合にのみ**充足**されます。
 つまり、節内のすべての変数が同じ値（すべて True またはすべて False）のとき、その節は違反となります。
+
+例えば、ブール変数 $x_0, x_1, x_2, x_3$ に対して、以下の節を考えます：
+
+$$
+\begin{aligned}
+C_0 &= \lbrace x_0,x_1,x_2 \rbrace,\\
+C_1 &= \lbrace x_1,x_2,x_3 \rbrace,\\
+C_2 &= \lbrace x_1,x_3 \rbrace
+\end{aligned}
+$$
+
+割り当て $(x_0, x_1, x_2, x_3) = (\text{True}, \text{True}, \text{False}, \text{False})$ は解です。各節に少なくとも1つの True と少なくとも1つの False の変数が含まれています。
 
 NAE-SAT は NP 完全であり、ハイパーグラフ彩色や制約充足問題などの応用があります。
 
