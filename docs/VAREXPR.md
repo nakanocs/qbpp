@@ -139,8 +139,8 @@ The following data types are supported:
 - **Standard integer types**:
 **`int8_t`**, **`int16_t`**, **`int32_t`**, and **`int64_t`**
 
-- **Boost.Multiprecision integer types**:
-**`qbpp::int128_t`**, **`qbpp::int256_t`**, **`qbpp::int512_t`**, **`qbpp::int1024_t`**, and **`qbpp::cpp_int`**
+- **Extended integer types**:
+**`qbpp::int128_t`** and **`qbpp::cpp_int`**
 
 The type **`qbpp::cpp_int`** represents an integer with an arbitrary number of digits.
 
@@ -153,10 +153,9 @@ The following table summarizes the range and how to specify large constants for 
 | `int32_t` | ±2.1×10⁹ | `12345` (integer literal) |
 | `int64_t` | ±9.2×10¹⁸ | `1234567890123456789LL` |
 | `qbpp::int128_t` | ±1.7×10³⁸ | `qbpp::int128_t("12345678901234567890")` |
-| `qbpp::int256_t` | ±5.8×10⁷⁶ | `qbpp::int256_t("...")` |
 | `qbpp::cpp_int` | unlimited | `qbpp::cpp_int("...")` |
 
-For `qbpp::int128_t` and the Boost.Multiprecision types (`int256_t`, `int512_t`, `int1024_t`, `cpp_int`),
+For `qbpp::int128_t` and `qbpp::cpp_int`,
 constant values that exceed the 64-bit integer range can be specified using **string constructors**.
 The string is parsed as a decimal number at runtime.
 
@@ -343,8 +342,8 @@ int main() {
 - **標準整数型**:
 **`int8_t`**、**`int16_t`**、**`int32_t`**、**`int64_t`**
 
-- **Boost.Multiprecision 整数型**:
-**`qbpp::int128_t`**、**`qbpp::int256_t`**、**`qbpp::int512_t`**、**`qbpp::int1024_t`**、**`qbpp::cpp_int`**
+- **拡張整数型**:
+**`qbpp::int128_t`** および **`qbpp::cpp_int`**
 
 型 **`qbpp::cpp_int`** は任意桁数の整数を表します。
 
@@ -357,10 +356,9 @@ int main() {
 | `int32_t` | ±2.1×10⁹ | `12345`（整数リテラル） |
 | `int64_t` | ±9.2×10¹⁸ | `1234567890123456789LL` |
 | `qbpp::int128_t` | ±1.7×10³⁸ | `qbpp::int128_t("12345678901234567890")` |
-| `qbpp::int256_t` | ±5.8×10⁷⁶ | `qbpp::int256_t("...")` |
 | `qbpp::cpp_int` | 無制限 | `qbpp::cpp_int("...")` |
 
-`qbpp::int128_t` および Boost.Multiprecision の型（`int256_t`、`int512_t`、`int1024_t`、`cpp_int`）では、
+`qbpp::int128_t` および `qbpp::cpp_int` では、
 64ビット整数の範囲を超える定数値を**文字列コンストラクタ**で指定できます。
 文字列は実行時に10進数として解析されます。
 
