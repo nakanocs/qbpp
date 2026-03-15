@@ -1,0 +1,5 @@
+{% if site.last_edit_timestamp and site.last_edit_time_format and page.last_modified_at %}
+<p class="text-small text-grey-dk-000 mb-0">
+  Page last modified: {{ page.last_modified_at | date: site.last_edit_time_format }}.
+</p>
+{% endif %}
