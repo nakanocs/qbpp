@@ -89,6 +89,7 @@ Item 9: weight = 18, value = 160
 |------------------------------|---------------------------------------|
 | `0 <= sum(w * x) <= capacity`| `between(sum(w * x), 0, capacity)`   |
 | `sol(*constraint)`           | `sol.eval(constraint.body)`           |
+
 </div>
 
 <div class="lang-ja" markdown="1">
@@ -175,4 +176,5 @@ Item 9: weight = 18, value = 160
 |------------------------------|---------------------------------------|
 | `0 <= sum(w * x) <= capacity`| `between(sum(w * x), 0, capacity)`   |
 | `sol(*constraint)`           | `sol.eval(constraint.body)`           |
+
 </div>
