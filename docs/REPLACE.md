@@ -247,6 +247,14 @@ This confirms that the division result $q=r/p=7$ is correctly obtained.
 > - **`f.replace(ml)`** updates the expression `f` in place by applying the replacements specified in `ml`.
 > - **`qbpp::replace(f, ml)`** returns a new expression in which the replacements have been applied, without modifying the original expression `f`.
 >  Use `f.replace(ml)` when you want to permanently modify an existing expression, and use `qbpp::replace(f, ml)` when you want to keep the original expression unchanged.
+
+> **NOTE: Negated literals and `replace()`**
+> The `replace()` function treats `x` and `~x` as independent keys.
+> Specifying `{x, 0}` in a `MapList` does **not** automatically replace `~x` with `1`.
+> If the expression contains negated literals such as `~x`, you should explicitly include both mappings:
+> ```cpp
+> qbpp::MapList ml({% raw %}{{x, 0}, {~x, 1}}{% endraw %});
+> ```
 </div>
 
 <div class="lang-ja" markdown="1">
@@ -490,4 +498,12 @@ p= 5, q= 7, r= 35
 > - **`f.replace(ml)`** は `ml` で指定された置換を適用して式 `f` をその場で更新します。
 > - **`qbpp::replace(f, ml)`** は置換が適用された新しい式を返し、元の式 `f` は変更しません。
 > 既存の式を恒久的に変更したい場合は `f.replace(ml)` を、元の式を変更せずに保持したい場合は `qbpp::replace(f, ml)` を使用してください。
+
+> **NOTE: 否定リテラルと `replace()`**
+> `replace()` 関数は `x` と `~x` を独立したキーとして扱います。
+> `MapList` に `{x, 0}` を指定しても、`~x` が自動的に `1` に置換されるわけではありません。
+> 式に `~x` のような否定リテラルが含まれている場合、両方のマッピングを明示的に指定してください:
+> ```cpp
+> qbpp::MapList ml({% raw %}{{x, 0}, {~x, 1}}{% endraw %});
+> ```
 </div>

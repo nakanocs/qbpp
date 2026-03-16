@@ -31,14 +31,14 @@ For each element $i\in U$, define the following expression:
 
 $$
 \begin{aligned}
-c_i &=\prod_{j: i\in S_j}(1-x_j) && (0\leq i\leq n-1)
+c_i &=\prod_{j: i\in S_j}\bar{x}_j && (0\leq i\leq n-1)
 \end{aligned}
 $$
 
 If none of the selected subsets contains $i$, then $i$ is not covered.
 In that case, $x_j=0$ holds for all $j$ such that $i\in S_j$
 and hence $c_i=1$.
-On the other hand, if at least one selected subset contains $i$, then $x_j$=1 for some $j$ with $i\in S$, and the factor $(1−x_j)$ becomes 0, so $c_i=1$.
+On the other hand, if at least one selected subset contains $i$, then $x_j$=1 for some $j$ with $i\in S$, and the factor $\bar{x}_j$ becomes 0, so $c_i=0$.
 Therefore, the following **constraint** becomes 0 if and only if all elements are covered:
 
 $$
@@ -90,7 +90,7 @@ int main() {
   }
   for (size_t i = 0; i < m; ++i) {
     for (size_t j : cover[i]) {
-      c[j] *= (1 - x[i]);
+      c[j] *= ~x[i];
     }
   }
 
@@ -119,7 +119,7 @@ int main() {
 This program defines a vector **`x`** of $m=8$ **binary variables** and constructs a vector **`c`** of $n=10$ **expressions**.
 Each expression `c[j]` corresponds to an element $j\in U$ and is initialized to 1.
 For every subset $S_i$, and for every element $j\in S_i$, we multiply `c[j]` by
-`(1 − x[i])`.
+`~x[i]`.
 As a result, `c[j]` becomes 0 if at least one selected subset covers element `j`, and remains 1 otherwise.
 
 The **`constraint`** is defined as the sum of all entries in `c`, and it becomes 0 if and only if all elements are covered.
@@ -218,13 +218,13 @@ $m$ 個のバイナリ変数 $x_0, x_1, \ldots, x_{m-1}$ を導入し、$x_j=1$ 
 
 $$
 \begin{aligned}
-c_i &=\prod_{j: i\in S_j}(1-x_j) && (0\leq i\leq n-1)
+c_i &=\prod_{j: i\in S_j}\bar{x}_j && (0\leq i\leq n-1)
 \end{aligned}
 $$
 
 選択された部分集合のいずれも $i$ を含まない場合、$i$ は被覆されません。
 この場合、$i\in S_j$ であるすべての $j$ に対して $x_j=0$ が成り立ち、$c_i=1$ となります。
-一方、少なくとも1つの選択された部分集合が $i$ を含む場合、$i\in S$ であるある $j$ に対して $x_j=1$ となり、因子 $(1-x_j)$ が0になるため $c_i=0$ となります。
+一方、少なくとも1つの選択された部分集合が $i$ を含む場合、$i\in S$ であるある $j$ に対して $x_j=1$ となり、因子 $\bar{x}_j$ が0になるため $c_i=0$ となります。
 したがって、次の**制約**はすべての要素が被覆されているときかつそのときに限り0になります：
 
 $$
@@ -276,7 +276,7 @@ int main() {
   }
   for (size_t i = 0; i < m; ++i) {
     for (size_t j : cover[i]) {
-      c[j] *= (1 - x[i]);
+      c[j] *= ~x[i];
     }
   }
 
@@ -304,7 +304,7 @@ int main() {
 ```
 このプログラムは $m=8$ 個の**バイナリ変数**のベクトル **`x`** と、$n=10$ 個の**式**のベクトル **`c`** を定義しています。
 各式 `c[j]` は要素 $j\in U$ に対応し、1で初期化されます。
-各部分集合 $S_i$ と各要素 $j\in S_i$ に対して、`c[j]` に `(1 - x[i])` を乗じます。
+各部分集合 $S_i$ と各要素 $j\in S_i$ に対して、`c[j]` に `~x[i]` を乗じます。
 その結果、少なくとも1つの選択された部分集合が要素 `j` を被覆する場合 `c[j]` は0になり、そうでない場合は1のままです。
 
 **`constraint`** は `c` のすべてのエントリの和として定義され、すべての要素が被覆されているときかつそのときに限り0になります。

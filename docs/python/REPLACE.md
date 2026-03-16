@@ -141,6 +141,14 @@ g.simplify_as_binary()
 > **NOTE**
 > - **`f.replace(ml)`** updates the expression `f` in place.
 > - **`replace(f, ml)`** returns a new expression without modifying the original.
+
+> **NOTE: Negated literals and `replace()`**
+> The `replace()` function treats `x` and `~x` as independent keys.
+> Specifying `(x, 0)` in a `MapList` does **not** automatically replace `~x` with `1`.
+> If the expression contains negated literals such as `~x`, you should explicitly include both mappings:
+> ```python
+> ml = MapList([(x, 0), (~x, 1)])
+> ```
 </div>
 
 <div class="lang-ja" markdown="1">
@@ -279,4 +287,12 @@ g.simplify_as_binary()
 > **注意**
 > - **`f.replace(ml)`** は式 `f` をその場で更新します。
 > - **`replace(f, ml)`** は元の式を変更せずに新しい式を返します。
+
+> **注意: 否定リテラルと `replace()`**
+> `replace()` 関数は `x` と `~x` を独立したキーとして扱います。
+> `MapList` に `(x, 0)` を指定しても、`~x` が自動的に `1` に置換されるわけではありません。
+> 式に `~x` のような否定リテラルが含まれている場合、両方のマッピングを明示的に指定してください：
+> ```python
+> ml = MapList([(x, 0), (~x, 1)])
+> ```
 </div>

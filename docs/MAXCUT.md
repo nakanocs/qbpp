@@ -16,7 +16,7 @@ Then, the number of edges crossing the cut $(S,\overline{S})$ is given by
 
 $$
 \begin{aligned}
-\text{objective} &= \sum_{(i,j)\in E}\Bigl(x_i(1-x_j) + (1-x_i)x_j\Bigr).
+\text{objective} &= \sum_{(i,j)\in E}\Bigl(x_i\bar{x}_j + \bar{x}_ix_j\Bigr).
 \end{aligned}
 $$
 
@@ -52,8 +52,8 @@ int main() {
 
   auto objective = qbpp::toExpr(0);
   for (const auto& edge : edges) {
-    objective += x[edge.first] * (1 - x[edge.second]) +
-                 (1 - x[edge.first]) * x[edge.second];
+    objective += x[edge.first] * ~x[edge.second] +
+                 ~x[edge.first] * x[edge.second];
   }
 
   auto f = -objective;
@@ -105,7 +105,7 @@ $n$ 個のバイナリ変数 $x_0, x_1, \ldots, x_{n-1}$ を導入し、$x_i=1$ 
 
 $$
 \begin{aligned}
-\text{objective} &= \sum_{(i,j)\in E}\Bigl(x_i(1-x_j) + (1-x_i)x_j\Bigr).
+\text{objective} &= \sum_{(i,j)\in E}\Bigl(x_i\bar{x}_j + \bar{x}_ix_j\Bigr).
 \end{aligned}
 $$
 
@@ -141,8 +141,8 @@ int main() {
 
   auto objective = qbpp::toExpr(0);
   for (const auto& edge : edges) {
-    objective += x[edge.first] * (1 - x[edge.second]) +
-                 (1 - x[edge.first]) * x[edge.second];
+    objective += x[edge.first] * ~x[edge.second] +
+                 ~x[edge.first] * x[edge.second];
   }
 
   auto f = -objective;

@@ -42,11 +42,12 @@ sections by providing a deeper understanding of QUBO++.
 6. [Expression Classes](EXPRESSION)
 7. [Evaluating Expressions](EVAL)
 8. [Replace functions](REPLACE)
-9. [Sum Functions for Multi-dimensional Arrays](SUM)
-10. [Easy Solver Usage](EASYSOLVER)
-11. [Exhaustive Solver Usage](EXHAUSTIVE)
-12. [ABS3 Solver Usage](ABS3)
-13. [Gurobi Solver Usage](GUROBI)
+9. [Negated Literals](NEGATIVE)
+10. [Sum Functions for Multi-dimensional Arrays](SUM)
+11. [Easy Solver Usage](EASYSOLVER)
+12. [Exhaustive Solver Usage](EXHAUSTIVE)
+13. [ABS3 Solver Usage](ABS3)
+14. [Gurobi Solver Usage](GUROBI)
 
 
 
@@ -99,11 +100,12 @@ See the [Case Studies](CASE_STUDIES) page for the full list.
 6. [式クラス](EXPRESSION)
 7. [式の評価](EVAL)
 8. [置換関数](REPLACE)
-9. [多次元配列用の Sum 関数](SUM)
-10. [Easy Solver の使い方](EASYSOLVER)
-11. [Exhaustive Solver の使い方](EXHAUSTIVE)
-12. [ABS3 Solver の使い方](ABS3)
-13. [Gurobi Solver の使い方](GUROBI)
+9. [否定リテラル](NEGATIVE)
+10. [多次元配列用の Sum 関数](SUM)
+11. [Easy Solver の使い方](EASYSOLVER)
+12. [Exhaustive Solver の使い方](EXHAUSTIVE)
+13. [ABS3 Solver の使い方](ABS3)
+14. [Gurobi Solver の使い方](GUROBI)
 
 
 

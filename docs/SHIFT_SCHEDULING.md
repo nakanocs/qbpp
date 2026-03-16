@@ -64,8 +64,8 @@ Each working period must consist of at least 3 consecutive working days:
 
 $$
 \begin{aligned}
- (1-x_{i,j})x_{i,j+1}x_{i,j+2}(1-x_{i,j+3}) = 0 & &(0\leq i\leq 5, 0\leq j\leq 29)\\
-(1-x_{i,j})x_{i,j+1}(1-x_{i,j+2}) = 0 & & (0\leq i\leq 5, 0\leq j \leq 30)
+ \bar{x}_{i,j}x_{i,j+1}x_{i,j+2}\bar{x}_{i,j+3} = 0 & &(0\leq i\leq 5, 0\leq j\leq 29)\\
+\bar{x}_{i,j}x_{i,j+1}\bar{x}_{i,j+2} = 0 & & (0\leq i\leq 5, 0\leq j \leq 30)
 \end{aligned}
 $$
 
@@ -74,7 +74,7 @@ No worker may have a single day off between two working days:
 
 $$
 \begin{aligned}
- x_{i,j}(1-x_{i,j+1})x_{i,j+2} = 0 & &(0\leq i\leq 5, 0\leq j\leq 30)\\
+ x_{i,j}\bar{x}_{i,j+1}x_{i,j+2} = 0 & &(0\leq i\leq 5, 0\leq j\leq 30)\\
 \end{aligned}
 $$
 
@@ -125,18 +125,18 @@ int main() {
   for (size_t w = 0; w < workers; ++w) {
     for (size_t j = 0; j < days - 1; ++j) {
       no_less_than_3_consecutive_working_days +=
-          (1 - x[w][j]) * x[w][j + 1] * x[w][j + 2] * (1 - x[w][j + 3]);
+          ~x[w][j] * x[w][j + 1] * x[w][j + 2] * ~x[w][j + 3];
     }
     for (size_t j = 0; j < days; ++j) {
       no_less_than_3_consecutive_working_days +=
-          (1 - x[w][j]) * x[w][j + 1] * (1 - x[w][j + 2]);
+          ~x[w][j] * x[w][j + 1] * ~x[w][j + 2];
     }
   }
 
   auto no_single_day_off = qbpp::toExpr(0);
   for (size_t w = 0; w < workers; ++w) {
     for (size_t j = 0; j <= days - 1; ++j) {
-      no_single_day_off += x[w][j] * (1 - x[w][j + 1]) * x[w][j + 2];
+      no_single_day_off += x[w][j] * ~x[w][j + 1] * x[w][j + 2];
     }
   }
 
@@ -150,7 +150,9 @@ int main() {
   qbpp::MapList ml;
   for (size_t i = 0; i < workers; ++i) {
     ml.push_back({x[i][0], 0});
+    ml.push_back({~x[i][0], 1});
     ml.push_back({x[i][days + 1], 0});
+    ml.push_back({~x[i][days + 1], 1});
   }
   f.simplify_as_binary();
 
@@ -277,8 +279,8 @@ $$
 
 $$
 \begin{aligned}
- (1-x_{i,j})x_{i,j+1}x_{i,j+2}(1-x_{i,j+3}) = 0 & &(0\leq i\leq 5, 0\leq j\leq 29)\\
-(1-x_{i,j})x_{i,j+1}(1-x_{i,j+2}) = 0 & & (0\leq i\leq 5, 0\leq j \leq 30)
+ \bar{x}_{i,j}x_{i,j+1}x_{i,j+2}\bar{x}_{i,j+3} = 0 & &(0\leq i\leq 5, 0\leq j\leq 29)\\
+\bar{x}_{i,j}x_{i,j+1}\bar{x}_{i,j+2} = 0 & & (0\leq i\leq 5, 0\leq j \leq 30)
 \end{aligned}
 $$
 
@@ -287,7 +289,7 @@ $$
 
 $$
 \begin{aligned}
- x_{i,j}(1-x_{i,j+1})x_{i,j+2} = 0 & &(0\leq i\leq 5, 0\leq j\leq 30)\\
+ x_{i,j}\bar{x}_{i,j+1}x_{i,j+2} = 0 & &(0\leq i\leq 5, 0\leq j\leq 30)\\
 \end{aligned}
 $$
 
@@ -338,18 +340,18 @@ int main() {
   for (size_t w = 0; w < workers; ++w) {
     for (size_t j = 0; j < days - 1; ++j) {
       no_less_than_3_consecutive_working_days +=
-          (1 - x[w][j]) * x[w][j + 1] * x[w][j + 2] * (1 - x[w][j + 3]);
+          ~x[w][j] * x[w][j + 1] * x[w][j + 2] * ~x[w][j + 3];
     }
     for (size_t j = 0; j < days; ++j) {
       no_less_than_3_consecutive_working_days +=
-          (1 - x[w][j]) * x[w][j + 1] * (1 - x[w][j + 2]);
+          ~x[w][j] * x[w][j + 1] * ~x[w][j + 2];
     }
   }
 
   auto no_single_day_off = qbpp::toExpr(0);
   for (size_t w = 0; w < workers; ++w) {
     for (size_t j = 0; j <= days - 1; ++j) {
-      no_single_day_off += x[w][j] * (1 - x[w][j + 1]) * x[w][j + 2];
+      no_single_day_off += x[w][j] * ~x[w][j + 1] * x[w][j + 2];
     }
   }
 
@@ -363,7 +365,9 @@ int main() {
   qbpp::MapList ml;
   for (size_t i = 0; i < workers; ++i) {
     ml.push_back({x[i][0], 0});
+    ml.push_back({~x[i][0], 1});
     ml.push_back({x[i][days + 1], 0});
+    ml.push_back({~x[i][days + 1], 1});
   }
   f.simplify_as_binary();
 
