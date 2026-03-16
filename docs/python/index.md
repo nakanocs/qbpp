@@ -41,10 +41,11 @@ usage patterns, and, where appropriate, internal implementations.
 6. [Expression Classes](EXPRESSION)
 7. [Evaluating Expressions](EVAL)
 8. [Replace Functions](REPLACE)
-9. [Sum Functions for Multi-dimensional Arrays](SUM)
-10. [Easy Solver Usage](EASYSOLVER)
-11. [Exhaustive Solver Usage](EXHAUSTIVE)
-12. [ABS3 Solver Usage](ABS3)
+9. [Negated Literals](NEGATIVE)
+10. [Sum Functions for Multi-dimensional Arrays](SUM)
+11. [Easy Solver Usage](EASYSOLVER)
+12. [Exhaustive Solver Usage](EXHAUSTIVE)
+13. [ABS3 Solver Usage](ABS3)
 
 > **NOTE**
 > The Gurobi Solver is not available in the Python binding.
@@ -97,10 +98,11 @@ PyQBPPを使った求解方法を学ぶことができます。
 6. [式のクラス](EXPRESSION)
 7. [式の評価](EVAL)
 8. [置換関数](REPLACE)
-9. [多次元配列の和関数](SUM)
-10. [Easy Solverの使い方](EASYSOLVER)
-11. [Exhaustive Solverの使い方](EXHAUSTIVE)
-12. [ABS3 Solverの使い方](ABS3)
+9. [否定リテラル](NEGATIVE)
+10. [多次元配列の和関数](SUM)
+11. [Easy Solverの使い方](EASYSOLVER)
+12. [Exhaustive Solverの使い方](EXHAUSTIVE)
+13. [ABS3 Solverの使い方](ABS3)
 
 > **NOTE**
 > Gurobi SolverはPythonバインディングでは利用できません。
