@@ -10,6 +10,8 @@ nav_order: 4
 This page describes how to manage your QUBO++ license using the **`qbpp-license`** command-line utility.
 The license system is shared between **QUBO++ (C++)** and **PyQBPP (Python)**.
 
+> **Important**: Keep your license key confidential. Do not share it with unauthorized users, post it in public repositories, or include it in unencrypted configuration files. In CI/CD environments, store the key as a secret environment variable.
+
 ## License Types
 
 QUBO++ offers several license types with different variable count limits and validity periods.
@@ -194,6 +196,8 @@ If the server is unreachable, QUBO++ falls back to the cached license status. If
 
 このページでは、**`qbpp-license`** コマンドラインユーティリティを使用した QUBO++ ライセンスの管理方法を説明します。
 ライセンスシステムは **QUBO++ (C++)** と **PyQBPP (Python)** で共通です。
+
+> **重要**: ライセンスキーは厳重に管理してください。許可されていないユーザーとの共有、公開リポジトリへの掲載、暗号化されていない設定ファイルへの記載は行わないでください。CI/CD 環境ではシークレット環境変数として設定してください。
 
 ## ライセンスの種類
 
