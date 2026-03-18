@@ -46,7 +46,7 @@ x = 6, y = 4
 ```
 
 ## Next steps
-1. Activate your license. See [**Installation**](INSTALL) for details.
+1. Activate your license. See [**License Management**](../LICENSE_MANAGEMENT) for details.
 2. Learn the basics of PyQBPP. Start with **Basics** in [**PyQBPP (Python)**](./).
 </div>
 
@@ -93,6 +93,6 @@ x = 6, y = 4
 ```
 
 ## 次のステップ
-1. ライセンスを有効化してください。詳細は[**インストール**](INSTALL)を参照してください。
+1. ライセンスを有効化してください。詳細は[**ライセンス管理**](../LICENSE_MANAGEMENT)を参照してください。
 2. PyQBPPの基礎を学びましょう。[**PyQBPP (Python)**](./)の**基礎**から始めてください。
 </div>

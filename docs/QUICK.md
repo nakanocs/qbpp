@@ -63,7 +63,7 @@ x = 6, y = 4
 {% endraw %}
 
 ## Next steps
-1. Activate your license. See [**Installation**](INSTALL) for details.
+1. Activate your license. See [**License Management**](LICENSE_MANAGEMENT) for details.
 2. Learn the basics of QUBO++. Start with **Basics** in [**QUBO++ (C++)**](DOCUMENT).
 3. Explore example QUBO++ programs in the [**Case Studies**](CASE_STUDIES).
 
@@ -129,7 +129,7 @@ x = 6, y = 4
 {% endraw %}
 
 ## 次のステップ
-1. ライセンスをアクティベートしてください。詳細は [**インストール**](INSTALL) をご覧ください。
+1. ライセンスをアクティベートしてください。詳細は [**ライセンス管理**](LICENSE_MANAGEMENT) をご覧ください。
 2. QUBO++ の基本を学びましょう。[**QUBO++ (C++)**](DOCUMENT) の **基礎** から始めてください。
 3. [**ケーススタディ**](CASE_STUDIES) で QUBO++ プログラムの例を探索してください。
 
