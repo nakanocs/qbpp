@@ -41,7 +41,7 @@ $$
 ## PyQBPP program for TSP
 ```python
 import math
-from pyqbpp import var, expr, sum, vector_sum, EasySolver
+import pyqbpp as qbpp
 
 nodes = [(10, 12),  (33, 125),  (12, 226),
          (121, 11), (108, 142), (111, 243),
@@ -53,11 +53,11 @@ def dist(i, j):
     return round(math.sqrt(dx * dx + dy * dy))
 
 n = len(nodes)
-x = var("x", n, n)
+x = qbpp.var("x", n, n)
 
-constraint = sum(vector_sum(x, 1) == 1) + sum(vector_sum(x, 0) == 1)
+constraint = qbpp.sum(qbpp.vector_sum(x, 1) == 1) + qbpp.sum(qbpp.vector_sum(x, 0) == 1)
 
-objective = expr()
+objective = qbpp.expr()
 for i in range(n):
     next_i = (i + 1) % n
     for j in range(n):
@@ -68,7 +68,7 @@ for i in range(n):
 f = objective + constraint * 1000
 f.simplify_as_binary()
 
-solver = EasySolver(f)
+solver = qbpp.EasySolver(f)
 solver.time_limit(1.0)
 sol = solver.search()
 
@@ -94,22 +94,22 @@ Without loss of generality, we can assume that node 0 is the starting node of th
 By fixing the start node, we can reduce the number of binary variables in the QUBO expression.
 
 ```python
-from pyqbpp import MapList, replace, Sol
+import pyqbpp as qbpp
 
-ml = MapList()
+ml = qbpp.MapList()
 ml.add(x[0][0], 1)
 for i in range(1, n):
     ml.add(x[i][0], 0)
     ml.add(x[0][i], 0)
 
-g = replace(f, ml)
+g = qbpp.replace(f, ml)
 g.simplify_as_binary()
 
-solver = EasySolver(g)
+solver = qbpp.EasySolver(g)
 solver.time_limit(1.0)
 sol = solver.search()
 
-full_sol = Sol(f)
+full_sol = qbpp.Sol(f)
 full_sol.set(sol)
 full_sol.set(ml)
 
@@ -202,7 +202,7 @@ $$
 ## TSPのPyQBPPプログラム
 ```python
 import math
-from pyqbpp import var, expr, sum, vector_sum, EasySolver
+import pyqbpp as qbpp
 
 nodes = [(10, 12),  (33, 125),  (12, 226),
          (121, 11), (108, 142), (111, 243),
@@ -214,11 +214,11 @@ def dist(i, j):
     return round(math.sqrt(dx * dx + dy * dy))
 
 n = len(nodes)
-x = var("x", n, n)
+x = qbpp.var("x", n, n)
 
-constraint = sum(vector_sum(x, 1) == 1) + sum(vector_sum(x, 0) == 1)
+constraint = qbpp.sum(qbpp.vector_sum(x, 1) == 1) + qbpp.sum(qbpp.vector_sum(x, 0) == 1)
 
-objective = expr()
+objective = qbpp.expr()
 for i in range(n):
     next_i = (i + 1) % n
     for j in range(n):
@@ -229,7 +229,7 @@ for i in range(n):
 f = objective + constraint * 1000
 f.simplify_as_binary()
 
-solver = EasySolver(f)
+solver = qbpp.EasySolver(f)
 solver.time_limit(1.0)
 sol = solver.search()
 
@@ -255,22 +255,22 @@ Tour: [7, 8, 5, 2, 4, 1, 0, 3, 6]
 開始ノードを固定することで、QUBO式のバイナリ変数の数を削減できます。
 
 ```python
-from pyqbpp import MapList, replace, Sol
+import pyqbpp as qbpp
 
-ml = MapList()
+ml = qbpp.MapList()
 ml.add(x[0][0], 1)
 for i in range(1, n):
     ml.add(x[i][0], 0)
     ml.add(x[0][i], 0)
 
-g = replace(f, ml)
+g = qbpp.replace(f, ml)
 g.simplify_as_binary()
 
-solver = EasySolver(g)
+solver = qbpp.EasySolver(g)
 solver.time_limit(1.0)
 sol = solver.search()
 
-full_sol = Sol(f)
+full_sol = qbpp.Sol(f)
 full_sol.set(sol)
 full_sol.set(ml)
 

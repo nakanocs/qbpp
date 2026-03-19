@@ -30,17 +30,17 @@ PyQBPP uses the `~` operator to represent negated literals,
 so `~x` denotes the negated literal of `x`.
 The following program demonstrates how PyQBPP handles negated literals:
 ```python
-from pyqbpp import var, Expr, MapList, replace
+import pyqbpp as qbpp
 
-x = var("x", 4)
-f = Expr(1)
+x = qbpp.var("x", 4)
+f = qbpp.Expr(1)
 for i in range(len(x)):
     f *= ~x[i]
 
-ml = MapList()
+ml = qbpp.MapList()
 for i in range(len(x)):
     ml.add(~x[i], 1 - x[i])
-g = replace(f, ml)
+g = qbpp.replace(f, ml)
 
 f.simplify_as_binary()
 g.simplify_as_binary()
@@ -120,16 +120,16 @@ should be specified consistently.
 
 The following program first fixes `x` to 1, then fixes `~x` to 0:
 ```python
-from pyqbpp import var, MapList
+import pyqbpp as qbpp
 
-x = var("x")
-y = var("y")
-z = var("z")
+x = qbpp.var("x")
+y = qbpp.var("y")
+z = qbpp.var("z")
 f = x * y * z + ~x * ~y * ~z
 print("f =", f)
-f.replace(MapList([(x, 1)]))
+f.replace(qbpp.MapList([(x, 1)]))
 print("f =", f)
-f.replace(MapList([(~x, 0)]))
+f.replace(qbpp.MapList([(~x, 0)]))
 print("f =", f)
 ```
 This program produces the following output:
@@ -147,14 +147,14 @@ If both are specified, their values must be consistent
 
 The following program evaluates the expression at $x=0, y=0, z=0$:
 ```python
-from pyqbpp import var, MapList
+import pyqbpp as qbpp
 
-x = var("x")
-y = var("y")
-z = var("z")
+x = qbpp.var("x")
+y = qbpp.var("y")
+z = qbpp.var("z")
 f = x * y * z + ~x * ~y * ~z
 print("f =", f)
-print("f(0, 0, 0) =", f(MapList([(x, 0), (~y, 1), (~z, 1)])))
+print("f(0, 0, 0) =", f(qbpp.MapList([(x, 0), (~y, 1), (~z, 1)])))
 ```
 This program produces the following output:
 ```
@@ -201,17 +201,17 @@ PyQBPPでは `~` 演算子で否定リテラルを表現します。
 `~x` は `x` の否定リテラルを表します。
 以下のプログラムは、PyQBPPが否定リテラルをどのように扱うかを示しています：
 ```python
-from pyqbpp import var, Expr, MapList, replace
+import pyqbpp as qbpp
 
-x = var("x", 4)
-f = Expr(1)
+x = qbpp.var("x", 4)
+f = qbpp.Expr(1)
 for i in range(len(x)):
     f *= ~x[i]
 
-ml = MapList()
+ml = qbpp.MapList()
 for i in range(len(x)):
     ml.add(~x[i], 1 - x[i])
-g = replace(f, ml)
+g = qbpp.replace(f, ml)
 
 f.simplify_as_binary()
 g.simplify_as_binary()
@@ -285,16 +285,16 @@ g = 1 -x[0] -x[1] -x[2] +x[0]*x[1] +x[0]*x[2] +x[1]*x[2] -x[0]*x[1]*x[2]
 
 以下のプログラムは、まず `x` を 1 に固定し、次に `~x` を 0 に固定します：
 ```python
-from pyqbpp import var, MapList
+import pyqbpp as qbpp
 
-x = var("x")
-y = var("y")
-z = var("z")
+x = qbpp.var("x")
+y = qbpp.var("y")
+z = qbpp.var("z")
 f = x * y * z + ~x * ~y * ~z
 print("f =", f)
-f.replace(MapList([(x, 1)]))
+f.replace(qbpp.MapList([(x, 1)]))
 print("f =", f)
-f.replace(MapList([(~x, 0)]))
+f.replace(qbpp.MapList([(~x, 0)]))
 print("f =", f)
 ```
 このプログラムは以下の出力を生成します：
@@ -310,14 +310,14 @@ f = y*z
 
 以下のプログラムは、$x=0, y=0, z=0$ で式を評価します：
 ```python
-from pyqbpp import var, MapList
+import pyqbpp as qbpp
 
-x = var("x")
-y = var("y")
-z = var("z")
+x = qbpp.var("x")
+y = qbpp.var("y")
+z = qbpp.var("z")
 f = x * y * z + ~x * ~y * ~z
 print("f =", f)
-print("f(0, 0, 0) =", f(MapList([(x, 0), (~y, 1), (~z, 1)])))
+print("f(0, 0, 0) =", f(qbpp.MapList([(x, 0), (~y, 1), (~z, 1)])))
 ```
 このプログラムは以下の出力を生成します：
 ```

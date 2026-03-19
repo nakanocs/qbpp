@@ -34,21 +34,21 @@ $$
 
 ## PyQBPP program
 ```python
-from pyqbpp import var, sum, between, Vector, ExhaustiveSolver
+import pyqbpp as qbpp
 
-w = Vector([10, 20, 30, 5, 8, 15, 12, 7, 17, 18])
-v = Vector([60, 100, 120, 60, 80, 150, 110, 70, 150, 160])
+w = qbpp.Vector([10, 20, 30, 5, 8, 15, 12, 7, 17, 18])
+v = qbpp.Vector([60, 100, 120, 60, 80, 150, 110, 70, 150, 160])
 capacity = 50
 
-x = var("x", len(w))
+x = qbpp.var("x", len(w))
 
-constraint = between(sum(w * x), 0, capacity)
-objective = sum(v * x)
+constraint = qbpp.between(qbpp.sum(w * x), 0, capacity)
+objective = qbpp.sum(v * x)
 
 f = -objective + 1000 * constraint
 f.simplify_as_binary()
 
-solver = ExhaustiveSolver(f)
+solver = qbpp.ExhaustiveSolver(f)
 sols = solver.search_optimal_solutions()
 for idx, sol in enumerate(sols):
     print(f"[Solution {idx}]")
@@ -121,21 +121,21 @@ $$
 
 ## PyQBPPプログラム
 ```python
-from pyqbpp import var, sum, between, Vector, ExhaustiveSolver
+import pyqbpp as qbpp
 
-w = Vector([10, 20, 30, 5, 8, 15, 12, 7, 17, 18])
-v = Vector([60, 100, 120, 60, 80, 150, 110, 70, 150, 160])
+w = qbpp.Vector([10, 20, 30, 5, 8, 15, 12, 7, 17, 18])
+v = qbpp.Vector([60, 100, 120, 60, 80, 150, 110, 70, 150, 160])
 capacity = 50
 
-x = var("x", len(w))
+x = qbpp.var("x", len(w))
 
-constraint = between(sum(w * x), 0, capacity)
-objective = sum(v * x)
+constraint = qbpp.between(qbpp.sum(w * x), 0, capacity)
+objective = qbpp.sum(v * x)
 
 f = -objective + 1000 * constraint
 f.simplify_as_binary()
 
-solver = ExhaustiveSolver(f)
+solver = qbpp.ExhaustiveSolver(f)
 sols = solver.search_optimal_solutions()
 for idx, sol in enumerate(sols):
     print(f"[Solution {idx}]")

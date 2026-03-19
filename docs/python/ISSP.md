@@ -22,22 +22,22 @@ We introduce binary variables $s_i$ and integer variables $v_i$. The product $s_
 
 ## PyQBPP program (HUBO formulation)
 ```python
-from pyqbpp import var, var_int, between, sum, Vector, EasySolver
+import pyqbpp as qbpp
 
 lower = [18, 17, 21, 18, 20, 14, 14, 23]
 upper = [19, 17, 22, 19, 20, 16, 15, 25]
 T = 100
 n = len(lower)
 
-v = [between(var_int(f"v{i}"), lower[i], upper[i]) for i in range(n)]
-s = var("s", n)
+v = [qbpp.between(qbpp.var_int(f"v{i}"), lower[i], upper[i]) for i in range(n)]
+s = qbpp.var("s", n)
 
-total = sum(Vector(v) * s)
-constraint = between(total, 0, T)
+total = qbpp.sum(qbpp.Vector(v) * s)
+constraint = qbpp.between(total, 0, T)
 f = -total + 1000 * constraint
 f.simplify_as_binary()
 
-solver = EasySolver(f)
+solver = qbpp.EasySolver(f)
 solver.target_energy(-T)
 sol = solver.search()
 for i in range(n):
@@ -60,15 +60,15 @@ To avoid quartic terms, we introduce auxiliary integer variables $a_i \in [0, u_
 The penalty `constraint1 = sum((1 - s) * a)` enforces $a_i = 0$ when $s_i = 0$.
 
 ```python
-from pyqbpp import var, var_int, between, sum, toExpr, Vector, EasySolver
+import pyqbpp as qbpp
 
 lower = [18, 17, 21, 18, 20, 14, 14, 23]
 upper = [19, 17, 22, 19, 20, 16, 15, 25]
 T = 100
 n = len(lower)
 
-a = [between(var_int(f"a{i}"), 0, upper[i] - lower[i]) for i in range(n)]
-s = var("s", n)
+a = [qbpp.between(qbpp.var_int(f"a{i}"), 0, upper[i] - lower[i]) for i in range(n)]
+s = qbpp.var("s", n)
 v = [s[i] * lower[i] + a[i] for i in range(n)]
 
 total = toExpr(0)
@@ -79,11 +79,11 @@ constraint1 = toExpr(0)
 for i in range(n):
     constraint1 += (1 - s[i]) * a[i]
 
-constraint2 = between(total, 0, T)
+constraint2 = qbpp.between(total, 0, T)
 f = -total + 1000 * (constraint1 + constraint2)
 f.simplify_as_binary()
 
-solver = EasySolver(f)
+solver = qbpp.EasySolver(f)
 solver.target_energy(-T)
 sol = solver.search()
 for i in range(n):
@@ -112,22 +112,22 @@ $$
 
 ## PyQBPPプログラム（HUBO定式化）
 ```python
-from pyqbpp import var, var_int, between, sum, Vector, EasySolver
+import pyqbpp as qbpp
 
 lower = [18, 17, 21, 18, 20, 14, 14, 23]
 upper = [19, 17, 22, 19, 20, 16, 15, 25]
 T = 100
 n = len(lower)
 
-v = [between(var_int(f"v{i}"), lower[i], upper[i]) for i in range(n)]
-s = var("s", n)
+v = [qbpp.between(qbpp.var_int(f"v{i}"), lower[i], upper[i]) for i in range(n)]
+s = qbpp.var("s", n)
 
-total = sum(Vector(v) * s)
-constraint = between(total, 0, T)
+total = qbpp.sum(qbpp.Vector(v) * s)
+constraint = qbpp.between(total, 0, T)
 f = -total + 1000 * constraint
 f.simplify_as_binary()
 
-solver = EasySolver(f)
+solver = qbpp.EasySolver(f)
 solver.target_energy(-T)
 sol = solver.search()
 for i in range(n):
@@ -150,15 +150,15 @@ sum = 100
 ペナルティ `constraint1 = sum((1 - s) * a)` は $s_i = 0$ のとき $a_i = 0$ を強制します。
 
 ```python
-from pyqbpp import var, var_int, between, sum, toExpr, Vector, EasySolver
+import pyqbpp as qbpp
 
 lower = [18, 17, 21, 18, 20, 14, 14, 23]
 upper = [19, 17, 22, 19, 20, 16, 15, 25]
 T = 100
 n = len(lower)
 
-a = [between(var_int(f"a{i}"), 0, upper[i] - lower[i]) for i in range(n)]
-s = var("s", n)
+a = [qbpp.between(qbpp.var_int(f"a{i}"), 0, upper[i] - lower[i]) for i in range(n)]
+s = qbpp.var("s", n)
 v = [s[i] * lower[i] + a[i] for i in range(n)]
 
 total = toExpr(0)
@@ -169,11 +169,11 @@ constraint1 = toExpr(0)
 for i in range(n):
     constraint1 += (1 - s[i]) * a[i]
 
-constraint2 = between(total, 0, T)
+constraint2 = qbpp.between(total, 0, T)
 f = -total + 1000 * (constraint1 + constraint2)
 f.simplify_as_binary()
 
-solver = EasySolver(f)
+solver = qbpp.EasySolver(f)
 solver.target_energy(-T)
 sol = solver.search()
 for i in range(n):

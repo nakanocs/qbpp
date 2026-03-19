@@ -54,16 +54,16 @@ $$
 ## PyQBPP program
 The following PyQBPP program constructs an expression representing the constraints above and then finds a feasible solution using the Easy Solver:
 ```python
-from pyqbpp import var, sum, vector_sum, between, expr, EasySolver
+import pyqbpp as qbpp
 
 n = 8
-x = var("x", n, n)
+x = qbpp.var("x", n, n)
 
-f = sum(vector_sum(x, 0) == 1) + sum(vector_sum(x, 1) == 1)
+f = qbpp.sum(qbpp.vector_sum(x, 0) == 1) + qbpp.sum(qbpp.vector_sum(x, 1) == 1)
 
 m = 2 * n - 3
-a = expr(m)
-b = expr(m)
+a = qbpp.expr(m)
+b = qbpp.expr(m)
 
 for i in range(m):
     k = i + 1
@@ -78,12 +78,12 @@ for i in range(m):
         if 0 <= c < n:
             b[i] += x[r][c]
 
-f += sum(between(a, 0, 1))
-f += sum(between(b, 0, 1))
+f += qbpp.sum(qbpp.between(a, 0, 1))
+f += qbpp.sum(qbpp.between(b, 0, 1))
 
 f.simplify_as_binary()
 
-solver = EasySolver(f)
+solver = qbpp.EasySolver(f)
 solver.target_energy(0)
 sol = solver.search()
 for i in range(n):
@@ -164,16 +164,16 @@ $$
 ## PyQBPP プログラム
 以下の PyQBPP プログラムは、上記の制約を表す式を構築し、Easy Solver を用いて実行可能解を求めます：
 ```python
-from pyqbpp import var, sum, vector_sum, between, expr, EasySolver
+import pyqbpp as qbpp
 
 n = 8
-x = var("x", n, n)
+x = qbpp.var("x", n, n)
 
-f = sum(vector_sum(x, 0) == 1) + sum(vector_sum(x, 1) == 1)
+f = qbpp.sum(qbpp.vector_sum(x, 0) == 1) + qbpp.sum(qbpp.vector_sum(x, 1) == 1)
 
 m = 2 * n - 3
-a = expr(m)
-b = expr(m)
+a = qbpp.expr(m)
+b = qbpp.expr(m)
 
 for i in range(m):
     k = i + 1
@@ -188,12 +188,12 @@ for i in range(m):
         if 0 <= c < n:
             b[i] += x[r][c]
 
-f += sum(between(a, 0, 1))
-f += sum(between(b, 0, 1))
+f += qbpp.sum(qbpp.between(a, 0, 1))
+f += qbpp.sum(qbpp.between(b, 0, 1))
 
 f.simplify_as_binary()
 
-solver = EasySolver(f)
+solver = qbpp.EasySolver(f)
 solver.target_energy(0)
 sol = solver.search()
 for i in range(n):

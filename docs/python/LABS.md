@@ -37,22 +37,22 @@ PyQBPP provides this conversion through the `spin_to_binary()` function.
 
 ## PyQBPP program for the LABS
 ```python
-from pyqbpp import var, expr, sqr, EasySolver
+import pyqbpp as qbpp
 
 n = 30
 
-s = var("s", n)
-labs = expr()
+s = qbpp.var("s", n)
+labs = qbpp.expr()
 for d in range(1, n):
-    temp = expr()
+    temp = qbpp.expr()
     for i in range(n - d):
         temp += s[i] * s[i + d]
-    labs += sqr(temp)
+    labs += qbpp.sqr(temp)
 
 labs.spin_to_binary()
 labs.simplify_as_binary()
 
-solver = EasySolver(labs)
+solver = qbpp.EasySolver(labs)
 solver.time_limit(10.0)
 solver.callback(lambda energy, tts: print(f"TTS = {tts:.3f}s Energy = {energy}"))
 sol = solver.search()
@@ -106,22 +106,22 @@ PyQBPPはこの変換を `spin_to_binary()` 関数で提供しています。
 
 ## LABSのPyQBPPプログラム
 ```python
-from pyqbpp import var, expr, sqr, EasySolver
+import pyqbpp as qbpp
 
 n = 30
 
-s = var("s", n)
-labs = expr()
+s = qbpp.var("s", n)
+labs = qbpp.expr()
 for d in range(1, n):
-    temp = expr()
+    temp = qbpp.expr()
     for i in range(n - d):
         temp += s[i] * s[i + d]
-    labs += sqr(temp)
+    labs += qbpp.sqr(temp)
 
 labs.spin_to_binary()
 labs.simplify_as_binary()
 
-solver = EasySolver(labs)
+solver = qbpp.EasySolver(labs)
 solver.time_limit(10.0)
 solver.callback(lambda energy, tts: print(f"TTS = {tts:.3f}s Energy = {energy}"))
 sol = solver.search()

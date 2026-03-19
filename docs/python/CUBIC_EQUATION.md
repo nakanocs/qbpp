@@ -19,13 +19,13 @@ This equation has three integer solutions: $x = -13, 2, 11$.
 ## PyQBPP program for solving the cubic equation
 In the following PyQBPP program, we define an integer variable x that takes values in $[-100, 100]$, and we enumerate all optimal solutions using the Exhaustive Solver:
 ```python
-from pyqbpp import var_int, between, ExhaustiveSolver
+import pyqbpp as qbpp
 
-x = between(var_int("x"), -100, 100)
+x = qbpp.between(qbpp.var_int("x"), -100, 100)
 f = x * x * x - 147 * x + 286 == 0
 f.simplify_as_binary()
 
-solver = ExhaustiveSolver(f)
+solver = qbpp.ExhaustiveSolver(f)
 sols = solver.search_optimal_solutions()
 
 seen = set()
@@ -74,13 +74,13 @@ $$
 ## 3次方程式を解く PyQBPP プログラム
 以下の PyQBPP プログラムでは、$[-100, 100]$ の値を取る整数変数 x を定義し、全探索ソルバーを使ってすべての最適解を列挙します:
 ```python
-from pyqbpp import var_int, between, ExhaustiveSolver
+import pyqbpp as qbpp
 
-x = between(var_int("x"), -100, 100)
+x = qbpp.between(qbpp.var_int("x"), -100, 100)
 f = x * x * x - 147 * x + 286 == 0
 f.simplify_as_binary()
 
-solver = ExhaustiveSolver(f)
+solver = qbpp.ExhaustiveSolver(f)
 sols = solver.search_optimal_solutions()
 
 seen = set()

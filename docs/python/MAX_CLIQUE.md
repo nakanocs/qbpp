@@ -43,7 +43,7 @@ $$
 
 ## PyQBPP program for the maximum clique problem
 ```python
-from pyqbpp import var, sum, Expr, ExhaustiveSolver
+import pyqbpp as qbpp
 
 N = 16
 edges = [
@@ -57,11 +57,11 @@ adj = [[False] * N for _ in range(N)]
 for u, v in edges:
     adj[u][v] = adj[v][u] = True
 
-x = var("x", N)
+x = qbpp.var("x", N)
 
-objective = sum(x)
+objective = qbpp.sum(x)
 
-constraint = Expr(0)
+constraint = qbpp.Expr(0)
 for i in range(N):
     for j in range(i + 1, N):
         if not adj[i][j]:
@@ -70,7 +70,7 @@ for i in range(N):
 f = -objective + N * constraint
 f.simplify_as_binary()
 
-solver = ExhaustiveSolver(f)
+solver = qbpp.ExhaustiveSolver(f)
 sol = solver.search()
 
 print(f"objective = {sol(objective)}")
@@ -153,7 +153,7 @@ $$
 
 ## 最大クリーク問題の PyQBPP プログラム
 ```python
-from pyqbpp import var, sum, Expr, ExhaustiveSolver
+import pyqbpp as qbpp
 
 N = 16
 edges = [
@@ -167,11 +167,11 @@ adj = [[False] * N for _ in range(N)]
 for u, v in edges:
     adj[u][v] = adj[v][u] = True
 
-x = var("x", N)
+x = qbpp.var("x", N)
 
-objective = sum(x)
+objective = qbpp.sum(x)
 
-constraint = Expr(0)
+constraint = qbpp.Expr(0)
 for i in range(N):
     for j in range(i + 1, N):
         if not adj[i][j]:
@@ -180,7 +180,7 @@ for i in range(N):
 f = -objective + N * constraint
 f.simplify_as_binary()
 
-solver = ExhaustiveSolver(f)
+solver = qbpp.ExhaustiveSolver(f)
 sol = solver.search()
 
 print(f"objective = {sol(objective)}")

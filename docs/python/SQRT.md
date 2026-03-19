@@ -45,14 +45,14 @@ Since $x$ is internally represented as a linear expression of binary variables, 
 ## PyQBPP program
 The following PyQBPP program constructs a HUBO expression based on the above idea and solves it using the Easy Solver:
 ```python
-from pyqbpp import var_int, between, EasySolver
+import pyqbpp as qbpp
 
 c = 2
 s = 10**10
-x = between(var_int("x"), s, c * s)
+x = qbpp.between(qbpp.var_int("x"), s, c * s)
 f = x * x == c * s * s
 f.simplify_as_binary()
-solver = EasySolver(f)
+solver = qbpp.EasySolver(f)
 solver.time_limit(1.0)
 sol = solver.search()
 print(f"Energy = {sol.energy()}")
@@ -119,14 +119,14 @@ $x$ は内部的にバイナリ変数の線形式として表現されるため�
 ## PyQBPP プログラム
 以下の PyQBPP プログラムは、上記の考え方に基づいて HUBO 式を構築し、Easy Solver を用いて解きます:
 ```python
-from pyqbpp import var_int, between, EasySolver
+import pyqbpp as qbpp
 
 c = 2
 s = 10**10
-x = between(var_int("x"), s, c * s)
+x = qbpp.between(qbpp.var_int("x"), s, c * s)
 f = x * x == c * s * s
 f.simplify_as_binary()
-solver = EasySolver(f)
+solver = qbpp.EasySolver(f)
 solver.time_limit(1.0)
 sol = solver.search()
 print(f"Energy = {sol.energy()}")

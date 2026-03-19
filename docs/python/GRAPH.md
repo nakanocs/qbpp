@@ -43,7 +43,7 @@ The penalty coefficient $2$ is sufficient to prioritize feasibility over increas
 ## PyQBPP Program for the MIS Problem
 Based on the QUBO formulation of the MIS problem described above, the following PyQBPP program solves an instance with 16 nodes:
 ```python
-from pyqbpp import var, expr, sum, toExpr, ExhaustiveSolver
+import pyqbpp as qbpp
 
 N = 16
 edges = [
@@ -52,16 +52,16 @@ edges = [
     (6, 14), (7, 14), (8, 9),  (9, 10), (9, 12), (10, 11),
     (10, 12),(11, 13),(12, 14),(13, 15),(14, 15)]
 
-x = var("x", N)
+x = qbpp.var("x", N)
 
-objective = -sum(x)
-constraint = expr()
+objective = -qbpp.sum(x)
+constraint = qbpp.expr()
 for u, v in edges:
     constraint += x[u] * x[v]
 f = objective + constraint * 2
 f.simplify_as_binary()
 
-solver = ExhaustiveSolver(f)
+solver = qbpp.ExhaustiveSolver(f)
 sol = solver.search()
 
 print(f"objective = {sol(objective)}")
@@ -144,7 +144,7 @@ $$
 ## MIS問題のPyQBPPプログラム
 上記のMIS問題のQUBO定式化に基づき、以下のPyQBPPプログラムは16ノードのインスタンスを解きます:
 ```python
-from pyqbpp import var, expr, sum, toExpr, ExhaustiveSolver
+import pyqbpp as qbpp
 
 N = 16
 edges = [
@@ -153,16 +153,16 @@ edges = [
     (6, 14), (7, 14), (8, 9),  (9, 10), (9, 12), (10, 11),
     (10, 12),(11, 13),(12, 14),(13, 15),(14, 15)]
 
-x = var("x", N)
+x = qbpp.var("x", N)
 
-objective = -sum(x)
-constraint = expr()
+objective = -qbpp.sum(x)
+constraint = qbpp.expr()
 for u, v in edges:
     constraint += x[u] * x[v]
 f = objective + constraint * 2
 f.simplify_as_binary()
 
-solver = ExhaustiveSolver(f)
+solver = qbpp.ExhaustiveSolver(f)
 sol = solver.search()
 
 print(f"objective = {sol(objective)}")

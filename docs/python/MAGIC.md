@@ -67,27 +67,27 @@ When all constraints are satisfied, the assignment $X=(x_{i,j,k})$ represents a 
 ## PyQBPP program for the magic square
 The following PyQBPP program implements these constraints and finds a magic square:
 ```python
-from pyqbpp import var, sum, vector_sum, toExpr, expr, EasySolver
+import pyqbpp as qbpp
 
-x = var("x", 3, 3, 9)
+x = qbpp.var("x", 3, 3, 9)
 
-c1 = sum(vector_sum(x) == 1)
+c1 = qbpp.sum(qbpp.vector_sum(x) == 1)
 
-temp = expr(9)
+temp = qbpp.expr(9)
 for i in range(3):
     for j in range(3):
         for k in range(9):
             temp[k] += x[i][j][k]
-c2 = sum(temp == 1)
+c2 = qbpp.sum(temp == 1)
 
-row = expr(3)
-column = expr(3)
+row = qbpp.expr(3)
+column = qbpp.expr(3)
 for i in range(3):
     for j in range(3):
         for k in range(9):
             row[i] += (k + 1) * x[i][j][k]
             column[j] += (k + 1) * x[i][j][k]
-c3 = sum(row == 15) + sum(column == 15)
+c3 = qbpp.sum(row == 15) + qbpp.sum(column == 15)
 
 diag = toExpr(0)
 for k in range(9):
@@ -100,7 +100,7 @@ c4 = (diag == 15) + (anti_diag == 15)
 f = c1 + c2 + c3 + c4
 f.simplify_as_binary()
 
-solver = EasySolver(f)
+solver = qbpp.EasySolver(f)
 solver.target_energy(0)
 sol = solver.search()
 for i in range(3):
@@ -149,27 +149,27 @@ These fixed assignments reduce the number of remaining binary variables, which i
 ## PyQBPP program for the magic square with fixing variables partially
 We modify the program above as follows:
 ```python
-from pyqbpp import var, sum, vector_sum, toExpr, expr, replace, MapList, Sol, EasySolver
+import pyqbpp as qbpp
 
-x = var("x", 3, 3, 9)
+x = qbpp.var("x", 3, 3, 9)
 
-c1 = sum(vector_sum(x) == 1)
+c1 = qbpp.sum(qbpp.vector_sum(x) == 1)
 
-temp = expr(9)
+temp = qbpp.expr(9)
 for i in range(3):
     for j in range(3):
         for k in range(9):
             temp[k] += x[i][j][k]
-c2 = sum(temp == 1)
+c2 = qbpp.sum(temp == 1)
 
-row = expr(3)
-column = expr(3)
+row = qbpp.expr(3)
+column = qbpp.expr(3)
 for i in range(3):
     for j in range(3):
         for k in range(9):
             row[i] += (k + 1) * x[i][j][k]
             column[j] += (k + 1) * x[i][j][k]
-c3 = sum(row == 15) + sum(column == 15)
+c3 = qbpp.sum(row == 15) + qbpp.sum(column == 15)
 
 diag = toExpr(0)
 for k in range(9):
@@ -182,7 +182,7 @@ c4 = (diag == 15) + (anti_diag == 15)
 f = c1 + c2 + c3 + c4
 f.simplify_as_binary()
 
-ml = MapList()
+ml = qbpp.MapList()
 for k in range(9):
     if k == 1:
         ml.add(x[0][0][k], 1)
@@ -194,11 +194,11 @@ for i in range(3):
         if not (i == 0 and j == 0):
             ml.add(x[i][j][1], 0)
 
-full_sol = Sol(f)
-g = replace(f, ml)
+full_sol = qbpp.Sol(f)
+g = qbpp.replace(f, ml)
 g.simplify_as_binary()
 
-solver = EasySolver(g)
+solver = qbpp.EasySolver(g)
 solver.target_energy(0)
 sol = solver.search()
 full_sol.set(sol)
@@ -289,27 +289,27 @@ $$
 ## 魔方陣のPyQBPPプログラム
 以下のPyQBPPプログラムはこれらの制約を実装し、魔方陣を求めます：
 ```python
-from pyqbpp import var, sum, vector_sum, toExpr, expr, EasySolver
+import pyqbpp as qbpp
 
-x = var("x", 3, 3, 9)
+x = qbpp.var("x", 3, 3, 9)
 
-c1 = sum(vector_sum(x) == 1)
+c1 = qbpp.sum(qbpp.vector_sum(x) == 1)
 
-temp = expr(9)
+temp = qbpp.expr(9)
 for i in range(3):
     for j in range(3):
         for k in range(9):
             temp[k] += x[i][j][k]
-c2 = sum(temp == 1)
+c2 = qbpp.sum(temp == 1)
 
-row = expr(3)
-column = expr(3)
+row = qbpp.expr(3)
+column = qbpp.expr(3)
 for i in range(3):
     for j in range(3):
         for k in range(9):
             row[i] += (k + 1) * x[i][j][k]
             column[j] += (k + 1) * x[i][j][k]
-c3 = sum(row == 15) + sum(column == 15)
+c3 = qbpp.sum(row == 15) + qbpp.sum(column == 15)
 
 diag = toExpr(0)
 for k in range(9):
@@ -322,7 +322,7 @@ c4 = (diag == 15) + (anti_diag == 15)
 f = c1 + c2 + c3 + c4
 f.simplify_as_binary()
 
-solver = EasySolver(f)
+solver = qbpp.EasySolver(f)
 solver.target_energy(0)
 sol = solver.search()
 for i in range(3):
@@ -370,27 +370,27 @@ $$
 ## 変数を部分的に固定した魔方陣のPyQBPPプログラム
 上記のプログラムを以下のように修正します：
 ```python
-from pyqbpp import var, sum, vector_sum, toExpr, expr, replace, MapList, Sol, EasySolver
+import pyqbpp as qbpp
 
-x = var("x", 3, 3, 9)
+x = qbpp.var("x", 3, 3, 9)
 
-c1 = sum(vector_sum(x) == 1)
+c1 = qbpp.sum(qbpp.vector_sum(x) == 1)
 
-temp = expr(9)
+temp = qbpp.expr(9)
 for i in range(3):
     for j in range(3):
         for k in range(9):
             temp[k] += x[i][j][k]
-c2 = sum(temp == 1)
+c2 = qbpp.sum(temp == 1)
 
-row = expr(3)
-column = expr(3)
+row = qbpp.expr(3)
+column = qbpp.expr(3)
 for i in range(3):
     for j in range(3):
         for k in range(9):
             row[i] += (k + 1) * x[i][j][k]
             column[j] += (k + 1) * x[i][j][k]
-c3 = sum(row == 15) + sum(column == 15)
+c3 = qbpp.sum(row == 15) + qbpp.sum(column == 15)
 
 diag = toExpr(0)
 for k in range(9):
@@ -403,7 +403,7 @@ c4 = (diag == 15) + (anti_diag == 15)
 f = c1 + c2 + c3 + c4
 f.simplify_as_binary()
 
-ml = MapList()
+ml = qbpp.MapList()
 for k in range(9):
     if k == 1:
         ml.add(x[0][0][k], 1)
@@ -415,11 +415,11 @@ for i in range(3):
         if not (i == 0 and j == 0):
             ml.add(x[i][j][1], 0)
 
-full_sol = Sol(f)
-g = replace(f, ml)
+full_sol = qbpp.Sol(f)
+g = qbpp.replace(f, ml)
 g.simplify_as_binary()
 
-solver = EasySolver(g)
+solver = qbpp.EasySolver(g)
 solver.target_energy(0)
 sol = solver.search()
 full_sol.set(sol)

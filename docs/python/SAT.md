@@ -50,10 +50,10 @@ Note that the constraint is naturally a **HUBO** (higher-order unconstrained bin
 The following PyQBPP program solves the 3-SAT instance described above:
 
 ```python
-from pyqbpp import var, Expr, EasySolver
+import pyqbpp as qbpp
 
 # 5 Boolean variables
-x = var("x", 5)
+x = qbpp.var("x", 5)
 
 # Convention: True=0, False=1
 # Positive literal x_i: False when x_i=1 -> contribute x[i]
@@ -63,38 +63,38 @@ x = var("x", 5)
 # Clause 0: (x0 OR x1 OR x2)
 #   violated when x0=False AND x1=False AND x2=False
 #   penalty = x[0] * x[1] * x[2]
-c0 = Expr(x[0] * x[1] * x[2])
+c0 = qbpp.Expr(x[0] * x[1] * x[2])
 
 # Clause 1: (~x0 OR x3 OR x4)
 #   violated when x0=True AND x3=False AND x4=False
 #   penalty = ~x[0] * x[3] * x[4]
-c1 = Expr(~x[0] * x[3] * x[4])
+c1 = qbpp.Expr(~x[0] * x[3] * x[4])
 
 # Clause 2: (x1 OR ~x2 OR ~x3)
 #   violated when x1=False AND x2=True AND x3=True
 #   penalty = x[1] * ~x[2] * ~x[3]
-c2 = Expr(x[1] * ~x[2] * ~x[3])
+c2 = qbpp.Expr(x[1] * ~x[2] * ~x[3])
 
 # Clause 3: (~x1 OR ~x3 OR x4)
 #   violated when x1=True AND x3=True AND x4=False
 #   penalty = ~x[1] * ~x[3] * x[4]
-c3 = Expr(~x[1] * ~x[3] * x[4])
+c3 = qbpp.Expr(~x[1] * ~x[3] * x[4])
 
 # Clause 4: (~x0 OR ~x1 OR ~x2)
 #   violated when x0=True AND x1=True AND x2=True
 #   penalty = ~x[0] * ~x[1] * ~x[2]
-c4 = Expr(~x[0] * ~x[1] * ~x[2])
+c4 = qbpp.Expr(~x[0] * ~x[1] * ~x[2])
 
 # Clause 5: (x0 OR x1 OR ~x4)
 #   violated when x0=False AND x1=False AND x4=True
 #   penalty = x[0] * x[1] * ~x[4]
-c5 = Expr(x[0] * x[1] * ~x[4])
+c5 = qbpp.Expr(x[0] * x[1] * ~x[4])
 
 # Total constraint: sum of clause penalties
 constraint = c0 + c1 + c2 + c3 + c4 + c5
 
 constraint.simplify_as_binary()
-solver = EasySolver(constraint)
+solver = qbpp.EasySolver(constraint)
 solver.target_energy(0)
 sol = solver.search()
 
@@ -192,10 +192,10 @@ $$
 以下の PyQBPP プログラムは、上記の 3-SAT インスタンスを解きます：
 
 ```python
-from pyqbpp import var, Expr, EasySolver
+import pyqbpp as qbpp
 
 # 5つのブール変数
-x = var("x", 5)
+x = qbpp.var("x", 5)
 
 # 規約: True=0, False=1
 # 正リテラル x_i: x_i=1 のとき偽 -> x[i] を使用
@@ -236,7 +236,7 @@ c5 = x[0] * x[1] * ~x[4]
 constraint = c0 + c1 + c2 + c3 + c4 + c5
 
 constraint.simplify_as_binary()
-solver = EasySolver(constraint)
+solver = qbpp.EasySolver(constraint)
 solver.target_energy(0)
 sol = solver.search()
 

@@ -43,7 +43,7 @@ $$
 
 ## PyQBPP program
 ```python
-from pyqbpp import var, sum, toExpr, between, ExhaustiveSolver
+import pyqbpp as qbpp
 
 N = 16
 edges = [
@@ -58,9 +58,9 @@ for i in range(M):
     adj[edges[i][0]].append(i)
     adj[edges[i][1]].append(i)
 
-x = var("x", M)
+x = qbpp.var("x", M)
 
-objective = sum(x)
+objective = qbpp.sum(x)
 
 constraint = toExpr(0)
 for u, v in edges:
@@ -69,12 +69,12 @@ for u, v in edges:
         t += x[idx]
     for idx in adj[v]:
         t += x[idx]
-    constraint += between(t, 1, 2)
+    constraint += qbpp.between(t, 1, 2)
 
 f = objective + constraint
 
 f.simplify_as_binary()
-solver = ExhaustiveSolver(f)
+solver = qbpp.ExhaustiveSolver(f)
 sol = solver.search()
 
 print(f"objective = {sol(objective)}")
@@ -170,7 +170,7 @@ $$
 
 ## PyQBPP プログラム
 ```python
-from pyqbpp import var, sum, toExpr, between, ExhaustiveSolver
+import pyqbpp as qbpp
 
 N = 16
 edges = [
@@ -185,9 +185,9 @@ for i in range(M):
     adj[edges[i][0]].append(i)
     adj[edges[i][1]].append(i)
 
-x = var("x", M)
+x = qbpp.var("x", M)
 
-objective = sum(x)
+objective = qbpp.sum(x)
 
 constraint = toExpr(0)
 for u, v in edges:
@@ -196,12 +196,12 @@ for u, v in edges:
         t += x[idx]
     for idx in adj[v]:
         t += x[idx]
-    constraint += between(t, 1, 2)
+    constraint += qbpp.between(t, 1, 2)
 
 f = objective + constraint
 
 f.simplify_as_binary()
-solver = ExhaustiveSolver(f)
+solver = qbpp.ExhaustiveSolver(f)
 sol = solver.search()
 
 print(f"objective = {sol(objective)}")

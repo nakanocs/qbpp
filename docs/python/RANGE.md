@@ -43,17 +43,17 @@ The optimal solution of this problem is $x=4$, $y=5$, with the objective value $
 
 The following PyQBPP program finds this optimal solution using the Easy Solver:
 ```python
-from pyqbpp import var_int, between, EasySolver
+import pyqbpp as qbpp
 
-x = between(var_int("x"), 0, 10)
-y = between(var_int("y"), 0, 10)
+x = qbpp.between(qbpp.var_int("x"), 0, 10)
+y = qbpp.between(qbpp.var_int("y"), 0, 10)
 f = 5 * x + 4 * y
-c1 = between(2 * x + 3 * y, 0, 24)
-c2 = between(7 * x + 5 * y, 0, 54)
+c1 = qbpp.between(2 * x + 3 * y, 0, 24)
+c2 = qbpp.between(7 * x + 5 * y, 0, 54)
 g = -f + 100 * (c1 + c2)
 g.simplify_as_binary()
 
-solver = EasySolver(g)
+solver = qbpp.EasySolver(g)
 solver.time_limit(1.0)
 sol = solver.search()
 
@@ -127,17 +127,17 @@ $$
 
 以下のPyQBPPプログラムは、Easy Solverを使ってこの最適解を求めます：
 ```python
-from pyqbpp import var_int, between, EasySolver
+import pyqbpp as qbpp
 
-x = between(var_int("x"), 0, 10)
-y = between(var_int("y"), 0, 10)
+x = qbpp.between(qbpp.var_int("x"), 0, 10)
+y = qbpp.between(qbpp.var_int("y"), 0, 10)
 f = 5 * x + 4 * y
-c1 = between(2 * x + 3 * y, 0, 24)
-c2 = between(7 * x + 5 * y, 0, 54)
+c1 = qbpp.between(2 * x + 3 * y, 0, 24)
+c2 = qbpp.between(7 * x + 5 * y, 0, 54)
 g = -f + 100 * (c1 + c2)
 g.simplify_as_binary()
 
-solver = EasySolver(g)
+solver = qbpp.EasySolver(g)
 solver.time_limit(1.0)
 sol = solver.search()
 

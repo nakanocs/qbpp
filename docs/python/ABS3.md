@@ -14,19 +14,19 @@ Solving an expression `f` using the ABS3 Solver involves the following three ste
 ## Solving LABS problem using the ABS3 Solver
 The following program solves the **Low Autocorrelation Binary Sequence (LABS)** problem using the ABS3 Solver:
 ```python
-from pyqbpp import var, expr, sqr, ABS3Solver
+import pyqbpp as qbpp
 
 size = 100
-x = var("x", size)
-f = expr()
+x = qbpp.var("x", size)
+f = qbpp.expr()
 for d in range(1, size):
-    temp = expr()
+    temp = qbpp.expr()
     for i in range(size - d):
         temp += (2 * x[i] - 1) * (2 * x[i + d] - 1)
-    f += sqr(temp)
+    f += qbpp.sqr(temp)
 f.simplify_as_binary()
 
-solver = ABS3Solver(f)
+solver = qbpp.ABS3Solver(f)
 solver.time_limit(10.0)
 solver.callback(lambda energy, tts, event: print(f"TTS = {tts:.3f}s Energy = {energy}"))
 sol = solver.search()
@@ -79,7 +79,7 @@ An optional second argument `gpu` controls GPU usage:
 ## Program Example: CPU-only mode
 To use the ABS3 Solver without a GPU, pass `0` as the second argument:
 ```python
-solver = ABS3Solver(f, 0)
+solver = qbpp.ABS3Solver(f, 0)
 solver.time_limit(5.0)
 solver.target_energy(0)
 sol = solver.search()
@@ -97,19 +97,19 @@ ABS3 Solverを使用して式 `f` を解くには、以下の3つのステップ
 ## ABS3 Solverを使用したLABS問題の求解
 以下のプログラムは、ABS3 Solverを使用して **Low Autocorrelation Binary Sequence (LABS)** 問題を解きます:
 ```python
-from pyqbpp import var, expr, sqr, ABS3Solver
+import pyqbpp as qbpp
 
 size = 100
-x = var("x", size)
-f = expr()
+x = qbpp.var("x", size)
+f = qbpp.expr()
 for d in range(1, size):
-    temp = expr()
+    temp = qbpp.expr()
     for i in range(size - d):
         temp += (2 * x[i] - 1) * (2 * x[i + d] - 1)
-    f += sqr(temp)
+    f += qbpp.sqr(temp)
 f.simplify_as_binary()
 
-solver = ABS3Solver(f)
+solver = qbpp.ABS3Solver(f)
 solver.time_limit(10.0)
 solver.callback(lambda energy, tts, event: print(f"TTS = {tts:.3f}s Energy = {energy}"))
 sol = solver.search()
@@ -162,7 +162,7 @@ TTS = 4.364s Energy = 834
 ## プログラム例: CPUのみのモード
 GPUなしでABS3 Solverを使用するには、第2引数に `0` を渡します:
 ```python
-solver = ABS3Solver(f, 0)
+solver = qbpp.ABS3Solver(f, 0)
 solver.time_limit(5.0)
 solver.target_energy(0)
 sol = solver.search()

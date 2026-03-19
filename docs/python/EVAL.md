@@ -14,14 +14,14 @@ A list can be defined as a **`MapList`** object.
 
 The following program computes the function $f(x,y,z)$ for $(x,y,z)=(0,1,1)$:
 ```python
-from pyqbpp import var, sqr, MapList
+import pyqbpp as qbpp
 
-x = var("x")
-y = var("y")
-z = var("z")
-f = sqr(x + 2 * y + 3 * z - 3)
+x = qbpp.var("x")
+y = qbpp.var("y")
+z = qbpp.var("z")
+f = qbpp.sqr(x + 2 * y + 3 * z - 3)
 
-ml = MapList([(x, 0), (y, 1), (z, 1)])
+ml = qbpp.MapList([(x, 0), (y, 1), (z, 1)])
 print("f(0,1,1) =", f.eval(ml))
 ```
 In this program, a `MapList` object `ml` is defined with the assignment $x=0$, $y=1$, $z=1$.
@@ -40,15 +40,15 @@ Using the **`set()`** method, we can assign values to individual variables.
 Then **`sol(f)`** returns the value of the expression `f` under the assignment stored in `sol`.
 
 ```python
-from pyqbpp import var, sqr, Sol
+import pyqbpp as qbpp
 
-x = var("x")
-y = var("y")
-z = var("z")
-f = sqr(x + 2 * y + 3 * z - 3)
+x = qbpp.var("x")
+y = qbpp.var("y")
+z = qbpp.var("z")
+f = qbpp.sqr(x + 2 * y + 3 * z - 3)
 f.simplify_as_binary()
 
-sol = Sol(f)
+sol = qbpp.Sol(f)
 sol.set(y, 1)
 sol.set(z, 1)
 
@@ -59,15 +59,15 @@ The method **`comp_energy()`** computes the energy value and caches it internall
 A solution object returned by a solver already has its energy cached.
 To retrieve the cached energy, use the **`energy()`** method:
 ```python
-from pyqbpp import var, sqr, EasySolver
+import pyqbpp as qbpp
 
-x = var("x")
-y = var("y")
-z = var("z")
-f = sqr(x + 2 * y + 3 * z - 4)
+x = qbpp.var("x")
+y = qbpp.var("y")
+z = qbpp.var("z")
+f = qbpp.sqr(x + 2 * y + 3 * z - 4)
 f.simplify_as_binary()
 
-solver = EasySolver(f)
+solver = qbpp.EasySolver(f)
 solver.target_energy(0)
 sol = solver.search()
 
@@ -98,14 +98,14 @@ print("energy =", sol.energy())
 
 以下のプログラムは、$(x,y,z)=(0,1,1)$ に対して関数 $f(x,y,z)$ を計算します：
 ```python
-from pyqbpp import var, sqr, MapList
+import pyqbpp as qbpp
 
-x = var("x")
-y = var("y")
-z = var("z")
-f = sqr(x + 2 * y + 3 * z - 3)
+x = qbpp.var("x")
+y = qbpp.var("y")
+z = qbpp.var("z")
+f = qbpp.sqr(x + 2 * y + 3 * z - 3)
 
-ml = MapList([(x, 0), (y, 1), (z, 1)])
+ml = qbpp.MapList([(x, 0), (y, 1), (z, 1)])
 print("f(0,1,1) =", f.eval(ml))
 ```
 このプログラムでは、$x=0$, $y=1$, $z=1$ の割り当てを持つ `MapList` オブジェクト `ml` を定義しています。
@@ -124,15 +124,15 @@ f(0,1,1) = 4
 そして **`sol(f)`** は `sol` に格納された割り当てのもとでの式 `f` の値を返します。
 
 ```python
-from pyqbpp import var, sqr, Sol
+import pyqbpp as qbpp
 
-x = var("x")
-y = var("y")
-z = var("z")
-f = sqr(x + 2 * y + 3 * z - 3)
+x = qbpp.var("x")
+y = qbpp.var("y")
+z = qbpp.var("z")
+f = qbpp.sqr(x + 2 * y + 3 * z - 3)
 f.simplify_as_binary()
 
-sol = Sol(f)
+sol = qbpp.Sol(f)
 sol.set(y, 1)
 sol.set(z, 1)
 
@@ -143,15 +143,15 @@ print("f(0,1,1) =", sol(f))
 ソルバーから返された解オブジェクトは、既にエネルギーがキャッシュされています。
 キャッシュされたエネルギーを取得するには、**`energy()`** メソッドを使います：
 ```python
-from pyqbpp import var, sqr, EasySolver
+import pyqbpp as qbpp
 
-x = var("x")
-y = var("y")
-z = var("z")
-f = sqr(x + 2 * y + 3 * z - 4)
+x = qbpp.var("x")
+y = qbpp.var("y")
+z = qbpp.var("z")
+f = qbpp.sqr(x + 2 * y + 3 * z - 4)
 f.simplify_as_binary()
 
-solver = EasySolver(f)
+solver = qbpp.EasySolver(f)
 solver.target_energy(0)
 sol = solver.search()
 

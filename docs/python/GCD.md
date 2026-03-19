@@ -26,20 +26,20 @@ To find such an $r$, we use $-r$ as the objective function in the HUBO formulati
 Based on the idea above, the following PyQBPP program computes the GCD of two integers,
 `P = 858` and `Q = 693`:
 ```python
-from pyqbpp import var_int, between, EasySolver
+import pyqbpp as qbpp
 
 P = 858
 Q = 693
-p = between(var_int("p"), 1, 1000)
-q = between(var_int("q"), 1, 1000)
-r = between(var_int("r"), 1, 1000)
+p = qbpp.between(qbpp.var_int("p"), 1, 1000)
+q = qbpp.between(qbpp.var_int("q"), 1, 1000)
+r = qbpp.between(qbpp.var_int("r"), 1, 1000)
 
 constraint = (p * r == Q) + (q * r == P)
 f = -r + constraint * 1000
 
 f.simplify_as_binary()
 
-solver = EasySolver(f)
+solver = qbpp.EasySolver(f)
 solver.time_limit(1.0)
 sol = solver.search()
 
@@ -83,20 +83,20 @@ $$
 ## PyQBPP プログラム
 上記の考え方に基づき、以下の PyQBPP プログラムは2つの整数 `P = 858` と `Q = 693` の GCD を計算します:
 ```python
-from pyqbpp import var_int, between, EasySolver
+import pyqbpp as qbpp
 
 P = 858
 Q = 693
-p = between(var_int("p"), 1, 1000)
-q = between(var_int("q"), 1, 1000)
-r = between(var_int("r"), 1, 1000)
+p = qbpp.between(qbpp.var_int("p"), 1, 1000)
+q = qbpp.between(qbpp.var_int("q"), 1, 1000)
+r = qbpp.between(qbpp.var_int("r"), 1, 1000)
 
 constraint = (p * r == Q) + (q * r == P)
 f = -r + constraint * 1000
 
 f.simplify_as_binary()
 
-solver = EasySolver(f)
+solver = qbpp.EasySolver(f)
 solver.time_limit(1.0)
 sol = solver.search()
 

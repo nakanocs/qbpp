@@ -34,7 +34,7 @@ $$
 ## PyQBPP program
 ```python
 import math
-from pyqbpp import var, expr, sum, toExpr, vector_sum, between, MapList, replace, Sol, EasySolver
+import pyqbpp as qbpp
 
 locations = [
     (200, 200, 0),  (247, 296, 44), (31, 393, 57), (96, 398, 94),
@@ -45,9 +45,9 @@ vehicle_capacity = [100, 200, 300]
 N = len(locations)
 V = len(vehicle_capacity)
 
-a = var("a", V, N, N)
+a = qbpp.var("a", V, N, N)
 
-row_constraint = sum(vector_sum(a) == 1)
+row_constraint = qbpp.sum(qbpp.vector_sum(a) == 1)
 
 column_sum = [toExpr(0) for _ in range(N - 1)]
 for v in range(V):
@@ -69,7 +69,7 @@ for v in range(V):
     for t in range(N):
         for i in range(1, N):
             vehicle_load[v] += a[v][t][i] * locations[i][2]
-    capacity_constraint += between(vehicle_load[v], 0, vehicle_capacity[v])
+    capacity_constraint += qbpp.between(vehicle_load[v], 0, vehicle_capacity[v])
 
 objective = toExpr(0)
 for v in range(V):
@@ -85,20 +85,20 @@ for v in range(V):
 f = objective + 10000 * (row_constraint + column_constraint +
                           consecutive_constraint + capacity_constraint)
 
-ml = MapList()
+ml = qbpp.MapList()
 for v in range(V):
     ml.add(a[v][0][0], 1)
     for i in range(1, N):
         ml.add(a[v][0][i], 0)
 
-g = replace(f, ml)
+g = qbpp.replace(f, ml)
 f.simplify_as_binary()
 g.simplify_as_binary()
-solver = EasySolver(g)
+solver = qbpp.EasySolver(g)
 
 sol = solver.search()
 
-full_sol = Sol(f)
+full_sol = qbpp.Sol(f)
 full_sol.set(sol)
 full_sol.set(ml)
 
@@ -200,7 +200,7 @@ $$
 ## PyQBPPプログラム
 ```python
 import math
-from pyqbpp import var, expr, sum, toExpr, vector_sum, between, MapList, replace, Sol, EasySolver
+import pyqbpp as qbpp
 
 locations = [
     (200, 200, 0),  (247, 296, 44), (31, 393, 57), (96, 398, 94),
@@ -211,9 +211,9 @@ vehicle_capacity = [100, 200, 300]
 N = len(locations)
 V = len(vehicle_capacity)
 
-a = var("a", V, N, N)
+a = qbpp.var("a", V, N, N)
 
-row_constraint = sum(vector_sum(a) == 1)
+row_constraint = qbpp.sum(qbpp.vector_sum(a) == 1)
 
 column_sum = [toExpr(0) for _ in range(N - 1)]
 for v in range(V):
@@ -235,7 +235,7 @@ for v in range(V):
     for t in range(N):
         for i in range(1, N):
             vehicle_load[v] += a[v][t][i] * locations[i][2]
-    capacity_constraint += between(vehicle_load[v], 0, vehicle_capacity[v])
+    capacity_constraint += qbpp.between(vehicle_load[v], 0, vehicle_capacity[v])
 
 objective = toExpr(0)
 for v in range(V):
@@ -251,20 +251,20 @@ for v in range(V):
 f = objective + 10000 * (row_constraint + column_constraint +
                           consecutive_constraint + capacity_constraint)
 
-ml = MapList()
+ml = qbpp.MapList()
 for v in range(V):
     ml.add(a[v][0][0], 1)
     for i in range(1, N):
         ml.add(a[v][0][i], 0)
 
-g = replace(f, ml)
+g = qbpp.replace(f, ml)
 f.simplify_as_binary()
 g.simplify_as_binary()
-solver = EasySolver(g)
+solver = qbpp.EasySolver(g)
 
 sol = solver.search()
 
-full_sol = Sol(f)
+full_sol = qbpp.Sol(f)
 full_sol.set(sol)
 full_sol.set(ml)
 

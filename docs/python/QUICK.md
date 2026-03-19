@@ -19,10 +19,10 @@ Install PyQBPP by following the instructions in [**Installation**](INSTALL).
 ### Create a PyQBPP sample program
 Create a PyQBPP sample program below and save as file **`test.py`**:
 ```python
-from pyqbpp import between, var_int, ExhaustiveSolver
+import pyqbpp as qbpp
 
-x = between(var_int("x"), 0, 10)
-y = between(var_int("y"), 0, 10)
+x = qbpp.between(qbpp.var_int("x"), 0, 10)
+y = qbpp.between(qbpp.var_int("y"), 0, 10)
 
 f = x + y == 10
 g = 2 * x + 4 * y == 28
@@ -30,7 +30,7 @@ h = f + g
 h.simplify_as_binary()
 print(f"h = {h}")
 
-solver = ExhaustiveSolver(h)
+solver = qbpp.ExhaustiveSolver(h)
 sol = solver.search()
 print(f"sol = {sol}")
 print(f"x = {sol(x)}, y = {sol(y)}")
@@ -66,10 +66,10 @@ x = 6, y = 4
 ### PyQBPPサンプルプログラムの作成
 以下のPyQBPPサンプルプログラムを作成し、**`test.py`**として保存してください:
 ```python
-from pyqbpp import between, var_int, ExhaustiveSolver
+import pyqbpp as qbpp
 
-x = between(var_int("x"), 0, 10)
-y = between(var_int("y"), 0, 10)
+x = qbpp.between(qbpp.var_int("x"), 0, 10)
+y = qbpp.between(qbpp.var_int("y"), 0, 10)
 
 f = x + y == 10
 g = 2 * x + 4 * y == 28
@@ -77,7 +77,7 @@ h = f + g
 h.simplify_as_binary()
 print(f"h = {h}")
 
-solver = ExhaustiveSolver(h)
+solver = qbpp.ExhaustiveSolver(h)
 sol = solver.search()
 print(f"sol = {sol}")
 print(f"x = {sol(x)}, y = {sol(y)}")

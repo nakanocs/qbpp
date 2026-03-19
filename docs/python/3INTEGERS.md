@@ -42,19 +42,19 @@ $$
 The following PyQBPP program formulates these constraints as a HUBO expression and solves it using the Exhaustive Solver:
 
 ```python
-from pyqbpp import var_int, between, ExhaustiveSolver
+import pyqbpp as qbpp
 
-x = between(var_int("x"), 1, 10)
-y = between(var_int("y"), 1, 10)
-z = between(var_int("z"), 1, 10)
+x = qbpp.between(qbpp.var_int("x"), 1, 10)
+y = qbpp.between(qbpp.var_int("y"), 1, 10)
+z = qbpp.between(qbpp.var_int("z"), 1, 10)
 
 c1 = x * y + y * z + z * x - x * y * z == 0
-c2 = between(y - x, 1, 9)
-c3 = between(z - y, 1, 9)
+c2 = qbpp.between(y - x, 1, 9)
+c3 = qbpp.between(z - y, 1, 9)
 
 f = c1 + c2 + c3
 f.simplify_as_binary()
-solver = ExhaustiveSolver(f)
+solver = qbpp.ExhaustiveSolver(f)
 sols = solver.search_optimal_solutions()
 
 seen = set()
@@ -118,19 +118,19 @@ $$
 以下のPyQBPPプログラムは、これらの制約をHUBO式として定式化し、Exhaustive Solverを用いて解きます：
 
 ```python
-from pyqbpp import var_int, between, ExhaustiveSolver
+import pyqbpp as qbpp
 
-x = between(var_int("x"), 1, 10)
-y = between(var_int("y"), 1, 10)
-z = between(var_int("z"), 1, 10)
+x = qbpp.between(qbpp.var_int("x"), 1, 10)
+y = qbpp.between(qbpp.var_int("y"), 1, 10)
+z = qbpp.between(qbpp.var_int("z"), 1, 10)
 
 c1 = x * y + y * z + z * x - x * y * z == 0
-c2 = between(y - x, 1, 9)
-c3 = between(z - y, 1, 9)
+c2 = qbpp.between(y - x, 1, 9)
+c3 = qbpp.between(z - y, 1, 9)
 
 f = c1 + c2 + c3
 f.simplify_as_binary()
-solver = ExhaustiveSolver(f)
+solver = qbpp.ExhaustiveSolver(f)
 sols = solver.search_optimal_solutions()
 
 seen = set()

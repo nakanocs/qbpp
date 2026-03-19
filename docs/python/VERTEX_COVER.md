@@ -42,7 +42,7 @@ $$
 
 ## PyQBPP program for the minimum vertex cover problem
 ```python
-from pyqbpp import var, sum, toExpr, ExhaustiveSolver
+import pyqbpp as qbpp
 
 N = 16
 edges = [
@@ -51,16 +51,16 @@ edges = [
     (6, 14), (7, 14), (8, 9),  (9, 10), (9, 12), (10, 11),
     (10, 12),(11, 13),(12, 14),(13, 15),(14, 15)]
 
-x = var("x", N)
+x = qbpp.var("x", N)
 
-objective = sum(x)
+objective = qbpp.sum(x)
 constraint = toExpr(0)
 for u, v in edges:
     constraint += (1 - x[u]) * (1 - x[v])
 f = objective + constraint * 2
 f.simplify_as_binary()
 
-solver = ExhaustiveSolver(f)
+solver = qbpp.ExhaustiveSolver(f)
 sol = solver.search()
 
 print(f"objective = {sol(objective)}")
@@ -145,7 +145,7 @@ $$
 
 ## 最小頂点被覆問題のPyQBPPプログラム
 ```python
-from pyqbpp import var, sum, toExpr, ExhaustiveSolver
+import pyqbpp as qbpp
 
 N = 16
 edges = [
@@ -154,16 +154,16 @@ edges = [
     (6, 14), (7, 14), (8, 9),  (9, 10), (9, 12), (10, 11),
     (10, 12),(11, 13),(12, 14),(13, 15),(14, 15)]
 
-x = var("x", N)
+x = qbpp.var("x", N)
 
-objective = sum(x)
+objective = qbpp.sum(x)
 constraint = toExpr(0)
 for u, v in edges:
     constraint += (1 - x[u]) * (1 - x[v])
 f = objective + constraint * 2
 f.simplify_as_binary()
 
-solver = ExhaustiveSolver(f)
+solver = qbpp.ExhaustiveSolver(f)
 sol = solver.search()
 
 print(f"objective = {sol(objective)}")

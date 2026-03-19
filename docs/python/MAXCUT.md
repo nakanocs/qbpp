@@ -32,7 +32,7 @@ An optimal assignment minimizing $f$ corresponds to a maximum cut of $G$.
 
 ## PyQBPP program for the Max-Cut problem
 ```python
-from pyqbpp import var, toExpr, ExhaustiveSolver
+import pyqbpp as qbpp
 
 N = 16
 edges = [
@@ -41,7 +41,7 @@ edges = [
     (6, 14), (7, 14), (8, 9),  (9, 10), (9, 12), (10, 11),(10, 12),
     (11, 13),(11, 15),(12, 14),(12, 15),(13, 15),(14, 15)]
 
-x = var("x", N)
+x = qbpp.var("x", N)
 
 objective = toExpr(0)
 for u, v in edges:
@@ -50,7 +50,7 @@ for u, v in edges:
 f = -objective
 f.simplify_as_binary()
 
-solver = ExhaustiveSolver(f)
+solver = qbpp.ExhaustiveSolver(f)
 sol = solver.search()
 
 print(f"objective = {sol(objective)}")
@@ -121,7 +121,7 @@ $f$ を最小化する最適な割り当ては、$G$ の最大カットに対応
 
 ## Max-Cut 問題の PyQBPP プログラム
 ```python
-from pyqbpp import var, toExpr, ExhaustiveSolver
+import pyqbpp as qbpp
 
 N = 16
 edges = [
@@ -130,7 +130,7 @@ edges = [
     (6, 14), (7, 14), (8, 9),  (9, 10), (9, 12), (10, 11),(10, 12),
     (11, 13),(11, 15),(12, 14),(12, 15),(13, 15),(14, 15)]
 
-x = var("x", N)
+x = qbpp.var("x", N)
 
 objective = toExpr(0)
 for u, v in edges:
@@ -139,7 +139,7 @@ for u, v in edges:
 f = -objective
 f.simplify_as_binary()
 
-solver = ExhaustiveSolver(f)
+solver = qbpp.ExhaustiveSolver(f)
 sol = solver.search()
 
 print(f"objective = {sol(objective)}")

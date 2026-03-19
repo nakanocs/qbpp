@@ -30,25 +30,25 @@ $$
 ## PyQBPP program for generating permutation matrices
 We can design a PyQBPP program based on the formula $f(X)$ above as follows:
 ```python
-from pyqbpp import var, expr, sqr, ExhaustiveSolver
+import pyqbpp as qbpp
 
-x = var("x", 4, 4)
-f = expr()
+x = qbpp.var("x", 4, 4)
+f = qbpp.expr()
 
 for i in range(4):
-    s = expr()
+    s = qbpp.expr()
     for j in range(4):
         s += x[i][j]
-    f += sqr(1 - s)
+    f += qbpp.sqr(1 - s)
 
 for j in range(4):
-    s = expr()
+    s = qbpp.expr()
     for i in range(4):
         s += x[i][j]
-    f += sqr(1 - s)
+    f += qbpp.sqr(1 - s)
 
 f.simplify_as_binary()
-solver = ExhaustiveSolver(f)
+solver = qbpp.ExhaustiveSolver(f)
 sols = solver.search_optimal_solutions()
 for k, sol in enumerate(sols):
     row = [sol.get_vector(x[i]) for i in range(4)]
@@ -70,13 +70,13 @@ For these two vectors of size `n`, `sqr()` squares each element, and `sum()` com
 
 The following program implements a QUBO formulation using these vector functions and operations:
 ```python
-from pyqbpp import var, sum, sqr, vector_sum, EasySolver
+import pyqbpp as qbpp
 
-x = var("x", 4, 4)
-f = sum(sqr(vector_sum(x, 1) - 1)) + sum(sqr(vector_sum(x, 0) - 1))
+x = qbpp.var("x", 4, 4)
+f = qbpp.sum(qbpp.sqr(qbpp.vector_sum(x, 1) - 1)) + qbpp.sum(qbpp.sqr(qbpp.vector_sum(x, 0) - 1))
 f.simplify_as_binary()
 
-solver = ExhaustiveSolver(f)
+solver = qbpp.ExhaustiveSolver(f)
 sols = solver.search_optimal_solutions()
 for k, sol in enumerate(sols):
     perm = []
@@ -119,19 +119,19 @@ Here, $P$ is a sufficiently large positive constant that prioritizes the permuta
 
 ## PyQBPP program for the assignment problem
 ```python
-from pyqbpp import var, sum, sqr, vector_sum, Vector, EasySolver
+import pyqbpp as qbpp
 
-c = Vector([Vector([58, 73, 91, 44]),
-            Vector([62, 15, 87, 39]),
-            Vector([78, 56, 23, 94]),
-            Vector([11, 85, 68, 72])])
-x = var("x", 4, 4)
-f = sum(vector_sum(x, 1) == 1) + sum(vector_sum(x, 0) == 1)
-g = sum(c * x)
+c = qbpp.Vector([qbpp.Vector([58, 73, 91, 44]),
+            qbpp.Vector([62, 15, 87, 39]),
+            qbpp.Vector([78, 56, 23, 94]),
+            qbpp.Vector([11, 85, 68, 72])])
+x = qbpp.var("x", 4, 4)
+f = qbpp.sum(qbpp.vector_sum(x, 1) == 1) + qbpp.sum(qbpp.vector_sum(x, 0) == 1)
+g = qbpp.sum(c * x)
 h = 1000 * f + g
 h.simplify_as_binary()
 
-solver = EasySolver(h)
+solver = qbpp.EasySolver(h)
 solver.time_limit(1.0)
 sol = solver.search()
 print("sol =", sol)
@@ -186,25 +186,25 @@ $$
 ## 置換行列を生成するPyQBPPプログラム
 上記の式 $f(X)$ に基づいて、以下のようにPyQBPPプログラムを設計できます:
 ```python
-from pyqbpp import var, expr, sqr, ExhaustiveSolver
+import pyqbpp as qbpp
 
-x = var("x", 4, 4)
-f = expr()
+x = qbpp.var("x", 4, 4)
+f = qbpp.expr()
 
 for i in range(4):
-    s = expr()
+    s = qbpp.expr()
     for j in range(4):
         s += x[i][j]
-    f += sqr(1 - s)
+    f += qbpp.sqr(1 - s)
 
 for j in range(4):
-    s = expr()
+    s = qbpp.expr()
     for i in range(4):
         s += x[i][j]
-    f += sqr(1 - s)
+    f += qbpp.sqr(1 - s)
 
 f.simplify_as_binary()
-solver = ExhaustiveSolver(f)
+solver = qbpp.ExhaustiveSolver(f)
 sols = solver.search_optimal_solutions()
 for k, sol in enumerate(sols):
     row = [sol.get_vector(x[i]) for i in range(4)]
@@ -226,13 +226,13 @@ Exhaustive Solverを使用して、すべての最適解が計算され **`sols`
 
 以下のプログラムは、これらのベクトル関数と演算を使用してQUBO定式化を実装しています:
 ```python
-from pyqbpp import var, sum, sqr, vector_sum, EasySolver
+import pyqbpp as qbpp
 
-x = var("x", 4, 4)
-f = sum(sqr(vector_sum(x, 1) - 1)) + sum(sqr(vector_sum(x, 0) - 1))
+x = qbpp.var("x", 4, 4)
+f = qbpp.sum(qbpp.sqr(qbpp.vector_sum(x, 1) - 1)) + qbpp.sum(qbpp.sqr(qbpp.vector_sum(x, 0) - 1))
 f.simplify_as_binary()
 
-solver = ExhaustiveSolver(f)
+solver = qbpp.ExhaustiveSolver(f)
 sols = solver.search_optimal_solutions()
 for k, sol in enumerate(sols):
     perm = []
@@ -275,19 +275,19 @@ $$
 
 ## 割当問題のPyQBPPプログラム
 ```python
-from pyqbpp import var, sum, sqr, vector_sum, Vector, EasySolver
+import pyqbpp as qbpp
 
-c = Vector([Vector([58, 73, 91, 44]),
-            Vector([62, 15, 87, 39]),
-            Vector([78, 56, 23, 94]),
-            Vector([11, 85, 68, 72])])
-x = var("x", 4, 4)
-f = sum(vector_sum(x, 1) == 1) + sum(vector_sum(x, 0) == 1)
-g = sum(c * x)
+c = qbpp.Vector([qbpp.Vector([58, 73, 91, 44]),
+            qbpp.Vector([62, 15, 87, 39]),
+            qbpp.Vector([78, 56, 23, 94]),
+            qbpp.Vector([11, 85, 68, 72])])
+x = qbpp.var("x", 4, 4)
+f = qbpp.sum(qbpp.vector_sum(x, 1) == 1) + qbpp.sum(qbpp.vector_sum(x, 0) == 1)
+g = qbpp.sum(c * x)
 h = 1000 * f + g
 h.simplify_as_binary()
 
-solver = EasySolver(h)
+solver = qbpp.EasySolver(h)
 solver.time_limit(1.0)
 sol = solver.search()
 print("sol =", sol)

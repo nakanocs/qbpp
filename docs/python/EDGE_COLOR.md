@@ -39,7 +39,7 @@ where $I(u)$ denotes the set of edge IDs incident to node $u$.
 ## PyQBPP program
 It is known that the edge chromatic number of a simple graph is either $\Delta$ or $\Delta+1$, where $\Delta$ is the maximum degree. The following program attempts an edge coloring with $m=\Delta$ colors:
 ```python
-from pyqbpp import var, sum, Expr, vector_sum, EasySolver
+import pyqbpp as qbpp
 
 n = 16
 edges = [
@@ -58,20 +58,20 @@ max_degree = max(len(neighbors) for neighbors in adj)
 m = max_degree
 
 s = len(edges)
-x = var("x", s, m)
+x = qbpp.var("x", s, m)
 
-onehot = sum(vector_sum(x) == 1)
-different = Expr(0)
+onehot = qbpp.sum(qbpp.vector_sum(x) == 1)
+different = qbpp.Expr(0)
 for i in range(n):
     for u in adj[i]:
         for v in adj[i]:
             if u < v:
-                different += sum(x[u] * x[v])
+                different += qbpp.sum(x[u] * x[v])
 
 f = onehot + different
 
 f.simplify_as_binary()
-solver = EasySolver(f)
+solver = qbpp.EasySolver(f)
 solver.target_energy(0)
 sol = solver.search()
 
@@ -156,7 +156,7 @@ $$
 ## PyQBPP プログラム
 単純グラフの辺彩色数は $\Delta$ または $\Delta+1$ であることが知られています。ここで $\Delta$ は最大次数です。以下のプログラムは $m=\Delta$ 色での辺彩色を試みます：
 ```python
-from pyqbpp import var, sum, Expr, vector_sum, EasySolver
+import pyqbpp as qbpp
 
 n = 16
 edges = [
@@ -175,20 +175,20 @@ max_degree = max(len(neighbors) for neighbors in adj)
 m = max_degree
 
 s = len(edges)
-x = var("x", s, m)
+x = qbpp.var("x", s, m)
 
-onehot = sum(vector_sum(x) == 1)
-different = Expr(0)
+onehot = qbpp.sum(qbpp.vector_sum(x) == 1)
+different = qbpp.Expr(0)
 for i in range(n):
     for u in adj[i]:
         for v in adj[i]:
             if u < v:
-                different += sum(x[u] * x[v])
+                different += qbpp.sum(x[u] * x[v])
 
 f = onehot + different
 
 f.simplify_as_binary()
-solver = EasySolver(f)
+solver = qbpp.EasySolver(f)
 solver.target_energy(0)
 sol = solver.search()
 

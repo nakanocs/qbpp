@@ -54,7 +54,7 @@ $$
 
 ## PyQBPP program for the HUBO formulation
 ```python
-from pyqbpp import var, sum, toExpr, EasySolver
+import pyqbpp as qbpp
 
 N = 16
 edges = [
@@ -68,9 +68,9 @@ for u, v in edges:
     adj[u].append(v)
     adj[v].append(u)
 
-x = var("x", N)
+x = qbpp.var("x", N)
 
-objective = sum(x)
+objective = qbpp.sum(x)
 
 constraint = toExpr(0)
 for i in range(N):
@@ -82,7 +82,7 @@ for i in range(N):
 f = objective + (N + 1) * constraint
 f.simplify_as_binary()
 
-solver = EasySolver(f)
+solver = qbpp.EasySolver(f)
 solver.time_limit(1.0)
 sol = solver.search()
 
@@ -115,14 +115,14 @@ $$
 
 The constraint can be described in PyQBPP as follows:
 ```python
-from pyqbpp import between
+import pyqbpp as qbpp
 
 constraint = toExpr(0)
 for i in range(N):
     t = toExpr(x[i])
     for j in adj[i]:
         t += x[j]
-    constraint += between(t, 1, len(adj[i]) + 1)
+    constraint += qbpp.between(t, 1, len(adj[i]) + 1)
 ```
 In this code, `t` stores the expression $\sum_{j\in N[i]}x_j$ and the `between()` function creates a penalty expression for $1\leq \sum_{j\in N[i]}x_j \leq |N[i]|+1$, which takes the minimum value 0 if and only if the inequality is satisfied.
 
@@ -203,7 +203,7 @@ $$
 
 ## HUBO定式化のPyQBPPプログラム
 ```python
-from pyqbpp import var, sum, toExpr, EasySolver
+import pyqbpp as qbpp
 
 N = 16
 edges = [
@@ -217,9 +217,9 @@ for u, v in edges:
     adj[u].append(v)
     adj[v].append(u)
 
-x = var("x", N)
+x = qbpp.var("x", N)
 
-objective = sum(x)
+objective = qbpp.sum(x)
 
 constraint = toExpr(0)
 for i in range(N):
@@ -231,7 +231,7 @@ for i in range(N):
 f = objective + (N + 1) * constraint
 f.simplify_as_binary()
 
-solver = EasySolver(f)
+solver = qbpp.EasySolver(f)
 solver.time_limit(1.0)
 sol = solver.search()
 
@@ -264,14 +264,14 @@ $$
 
 この制約はPyQBPPで以下のように記述できます：
 ```python
-from pyqbpp import between
+import pyqbpp as qbpp
 
 constraint = toExpr(0)
 for i in range(N):
     t = toExpr(x[i])
     for j in adj[i]:
         t += x[j]
-    constraint += between(t, 1, len(adj[i]) + 1)
+    constraint += qbpp.between(t, 1, len(adj[i]) + 1)
 ```
 このコードでは、`t` は式 $\sum_{j\in N[i]}x_j$ を格納し、`between()` 関数は $1\leq \sum_{j\in N[i]}x_j \leq |N[i]|+1$ のペナルティ式を生成します。この式は不等式が満たされている場合にのみ最小値0をとります。
 

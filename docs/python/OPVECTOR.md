@@ -17,9 +17,9 @@ When you combine a vector and a scalar, the scalar is applied to each element of
 
 The following program illustrates this behavior:
 ```python
-from pyqbpp import var
+import pyqbpp as qbpp
 
-x = var("x", 3)
+x = qbpp.var("x", 3)
 f = 2 * x + 1
 
 print("f =", f)
@@ -38,10 +38,10 @@ f[2] = 1 +2*x[2]
 When you combine two vectors of the same size, the operation is performed element-wise.
 
 ```python
-from pyqbpp import var
+import pyqbpp as qbpp
 
-x = var("x", 3)
-y = var("y", 3)
+x = qbpp.var("x", 3)
+y = qbpp.var("y", 3)
 f = 2 * x + 3 * y + 1
 
 print("f =", f)
@@ -59,10 +59,10 @@ f[2] = 1 +2*x[2] +3*y[2]
 ## Compound operators for vectors
 The compound operators **`+=`**, **`-=`**, **`*=`**, and **`/=`** also work element-wise for vectors:
 ```python
-from pyqbpp import var
+import pyqbpp as qbpp
 
-x = var("x", 3)
-y = var("y", 3)
+x = qbpp.var("x", 3)
+y = qbpp.var("y", 3)
 f = 6 * x + 4
 
 f += 3 * y
@@ -85,10 +85,10 @@ f = {6*x[0]*y[0] +3*y[0]*y[0] -8*y[0],6*x[1]*y[1] +3*y[1]*y[1] -8*y[1],6*x[2]*y[
 ## Square function for vectors
 The square function also works element-wise for vectors:
 ```python
-from pyqbpp import var, sqr
+import pyqbpp as qbpp
 
-x = var("x", 3)
-f = sqr(x + 1)
+x = qbpp.var("x", 3)
+f = qbpp.sqr(x + 1)
 
 print("f =", f)
 ```
@@ -100,14 +100,14 @@ f = {1 +x[0]*x[0] +x[0] +x[0],1 +x[1]*x[1] +x[1] +x[1],1 +x[2]*x[2] +x[2] +x[2]}
 ## Simplify functions for vectors
 Simplify functions also work element-wise for vectors:
 ```python
-from pyqbpp import var, sqr, simplify, simplify_as_binary, simplify_as_spin
+import pyqbpp as qbpp
 
-x = var("x", 3)
-f = sqr(x - 1)
+x = qbpp.var("x", 3)
+f = qbpp.sqr(x - 1)
 print("f =", f)
-print("simplify(f) =", simplify(f))
-print("simplify_as_binary(f) =", simplify_as_binary(f))
-print("simplify_as_spin(f) =", simplify_as_spin(f))
+print("qbpp.simplify(f) =", qbpp.simplify(f))
+print("qbpp.simplify_as_binary(f) =", qbpp.simplify_as_binary(f))
+print("qbpp.simplify_as_spin(f) =", qbpp.simplify_as_spin(f))
 ```
 This program produces the following output:
 ```
@@ -134,9 +134,9 @@ simplify_as_spin(f) = {2 -2*x[0],2 -2*x[1],2 -2*x[2]}
 
 以下のプログラムはこの動作を示しています。
 ```python
-from pyqbpp import var
+import pyqbpp as qbpp
 
-x = var("x", 3)
+x = qbpp.var("x", 3)
 f = 2 * x + 1
 
 print("f =", f)
@@ -155,10 +155,10 @@ f[2] = 1 +2*x[2]
 同じサイズの2つのベクトルを組み合わせると、演算は要素ごとに行われます。
 
 ```python
-from pyqbpp import var
+import pyqbpp as qbpp
 
-x = var("x", 3)
-y = var("y", 3)
+x = qbpp.var("x", 3)
+y = qbpp.var("y", 3)
 f = 2 * x + 3 * y + 1
 
 print("f =", f)
@@ -176,10 +176,10 @@ f[2] = 1 +2*x[2] +3*y[2]
 ## ベクトルの複合演算子
 複合演算子 **`+=`**、**`-=`**、**`*=`**、**`/=`** もベクトルに対して要素ごとに適用されます。
 ```python
-from pyqbpp import var
+import pyqbpp as qbpp
 
-x = var("x", 3)
-y = var("y", 3)
+x = qbpp.var("x", 3)
+y = qbpp.var("y", 3)
 f = 6 * x + 4
 
 f += 3 * y
@@ -202,10 +202,10 @@ f = {6*x[0]*y[0] +3*y[0]*y[0] -8*y[0],6*x[1]*y[1] +3*y[1]*y[1] -8*y[1],6*x[2]*y[
 ## ベクトルの二乗関数
 二乗関数もベクトルに対して要素ごとに適用されます。
 ```python
-from pyqbpp import var, sqr
+import pyqbpp as qbpp
 
-x = var("x", 3)
-f = sqr(x + 1)
+x = qbpp.var("x", 3)
+f = qbpp.sqr(x + 1)
 
 print("f =", f)
 ```
@@ -217,14 +217,14 @@ f = {1 +x[0]*x[0] +x[0] +x[0],1 +x[1]*x[1] +x[1] +x[1],1 +x[2]*x[2] +x[2] +x[2]}
 ## ベクトルの簡約化関数
 簡約化関数もベクトルに対して要素ごとに適用されます。
 ```python
-from pyqbpp import var, sqr, simplify, simplify_as_binary, simplify_as_spin
+import pyqbpp as qbpp
 
-x = var("x", 3)
-f = sqr(x - 1)
+x = qbpp.var("x", 3)
+f = qbpp.sqr(x - 1)
 print("f =", f)
-print("simplify(f) =", simplify(f))
-print("simplify_as_binary(f) =", simplify_as_binary(f))
-print("simplify_as_spin(f) =", simplify_as_spin(f))
+print("qbpp.simplify(f) =", qbpp.simplify(f))
+print("qbpp.simplify_as_binary(f) =", qbpp.simplify_as_binary(f))
+print("qbpp.simplify_as_spin(f) =", qbpp.simplify_as_spin(f))
 ```
 このプログラムの出力は以下の通りです。
 ```

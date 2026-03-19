@@ -13,10 +13,10 @@ A conventional binary encoding is used to represent integer values.
 
 The following program demonstrates how integer variables are defined:
 ```python
-from pyqbpp import var_int, between
+import pyqbpp as qbpp
 
-x = between(var_int("x"), 1, 8)
-y = between(var_int("y"), -10, 10)
+x = qbpp.between(qbpp.var_int("x"), 1, 8)
+y = qbpp.between(qbpp.var_int("y"), -10, 10)
 print(f"x = {x} uses {x.var_count()} variables.")
 print(f"y = {y} uses {y.var_count()} variables.")
 ```
@@ -47,17 +47,17 @@ $$
 ## PyQBPP program
 The following program constructs the QUBO expression, solves it, and decodes the resulting values of $x$ and $y$:
 ```python
-from pyqbpp import var_int, between, EasySolver
+import pyqbpp as qbpp
 
-x = between(var_int("x"), 0, 10)
-y = between(var_int("y"), 0, 10)
+x = qbpp.between(qbpp.var_int("x"), 0, 10)
+y = qbpp.between(qbpp.var_int("y"), 0, 10)
 
 f = (x + y) == 10
 g = (2 * x + 4 * y) == 28
 h = f + g
 h.simplify_as_binary()
 
-solver = EasySolver(h)
+solver = qbpp.EasySolver(h)
 solver.target_energy(0)
 sol = solver.search()
 
@@ -110,10 +110,10 @@ PyQBPPは**整数変数**をサポートしており、内部的には複数の�
 
 以下のプログラムは整数変数の定義方法を示しています。
 ```python
-from pyqbpp import var_int, between
+import pyqbpp as qbpp
 
-x = between(var_int("x"), 1, 8)
-y = between(var_int("y"), -10, 10)
+x = qbpp.between(qbpp.var_int("x"), 1, 8)
+y = qbpp.between(qbpp.var_int("y"), -10, 10)
 print(f"x = {x} uses {x.var_count()} variables.")
 print(f"y = {y} uses {y.var_count()} variables.")
 ```
@@ -144,17 +144,17 @@ $$
 ## PyQBPP プログラム
 以下のプログラムはQUBO式を構築し、それを解いて $x$ と $y$ の値を復号します。
 ```python
-from pyqbpp import var_int, between, EasySolver
+import pyqbpp as qbpp
 
-x = between(var_int("x"), 0, 10)
-y = between(var_int("y"), 0, 10)
+x = qbpp.between(qbpp.var_int("x"), 0, 10)
+y = qbpp.between(qbpp.var_int("y"), 0, 10)
 
 f = (x + y) == 10
 g = (2 * x + 4 * y) == 28
 h = f + g
 h.simplify_as_binary()
 
-solver = EasySolver(h)
+solver = qbpp.EasySolver(h)
 solver.target_energy(0)
 sol = solver.search()
 

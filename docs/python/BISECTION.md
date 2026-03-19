@@ -55,7 +55,7 @@ where $P$ must be large enough (e.g., $P = \lvert E\rvert + 1$) to ensure that t
 The following PyQBPP program solves the Minimum Graph Bisection problem for a 16-node graph:
 
 ```python
-from pyqbpp import var, toExpr, sum as qsum, ExhaustiveSolver
+import pyqbpp as qbpp
 
 N = 16
 edges = [
@@ -66,7 +66,7 @@ edges = [
 ]
 M = len(edges)
 
-x = var("x", N)
+x = qbpp.var("x", N)
 
 # Objective: number of edges crossing the cut
 objective = toExpr(0)
@@ -80,7 +80,7 @@ constraint = qsum(x) == N // 2
 f = objective + (M + 1) * constraint
 f.simplify_as_binary()
 
-solver = ExhaustiveSolver(f)
+solver = qbpp.ExhaustiveSolver(f)
 sol = solver.search()
 
 print(f"Cut edges = {sol(objective)}")
@@ -152,7 +152,7 @@ $$
 以下の PyQBPP プログラムは、16 ノードのグラフに対する最小グラフ二分割問題を解きます：
 
 ```python
-from pyqbpp import var, toExpr, sum as qsum, ExhaustiveSolver
+import pyqbpp as qbpp
 
 N = 16
 edges = [
@@ -163,7 +163,7 @@ edges = [
 ]
 M = len(edges)
 
-x = var("x", N)
+x = qbpp.var("x", N)
 
 # 目的関数: カットを横断する辺の数
 objective = toExpr(0)
@@ -177,7 +177,7 @@ constraint = qsum(x) == N // 2
 f = objective + (M + 1) * constraint
 f.simplify_as_binary()
 
-solver = ExhaustiveSolver(f)
+solver = qbpp.ExhaustiveSolver(f)
 sol = solver.search()
 
 print(f"Cut edges = {sol(objective)}")

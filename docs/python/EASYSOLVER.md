@@ -34,19 +34,19 @@ The Easy Solver searches for solutions by calling the **`search()`** method.
 The following program searches for a solution to the
 **Low Autocorrelation Binary Sequences (LABS)** problem using the Easy Solver:
 ```python
-from pyqbpp import var, expr, sqr, EasySolver
+import pyqbpp as qbpp
 
 size = 100
-x = var("x", size)
-f = expr()
+x = qbpp.var("x", size)
+f = qbpp.expr()
 for d in range(1, size):
-    temp = expr()
+    temp = qbpp.expr()
     for i in range(size - d):
         temp += (2 * x[i] - 1) * (2 * x[i + d] - 1)
-    f += sqr(temp)
+    f += qbpp.sqr(temp)
 f.simplify_as_binary()
 
-solver = EasySolver(f)
+solver = qbpp.EasySolver(f)
 solver.time_limit(5.0)
 solver.target_energy(900)
 solver.callback(lambda energy, tts: print(f"TTS = {tts:.3f}s Energy = {energy}"))
@@ -104,19 +104,19 @@ Easy Solverは **`search()`** メソッドを呼び出すことで解を探索�
 以下のプログラムは、Easy Solverを使用して
 **Low Autocorrelation Binary Sequences (LABS)** 問題の解を探索します:
 ```python
-from pyqbpp import var, expr, sqr, EasySolver
+import pyqbpp as qbpp
 
 size = 100
-x = var("x", size)
-f = expr()
+x = qbpp.var("x", size)
+f = qbpp.expr()
 for d in range(1, size):
-    temp = expr()
+    temp = qbpp.expr()
     for i in range(size - d):
         temp += (2 * x[i] - 1) * (2 * x[i + d] - 1)
-    f += sqr(temp)
+    f += qbpp.sqr(temp)
 f.simplify_as_binary()
 
-solver = EasySolver(f)
+solver = qbpp.EasySolver(f)
 solver.time_limit(5.0)
 solver.target_energy(900)
 solver.callback(lambda energy, tts: print(f"TTS = {tts:.3f}s Energy = {energy}"))

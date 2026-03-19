@@ -16,7 +16,7 @@ pip install pyqbpp
 ## Importing the library
 To use PyQBPP, import the necessary functions from the **`pyqbpp`** module:
 ```python
-from pyqbpp import var, expr, simplify, simplify_as_binary, simplify_as_spin
+import pyqbpp as qbpp
 ```
 
 ## Defining variables and expressions
@@ -27,11 +27,11 @@ Expressions are constructed using standard arithmetic operators such as **`+`**,
 
 The following program defines three variables `a`, `b`, and `c`, and an expression `f`, which is printed:
 ```python
-from pyqbpp import var
+import pyqbpp as qbpp
 
-a = var("a")
-b = var("b")
-c = var("c")
+a = qbpp.var("a")
+b = qbpp.var("b")
+c = qbpp.var("c")
 f = (a + b - 1) * (b + c - 1)
 print("f =", f)
 ```
@@ -90,8 +90,8 @@ If you do not want to modify `f`, you can instead use the global functions
 **`simplify(f)`**, **`simplify_as_binary(f)`**, and **`simplify_as_spin(f)`**, which return the simplified expressions without changing `f`.
 
 ```python
-from pyqbpp import simplify_as_binary
-g = simplify_as_binary(f)  # f is not modified, g is a new simplified expression
+import pyqbpp as qbpp
+g = qbpp.simplify_as_binary(f)  # f is not modified, g is a new simplified expression
 ```
 
 > **NOTE**
@@ -110,7 +110,7 @@ pip install pyqbpp
 ## ライブラリのインポート
 PyQBPPを使用するには、**`pyqbpp`**モジュールから必要な関数をインポートします:
 ```python
-from pyqbpp import var, expr, simplify, simplify_as_binary, simplify_as_spin
+import pyqbpp as qbpp
 ```
 
 ## 変数と式の定義
@@ -121,11 +121,11 @@ from pyqbpp import var, expr, simplify, simplify_as_binary, simplify_as_spin
 
 以下のプログラムは、3つの変数`a`、`b`、`c`と式`f`を定義し、表示します:
 ```python
-from pyqbpp import var
+import pyqbpp as qbpp
 
-a = var("a")
-b = var("b")
-c = var("c")
+a = qbpp.var("a")
+b = qbpp.var("b")
+c = qbpp.var("c")
 f = (a + b - 1) * (b + c - 1)
 print("f =", f)
 ```
@@ -184,8 +184,8 @@ f = 2 -a -2*b -c +a*b +a*c +b*c
 **`simplify(f)`**、**`simplify_as_binary(f)`**、**`simplify_as_spin(f)`**を使用できます。これらは`f`を変更せずに簡約化された式を返します。
 
 ```python
-from pyqbpp import simplify_as_binary
-g = simplify_as_binary(f)  # fは変更されず、gは新しい簡約化された式
+import pyqbpp as qbpp
+g = qbpp.simplify_as_binary(f)  # fは変更されず、gは新しい簡約化された式
 ```
 
 > **NOTE**

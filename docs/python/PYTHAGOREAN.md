@@ -20,17 +20,17 @@ To avoid duplicates, we assume $x<y$.
 ## PyQBPP program for listing Pythagorean Triples
 The following program lists Pythagorean triples with $x\leq 16$, $y\leq 16$, and $z\leq 16$:
 ```python
-from pyqbpp import var_int, between, inf, ExhaustiveSolver
+import pyqbpp as qbpp
 
-x = between(var_int("x"), 1, 16)
-y = between(var_int("y"), 1, 16)
-z = between(var_int("z"), 1, 16)
+x = qbpp.between(qbpp.var_int("x"), 1, 16)
+y = qbpp.between(qbpp.var_int("y"), 1, 16)
+z = qbpp.between(qbpp.var_int("z"), 1, 16)
 f = x * x + y * y - z * z == 0
-c = between(y - x, 1, +inf)
+c = qbpp.between(y - x, 1, +qbpp.inf)
 g = f + c
 g.simplify_as_binary()
 
-solver = ExhaustiveSolver(g)
+solver = qbpp.ExhaustiveSolver(g)
 sols = solver.search_optimal_solutions()
 
 seen = set()
@@ -70,8 +70,8 @@ x=9, y=12, z=15, f=0, c=3
 <tr><th>C++ QUBO++</th><th>PyQBPP</th></tr>
 </thead>
 <tbody>
-<tr><td><code>1 &lt;= qbpp::var_int("x") &lt;= 16</code></td><td><code>between(var_int("x"), 1, 16)</code></td></tr>
-<tr><td><code>1 &lt;= y - x &lt;= +qbpp::inf</code></td><td><code>between(y - x, 1, +inf)</code></td></tr>
+<tr><td><code>1 &lt;= qbpp::var_int("x") &lt;= 16</code></td><td><code>qbpp.between(qbpp.var_int("x"), 1, 16)</code></td></tr>
+<tr><td><code>1 &lt;= y - x &lt;= +qbpp::inf</code></td><td><code>qbpp.between(y - x, 1, +qbpp.inf)</code></td></tr>
 <tr><td><code>sol(x)</code></td><td><code>sol(x)</code></td></tr>
 <tr><td><code>sol(*f)</code></td><td><code>sol(f.body)</code></td></tr>
 </tbody>
@@ -95,17 +95,17 @@ $$
 ## ピタゴラス数を列挙する PyQBPP プログラム
 以下のプログラムは、$x\leq 16$、$y\leq 16$、$z\leq 16$ のピタゴラス数を列挙します:
 ```python
-from pyqbpp import var_int, between, inf, ExhaustiveSolver
+import pyqbpp as qbpp
 
-x = between(var_int("x"), 1, 16)
-y = between(var_int("y"), 1, 16)
-z = between(var_int("z"), 1, 16)
+x = qbpp.between(qbpp.var_int("x"), 1, 16)
+y = qbpp.between(qbpp.var_int("y"), 1, 16)
+z = qbpp.between(qbpp.var_int("z"), 1, 16)
 f = x * x + y * y - z * z == 0
-c = between(y - x, 1, +inf)
+c = qbpp.between(y - x, 1, +qbpp.inf)
 g = f + c
 g.simplify_as_binary()
 
-solver = ExhaustiveSolver(g)
+solver = qbpp.ExhaustiveSolver(g)
 sols = solver.search_optimal_solutions()
 
 seen = set()
@@ -144,8 +144,8 @@ x=9, y=12, z=15, f=0, c=3
 <tr><th>C++ QUBO++</th><th>PyQBPP</th></tr>
 </thead>
 <tbody>
-<tr><td><code>1 &lt;= qbpp::var_int("x") &lt;= 16</code></td><td><code>between(var_int("x"), 1, 16)</code></td></tr>
-<tr><td><code>1 &lt;= y - x &lt;= +qbpp::inf</code></td><td><code>between(y - x, 1, +inf)</code></td></tr>
+<tr><td><code>1 &lt;= qbpp::var_int("x") &lt;= 16</code></td><td><code>qbpp.between(qbpp.var_int("x"), 1, 16)</code></td></tr>
+<tr><td><code>1 &lt;= y - x &lt;= +qbpp::inf</code></td><td><code>qbpp.between(y - x, 1, +qbpp.inf)</code></td></tr>
 <tr><td><code>sol(x)</code></td><td><code>sol(x)</code></td></tr>
 <tr><td><code>sol(*f)</code></td><td><code>sol(f.body)</code></td></tr>
 </tbody>

@@ -49,14 +49,14 @@ The following function `adder` returns a QUBO expression whose minimum value is 
 ```python
 def adder(a, b, s):
     N = len(a)
-    c = var(N + 1)
+    c = qbpp.var(N + 1)
     f = toExpr(0)
     for j in range(N):
         f += fa(a[j], b[j], c[j], c[j + 1], s[j])
-    ml = MapList()
+    ml = qbpp.MapList()
     ml.add(c[0], 0)
     ml.add(c[N], s[N])
-    return replace(f, ml)
+    return qbpp.replace(f, ml)
 ```
 In this function, `c` is a vector of `N + 1` variables used to connect the carry-out and carry-in signals of the `fa` blocks, forming an `N`-bit ripple-carry adder.
 
@@ -67,7 +67,7 @@ The following function `multiplier` returns a QUBO expression whose minimum valu
 ```python
 def multiplier(x, y, z):
     N = len(x)
-    c = var("c", N - 1, N + 1)
+    c = qbpp.var("c", N - 1, N + 1)
 
     f = toExpr(0)
 
@@ -84,12 +84,12 @@ def multiplier(x, y, z):
 
     f += z[0] - x[0] * y[0] == 0
 
-    ml = MapList()
+    ml = qbpp.MapList()
     for i in range(N - 2):
         ml.add(c[i][0], z[i + 1])
     for i in range(N + 1):
         ml.add(c[N - 2][i], z[N + i - 1])
-    f = replace(f, ml)
+    f = qbpp.replace(f, ml)
     f.simplify_as_binary()
     return f
 ```
@@ -103,25 +103,25 @@ The following program constructs a 4-bit multiplier with
 - `y`: 4 binary variables,
 - `z`: a list of constants `[1, 1, 1, 1, 0, 0, 0, 1]`, representing the 8-bit integer `10001111` `(143)`, and stores the resulting expression in `f`:
 ```python
-from pyqbpp import var, toExpr, replace, MapList, EasySolver
+import pyqbpp as qbpp
 
 def fa(a, b, i, o, s):
     return (a + b + i) - (2 * o + s) == 0
 
 def adder(a, b, s):
     N = len(a)
-    c = var(N + 1)
+    c = qbpp.var(N + 1)
     f = toExpr(0)
     for j in range(N):
         f += fa(a[j], b[j], c[j], c[j + 1], s[j])
-    ml = MapList()
+    ml = qbpp.MapList()
     ml.add(c[0], 0)
     ml.add(c[N], s[N])
-    return replace(f, ml)
+    return qbpp.replace(f, ml)
 
 def multiplier(x, y, z):
     N = len(x)
-    c = var("c", N - 1, N + 1)
+    c = qbpp.var("c", N - 1, N + 1)
 
     f = toExpr(0)
 
@@ -138,22 +138,22 @@ def multiplier(x, y, z):
 
     f += z[0] - x[0] * y[0] == 0
 
-    ml = MapList()
+    ml = qbpp.MapList()
     for i in range(N - 2):
         ml.add(c[i][0], z[i + 1])
     for i in range(N + 1):
         ml.add(c[N - 2][i], z[N + i - 1])
-    f = replace(f, ml)
+    f = qbpp.replace(f, ml)
     f.simplify_as_binary()
     return f
 
-x = var("x", 4)
-y = var("y", 4)
+x = qbpp.var("x", 4)
+y = qbpp.var("y", 4)
 z = [1, 1, 1, 1, 0, 0, 0, 1]
 f = multiplier(x, y, z)
 f.simplify_as_binary()
 
-solver = EasySolver(f)
+solver = qbpp.EasySolver(f)
 solver.target_energy(0)
 sol = solver.search()
 
@@ -213,14 +213,14 @@ def fa(a, b, i, o, s):
 ```python
 def adder(a, b, s):
     N = len(a)
-    c = var(N + 1)
+    c = qbpp.var(N + 1)
     f = toExpr(0)
     for j in range(N):
         f += fa(a[j], b[j], c[j], c[j + 1], s[j])
-    ml = MapList()
+    ml = qbpp.MapList()
     ml.add(c[0], 0)
     ml.add(c[N], s[N])
-    return replace(f, ml)
+    return qbpp.replace(f, ml)
 ```
 この関数では、`c` は `N + 1` 個の変数のベクトルで、`fa` ブロックのキャリーアウトとキャリーインの信号を接続し、`N`ビットのリプルキャリー加算器を形成します。
 
@@ -231,7 +231,7 @@ def adder(a, b, s):
 ```python
 def multiplier(x, y, z):
     N = len(x)
-    c = var("c", N - 1, N + 1)
+    c = qbpp.var("c", N - 1, N + 1)
 
     f = toExpr(0)
 
@@ -248,12 +248,12 @@ def multiplier(x, y, z):
 
     f += z[0] - x[0] * y[0] == 0
 
-    ml = MapList()
+    ml = qbpp.MapList()
     for i in range(N - 2):
         ml.add(c[i][0], z[i + 1])
     for i in range(N + 1):
         ml.add(c[N - 2][i], z[N + i - 1])
-    f = replace(f, ml)
+    f = qbpp.replace(f, ml)
     f.simplify_as_binary()
     return f
 ```
@@ -269,25 +269,25 @@ def multiplier(x, y, z):
 
 結果の式を `f` に格納します:
 ```python
-from pyqbpp import var, toExpr, replace, MapList, EasySolver
+import pyqbpp as qbpp
 
 def fa(a, b, i, o, s):
     return (a + b + i) - (2 * o + s) == 0
 
 def adder(a, b, s):
     N = len(a)
-    c = var(N + 1)
+    c = qbpp.var(N + 1)
     f = toExpr(0)
     for j in range(N):
         f += fa(a[j], b[j], c[j], c[j + 1], s[j])
-    ml = MapList()
+    ml = qbpp.MapList()
     ml.add(c[0], 0)
     ml.add(c[N], s[N])
-    return replace(f, ml)
+    return qbpp.replace(f, ml)
 
 def multiplier(x, y, z):
     N = len(x)
-    c = var("c", N - 1, N + 1)
+    c = qbpp.var("c", N - 1, N + 1)
 
     f = toExpr(0)
 
@@ -304,22 +304,22 @@ def multiplier(x, y, z):
 
     f += z[0] - x[0] * y[0] == 0
 
-    ml = MapList()
+    ml = qbpp.MapList()
     for i in range(N - 2):
         ml.add(c[i][0], z[i + 1])
     for i in range(N + 1):
         ml.add(c[N - 2][i], z[N + i - 1])
-    f = replace(f, ml)
+    f = qbpp.replace(f, ml)
     f.simplify_as_binary()
     return f
 
-x = var("x", 4)
-y = var("y", 4)
+x = qbpp.var("x", 4)
+y = qbpp.var("y", 4)
 z = [1, 1, 1, 1, 0, 0, 0, 1]
 f = multiplier(x, y, z)
 f.simplify_as_binary()
 
-solver = EasySolver(f)
+solver = qbpp.EasySolver(f)
 solver.target_energy(0)
 sol = solver.search()
 

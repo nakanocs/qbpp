@@ -20,17 +20,17 @@ $$
 
 ## PyQBPP program
 ```python
-from pyqbpp import var_int, between, EasySolver
+import pyqbpp as qbpp
 
-x = between(var_int("x", 3), 0, 5)
+x = qbpp.between(qbpp.var_int("x", 3), 0, 5)
 objective = 2 * x[0] + 5 * x[1] + 5 * x[2]
-c1 = between(x[0] + 3 * x[1] + x[2], 0, 12)
-c2 = between(x[0] + 2 * x[2], 0, 5)
-c3 = between(x[1] + x[2], 0, 4)
+c1 = qbpp.between(x[0] + 3 * x[1] + x[2], 0, 12)
+c2 = qbpp.between(x[0] + 2 * x[2], 0, 5)
+c3 = qbpp.between(x[1] + x[2], 0, 4)
 
 f = -objective + 100 * (c1 + c2 + c3)
 f.simplify_as_binary()
-solver = EasySolver(f)
+solver = qbpp.EasySolver(f)
 solver.time_limit(1.0)
 sol = solver.search()
 print(f"x0 = {sol(x[0])}, x1 = {sol(x[1])}, x2 = {sol(x[2])}")
@@ -71,17 +71,17 @@ $$
 
 ## PyQBPPプログラム
 ```python
-from pyqbpp import var_int, between, EasySolver
+import pyqbpp as qbpp
 
-x = between(var_int("x", 3), 0, 5)
+x = qbpp.between(qbpp.var_int("x", 3), 0, 5)
 objective = 2 * x[0] + 5 * x[1] + 5 * x[2]
-c1 = between(x[0] + 3 * x[1] + x[2], 0, 12)
-c2 = between(x[0] + 2 * x[2], 0, 5)
-c3 = between(x[1] + x[2], 0, 4)
+c1 = qbpp.between(x[0] + 3 * x[1] + x[2], 0, 12)
+c2 = qbpp.between(x[0] + 2 * x[2], 0, 5)
+c3 = qbpp.between(x[1] + x[2], 0, 4)
 
 f = -objective + 100 * (c1 + c2 + c3)
 f.simplify_as_binary()
-solver = EasySolver(f)
+solver = qbpp.EasySolver(f)
 solver.time_limit(1.0)
 sol = solver.search()
 print(f"x0 = {sol(x[0])}, x1 = {sol(x[1])}, x2 = {sol(x[2])}")

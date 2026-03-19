@@ -19,23 +19,23 @@ For simplicity, we assume that all workers are off on day 0 and day 32.
 
 ## PyQBPP program for the shift scheduling
 ```python
-from pyqbpp import var, sum, toExpr, vector_sum, between, MapList, replace, Sol, Vector, EasySolver
+import pyqbpp as qbpp
 
 days = 31
 worker_cost = [13, 13, 12, 12, 11, 10]
 workers = len(worker_cost)
 
-x = var("x", workers, days + 2)
+x = qbpp.var("x", workers, days + 2)
 
-workers_each_day = vector_sum(x, 0)
+workers_each_day = qbpp.vector_sum(x, 0)
 each_day_4_workers = toExpr(0)
 for j in range(1, days + 1):
     each_day_4_workers += workers_each_day[j] == 4
 
-workers_working_days = vector_sum(x)
+workers_working_days = qbpp.vector_sum(x)
 work_20_21_days = toExpr(0)
 for i in range(workers):
-    work_20_21_days += between(workers_working_days[i], 20, 21)
+    work_20_21_days += qbpp.between(workers_working_days[i], 20, 21)
 
 no_more_than_6 = toExpr(0)
 for w in range(workers):
@@ -63,21 +63,21 @@ constraints = (work_20_21_days + no_less_than_3 + no_more_than_6 +
                no_single_day_off + each_day_4_workers)
 f = total_worker_cost + 10000 * constraints
 
-ml = MapList()
+ml = qbpp.MapList()
 for i in range(workers):
     ml.add(x[i][0], 0)
     ml.add(x[i][days + 1], 0)
 f.simplify_as_binary()
 
-g = replace(f, ml)
+g = qbpp.replace(f, ml)
 g.simplify_as_binary()
 
-solver = EasySolver(g)
+solver = qbpp.EasySolver(g)
 solver.time_limit(5.0)
 solver.target_energy(0)
 sol = solver.search()
 
-full_sol = Sol(f)
+full_sol = qbpp.Sol(f)
 full_sol.set(ml)
 full_sol.set(sol)
 
@@ -120,23 +120,23 @@ Constraints violations: 0
 
 ## シフトスケジューリングのPyQBPPプログラム
 ```python
-from pyqbpp import var, sum, toExpr, vector_sum, between, MapList, replace, Sol, Vector, EasySolver
+import pyqbpp as qbpp
 
 days = 31
 worker_cost = [13, 13, 12, 12, 11, 10]
 workers = len(worker_cost)
 
-x = var("x", workers, days + 2)
+x = qbpp.var("x", workers, days + 2)
 
-workers_each_day = vector_sum(x, 0)
+workers_each_day = qbpp.vector_sum(x, 0)
 each_day_4_workers = toExpr(0)
 for j in range(1, days + 1):
     each_day_4_workers += workers_each_day[j] == 4
 
-workers_working_days = vector_sum(x)
+workers_working_days = qbpp.vector_sum(x)
 work_20_21_days = toExpr(0)
 for i in range(workers):
-    work_20_21_days += between(workers_working_days[i], 20, 21)
+    work_20_21_days += qbpp.between(workers_working_days[i], 20, 21)
 
 no_more_than_6 = toExpr(0)
 for w in range(workers):
@@ -164,21 +164,21 @@ constraints = (work_20_21_days + no_less_than_3 + no_more_than_6 +
                no_single_day_off + each_day_4_workers)
 f = total_worker_cost + 10000 * constraints
 
-ml = MapList()
+ml = qbpp.MapList()
 for i in range(workers):
     ml.add(x[i][0], 0)
     ml.add(x[i][days + 1], 0)
 f.simplify_as_binary()
 
-g = replace(f, ml)
+g = qbpp.replace(f, ml)
 g.simplify_as_binary()
 
-solver = EasySolver(g)
+solver = qbpp.EasySolver(g)
 solver.time_limit(5.0)
 solver.target_energy(0)
 sol = solver.search()
 
-full_sol = Sol(f)
+full_sol = qbpp.Sol(f)
 full_sol.set(ml)
 full_sol.set(sol)
 

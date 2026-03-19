@@ -90,7 +90,7 @@ $$
 ## PyQBPP program for SEND+MORE=MONEY
 The following PyQBPP program implements the QUBO formulation above and finds a solution using EasySolver:
 ```python
-from pyqbpp import var, sum, vector_sum, toExpr, replace, MapList, Sol, EasySolver
+import pyqbpp as qbpp
 
 LETTERS = "SENDMORY"
 L = len(LETTERS)
@@ -98,14 +98,14 @@ L = len(LETTERS)
 def I(c):
     return LETTERS.index(c)
 
-x = var("x", L, 10)
+x = qbpp.var("x", L, 10)
 
-onehot = sum(vector_sum(x) == 1)
+onehot = qbpp.sum(qbpp.vector_sum(x) == 1)
 
 different = toExpr(0)
 for i in range(L - 1):
     for j in range(i + 1, L):
-        different += sum(x[i] * x[j])
+        different += qbpp.sum(x[i] * x[j])
 
 send = toExpr(0)
 more = toExpr(0)
@@ -121,17 +121,17 @@ P = 10000
 f = P * (onehot + different) + equal
 f.simplify_as_binary()
 
-ml = MapList()
+ml = qbpp.MapList()
 ml.add(x[I('S')][0], 0)
 ml.add(x[I('M')][0], 0)
-g = replace(f, ml)
+g = qbpp.replace(f, ml)
 g.simplify_as_binary()
 
-solver = EasySolver(g)
+solver = qbpp.EasySolver(g)
 solver.target_energy(0)
 sol = solver.search()
 
-full_sol = Sol(f)
+full_sol = qbpp.Sol(f)
 full_sol.set(sol)
 full_sol.set(ml)
 
@@ -254,7 +254,7 @@ $$
 ## SEND+MORE=MONEY の PyQBPP プログラム
 以下の PyQBPP プログラムは上記の QUBO 定式化を実装し、EasySolver を用いて解を求めます:
 ```python
-from pyqbpp import var, sum, vector_sum, toExpr, replace, MapList, Sol, EasySolver
+import pyqbpp as qbpp
 
 LETTERS = "SENDMORY"
 L = len(LETTERS)
@@ -262,14 +262,14 @@ L = len(LETTERS)
 def I(c):
     return LETTERS.index(c)
 
-x = var("x", L, 10)
+x = qbpp.var("x", L, 10)
 
-onehot = sum(vector_sum(x) == 1)
+onehot = qbpp.sum(qbpp.vector_sum(x) == 1)
 
 different = toExpr(0)
 for i in range(L - 1):
     for j in range(i + 1, L):
-        different += sum(x[i] * x[j])
+        different += qbpp.sum(x[i] * x[j])
 
 send = toExpr(0)
 more = toExpr(0)
@@ -285,17 +285,17 @@ P = 10000
 f = P * (onehot + different) + equal
 f.simplify_as_binary()
 
-ml = MapList()
+ml = qbpp.MapList()
 ml.add(x[I('S')][0], 0)
 ml.add(x[I('M')][0], 0)
-g = replace(f, ml)
+g = qbpp.replace(f, ml)
 g.simplify_as_binary()
 
-solver = EasySolver(g)
+solver = qbpp.EasySolver(g)
 solver.target_energy(0)
 sol = solver.search()
 
-full_sol = Sol(f)
+full_sol = qbpp.Sol(f)
 full_sol.set(sol)
 full_sol.set(ml)
 

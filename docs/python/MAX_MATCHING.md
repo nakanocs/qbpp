@@ -41,7 +41,7 @@ $$
 
 ## PyQBPP program for the maximum matching
 ```python
-from pyqbpp import var, sum, toExpr, ExhaustiveSolver
+import pyqbpp as qbpp
 
 N = 16
 edges = [
@@ -51,9 +51,9 @@ edges = [
     (11, 13),(11, 15),(12, 14),(12, 15),(13, 15),(14, 15)]
 M = len(edges)
 
-x = var("x", M)
+x = qbpp.var("x", M)
 
-objective = sum(x)
+objective = qbpp.sum(x)
 
 constraint = toExpr(0)
 for i in range(M):
@@ -65,7 +65,7 @@ for i in range(M):
 f = -objective + 2 * constraint
 f.simplify_as_binary()
 
-solver = ExhaustiveSolver(f)
+solver = qbpp.ExhaustiveSolver(f)
 sol = solver.search()
 
 print(f"objective = {sol(objective)}")
@@ -138,7 +138,7 @@ $$
 
 ## 最大マッチングの PyQBPP プログラム
 ```python
-from pyqbpp import var, sum, toExpr, ExhaustiveSolver
+import pyqbpp as qbpp
 
 N = 16
 edges = [
@@ -148,9 +148,9 @@ edges = [
     (11, 13),(11, 15),(12, 14),(12, 15),(13, 15),(14, 15)]
 M = len(edges)
 
-x = var("x", M)
+x = qbpp.var("x", M)
 
-objective = sum(x)
+objective = qbpp.sum(x)
 
 constraint = toExpr(0)
 for i in range(M):
@@ -162,7 +162,7 @@ for i in range(M):
 f = -objective + 2 * constraint
 f.simplify_as_binary()
 
-solver = ExhaustiveSolver(f)
+solver = qbpp.ExhaustiveSolver(f)
 sol = solver.search()
 
 print(f"objective = {sol(objective)}")

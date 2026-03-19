@@ -33,16 +33,16 @@ $$
 This expression attains its minimum value of 0 if and only if the five variables take values consistent with a valid full-adder operation.
 The following PyQBPP program verifies this formulation using the exhaustive solver:
 ```python
-from pyqbpp import var, replace, MapList, ExhaustiveSolver
+import pyqbpp as qbpp
 
-a = var("a")
-b = var("b")
-i = var("i")
-o = var("o")
-s = var("s")
+a = qbpp.var("a")
+b = qbpp.var("b")
+i = qbpp.var("i")
+o = qbpp.var("o")
+s = qbpp.var("s")
 fa = (a + b + i) - (2 * o + s) == 0
 fa.simplify_as_binary()
-solver = ExhaustiveSolver(fa)
+solver = qbpp.ExhaustiveSolver(fa)
 sols = solver.search_optimal_solutions()
 for idx, sol in enumerate(sols):
     vals = {v: sol(v) for v in [a, b, i, o, s]}
@@ -64,13 +64,13 @@ The program produces the following output, confirming that the expression correc
 If some bits are fixed, the valid values of the remaining bits can be derived.
 For example, the three input bits can be fixed using the `replace()` function:
 ```python
-ml = MapList()
+ml = qbpp.MapList()
 ml.add(a, 1)
 ml.add(b, 1)
 ml.add(i, 0)
-fa2 = replace(fa, ml)
+fa2 = qbpp.replace(fa, ml)
 fa2.simplify_as_binary()
-solver2 = ExhaustiveSolver(fa2)
+solver2 = qbpp.ExhaustiveSolver(fa2)
 sols2 = solver2.search_optimal_solutions()
 for idx, sol in enumerate(sols2):
     print(f"({idx}) {sol.energy()}: o={sol(o)}, s={sol(s)}")
@@ -85,40 +85,40 @@ The program then produces the following output:
 Using the QUBO expression for a full adder, we can construct a QUBO expression that simulates a ripple-carry adder.
 The following PyQBPP program creates a QUBO expression for simulating a 4-bit adder by combining four full adders:
 ```python
-from pyqbpp import var, replace, MapList, ExhaustiveSolver
+import pyqbpp as qbpp
 
-a = var("a")
-b = var("b")
-i = var("i")
-o = var("o")
-s = var("s")
+a = qbpp.var("a")
+b = qbpp.var("b")
+i = qbpp.var("i")
+o = qbpp.var("o")
+s = qbpp.var("s")
 fa = (a + b + i) - (2 * o + s) == 0
 
-x = var("x", 4)
-y = var("y", 4)
-c = var("c", 5)
-z = var("z", 4)
+x = qbpp.var("x", 4)
+y = qbpp.var("y", 4)
+c = qbpp.var("c", 5)
+z = qbpp.var("z", 4)
 
-ml0 = MapList()
+ml0 = qbpp.MapList()
 ml0.add(a, x[0]); ml0.add(b, y[0]); ml0.add(i, c[0]); ml0.add(o, c[1]); ml0.add(s, z[0])
-fa0 = replace(fa, ml0)
+fa0 = qbpp.replace(fa, ml0)
 
-ml1 = MapList()
+ml1 = qbpp.MapList()
 ml1.add(a, x[1]); ml1.add(b, y[1]); ml1.add(i, c[1]); ml1.add(o, c[2]); ml1.add(s, z[1])
-fa1 = replace(fa, ml1)
+fa1 = qbpp.replace(fa, ml1)
 
-ml2 = MapList()
+ml2 = qbpp.MapList()
 ml2.add(a, x[2]); ml2.add(b, y[2]); ml2.add(i, c[2]); ml2.add(o, c[3]); ml2.add(s, z[2])
-fa2 = replace(fa, ml2)
+fa2 = qbpp.replace(fa, ml2)
 
-ml3 = MapList()
+ml3 = qbpp.MapList()
 ml3.add(a, x[3]); ml3.add(b, y[3]); ml3.add(i, c[3]); ml3.add(o, c[4]); ml3.add(s, z[3])
-fa3 = replace(fa, ml3)
+fa3 = qbpp.replace(fa, ml3)
 
 adder = fa0 + fa1 + fa2 + fa3
 adder.simplify_as_binary()
 
-solver = ExhaustiveSolver(adder)
+solver = qbpp.ExhaustiveSolver(adder)
 sols = solver.search_optimal_solutions()
 print(f"Number of valid solutions: {len(sols)}")
 for idx in [0, 1, len(sols)-2, len(sols)-1]:
@@ -143,27 +143,27 @@ Number of valid solutions: 512
 
 Alternatively, we can define a Python function `fa` to construct full-adder constraints in a more concise manner:
 ```python
-from pyqbpp import var, toExpr, replace, MapList, ExhaustiveSolver
+import pyqbpp as qbpp
 
 def fa(a, b, i, o, s):
     return (a + b + i) - (2 * o + s) == 0
 
-x = var("x", 4)
-y = var("y", 4)
-c = var("c", 5)
-z = var("z", 4)
+x = qbpp.var("x", 4)
+y = qbpp.var("y", 4)
+c = qbpp.var("c", 5)
+z = qbpp.var("z", 4)
 
 adder = toExpr(0)
 for j in range(4):
     adder += fa(x[j], y[j], c[j], c[j + 1], z[j])
 
-ml = MapList()
+ml = qbpp.MapList()
 ml.add(c[0], 0)
 ml.add(c[4], 0)
-adder = replace(adder, ml)
+adder = qbpp.replace(adder, ml)
 adder.simplify_as_binary()
 
-solver = ExhaustiveSolver(adder)
+solver = qbpp.ExhaustiveSolver(adder)
 sols = solver.search_optimal_solutions()
 print(f"Number of valid solutions: {len(sols)}")
 ```
@@ -198,16 +198,16 @@ $$
 この式は、5つの変数が有効な全加算器の動作と矛盾しない値を取る場合に限り、最小値 0 を達成します。
 以下の PyQBPP プログラムは、全探索ソルバーを用いてこの定式化を検証します:
 ```python
-from pyqbpp import var, replace, MapList, ExhaustiveSolver
+import pyqbpp as qbpp
 
-a = var("a")
-b = var("b")
-i = var("i")
-o = var("o")
-s = var("s")
+a = qbpp.var("a")
+b = qbpp.var("b")
+i = qbpp.var("i")
+o = qbpp.var("o")
+s = qbpp.var("s")
 fa = (a + b + i) - (2 * o + s) == 0
 fa.simplify_as_binary()
-solver = ExhaustiveSolver(fa)
+solver = qbpp.ExhaustiveSolver(fa)
 sols = solver.search_optimal_solutions()
 for idx, sol in enumerate(sols):
     vals = {v: sol(v) for v in [a, b, i, o, s]}
@@ -229,13 +229,13 @@ for idx, sol in enumerate(sols):
 一部のビットを固定すると、残りのビットの有効な値を導出できます。
 例えば、3つの入力ビットは `replace()` 関数を使って固定できます:
 ```python
-ml = MapList()
+ml = qbpp.MapList()
 ml.add(a, 1)
 ml.add(b, 1)
 ml.add(i, 0)
-fa2 = replace(fa, ml)
+fa2 = qbpp.replace(fa, ml)
 fa2.simplify_as_binary()
-solver2 = ExhaustiveSolver(fa2)
+solver2 = qbpp.ExhaustiveSolver(fa2)
 sols2 = solver2.search_optimal_solutions()
 for idx, sol in enumerate(sols2):
     print(f"({idx}) {sol.energy()}: o={sol(o)}, s={sol(s)}")
@@ -250,40 +250,40 @@ for idx, sol in enumerate(sols2):
 全加算器の QUBO 式を用いて、リプルキャリー加算器をシミュレートする QUBO 式を構築できます。
 以下の PyQBPP プログラムは、4つの全加算器を組み合わせて4ビット加算器をシミュレートする QUBO 式を作成します:
 ```python
-from pyqbpp import var, replace, MapList, ExhaustiveSolver
+import pyqbpp as qbpp
 
-a = var("a")
-b = var("b")
-i = var("i")
-o = var("o")
-s = var("s")
+a = qbpp.var("a")
+b = qbpp.var("b")
+i = qbpp.var("i")
+o = qbpp.var("o")
+s = qbpp.var("s")
 fa = (a + b + i) - (2 * o + s) == 0
 
-x = var("x", 4)
-y = var("y", 4)
-c = var("c", 5)
-z = var("z", 4)
+x = qbpp.var("x", 4)
+y = qbpp.var("y", 4)
+c = qbpp.var("c", 5)
+z = qbpp.var("z", 4)
 
-ml0 = MapList()
+ml0 = qbpp.MapList()
 ml0.add(a, x[0]); ml0.add(b, y[0]); ml0.add(i, c[0]); ml0.add(o, c[1]); ml0.add(s, z[0])
-fa0 = replace(fa, ml0)
+fa0 = qbpp.replace(fa, ml0)
 
-ml1 = MapList()
+ml1 = qbpp.MapList()
 ml1.add(a, x[1]); ml1.add(b, y[1]); ml1.add(i, c[1]); ml1.add(o, c[2]); ml1.add(s, z[1])
-fa1 = replace(fa, ml1)
+fa1 = qbpp.replace(fa, ml1)
 
-ml2 = MapList()
+ml2 = qbpp.MapList()
 ml2.add(a, x[2]); ml2.add(b, y[2]); ml2.add(i, c[2]); ml2.add(o, c[3]); ml2.add(s, z[2])
-fa2 = replace(fa, ml2)
+fa2 = qbpp.replace(fa, ml2)
 
-ml3 = MapList()
+ml3 = qbpp.MapList()
 ml3.add(a, x[3]); ml3.add(b, y[3]); ml3.add(i, c[3]); ml3.add(o, c[4]); ml3.add(s, z[3])
-fa3 = replace(fa, ml3)
+fa3 = qbpp.replace(fa, ml3)
 
 adder = fa0 + fa1 + fa2 + fa3
 adder.simplify_as_binary()
 
-solver = ExhaustiveSolver(adder)
+solver = qbpp.ExhaustiveSolver(adder)
 sols = solver.search_optimal_solutions()
 print(f"Number of valid solutions: {len(sols)}")
 for idx in [0, 1, len(sols)-2, len(sols)-1]:
@@ -308,27 +308,27 @@ Number of valid solutions: 512
 
 あるいは、Python 関数 `fa` を定義して、より簡潔に全加算器の制約を構築することもできます:
 ```python
-from pyqbpp import var, toExpr, replace, MapList, ExhaustiveSolver
+import pyqbpp as qbpp
 
 def fa(a, b, i, o, s):
     return (a + b + i) - (2 * o + s) == 0
 
-x = var("x", 4)
-y = var("y", 4)
-c = var("c", 5)
-z = var("z", 4)
+x = qbpp.var("x", 4)
+y = qbpp.var("y", 4)
+c = qbpp.var("c", 5)
+z = qbpp.var("z", 4)
 
 adder = toExpr(0)
 for j in range(4):
     adder += fa(x[j], y[j], c[j], c[j + 1], z[j])
 
-ml = MapList()
+ml = qbpp.MapList()
 ml.add(c[0], 0)
 ml.add(c[4], 0)
-adder = replace(adder, ml)
+adder = qbpp.replace(adder, ml)
 adder.simplify_as_binary()
 
-solver = ExhaustiveSolver(adder)
+solver = qbpp.ExhaustiveSolver(adder)
 sols = solver.search_optimal_solutions()
 print(f"Number of valid solutions: {len(sols)}")
 ```

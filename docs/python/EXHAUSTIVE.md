@@ -47,19 +47,19 @@ The following program searches for a solution to the
 **Low Autocorrelation Binary Sequences (LABS)** problem using the Exhaustive
 Solver:
 ```python
-from pyqbpp import var, expr, sqr, ExhaustiveSolver
+import pyqbpp as qbpp
 
 size = 20
-x = var("x", size)
-f = expr()
+x = qbpp.var("x", size)
+f = qbpp.expr()
 for d in range(1, size):
-    temp = expr()
+    temp = qbpp.expr()
     for i in range(size - d):
         temp += (2 * x[i] - 1) * (2 * x[i + d] - 1)
-    f += sqr(temp)
+    f += qbpp.sqr(temp)
 f.simplify_as_binary()
 
-solver = ExhaustiveSolver(f)
+solver = qbpp.ExhaustiveSolver(f)
 solver.callback(lambda energy, tts: print(f"TTS = {tts:.3f}s Energy = {energy}"))
 sol = solver.search()
 bits = "".join("-" if sol(i) == 0 else "+" for i in range(size))
@@ -86,7 +86,7 @@ TTS = 0.014s Energy = 26
 All optimal solutions can be obtained by calling the
 **`search_optimal_solutions()`** method as follows:
 ```python
-solver = ExhaustiveSolver(f)
+solver = qbpp.ExhaustiveSolver(f)
 opts = solver.search_optimal_solutions()
 for s in opts:
     bits = "".join("-" if s(i) == 0 else "+" for i in range(size))
@@ -108,7 +108,7 @@ The output is as follows:
 The top-k solutions with the lowest energy can be obtained by calling the
 **`search_topk_solutions(k)`** method as follows:
 ```python
-solver = ExhaustiveSolver(f)
+solver = qbpp.ExhaustiveSolver(f)
 topk = solver.search_topk_solutions(10)
 for s in topk:
     bits = "".join("-" if s(i) == 0 else "+" for i in range(size))
@@ -135,7 +135,7 @@ Note that this function stores all $2^n$ solutions in memory, where $n$ is the n
 For example, with $n = 20$, over one million solutions are stored, and memory usage grows exponentially with $n$.
 Use this function only when $n$ is small enough.
 ```python
-solver = ExhaustiveSolver(f)
+solver = qbpp.ExhaustiveSolver(f)
 all_sols = solver.search_all_solutions()
 for s in all_sols:
     bits = "".join("-" if s(i) == 0 else "+" for i in range(size))
@@ -183,19 +183,19 @@ Exhaustive Solverは、ソルバーオブジェクトの以下のメソッドの
 以下のプログラムは、Exhaustive Solverを使用して
 **Low Autocorrelation Binary Sequences (LABS)** 問題の解を探索します:
 ```python
-from pyqbpp import var, expr, sqr, ExhaustiveSolver
+import pyqbpp as qbpp
 
 size = 20
-x = var("x", size)
-f = expr()
+x = qbpp.var("x", size)
+f = qbpp.expr()
 for d in range(1, size):
-    temp = expr()
+    temp = qbpp.expr()
     for i in range(size - d):
         temp += (2 * x[i] - 1) * (2 * x[i + d] - 1)
-    f += sqr(temp)
+    f += qbpp.sqr(temp)
 f.simplify_as_binary()
 
-solver = ExhaustiveSolver(f)
+solver = qbpp.ExhaustiveSolver(f)
 solver.callback(lambda energy, tts: print(f"TTS = {tts:.3f}s Energy = {energy}"))
 sol = solver.search()
 bits = "".join("-" if sol(i) == 0 else "+" for i in range(size))
@@ -221,7 +221,7 @@ TTS = 0.014s Energy = 26
 {% endraw %}
 すべての最適解は、以下のように **`search_optimal_solutions()`** メソッドを呼び出すことで取得できます:
 ```python
-solver = ExhaustiveSolver(f)
+solver = qbpp.ExhaustiveSolver(f)
 opts = solver.search_optimal_solutions()
 for s in opts:
     bits = "".join("-" if s(i) == 0 else "+" for i in range(size))
@@ -242,7 +242,7 @@ for s in opts:
 {% endraw %}
 エネルギーが最も低いtop-k解は、以下のように **`search_topk_solutions(k)`** メソッドを呼び出すことで取得できます:
 ```python
-solver = ExhaustiveSolver(f)
+solver = qbpp.ExhaustiveSolver(f)
 topk = solver.search_topk_solutions(10)
 for s in topk:
     bits = "".join("-" if s(i) == 0 else "+" for i in range(size))
@@ -268,7 +268,7 @@ for s in topk:
 例えば、$n = 20$ の場合、100万以上の解が格納され、メモリ使用量は $n$ に対して指数的に増加します。
 $n$ が十分に小さい場合のみ、この関数を使用してください。
 ```python
-solver = ExhaustiveSolver(f)
+solver = qbpp.ExhaustiveSolver(f)
 all_sols = solver.search_all_solutions()
 for s in all_sols:
     bits = "".join("-" if s(i) == 0 else "+" for i in range(size))

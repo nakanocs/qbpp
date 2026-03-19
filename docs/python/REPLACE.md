@@ -19,23 +19,23 @@ This program finds a partition of the numbers in a list into two subsets $P$ and
 We modify this problem so that 64 must belong to $P$ and 27 must belong to $Q$:
 
 ```python
-from pyqbpp import var, sum, sqr, replace, MapList, Sol, ExhaustiveSolver
+import pyqbpp as qbpp
 
 w = [64, 27, 47, 74, 12, 83, 63, 40]
-x = var("x", len(w))
-p = sum([w[i] * x[i] for i in range(len(w))])
-q = sum([w[i] * ~x[i] for i in range(len(w))])
-f = sqr(p - q)
+x = qbpp.var("x", len(w))
+p = qbpp.sum([w[i] * x[i] for i in range(len(w))])
+q = qbpp.sum([w[i] * ~x[i] for i in range(len(w))])
+f = qbpp.sqr(p - q)
 f.simplify_as_binary()
 
-ml = MapList([(x[0], 1), (x[1], 0)])
-g = replace(f, ml)
+ml = qbpp.MapList([(x[0], 1), (x[1], 0)])
+g = qbpp.replace(f, ml)
 g.simplify_as_binary()
 
-solver = ExhaustiveSolver(g)
+solver = qbpp.ExhaustiveSolver(g)
 sol = solver.search()
 
-full_sol = Sol(f)
+full_sol = qbpp.Sol(f)
 full_sol.set(sol)
 full_sol.set(ml)
 
@@ -62,14 +62,14 @@ For example, to ensure that 64 and 27 are placed in distinct subsets,
 we replace `x[0]` with `~x[1]` so they always take opposite values:
 
 ```python
-ml = MapList([(x[0], ~x[1])])
-g = replace(f, ml)
+ml = qbpp.MapList([(x[0], ~x[1])])
+g = qbpp.replace(f, ml)
 g.simplify_as_binary()
 
-solver = ExhaustiveSolver(g)
+solver = qbpp.ExhaustiveSolver(g)
 sol = solver.search()
 
-full_sol = Sol(f)
+full_sol = qbpp.Sol(f)
 full_sol.set(sol, ml)
 
 print("energy =", full_sol.comp_energy())
@@ -94,23 +94,23 @@ Let $p$, $q$, and $r$ be integer variables with the constraint $p\times q - r = 
 ### Multiplication
 Fix $p=5$ and $q=7$ to find $r=35$:
 ```python
-from pyqbpp import var_int, between, replace, MapList, Sol, EasySolver
+import pyqbpp as qbpp
 
-p = between(var_int("p"), 2, 8)
-q = between(var_int("q"), 2, 8)
-r = between(var_int("r"), 2, 40)
+p = qbpp.between(qbpp.var_int("p"), 2, 8)
+q = qbpp.between(qbpp.var_int("q"), 2, 8)
+r = qbpp.between(qbpp.var_int("r"), 2, 40)
 f = p * q - r == 0
 f.simplify_as_binary()
 
-ml = MapList([(p, 5), (q, 7)])
-g = replace(f, ml)
+ml = qbpp.MapList([(p, 5), (q, 7)])
+g = qbpp.replace(f, ml)
 g.simplify_as_binary()
 
-solver = EasySolver(g)
+solver = qbpp.EasySolver(g)
 solver.target_energy(0)
 sol = solver.search()
 
-full_sol = Sol(f)
+full_sol = qbpp.Sol(f)
 full_sol.set(sol)
 full_sol.set(ml)
 print(f"p={full_sol(p)}, q={full_sol(q)}, r={full_sol(r)}")
@@ -123,8 +123,8 @@ p=5, q=7, r=35
 ### Factorization
 Fix $r=35$ to find $p$ and $q$:
 ```python
-ml = MapList([(r, 35)])
-g = replace(f, ml)
+ml = qbpp.MapList([(r, 35)])
+g = qbpp.replace(f, ml)
 g.simplify_as_binary()
 # ... same solver setup ...
 ```
@@ -132,8 +132,8 @@ g.simplify_as_binary()
 ### Division
 Fix $p=5$ and $r=35$ to find $q=7$:
 ```python
-ml = MapList([(p, 5), (r, 35)])
-g = replace(f, ml)
+ml = qbpp.MapList([(p, 5), (r, 35)])
+g = qbpp.replace(f, ml)
 g.simplify_as_binary()
 # ... same solver setup ...
 ```
@@ -147,7 +147,7 @@ g.simplify_as_binary()
 > Specifying `(x, 0)` in a `MapList` does **not** automatically replace `~x` with `1`.
 > If the expression contains negated literals such as `~x`, you should explicitly include both mappings:
 > ```python
-> ml = MapList([(x, 0), (~x, 1)])
+> ml = qbpp.MapList([(x, 0), (~x, 1)])
 > ```
 </div>
 
@@ -165,23 +165,23 @@ PyQBPPは、式中の変数値を固定するために使用できる以下の�
 この問題を、64が $P$ に、27が $Q$ に属さなければならないように変更します：
 
 ```python
-from pyqbpp import var, sum, sqr, replace, MapList, Sol, ExhaustiveSolver
+import pyqbpp as qbpp
 
 w = [64, 27, 47, 74, 12, 83, 63, 40]
-x = var("x", len(w))
-p = sum([w[i] * x[i] for i in range(len(w))])
-q = sum([w[i] * ~x[i] for i in range(len(w))])
-f = sqr(p - q)
+x = qbpp.var("x", len(w))
+p = qbpp.sum([w[i] * x[i] for i in range(len(w))])
+q = qbpp.sum([w[i] * ~x[i] for i in range(len(w))])
+f = qbpp.sqr(p - q)
 f.simplify_as_binary()
 
-ml = MapList([(x[0], 1), (x[1], 0)])
-g = replace(f, ml)
+ml = qbpp.MapList([(x[0], 1), (x[1], 0)])
+g = qbpp.replace(f, ml)
 g.simplify_as_binary()
 
-solver = ExhaustiveSolver(g)
+solver = qbpp.ExhaustiveSolver(g)
 sol = solver.search()
 
-full_sol = Sol(f)
+full_sol = qbpp.Sol(f)
 full_sol.set(sol)
 full_sol.set(ml)
 
@@ -208,14 +208,14 @@ Q: [27, 74, 63, 40]
 `x[0]` を `~x[1]` で置換して常に反対の値を取るようにします：
 
 ```python
-ml = MapList([(x[0], ~x[1])])
-g = replace(f, ml)
+ml = qbpp.MapList([(x[0], ~x[1])])
+g = qbpp.replace(f, ml)
 g.simplify_as_binary()
 
-solver = ExhaustiveSolver(g)
+solver = qbpp.ExhaustiveSolver(g)
 sol = solver.search()
 
-full_sol = Sol(f)
+full_sol = qbpp.Sol(f)
 full_sol.set(sol, ml)
 
 print("energy =", full_sol.comp_energy())
@@ -240,23 +240,23 @@ $p$, $q$, $r$ を整数変数とし、制約 $p\times q - r = 0$ を課します
 ### 乗算
 $p=5$ と $q=7$ を固定して $r=35$ を求めます：
 ```python
-from pyqbpp import var_int, between, replace, MapList, Sol, EasySolver
+import pyqbpp as qbpp
 
-p = between(var_int("p"), 2, 8)
-q = between(var_int("q"), 2, 8)
-r = between(var_int("r"), 2, 40)
+p = qbpp.between(qbpp.var_int("p"), 2, 8)
+q = qbpp.between(qbpp.var_int("q"), 2, 8)
+r = qbpp.between(qbpp.var_int("r"), 2, 40)
 f = p * q - r == 0
 f.simplify_as_binary()
 
-ml = MapList([(p, 5), (q, 7)])
-g = replace(f, ml)
+ml = qbpp.MapList([(p, 5), (q, 7)])
+g = qbpp.replace(f, ml)
 g.simplify_as_binary()
 
-solver = EasySolver(g)
+solver = qbpp.EasySolver(g)
 solver.target_energy(0)
 sol = solver.search()
 
-full_sol = Sol(f)
+full_sol = qbpp.Sol(f)
 full_sol.set(sol)
 full_sol.set(ml)
 print(f"p={full_sol(p)}, q={full_sol(q)}, r={full_sol(r)}")
@@ -269,8 +269,8 @@ p=5, q=7, r=35
 ### 素因数分解
 $r=35$ を固定して $p$ と $q$ を求めます：
 ```python
-ml = MapList([(r, 35)])
-g = replace(f, ml)
+ml = qbpp.MapList([(r, 35)])
+g = qbpp.replace(f, ml)
 g.simplify_as_binary()
 # ... 同じソルバー設定 ...
 ```
@@ -278,8 +278,8 @@ g.simplify_as_binary()
 ### 除算
 $p=5$ と $r=35$ を固定して $q=7$ を求めます：
 ```python
-ml = MapList([(p, 5), (r, 35)])
-g = replace(f, ml)
+ml = qbpp.MapList([(p, 5), (r, 35)])
+g = qbpp.replace(f, ml)
 g.simplify_as_binary()
 # ... 同じソルバー設定 ...
 ```
@@ -293,6 +293,6 @@ g.simplify_as_binary()
 > `MapList` に `(x, 0)` を指定しても、`~x` が自動的に `1` に置換されるわけではありません。
 > 式に `~x` のような否定リテラルが含まれている場合、両方のマッピングを明示的に指定してください：
 > ```python
-> ml = MapList([(x, 0), (~x, 1)])
+> ml = qbpp.MapList([(x, 0), (~x, 1)])
 > ```
 </div>

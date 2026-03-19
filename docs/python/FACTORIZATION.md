@@ -36,15 +36,15 @@ Clearly, $f(p,q)$ attains the minimum value 0 exactly when $p$ and $q$ are the c
 ## PyQBPP program for factorization
 The following program constructs the HUBO expression $f(p,q)$, and solves the optimization problem using the Easy Solver:
 ```python
-from pyqbpp import var_int, between, EasySolver
+import pyqbpp as qbpp
 
-p = between(var_int("p"), 2, 5)
-q = between(var_int("q"), 6, 17)
+p = qbpp.between(qbpp.var_int("p"), 2, 5)
+q = qbpp.between(qbpp.var_int("q"), 6, 17)
 
 f = (p * q) == 35
 print("f =", f.simplify_as_binary())
 
-solver = EasySolver(f)
+solver = qbpp.EasySolver(f)
 solver.target_energy(0)
 sol = solver.search()
 
@@ -100,15 +100,15 @@ $$
 ## 素因数分解の PyQBPP プログラム
 以下のプログラムは HUBO 式 $f(p,q)$ を構築し、Easy Solver を用いて最適化問題を解きます:
 ```python
-from pyqbpp import var_int, between, EasySolver
+import pyqbpp as qbpp
 
-p = between(var_int("p"), 2, 5)
-q = between(var_int("q"), 6, 17)
+p = qbpp.between(qbpp.var_int("p"), 2, 5)
+q = qbpp.between(qbpp.var_int("q"), 6, 17)
 
 f = (p * q) == 35
 print("f =", f.simplify_as_binary())
 
-solver = EasySolver(f)
+solver = qbpp.EasySolver(f)
 solver.target_energy(0)
 sol = solver.search()
 

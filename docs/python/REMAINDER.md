@@ -43,19 +43,19 @@ $$
 ## PyQBPP program
 The following program finds a solution $x$ for this remainder problem:
 ```python
-from pyqbpp import var_int, between, EasySolver
+import pyqbpp as qbpp
 
-x = between(var_int("x"), 0, 3 * 5 * 7 - 1)
-d3 = between(var_int("d3"), 0, 5 * 7 - 1)
-d5 = between(var_int("d5"), 0, 3 * 7 - 1)
-d7 = between(var_int("d7"), 0, 3 * 5 - 1)
+x = qbpp.between(qbpp.var_int("x"), 0, 3 * 5 * 7 - 1)
+d3 = qbpp.between(qbpp.var_int("d3"), 0, 5 * 7 - 1)
+d5 = qbpp.between(qbpp.var_int("d5"), 0, 3 * 7 - 1)
+d7 = qbpp.between(qbpp.var_int("d7"), 0, 3 * 5 - 1)
 c3 = x - 3 * d3 == 2
 c5 = x - 5 * d5 == 3
 c7 = x - 7 * d7 == 5
 f = x + 1000 * (c3 + c5 + c7)
 f.simplify_as_binary()
 
-solver = EasySolver(f)
+solver = qbpp.EasySolver(f)
 solver.time_limit(1.0)
 sol = solver.search()
 
@@ -127,19 +127,19 @@ $$
 ## PyQBPP プログラム
 以下のプログラムは、この余り問題の解 $x$ を求めます:
 ```python
-from pyqbpp import var_int, between, EasySolver
+import pyqbpp as qbpp
 
-x = between(var_int("x"), 0, 3 * 5 * 7 - 1)
-d3 = between(var_int("d3"), 0, 5 * 7 - 1)
-d5 = between(var_int("d5"), 0, 3 * 7 - 1)
-d7 = between(var_int("d7"), 0, 3 * 5 - 1)
+x = qbpp.between(qbpp.var_int("x"), 0, 3 * 5 * 7 - 1)
+d3 = qbpp.between(qbpp.var_int("d3"), 0, 5 * 7 - 1)
+d5 = qbpp.between(qbpp.var_int("d5"), 0, 3 * 7 - 1)
+d7 = qbpp.between(qbpp.var_int("d7"), 0, 3 * 5 - 1)
 c3 = x - 3 * d3 == 2
 c5 = x - 5 * d5 == 3
 c7 = x - 7 * d7 == 5
 f = x + 1000 * (c3 + c5 + c7)
 f.simplify_as_binary()
 
-solver = EasySolver(f)
+solver = qbpp.EasySolver(f)
 solver.time_limit(1.0)
 sol = solver.search()
 

@@ -42,7 +42,7 @@ $$
 ## PyQBPP program
 Since any planar graph can be colored with at most four colors, we use a planar graph with 16 nodes and $m=4$ colors as an example:
 ```python
-from pyqbpp import var, sum, Expr, vector_sum, EasySolver
+import pyqbpp as qbpp
 
 n = 16
 edges = [
@@ -53,17 +53,17 @@ edges = [
     (10, 15),(11, 13),(12, 14),(13, 15),(14, 15)]
 m = 4
 
-x = var("x", n, m)
+x = qbpp.var("x", n, m)
 
-onehot = sum(vector_sum(x) == 1)
-different = Expr(0)
+onehot = qbpp.sum(qbpp.vector_sum(x) == 1)
+different = qbpp.Expr(0)
 for u, v in edges:
-    different += sum(x[u] * x[v])
+    different += qbpp.sum(x[u] * x[v])
 
 f = onehot + different
 
 f.simplify_as_binary()
-solver = EasySolver(f)
+solver = qbpp.EasySolver(f)
 solver.target_energy(0)
 sol = solver.search()
 
@@ -157,7 +157,7 @@ $$
 ## PyQBPP プログラム
 任意の平面グラフは最大4色で彩色可能であるため、16ノードの平面グラフと $m=4$ 色を例として使用します：
 ```python
-from pyqbpp import var, sum, Expr, vector_sum, EasySolver
+import pyqbpp as qbpp
 
 n = 16
 edges = [
@@ -168,17 +168,17 @@ edges = [
     (10, 15),(11, 13),(12, 14),(13, 15),(14, 15)]
 m = 4
 
-x = var("x", n, m)
+x = qbpp.var("x", n, m)
 
-onehot = sum(vector_sum(x) == 1)
-different = Expr(0)
+onehot = qbpp.sum(qbpp.vector_sum(x) == 1)
+different = qbpp.Expr(0)
 for u, v in edges:
-    different += sum(x[u] * x[v])
+    different += qbpp.sum(x[u] * x[v])
 
 f = onehot + different
 
 f.simplify_as_binary()
-solver = EasySolver(f)
+solver = qbpp.EasySolver(f)
 solver.target_energy(0)
 sol = solver.search()
 

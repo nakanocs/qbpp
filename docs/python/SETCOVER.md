@@ -52,7 +52,7 @@ $$
 
 ## PyQBPP program for the minimum set cover problem
 ```python
-from pyqbpp import var, expr, sum, toExpr, Vector, ExhaustiveSolver
+import pyqbpp as qbpp
 
 n = 10
 cover = [
@@ -61,7 +61,7 @@ cover = [
 cost = [3, 4, 3, 2, 3, 4, 3, 3]
 m = len(cover)
 
-x = var("x", m)
+x = qbpp.var("x", m)
 
 c = [toExpr(1) for _ in range(n)]
 for i in range(m):
@@ -79,7 +79,7 @@ for j in range(n):
 f = objective + 1000 * constraint
 
 f.simplify_as_binary()
-solver = ExhaustiveSolver(f)
+solver = qbpp.ExhaustiveSolver(f)
 sol = solver.search()
 
 print(f"objective = {sol(objective)}")
@@ -112,7 +112,7 @@ If $c_i\geq 1$, then at least one selected subset covers $i$.
 
 The constraint in PyQBPP can be modified as follows:
 ```python
-from pyqbpp import between
+import pyqbpp as qbpp
 
 c = [toExpr(0) for _ in range(n)]
 for i in range(m):
@@ -121,7 +121,7 @@ for i in range(m):
 
 constraint = toExpr(0)
 for j in range(n):
-    constraint += between(c[j], 1, m)
+    constraint += qbpp.between(c[j], 1, m)
 ```
 
 ### Comparison with C++ QUBO++
@@ -181,7 +181,7 @@ $$
 
 ## 最小集合被覆問題のPyQBPPプログラム
 ```python
-from pyqbpp import var, expr, sum, toExpr, Vector, ExhaustiveSolver
+import pyqbpp as qbpp
 
 n = 10
 cover = [
@@ -190,7 +190,7 @@ cover = [
 cost = [3, 4, 3, 2, 3, 4, 3, 3]
 m = len(cover)
 
-x = var("x", m)
+x = qbpp.var("x", m)
 
 c = [toExpr(1) for _ in range(n)]
 for i in range(m):
@@ -208,7 +208,7 @@ for j in range(n):
 f = objective + 1000 * constraint
 
 f.simplify_as_binary()
-solver = ExhaustiveSolver(f)
+solver = qbpp.ExhaustiveSolver(f)
 sol = solver.search()
 
 print(f"objective = {sol(objective)}")
@@ -240,7 +240,7 @@ $c_i\geq 1$ であれば、少なくとも1つの選択された部分集合が 
 
 PyQBPPでの制約は以下のように変更できます：
 ```python
-from pyqbpp import between
+import pyqbpp as qbpp
 
 c = [toExpr(0) for _ in range(n)]
 for i in range(m):
@@ -249,7 +249,7 @@ for i in range(m):
 
 constraint = toExpr(0)
 for j in range(n):
-    constraint += between(c[j], 1, m)
+    constraint += qbpp.between(c[j], 1, m)
 ```
 
 ### C++ QUBO++との比較

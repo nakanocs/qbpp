@@ -53,7 +53,7 @@ $$
 
 ## PyQBPP program for the subgraph isomorphism problem
 ```python
-from pyqbpp import var, sum, toExpr, vector_sum, between, MapList, replace, Sol, EasySolver
+import pyqbpp as qbpp
 
 N = 10
 host = [
@@ -64,11 +64,11 @@ M = 6
 guest = [
     (0, 1), (0, 2), (1, 2), (1, 3), (2, 3), (2, 5), (3, 4), (4, 5)]
 
-x = var("x", M, N)
+x = qbpp.var("x", M, N)
 
-host_assigned = vector_sum(x, 0)
+host_assigned = qbpp.vector_sum(x, 0)
 
-constraint = sum(vector_sum(x, 1) == 1) + sum(between(host_assigned, 0, 1))
+constraint = qbpp.sum(qbpp.vector_sum(x, 1) == 1) + qbpp.sum(qbpp.between(host_assigned, 0, 1))
 
 objective = toExpr(0)
 for ug, vg in guest:
@@ -78,7 +78,7 @@ for ug, vg in guest:
 f = -objective + constraint * (M * N)
 f.simplify_as_binary()
 
-solver = EasySolver(f)
+solver = qbpp.EasySolver(f)
 solver.target_energy(-len(guest))
 sol = solver.search()
 
@@ -211,7 +211,7 @@ $$
 
 ## 部分グラフ同型問題のPyQBPPプログラム
 ```python
-from pyqbpp import var, sum, toExpr, vector_sum, between, MapList, replace, Sol, EasySolver
+import pyqbpp as qbpp
 
 N = 10
 host = [
@@ -222,11 +222,11 @@ M = 6
 guest = [
     (0, 1), (0, 2), (1, 2), (1, 3), (2, 3), (2, 5), (3, 4), (4, 5)]
 
-x = var("x", M, N)
+x = qbpp.var("x", M, N)
 
-host_assigned = vector_sum(x, 0)
+host_assigned = qbpp.vector_sum(x, 0)
 
-constraint = sum(vector_sum(x, 1) == 1) + sum(between(host_assigned, 0, 1))
+constraint = qbpp.sum(qbpp.vector_sum(x, 1) == 1) + qbpp.sum(qbpp.between(host_assigned, 0, 1))
 
 objective = toExpr(0)
 for ug, vg in guest:
@@ -236,7 +236,7 @@ for ug, vg in guest:
 f = -objective + constraint * (M * N)
 f.simplify_as_binary()
 
-solver = EasySolver(f)
+solver = qbpp.EasySolver(f)
 solver.target_energy(-len(guest))
 sol = solver.search()
 

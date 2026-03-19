@@ -38,7 +38,7 @@ $M=6$ bars of length $L=60$ and $N=4$ orders:
 | Quantity $c_j$ | 10 | 4 | 8 | 6 |
 
 ```python
-from pyqbpp import var_int, between, sum, toExpr, expr, EasySolver
+import pyqbpp as qbpp
 
 L = 60
 l = [13, 23, 8, 11]
@@ -47,7 +47,7 @@ N = len(l)
 M = 6
 
 # Create integer variables x[i][j] for pieces of order j cut from bar i
-x = [[between(var_int(), 0, c[j]) for j in range(N)] for i in range(M)]
+x = [[qbpp.between(qbpp.var_int(), 0, c[j]) for j in range(N)] for i in range(M)]
 
 # Order constraint: total pieces for each order must equal c[j]
 order_constraint = toExpr(0)
@@ -65,12 +65,12 @@ for i in range(M):
     for j in range(N):
         used += x[i][j] * l[j]
     bar_length_used.append(used)
-    bar_constraint += between(used, 0, L)
+    bar_constraint += qbpp.between(used, 0, L)
 
 f = order_constraint + bar_constraint
 f.simplify_as_binary()
 
-solver = EasySolver(f)
+solver = qbpp.EasySolver(f)
 solver.time_limit(10.0)
 solver.target_energy(0)
 sol = solver.search()
@@ -133,7 +133,7 @@ $$
 | 数量 $c_j$ | 10 | 4 | 8 | 6 |
 
 ```python
-from pyqbpp import var_int, between, sum, toExpr, expr, EasySolver
+import pyqbpp as qbpp
 
 L = 60
 l = [13, 23, 8, 11]
@@ -142,7 +142,7 @@ N = len(l)
 M = 6
 
 # Create integer variables x[i][j] for pieces of order j cut from bar i
-x = [[between(var_int(), 0, c[j]) for j in range(N)] for i in range(M)]
+x = [[qbpp.between(qbpp.var_int(), 0, c[j]) for j in range(N)] for i in range(M)]
 
 # Order constraint: total pieces for each order must equal c[j]
 order_constraint = toExpr(0)
@@ -160,12 +160,12 @@ for i in range(M):
     for j in range(N):
         used += x[i][j] * l[j]
     bar_length_used.append(used)
-    bar_constraint += between(used, 0, L)
+    bar_constraint += qbpp.between(used, 0, L)
 
 f = order_constraint + bar_constraint
 f.simplify_as_binary()
 
-solver = EasySolver(f)
+solver = qbpp.EasySolver(f)
 solver.time_limit(10.0)
 solver.target_energy(0)
 sol = solver.search()

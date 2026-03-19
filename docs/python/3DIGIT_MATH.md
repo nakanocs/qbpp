@@ -39,18 +39,18 @@ $$
 ## PyQBPP program
 The following PyQBPP program finds all solutions:
 ```python
-from pyqbpp import var_int, between, ExhaustiveSolver
+import pyqbpp as qbpp
 
-x = between(var_int("x"), 1, 9)
-y = between(var_int("y"), 0, 9)
-t = between(var_int("t"), 0, 4)
+x = qbpp.between(qbpp.var_int("x"), 1, 9)
+y = qbpp.between(qbpp.var_int("y"), 0, 9)
+t = qbpp.between(qbpp.var_int("t"), 0, 4)
 z = 2 * t + 1
 v = x * 100 + y * 10 + z
 
 f = x * y * z == 252
 
 f.simplify_as_binary()
-solver = ExhaustiveSolver(f)
+solver = qbpp.ExhaustiveSolver(f)
 sols = solver.search_optimal_solutions()
 results = set()
 for sol in sols:
@@ -108,18 +108,18 @@ $$
 ## PyQBPPプログラム
 以下のPyQBPPプログラムですべての解を求めます：
 ```python
-from pyqbpp import var_int, between, ExhaustiveSolver
+import pyqbpp as qbpp
 
-x = between(var_int("x"), 1, 9)
-y = between(var_int("y"), 0, 9)
-t = between(var_int("t"), 0, 4)
+x = qbpp.between(qbpp.var_int("x"), 1, 9)
+y = qbpp.between(qbpp.var_int("y"), 0, 9)
+t = qbpp.between(qbpp.var_int("t"), 0, 4)
 z = 2 * t + 1
 v = x * 100 + y * 10 + z
 
 f = x * y * z == 252
 
 f.simplify_as_binary()
-solver = ExhaustiveSolver(f)
+solver = qbpp.ExhaustiveSolver(f)
 sols = solver.search_optimal_solutions()
 results = set()
 for sol in sols:

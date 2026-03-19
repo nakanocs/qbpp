@@ -54,13 +54,13 @@ The following functions are provided to create variables:
 
 ### Examples
 ```python
-from pyqbpp import var
+import pyqbpp as qbpp
 
-x = var("x")          # Single variable named "x"
-y = var("y", 3)       # Vector: y[0], y[1], y[2]
-z = var("z", 2, 3)    # 2x3 matrix: z[0][0], ..., z[1][2]
-a = var()             # Single unnamed variable
-b = var(5)            # Vector of 5 unnamed variables
+x = qbpp.var("x")          # Single variable named "x"
+y = qbpp.var("y", 3)       # Vector: y[0], y[1], y[2]
+z = qbpp.var("z", 2, 3)    # 2x3 matrix: z[0][0], ..., z[1][2]
+a = qbpp.var()             # Single unnamed variable
+b = qbpp.var(5)            # Vector of 5 unnamed variables
 ```
 
 ## `pyqbpp.Var` properties and methods
@@ -100,11 +100,11 @@ The following functions are provided to create integer variables:
 
 ### Examples
 ```python
-from pyqbpp import var_int, between
+import pyqbpp as qbpp
 
-x = between(var_int("x"), 0, 10)       # Integer variable x in [0, 10]
-y = between(var_int("y", 3), -5, 5)    # Vector of 3 integer variables in [-5, 5]
-z = between(var_int("z", 2, 3), 1, 8)  # 2x3 matrix of integer variables in [1, 8]
+x = qbpp.between(qbpp.var_int("x"), 0, 10)       # Integer variable x in [0, 10]
+y = qbpp.between(qbpp.var_int("y", 3), -5, 5)    # Vector of 3 integer variables in [-5, 5]
+z = qbpp.between(qbpp.var_int("z", 2, 3), 1, 8)  # 2x3 matrix of integer variables in [1, 8]
 ```
 
 ### Integer variable properties
@@ -124,7 +124,7 @@ For a `pyqbpp.VarInt` instance `x`, the following are available:
 
 The following expression is equivalent to the expression stored in `x`:
 ```python
-x.min_val + sum(c * v for c, v in zip(x.coeffs, x.int_vars))
+x.min_val + qbpp.sum(c * v for c, v in zip(x.coeffs, x.int_vars))
 ```
 
 ### Comparison with C++ QUBO++
@@ -191,13 +191,13 @@ s = str(obj)
 
 ### 例
 ```python
-from pyqbpp import var
+import pyqbpp as qbpp
 
-x = var("x")          # Single variable named "x"
-y = var("y", 3)       # Vector: y[0], y[1], y[2]
-z = var("z", 2, 3)    # 2x3 matrix: z[0][0], ..., z[1][2]
-a = var()             # Single unnamed variable
-b = var(5)            # Vector of 5 unnamed variables
+x = qbpp.var("x")          # Single variable named "x"
+y = qbpp.var("y", 3)       # Vector: y[0], y[1], y[2]
+z = qbpp.var("z", 2, 3)    # 2x3 matrix: z[0][0], ..., z[1][2]
+a = qbpp.var()             # Single unnamed variable
+b = qbpp.var(5)            # Vector of 5 unnamed variables
 ```
 
 ## `pyqbpp.Var` のプロパティとメソッド
@@ -236,11 +236,11 @@ b = var(5)            # Vector of 5 unnamed variables
 
 ### 例
 ```python
-from pyqbpp import var_int, between
+import pyqbpp as qbpp
 
-x = between(var_int("x"), 0, 10)       # Integer variable x in [0, 10]
-y = between(var_int("y", 3), -5, 5)    # Vector of 3 integer variables in [-5, 5]
-z = between(var_int("z", 2, 3), 1, 8)  # 2x3 matrix of integer variables in [1, 8]
+x = qbpp.between(qbpp.var_int("x"), 0, 10)       # Integer variable x in [0, 10]
+y = qbpp.between(qbpp.var_int("y", 3), -5, 5)    # Vector of 3 integer variables in [-5, 5]
+z = qbpp.between(qbpp.var_int("z", 2, 3), 1, 8)  # 2x3 matrix of integer variables in [1, 8]
 ```
 
 ### 整数変数のプロパティ
@@ -260,7 +260,7 @@ z = between(var_int("z", 2, 3), 1, 8)  # 2x3 matrix of integer variables in [1, 
 
 以下の式は `x` に格納されている式と等価です。
 ```python
-x.min_val + sum(c * v for c, v in zip(x.coeffs, x.int_vars))
+x.min_val + qbpp.sum(c * v for c, v in zip(x.coeffs, x.int_vars))
 ```
 
 ### C++ QUBO++ との比較

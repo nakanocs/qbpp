@@ -62,17 +62,17 @@ If the expression contains any product terms, an error is thrown.
 
 ### Example
 ```python
-from pyqbpp import toExpr, toInt, Expr
+import pyqbpp as qbpp
 
 e = toExpr(5)       # Expr with constant 5
-n = toInt(Expr(42)) # 42
+n = toInt(qbpp.Expr(42)) # 42
 ```
 
 ## Assignment
 In Python, the `=` operator rebinds the variable name to a new object.
 To copy an expression, use the `Expr` constructor:
 ```python
-f = Expr(g)  # f is a copy of g
+f = qbpp.Expr(g)  # f is a copy of g
 ```
 
 ## Binary Operators: `+`, `-`, `*`
@@ -103,13 +103,13 @@ The compound division operator `/=` divides the expression in place.
 
 ### Example
 ```python
-from pyqbpp import var, Expr
+import pyqbpp as qbpp
 
-x = var("x")
-y = var("y")
+x = qbpp.var("x")
+y = qbpp.var("y")
 f = 6 * x + 4 * y + 2
 g = f / 2          # g = 3*x + 2*y + 1
-f = Expr(f)
+f = qbpp.Expr(f)
 f /= 2             # f = 3*x + 2*y + 1
 ```
 
@@ -137,7 +137,7 @@ In PyQBPP, `g.body` property is used instead.
 In C++ QUBO++, the range comparison is written as `l <= f <= u`.
 In PyQBPP, the `between()` function is used instead:
 ```python
-g = between(f, l, u)
+g = qbpp.between(f, l, u)
 ```
 where:
 - `f` is a non-integer `ExprType`, and
@@ -171,10 +171,10 @@ For a `pyqbpp.Vector` object `v`:
 
 ### Example
 ```python
-from pyqbpp import var, sqr
+import pyqbpp as qbpp
 
-x = var("x")
-f = sqr(x)       # x * x
+x = qbpp.var("x")
+f = qbpp.sqr(x)       # x * x
 ```
 
 ## Greatest Common Divisor function: `gcd()`
@@ -184,10 +184,10 @@ Since the given expression is divisible by the resulting GCD, all integer coeffi
 
 ### Example
 ```python
-from pyqbpp import var, gcd
+import pyqbpp as qbpp
 
-x = var("x")
-y = var("y")
+x = qbpp.var("x")
+y = qbpp.var("y")
 f = 6 * x + 4 * y + 2
 print(gcd(f))    # 2
 g = f / gcd(f)   # 3*x + 2*y + 1
@@ -220,13 +220,13 @@ Both variants are available as member functions and global functions:
 
 ### Example
 ```python
-from pyqbpp import var, Expr, simplify_as_binary, simplify_as_spin
+import pyqbpp as qbpp
 
-x = var("x")
-f = Expr(x * x + x)
+x = qbpp.var("x")
+f = qbpp.Expr(x * x + x)
 f.simplify_as_binary()  # 2*x (since x^2 = x)
 
-g = Expr(x * x + x)
+g = qbpp.Expr(x * x + x)
 g.simplify_as_spin()    # 1 + x (since x^2 = 1)
 ```
 
@@ -240,13 +240,13 @@ All variables appearing in `f` must have corresponding mappings defined in `ml`.
 
 ### Example
 ```python
-from pyqbpp import var, MapList
+import pyqbpp as qbpp
 
-x = var("x")
-y = var("y")
+x = qbpp.var("x")
+y = qbpp.var("y")
 f = 3 * x + 2 * y + 1
 
-ml = MapList([(x, 1), (y, 0)])
+ml = qbpp.MapList([(x, 1), (y, 0)])
 print(f(ml))  # 4  (= 3*1 + 2*0 + 1)
 ```
 
@@ -268,25 +268,25 @@ Replaces variables in `f` according to the mappings in `ml` in place and returns
 
 ### Creating a MapList
 ```python
-from pyqbpp import MapList, Expr
+import pyqbpp as qbpp
 
-ml = MapList()                      # Empty MapList
+ml = qbpp.MapList()                      # Empty MapList
 ml.add(x, 0)                       # Add mapping: x -> 0
-ml.add(y, Expr(z))                  # Add mapping: y -> z
+ml.add(y, qbpp.Expr(z))                  # Add mapping: y -> z
 
-ml = MapList([(x, 0), (y, 1)])      # Create from list of pairs
+ml = qbpp.MapList([(x, 0), (y, 1)])      # Create from list of pairs
 ```
 
 ### Example
 ```python
-from pyqbpp import var, Expr, MapList, replace
+import pyqbpp as qbpp
 
-x = var("x")
-y = var("y")
+x = qbpp.var("x")
+y = qbpp.var("y")
 f = 2 * x + 3 * y + 1
 
-ml = MapList([(x, 1), (y, 0)])
-g = replace(f, ml)   # g = 2*1 + 3*0 + 1 = 3 (new Expr)
+ml = qbpp.MapList([(x, 1), (y, 0)])
+g = qbpp.replace(f, ml)   # g = 2*1 + 3*0 + 1 = 3 (new Expr)
 f.replace(ml)         # f is modified in place
 ```
 
@@ -310,12 +310,12 @@ Replaces `f` with the reduced expression in place and returns the updated expres
 
 ### Example
 ```python
-from pyqbpp import var, Expr, reduce
+import pyqbpp as qbpp
 
-x = var("x")
-y = var("y")
-z = var("z")
-f = Expr(x * y * z)
+x = qbpp.var("x")
+y = qbpp.var("y")
+z = qbpp.var("z")
+f = qbpp.Expr(x * y * z)
 f.simplify_as_binary()
 g = reduce(f)   # Reduced to linear and quadratic terms
 ```
@@ -343,13 +343,13 @@ Both functions are available as member functions (in-place) and global functions
 
 ### Example
 ```python
-from pyqbpp import var, Expr, spin_to_binary, binary_to_spin
+import pyqbpp as qbpp
 
-s = var("s")
+s = qbpp.var("s")
 f = 3 * s + 1
 g = spin_to_binary(f)   # -2 + 6*s  (replaced s with 2*s-1)
 
-b = var("b")
+b = qbpp.var("b")
 h = 2 * b + 1
 k = binary_to_spin(h)   # 2 + 2*b  (replaced b with (b+1)/2, multiplied by 2)
 ```
@@ -422,17 +422,17 @@ PyQBPPでは以下が含まれます。
 
 ### 例
 ```python
-from pyqbpp import toExpr, toInt, Expr
+import pyqbpp as qbpp
 
 e = toExpr(5)       # Expr with constant 5
-n = toInt(Expr(42)) # 42
+n = toInt(qbpp.Expr(42)) # 42
 ```
 
 ## 代入
 Pythonでは、`=` 演算子は変数名を新しいオブジェクトに再バインドします。
 式をコピーするには、`Expr` コンストラクタを使用します。
 ```python
-f = Expr(g)  # f is a copy of g
+f = qbpp.Expr(g)  # f is a copy of g
 ```
 
 ## 二項演算子: `+`, `-`, `*`
@@ -463,13 +463,13 @@ f = Expr(g)  # f is a copy of g
 
 ### 例
 ```python
-from pyqbpp import var, Expr
+import pyqbpp as qbpp
 
-x = var("x")
-y = var("y")
+x = qbpp.var("x")
+y = qbpp.var("y")
 f = 6 * x + 4 * y + 2
 g = f / 2          # g = 3*x + 2*y + 1
-f = Expr(f)
+f = qbpp.Expr(f)
 f /= 2             # f = 3*x + 2*y + 1
 ```
 
@@ -497,7 +497,7 @@ PyQBPPでは、代わりに `g.body` プロパティを使用します。
 C++ QUBO++では、範囲比較は `l <= f <= u` と記述します。
 PyQBPPでは、代わりに `between()` 関数を使用します。
 ```python
-g = between(f, l, u)
+g = qbpp.between(f, l, u)
 ```
 ここで:
 - `f` は非整数の `ExprType`
@@ -531,10 +531,10 @@ g = between(f, l, u)
 
 ### 例
 ```python
-from pyqbpp import var, sqr
+import pyqbpp as qbpp
 
-x = var("x")
-f = sqr(x)       # x * x
+x = qbpp.var("x")
+f = qbpp.sqr(x)       # x * x
 ```
 
 ## 最大公約数関数: `gcd()`
@@ -544,10 +544,10 @@ f = sqr(x)       # x * x
 
 ### 例
 ```python
-from pyqbpp import var, gcd
+import pyqbpp as qbpp
 
-x = var("x")
-y = var("y")
+x = qbpp.var("x")
+y = qbpp.var("y")
 f = 6 * x + 4 * y + 2
 print(gcd(f))    # 2
 g = f / gcd(f)   # 3*x + 2*y + 1
@@ -578,13 +578,13 @@ g = f / gcd(f)   # 3*x + 2*y + 1
 
 ### 例
 ```python
-from pyqbpp import var, Expr, simplify_as_binary, simplify_as_spin
+import pyqbpp as qbpp
 
-x = var("x")
-f = Expr(x * x + x)
+x = qbpp.var("x")
+f = qbpp.Expr(x * x + x)
 f.simplify_as_binary()  # 2*x (since x^2 = x)
 
-g = Expr(x * x + x)
+g = qbpp.Expr(x * x + x)
 g.simplify_as_spin()    # 1 + x (since x^2 = 1)
 ```
 
@@ -598,13 +598,13 @@ g.simplify_as_spin()    # 1 + x (since x^2 = 1)
 
 ### 例
 ```python
-from pyqbpp import var, MapList
+import pyqbpp as qbpp
 
-x = var("x")
-y = var("y")
+x = qbpp.var("x")
+y = qbpp.var("y")
 f = 3 * x + 2 * y + 1
 
-ml = MapList([(x, 1), (y, 0)])
+ml = qbpp.MapList([(x, 1), (y, 0)])
 print(f(ml))  # 4  (= 3*1 + 2*0 + 1)
 ```
 
@@ -626,25 +626,25 @@ print(f(ml))  # 4  (= 3*1 + 2*0 + 1)
 
 ### MapList の作成
 ```python
-from pyqbpp import MapList, Expr
+import pyqbpp as qbpp
 
-ml = MapList()                      # Empty MapList
+ml = qbpp.MapList()                      # Empty MapList
 ml.add(x, 0)                       # Add mapping: x -> 0
-ml.add(y, Expr(z))                  # Add mapping: y -> z
+ml.add(y, qbpp.Expr(z))                  # Add mapping: y -> z
 
-ml = MapList([(x, 0), (y, 1)])      # Create from list of pairs
+ml = qbpp.MapList([(x, 0), (y, 1)])      # Create from list of pairs
 ```
 
 ### 例
 ```python
-from pyqbpp import var, Expr, MapList, replace
+import pyqbpp as qbpp
 
-x = var("x")
-y = var("y")
+x = qbpp.var("x")
+y = qbpp.var("y")
 f = 2 * x + 3 * y + 1
 
-ml = MapList([(x, 1), (y, 0)])
-g = replace(f, ml)   # g = 2*1 + 3*0 + 1 = 3 (new Expr)
+ml = qbpp.MapList([(x, 1), (y, 0)])
+g = qbpp.replace(f, ml)   # g = 2*1 + 3*0 + 1 = 3 (new Expr)
 f.replace(ml)         # f is modified in place
 ```
 
@@ -668,12 +668,12 @@ f.replace(ml)         # f is modified in place
 
 ### 例
 ```python
-from pyqbpp import var, Expr, reduce
+import pyqbpp as qbpp
 
-x = var("x")
-y = var("y")
-z = var("z")
-f = Expr(x * y * z)
+x = qbpp.var("x")
+y = qbpp.var("y")
+z = qbpp.var("z")
+f = qbpp.Expr(x * y * z)
 f.simplify_as_binary()
 g = reduce(f)   # Reduced to linear and quadratic terms
 ```
@@ -699,13 +699,13 @@ $$
 
 ### 例
 ```python
-from pyqbpp import var, Expr, spin_to_binary, binary_to_spin
+import pyqbpp as qbpp
 
-s = var("s")
+s = qbpp.var("s")
 f = 3 * s + 1
 g = spin_to_binary(f)   # -2 + 6*s  (replaced s with 2*s-1)
 
-b = var("b")
+b = qbpp.var("b")
 h = 2 * b + 1
 k = binary_to_spin(h)   # 2 + 2*b  (replaced b with (b+1)/2, multiplied by 2)
 ```
