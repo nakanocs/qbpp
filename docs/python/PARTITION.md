@@ -109,10 +109,13 @@ Q : 64 27 74 40
 
 ## PyQBPP program using vector operations
 PyQBPP has rich vector operations that can simplify the code.
+
+In the following code, `w` is defined as a `Vector` object by wrapping the Python list with `qbpp.Vector()`.
+This converts the plain list into a `Vector`, which supports element-wise operations such as `+`, `-`, `*`, and `~`.
 Since the overloaded operator `*` for `Vector` performs element-wise multiplication,
-**`sum(Vector(w) * x)`** returns the `Expr` object representing $P(L)$.
+**`qbpp.sum(w * x)`** returns the `Expr` object representing $P(L)$.
 The `~` operator applied to a `Vector` of variables returns a vector of their negated literals.
-Thus, **`sum(Vector(w) * ~x)`** returns an `Expr` object storing $Q(L)$.
+Thus, **`qbpp.sum(w * ~x)`** returns an `Expr` object storing $Q(L)$.
 
 ```python
 import pyqbpp as qbpp
@@ -236,10 +239,13 @@ Q : 64 27 74 40
 
 ## ベクトル演算を用いたPyQBPPプログラム
 PyQBPPにはコードを簡潔にするための豊富なベクトル演算があります。
+
+以下のコードでは、`w` をPythonリストから `qbpp.Vector()` で `Vector` オブジェクトに変換して定義しています。
+これにより、要素ごとの演算（`+`, `-`, `*`, `~`）が使えるようになります。
 `Vector` に対するオーバーロード演算子 `*` は要素ごとの乗算を行うため、
-**`sum(Vector(w) * x)`** は $P(L)$ を表す `Expr` オブジェクトを返します。
+**`qbpp.sum(w * x)`** は $P(L)$ を表す `Expr` オブジェクトを返します。
 変数のベクトルに対する `~` 演算子は否定リテラルのベクトルを返します。
-したがって、**`sum(Vector(w) * ~x)`** は $Q(L)$ を格納する `Expr` オブジェクトを返します。
+したがって、**`qbpp.sum(w * ~x)`** は $Q(L)$ を格納する `Expr` オブジェクトを返します。
 
 ```python
 import pyqbpp as qbpp
