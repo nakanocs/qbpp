@@ -45,11 +45,12 @@ import pyqbpp as qbpp
 
 x = qbpp.var("x")
 y = qbpp.var("y")
-f = toExpr(2 * x * y)
+f = 2 * x * y
 f += 3 * y
 
 print("f =", f)
 ```
+In this program, `2 * x * y` initially creates a `Term`, but the `+=` operator automatically converts it to an `Expr`.
 This program prints:
 ```
 f = 2*x*y +3*y
@@ -59,25 +60,12 @@ f = 2*x*y +3*y
 
 In Python, there is no risk of accidentally creating a `Term` when you meant to create an `Expr`,
 because Python's dynamic typing handles conversions automatically.
-However, to explicitly create an `Expr` from an integer, a `Var`, or a `Term`, the **`toExpr()`** function is available:
+In C++ QUBO++, an explicit `qbpp::Expr(2 * x * y)` cast is sometimes needed, but in PyQBPP this is never necessary.
+
+A `toExpr()` function is provided for compatibility with C++, but it is not needed in practice:
 ```python
-import pyqbpp as qbpp
-
-x = qbpp.var("x")
-f = toExpr(0)    # Expr with constant 0
-g = toExpr(x)    # Expr containing variable x
-h = toExpr(3 * x)  # Expr from Term
-
-f += 2 * x + 1
-print("f =", f)
-print("g =", g)
-print("h =", h)
-```
-This program prints:
-```
-f = 1 +2*x
-g = x
-h = 3*x
+f = qbpp.toExpr(2 * x * y)  # works, but unnecessary
+f = 2 * x * y               # this is sufficient
 ```
 
 ## Coefficient and Energy Types
@@ -139,11 +127,12 @@ import pyqbpp as qbpp
 
 x = qbpp.var("x")
 y = qbpp.var("y")
-f = toExpr(2 * x * y)
+f = 2 * x * y
 f += 3 * y
 
 print("f =", f)
 ```
+このプログラムでは、`2 * x * y` は最初 `Term` を生成しますが、`+=` 演算子が自動的に `Expr` に変換します。
 このプログラムは以下を出力します:
 ```
 f = 2*x*y +3*y
@@ -153,25 +142,12 @@ f = 2*x*y +3*y
 
 Pythonでは、`Expr`を作成するつもりで誤って`Term`を作成してしまうリスクはありません。
 Pythonの動的型付けが変換を自動的に処理するためです。
-ただし、整数、`Var`、または`Term`から明示的に`Expr`を作成するには、**`toExpr()`**関数を使用できます:
+C++ QUBO++では明示的な `qbpp::Expr(2 * x * y)` キャストが必要な場合がありますが、PyQBPPでは不要です。
+
+C++との互換性のために `toExpr()` 関数が用意されていますが、実際には使う必要はありません:
 ```python
-import pyqbpp as qbpp
-
-x = qbpp.var("x")
-f = toExpr(0)    # 定数0のExpr
-g = toExpr(x)    # 変数xを含むExpr
-h = toExpr(3 * x)  # TermからのExpr
-
-f += 2 * x + 1
-print("f =", f)
-print("g =", g)
-print("h =", h)
-```
-このプログラムは以下を出力します:
-```
-f = 1 +2*x
-g = x
-h = 3*x
+f = qbpp.toExpr(2 * x * y)  # 動作するが不要
+f = 2 * x * y               # これで十分
 ```
 
 ## 係数型とエネルギー型
