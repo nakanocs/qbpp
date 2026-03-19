@@ -48,7 +48,7 @@ $$
 f = \text{objective} + P \times \text{constraint}
 $$
 
-where $P$ must be large enough (e.g., $P = |E| + 1$) to ensure that the balance constraint is always satisfied in an optimal solution.
+where $P$ must be large enough (e.g., $P = \lvert E\rvert + 1$) to ensure that the balance constraint is always satisfied in an optimal solution.
 
 ## PyQBPP program
 
@@ -104,7 +104,7 @@ The solver finds a balanced partition with only 6 edges crossing the cut.
 <div class="lang-ja" markdown="1">
 # 最小グラフ二分割問題
 
-無向グラフ $G=(V,E)$（$n$ ノード、$n$ は偶数）が与えられたとき、**最小グラフ二分割**問題は、ノード集合 $V$ を**等しいサイズ**（$|S|=|\overline{S}|=n/2$）の2つの互いに素な部分集合 $S$ と $\overline{S}$ に分割し、分割を横断する辺の数を**最小化**することを目的とします。
+無向グラフ $G=(V,E)$（$n$ ノード、$n$ は偶数）が与えられたとき、**最小グラフ二分割**問題は、ノード集合 $V$ を**等しいサイズ**（$\lvert S\rvert=\lvert\overline{S}\rvert=n/2$）の2つの互いに素な部分集合 $S$ と $\overline{S}$ に分割し、分割を横断する辺の数を**最小化**することを目的とします。
 
 この問題は[最大カット](MAXCUT)と2つの点で異なります：
 1. 分割は**均等**（同サイズの半分）でなければなりません。
@@ -145,7 +145,7 @@ $$
 f = \text{objective} + P \times \text{constraint}
 $$
 
-ここで $P$ は十分大きく（例えば $P = |E| + 1$）、最適解で均等制約が常に満たされるようにします。
+ここで $P$ は十分大きく（例えば $P = \lvert E\rvert + 1$）、最適解で均等制約が常に満たされるようにします。
 
 ## PyQBPP プログラム
 
