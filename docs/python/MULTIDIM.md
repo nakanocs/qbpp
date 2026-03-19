@@ -24,6 +24,50 @@ print("x =", x)
 Each `Var` object in **`x`** can be accessed as **`x[i][j][k]`**.
 {% endraw %}
 
+## Creating integer variable arrays with individual ranges
+
+When defining a multi-dimensional array of integer variables, all elements created by `qbpp.between(qbpp.var_int("name", s1, s2, ...), l, u)` share the same range $[l, u]$.
+In many practical problems, however, each element may need a different range.
+There are two approaches to achieve this.
+
+### Approach 1: Placeholder array
+
+First create a **placeholder array** using **`qbpp.var_int("name", s1, s2, ...) == 0`**, then assign individual ranges to each element using `qbpp.between()`:
+
+```python
+import pyqbpp as qbpp
+
+max_vals = [3, 7, 15, 5]
+x = qbpp.var_int("x", len(max_vals)) == 0
+for i in range(len(max_vals)):
+    x[i] = qbpp.between(x[i], 0, max_vals[i])
+for i in range(len(max_vals)):
+    print(f"x[{i}] = {x[i]}")
+```
+Here, `qbpp.var_int("x", 4) == 0` creates an array of 4 constant-zero `VarInt` placeholders.
+Each element is then reassigned with its own range using `qbpp.between(x[i], 0, max_vals[i])`.
+The `qbpp.between()` function automatically inherits the name from the placeholder, so no explicit name is needed.
+
+> **NOTE**
+> The `== 0` syntax creates a `VarInt` with `min_val = max_val = 0` (i.e., a constant zero placeholder).
+> It does **not** create an equality constraint.
+
+### Approach 2: List comprehension with `Vector`
+
+Alternatively, you can use a Python list comprehension wrapped with `qbpp.Vector()`:
+
+```python
+import pyqbpp as qbpp
+
+max_vals = [3, 7, 15, 5]
+x = qbpp.Vector([qbpp.between(qbpp.var_int(f"x[{i}]"), 0, max_vals[i])
+                  for i in range(len(max_vals))])
+```
+
+This approach creates the variables directly without placeholders.
+Note that an explicit name (e.g., `f"x[{i}]"`) must be provided for each variable,
+and the result must be wrapped with `qbpp.Vector()` to enable element-wise operations.
+
 ## Defining multi-dimensional expressions
 PyQBPP allows you to define **multi-dimensional expressions** with arbitrary depth using the function `expr()`:
 - **`expr(s1, s2, ..., sd)`**: Creates a multi-dimensional array of `Expr` objects with shape $s_1\times s_2\times \cdots\times s_d$.
@@ -121,6 +165,49 @@ print("x =", x)
 {% raw %}
 **`x`** 内の各 `Var` オブジェクトは **`x[i][j][k]`** としてアクセスできます。
 {% endraw %}
+
+## 個別の範囲を持つ整数変数配列の作成
+
+多次元整数変数配列を定義する場合、`qbpp.between(qbpp.var_int("name", s1, s2, ...), l, u)` で作成された全要素は同じ範囲 $[l, u]$ を共有します。
+しかし実際の問題では、各要素に異なる範囲が必要な場合が多くあります。
+これを実現するには2つの方法があります。
+
+### 方法1: プレースホルダ配列
+
+まず **`qbpp.var_int("name", s1, s2, ...) == 0`** で**プレースホルダ配列**を作成し、`qbpp.between()` で各要素に個別の範囲を割り当てます:
+
+```python
+import pyqbpp as qbpp
+
+max_vals = [3, 7, 15, 5]
+x = qbpp.var_int("x", len(max_vals)) == 0
+for i in range(len(max_vals)):
+    x[i] = qbpp.between(x[i], 0, max_vals[i])
+for i in range(len(max_vals)):
+    print(f"x[{i}] = {x[i]}")
+```
+ここで、`qbpp.var_int("x", 4) == 0` は定数ゼロの `VarInt` プレースホルダ4個の配列を作成します。
+各要素は `qbpp.between(x[i], 0, max_vals[i])` で個別の範囲に再代入されます。
+`qbpp.between()` はプレースホルダから名前を自動的に引き継ぐため、明示的な名前の指定は不要です。
+
+> **NOTE**
+> `== 0` の構文は `min_val = max_val = 0`（定数ゼロのプレースホルダ）の `VarInt` を作成するものであり、等号制約を作成するものでは**ありません**。
+
+### 方法2: リスト内包表記と `Vector`
+
+Python のリスト内包表記を `qbpp.Vector()` で包む方法もあります:
+
+```python
+import pyqbpp as qbpp
+
+max_vals = [3, 7, 15, 5]
+x = qbpp.Vector([qbpp.between(qbpp.var_int(f"x[{i}]"), 0, max_vals[i])
+                  for i in range(len(max_vals))])
+```
+
+この方法ではプレースホルダなしに変数を直接作成します。
+各変数に明示的な名前（例: `f"x[{i}]"`）を指定する必要があることと、
+要素ごとの演算を使用するには結果を `qbpp.Vector()` で包む必要がある点に注意してください。
 
 ## 多次元式の定義
 PyQBPPでは、関数 `expr()` を使って任意の深さの**多次元式**を定義できます。
