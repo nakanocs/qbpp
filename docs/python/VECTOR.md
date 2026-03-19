@@ -38,6 +38,16 @@ f = x[0] +x[1] +x[2] +x[3] +x[4]
 > **`var(name, size)`** returns a **`Vector`** object that contains `size` elements of type `Var`.
 > The **`Vector`** class provides overloaded operators that support element-wise operations.
 
+> **WARNING: `Vector` vs Python `list`**
+> A variable array can also be created using a Python list comprehension:
+> ```python
+> x = [qbpp.var(f"x[{i}]") for i in range(5)]
+> ```
+> Although this creates variables with the same names, the result is a Python **`list`**, not a **`Vector`**.
+> The key difference is that `Vector` supports element-wise operations (`+`, `-`, `*`, `~`), whereas `list` does not.
+> For example, `x + x` with a `Vector` returns a new `Vector` with element-wise sums, but with a `list` it returns a concatenated list of length 10.
+> Always use **`qbpp.var("x", size)`** when you need vector operations.
+
 ## Sum function
 Using the utility function **`sum()`**, you can obtain the sum of a vector of binary variables.
 The following program uses `sum()` to compute the sum of all variables in the vector `x`:
@@ -122,6 +132,16 @@ f = x[0] +x[1] +x[2] +x[3] +x[4]
 > **NOTE**
 > **`var(name, size)`** は `size` 個の `Var` 型要素を含む **`Vector`** オブジェクトを返します。
 > **`Vector`** クラスは、要素ごとの演算をサポートするオーバーロードされた演算子を提供します。
+
+> **WARNING: `Vector` と Python の `list` の違い**
+> 変数配列はPythonのリスト内包表記でも作成できます:
+> ```python
+> x = [qbpp.var(f"x[{i}]") for i in range(5)]
+> ```
+> これは同じ名前の変数を作成しますが、結果は **`Vector`** ではなくPythonの **`list`** になります。
+> 重要な違いは、`Vector` は要素ごとの演算（`+`, `-`, `*`, `~`）をサポートしますが、`list` はサポートしないことです。
+> 例えば、`Vector` での `x + x` は要素ごとの和を含む新しい `Vector` を返しますが、`list` では長さ10の連結リストを返します。
+> ベクトル演算が必要な場合は、常に **`qbpp.var("x", size)`** を使用してください。
 
 ## Sum 関数
 ユーティリティ関数 **`sum()`** を使って、バイナリ変数ベクトルの合計を取得できます。
