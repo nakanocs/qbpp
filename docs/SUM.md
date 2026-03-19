@@ -81,45 +81,50 @@ However, for large arrays, it is recommended to use `qbpp::sum()` and `qbpp::vec
 
 By default, `qbpp::vector_sum()` sums along the innermost (last) axis.
 You can specify a different axis using **`qbpp::vector_sum(array, axis)`**.
-
-For a 2D array `x` of size $3 \times 4$:
-- **`qbpp::vector_sum(x, 1)`** computes the **row sums** (sum along axis 1), returning a 1D array of size 3.
-- **`qbpp::vector_sum(x, 0)`** computes the **column sums** (sum along axis 0), returning a 1D array of size 4.
-
 Negative indices are also supported: axis `-1` refers to the last axis, `-2` to the second-to-last, and so on.
 
-The following program demonstrates summing along different axes:
+Using the same $2 \times 3 \times 3$ array `x` as above, the following program demonstrates summing along each of the three axes:
+
 ```cpp
-#define MAXDEG 2
-#include <qbpp/qbpp.hpp>
-
-int main() {
-  auto x = qbpp::var("x", 3, 4);
-
-  auto row_sum = qbpp::vector_sum(x, 1);
-  std::cout << "=== row sums (axis=1) ===" << std::endl;
-  for (size_t i = 0; i < 3; ++i) {
-    std::cout << "row_sum[" << i << "] = " << row_sum[i] << std::endl;
-  }
-
-  auto col_sum = qbpp::vector_sum(x, 0);
-  std::cout << "=== column sums (axis=0) ===" << std::endl;
-  for (size_t j = 0; j < 4; ++j) {
-    std::cout << "col_sum[" << j << "] = " << col_sum[j] << std::endl;
-  }
-}
+  auto vs2 = qbpp::vector_sum(x, 2).simplify();  // sum along axis 2 (default)
+  auto vs1 = qbpp::vector_sum(x, 1).simplify();  // sum along axis 1
+  auto vs0 = qbpp::vector_sum(x, 0).simplify();  // sum along axis 0
 ```
-This program produces the following output:
+
+- **`qbpp::vector_sum(x, 2)`** sums along axis 2 (the innermost axis), producing a $2 \times 3$ array. This is equivalent to `qbpp::vector_sum(x)`.
+
 ```
-=== row sums (axis=1) ===
-row_sum[0] = x[0][3] +x[0][2] +x[0][1] +x[0][0]
-row_sum[1] = x[1][3] +x[1][2] +x[1][1] +x[1][0]
-row_sum[2] = x[2][3] +x[2][2] +x[2][1] +x[2][0]
-=== column sums (axis=0) ===
-col_sum[0] = x[2][0] +x[1][0] +x[0][0]
-col_sum[1] = x[2][1] +x[1][1] +x[0][1]
-col_sum[2] = x[2][2] +x[1][2] +x[0][2]
-col_sum[3] = x[2][3] +x[1][3] +x[0][3]
+vs2[0][0] = x[0][0][0] +x[0][0][1] +x[0][0][2]
+vs2[0][1] = x[0][1][0] +x[0][1][1] +x[0][1][2]
+vs2[0][2] = x[0][2][0] +x[0][2][1] +x[0][2][2]
+vs2[1][0] = x[1][0][0] +x[1][0][1] +x[1][0][2]
+vs2[1][1] = x[1][1][0] +x[1][1][1] +x[1][1][2]
+vs2[1][2] = x[1][2][0] +x[1][2][1] +x[1][2][2]
+```
+
+- **`qbpp::vector_sum(x, 1)`** sums along axis 1 (the middle axis), producing a $2 \times 3$ array.
+
+```
+vs1[0][0] = x[0][0][0] +x[0][1][0] +x[0][2][0]
+vs1[0][1] = x[0][0][1] +x[0][1][1] +x[0][2][1]
+vs1[0][2] = x[0][0][2] +x[0][1][2] +x[0][2][2]
+vs1[1][0] = x[1][0][0] +x[1][1][0] +x[1][2][0]
+vs1[1][1] = x[1][0][1] +x[1][1][1] +x[1][2][1]
+vs1[1][2] = x[1][0][2] +x[1][1][2] +x[1][2][2]
+```
+
+- **`qbpp::vector_sum(x, 0)`** sums along axis 0 (the outermost axis), producing a $3 \times 3$ array.
+
+```
+vs0[0][0] = x[0][0][0] +x[1][0][0]
+vs0[0][1] = x[0][0][1] +x[1][0][1]
+vs0[0][2] = x[0][0][2] +x[1][0][2]
+vs0[1][0] = x[0][1][0] +x[1][1][0]
+vs0[1][1] = x[0][1][1] +x[1][1][1]
+vs0[1][2] = x[0][1][2] +x[1][1][2]
+vs0[2][0] = x[0][2][0] +x[1][2][0]
+vs0[2][1] = x[0][2][1] +x[1][2][1]
+vs0[2][2] = x[0][2][2] +x[1][2][2]
 ```
 </div>
 
@@ -199,44 +204,49 @@ vector_sum[1][2] = 3 +x[1][2][0] +x[1][2][1] +x[1][2][2]
 
 デフォルトでは、`qbpp::vector_sum()` は最も内側（最後）の軸に沿って合計を計算します。
 **`qbpp::vector_sum(array, axis)`** で異なる軸を指定できます。
-
-サイズ $3 \times 4$ の2次元配列 `x` に対して:
-- **`qbpp::vector_sum(x, 1)`** は**行の合計**（軸1に沿った合計）を計算し、サイズ3の1次元配列を返します。
-- **`qbpp::vector_sum(x, 0)`** は**列の合計**（軸0に沿った合計）を計算し、サイズ4の1次元配列を返します。
-
 負のインデックスもサポートされています: 軸 `-1` は最後の軸、`-2` は最後から2番目の軸を指します。
 
-以下のプログラムは、異なる軸に沿った合計を示しています:
+上記と同じ $2 \times 3 \times 3$ の配列 `x` を使って、3つの軸それぞれに沿った合計を示します:
+
 ```cpp
-#define MAXDEG 2
-#include <qbpp/qbpp.hpp>
-
-int main() {
-  auto x = qbpp::var("x", 3, 4);
-
-  auto row_sum = qbpp::vector_sum(x, 1);
-  std::cout << "=== row sums (axis=1) ===" << std::endl;
-  for (size_t i = 0; i < 3; ++i) {
-    std::cout << "row_sum[" << i << "] = " << row_sum[i] << std::endl;
-  }
-
-  auto col_sum = qbpp::vector_sum(x, 0);
-  std::cout << "=== column sums (axis=0) ===" << std::endl;
-  for (size_t j = 0; j < 4; ++j) {
-    std::cout << "col_sum[" << j << "] = " << col_sum[j] << std::endl;
-  }
-}
+  auto vs2 = qbpp::vector_sum(x, 2).simplify();  // 軸2に沿って合計（デフォルト）
+  auto vs1 = qbpp::vector_sum(x, 1).simplify();  // 軸1に沿って合計
+  auto vs0 = qbpp::vector_sum(x, 0).simplify();  // 軸0に沿って合計
 ```
-このプログラムは以下の出力を生成します:
+
+- **`qbpp::vector_sum(x, 2)`** は軸2（最も内側の軸）に沿って合計し、$2 \times 3$ の配列を生成します。これは `qbpp::vector_sum(x)` と同等です。
+
 ```
-=== row sums (axis=1) ===
-row_sum[0] = x[0][3] +x[0][2] +x[0][1] +x[0][0]
-row_sum[1] = x[1][3] +x[1][2] +x[1][1] +x[1][0]
-row_sum[2] = x[2][3] +x[2][2] +x[2][1] +x[2][0]
-=== column sums (axis=0) ===
-col_sum[0] = x[2][0] +x[1][0] +x[0][0]
-col_sum[1] = x[2][1] +x[1][1] +x[0][1]
-col_sum[2] = x[2][2] +x[1][2] +x[0][2]
-col_sum[3] = x[2][3] +x[1][3] +x[0][3]
+vs2[0][0] = x[0][0][0] +x[0][0][1] +x[0][0][2]
+vs2[0][1] = x[0][1][0] +x[0][1][1] +x[0][1][2]
+vs2[0][2] = x[0][2][0] +x[0][2][1] +x[0][2][2]
+vs2[1][0] = x[1][0][0] +x[1][0][1] +x[1][0][2]
+vs2[1][1] = x[1][1][0] +x[1][1][1] +x[1][1][2]
+vs2[1][2] = x[1][2][0] +x[1][2][1] +x[1][2][2]
+```
+
+- **`qbpp::vector_sum(x, 1)`** は軸1（中間の軸）に沿って合計し、$2 \times 3$ の配列を生成します。
+
+```
+vs1[0][0] = x[0][0][0] +x[0][1][0] +x[0][2][0]
+vs1[0][1] = x[0][0][1] +x[0][1][1] +x[0][2][1]
+vs1[0][2] = x[0][0][2] +x[0][1][2] +x[0][2][2]
+vs1[1][0] = x[1][0][0] +x[1][1][0] +x[1][2][0]
+vs1[1][1] = x[1][0][1] +x[1][1][1] +x[1][2][1]
+vs1[1][2] = x[1][0][2] +x[1][1][2] +x[1][2][2]
+```
+
+- **`qbpp::vector_sum(x, 0)`** は軸0（最も外側の軸）に沿って合計し、$3 \times 3$ の配列を生成します。
+
+```
+vs0[0][0] = x[0][0][0] +x[1][0][0]
+vs0[0][1] = x[0][0][1] +x[1][0][1]
+vs0[0][2] = x[0][0][2] +x[1][0][2]
+vs0[1][0] = x[0][1][0] +x[1][1][0]
+vs0[1][1] = x[0][1][1] +x[1][1][1]
+vs0[1][2] = x[0][1][2] +x[1][1][2]
+vs0[2][0] = x[0][2][0] +x[1][2][0]
+vs0[2][1] = x[0][2][1] +x[1][2][1]
+vs0[2][2] = x[0][2][2] +x[1][2][2]
 ```
 </div>

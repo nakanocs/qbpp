@@ -72,28 +72,19 @@ However, for large arrays, it is recommended to use `sum()` and `vector_sum()`, 
 
 By default, `vector_sum()` sums along the innermost (last) axis.
 You can specify a different axis using **`vector_sum(array, axis)`**.
-
-For a 2D array `x` of size $3 \times 4$:
-- **`vector_sum(x, 1)`** computes the **row sums** (sum along axis 1), returning a 1D array of size 3.
-- **`vector_sum(x, 0)`** computes the **column sums** (sum along axis 0), returning a 1D array of size 4.
-
 Negative indices are also supported: axis `-1` refers to the last axis, `-2` to the second-to-last, and so on.
 
+Using the same $2 \times 3 \times 3$ array `x` as above, the following code demonstrates summing along each of the three axes:
+
 ```python
-from pyqbpp import var, vector_sum
-
-x = var("x", 3, 4)
-
-row_sum = vector_sum(x, 1)
-print("=== row sums (axis=1) ===")
-for i in range(3):
-    print(f"row_sum[{i}] =", row_sum[i])
-
-col_sum = vector_sum(x, 0)
-print("=== column sums (axis=0) ===")
-for j in range(4):
-    print(f"col_sum[{j}] =", col_sum[j])
+vs2 = vector_sum(x, 2)  # sum along axis 2 (default)
+vs1 = vector_sum(x, 1)  # sum along axis 1
+vs0 = vector_sum(x, 0)  # sum along axis 0
 ```
+
+- **`vector_sum(x, 2)`** sums along axis 2 (the innermost axis), producing a $2 \times 3$ array. This is equivalent to `vector_sum(x)`.
+- **`vector_sum(x, 1)`** sums along axis 1 (the middle axis), producing a $2 \times 3$ array.
+- **`vector_sum(x, 0)`** sums along axis 0 (the outermost axis), producing a $3 \times 3$ array.
 </div>
 
 <div class="lang-ja" markdown="1">
@@ -164,26 +155,17 @@ vector_sum[1][2] = 3 +x[1][2][0] +x[1][2][1] +x[1][2][2]
 
 デフォルトでは、`vector_sum()` は最も内側（最後）の軸に沿って合計を計算します。
 **`vector_sum(array, axis)`** で異なる軸を指定できます。
-
-サイズ $3 \times 4$ の2次元配列 `x` に対して:
-- **`vector_sum(x, 1)`** は**行の合計**（軸1に沿った合計）を計算し、サイズ3の1次元配列を返します。
-- **`vector_sum(x, 0)`** は**列の合計**（軸0に沿った合計）を計算し、サイズ4の1次元配列を返します。
-
 負のインデックスもサポートされています: 軸 `-1` は最後の軸、`-2` は最後から2番目の軸を指します。
 
+上記と同じ $2 \times 3 \times 3$ の配列 `x` を使って、3つの軸それぞれに沿った合計を示します:
+
 ```python
-from pyqbpp import var, vector_sum
-
-x = var("x", 3, 4)
-
-row_sum = vector_sum(x, 1)
-print("=== row sums (axis=1) ===")
-for i in range(3):
-    print(f"row_sum[{i}] =", row_sum[i])
-
-col_sum = vector_sum(x, 0)
-print("=== column sums (axis=0) ===")
-for j in range(4):
-    print(f"col_sum[{j}] =", col_sum[j])
+vs2 = vector_sum(x, 2)  # 軸2に沿って合計（デフォルト）
+vs1 = vector_sum(x, 1)  # 軸1に沿って合計
+vs0 = vector_sum(x, 0)  # 軸0に沿って合計
 ```
+
+- **`vector_sum(x, 2)`** は軸2（最も内側の軸）に沿って合計し、$2 \times 3$ の配列を生成します。これは `vector_sum(x)` と同等です。
+- **`vector_sum(x, 1)`** は軸1（中間の軸）に沿って合計し、$2 \times 3$ の配列を生成します。
+- **`vector_sum(x, 0)`** は軸0（最も外側の軸）に沿って合計し、$3 \times 3$ の配列を生成します。
 </div>
