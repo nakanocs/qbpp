@@ -121,10 +121,10 @@ Here, $P$ is a sufficiently large positive constant that prioritizes the permuta
 ```python
 import pyqbpp as qbpp
 
-c = qbpp.Vector([qbpp.Vector([58, 73, 91, 44]),
-            qbpp.Vector([62, 15, 87, 39]),
-            qbpp.Vector([78, 56, 23, 94]),
-            qbpp.Vector([11, 85, 68, 72])])
+c = qbpp.Vector([[58, 73, 91, 44],
+                 [62, 15, 87, 39],
+                 [78, 56, 23, 94],
+                 [11, 85, 68, 72]])
 x = qbpp.var("x", 4, 4)
 f = qbpp.sum(qbpp.vector_sum(x, 1) == 1) + qbpp.sum(qbpp.vector_sum(x, 0) == 1)
 g = qbpp.sum(c * x)
@@ -277,10 +277,10 @@ $$
 ```python
 import pyqbpp as qbpp
 
-c = qbpp.Vector([qbpp.Vector([58, 73, 91, 44]),
-            qbpp.Vector([62, 15, 87, 39]),
-            qbpp.Vector([78, 56, 23, 94]),
-            qbpp.Vector([11, 85, 68, 72])])
+c = qbpp.Vector([[58, 73, 91, 44],
+                 [62, 15, 87, 39],
+                 [78, 56, 23, 94],
+                 [11, 85, 68, 72]])
 x = qbpp.var("x", 4, 4)
 f = qbpp.sum(qbpp.vector_sum(x, 1) == 1) + qbpp.sum(qbpp.vector_sum(x, 0) == 1)
 g = qbpp.sum(c * x)
