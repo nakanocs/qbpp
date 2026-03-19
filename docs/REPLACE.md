@@ -35,7 +35,7 @@ int main() {
   qbpp::Vector<uint32_t> w = {64, 27, 47, 74, 12, 83, 63, 40};
   auto x = qbpp::var("x", w.size());
   auto p = qbpp::sum(w * x);
-  auto q = qbpp::sum(w * (1 - x));
+  auto q = qbpp::sum(w * ~x);
   auto f = qbpp::sqr(p - q);
   f.simplify_as_binary();
 
@@ -97,13 +97,13 @@ Q : 27 74 63 40
 The `replace()` function can also replace a variable with an expression, not only with a constant value.
 
 Here, we present a more sophisticated way to ensure that 64 and 27 are placed in distinct subsets in the partitioning problem introduced above.
-The key idea is to replace the variable `x[0]` in the expression `f` with the expression `1 - x[1]`.
+The key idea is to replace the variable `x[0]` in the expression `f` with the negated literal `~x[1]`.
 This enforces the constraint that `x[0]` and `x[1]` always take opposite values, guaranteeing that the corresponding elements (64 and 27) belong to different subsets.
 
 The following C++ program implements this idea:
 {% raw %}
 ```cpp
-  qbpp::MapList ml({{x[0], 1 - x[1]}});
+  qbpp::MapList ml({{x[0], ~x[1]}});
   auto g = qbpp::replace(f, ml);
   g.simplify_as_binary();
   auto solver = qbpp::exhaustive_solver::ExhaustiveSolver(g);
@@ -112,22 +112,22 @@ The following C++ program implements this idea:
   auto full_sol = qbpp::Sol(f).set(sol, ml);
 ```
 {% endraw %}
-In this program, a qbpp::MapList object ml is defined so that the variable `x[0]` is replaced by the expression `1 - x[1]`.
+In this program, a qbpp::MapList object ml is defined so that the variable `x[0]` is replaced by the negated literal `~x[1]`.
 
 The `qbpp::replace()` function applies this substitution to the original expression `f`, and the resulting expression is stored in `g`.
-As a result, `g` no longer contains the variable `x[0]`; instead, all occurrences of `x[0]` are replaced by the expression `1 - x[1]`.
+As a result, `g` no longer contains the variable `x[0]`; instead, all occurrences of `x[0]` are replaced by `~x[1]`.
 
 The Exhaustive Solver is then used to find an optimal solution for `g`, which is stored in `sol`.
 Since `x[0]` does not appear in `g`, the solution sol also does not include an assignment for `x[0]`.
 
 To construct a complete solution over the original variables in `f`, we start with a zero-initialized `qbpp::Sol(f)` and then populate it by calling `set(sol, ml)`.
-Note that `sol` and `ml` must be passed to `set()` together, because the mapping in `ml` (e.g., `x[0] = 1 - x[1]`) may depend on variable values contained in `sol`.
+Note that `sol` and `ml` must be passed to `set()` together, because the mapping in `ml` (e.g., `x[0] = ~x[1]`) may depend on variable values contained in `sol`.
 
 This program produces the following output:
 {% raw %}
 ```
 sol = 4:{{x[1],0},{x[2],1},{x[3],0},{x[4],1},{x[5],1},{x[6],0},{x[7],0}}
-ml = {{x[0],1 -x[1]}}
+ml = {{x[0],~x[1]}}
 full_sol = 4:{{x[0],1},{x[1],0},{x[2],1},{x[3],0},{x[4],1},{x[5],1},{x[6],0},{x[7],0}}
 f(full_sol) = 4
 p(full_sol) = 206
@@ -287,7 +287,7 @@ int main() {
   qbpp::Vector<uint32_t> w = {64, 27, 47, 74, 12, 83, 63, 40};
   auto x = qbpp::var("x", w.size());
   auto p = qbpp::sum(w * x);
-  auto q = qbpp::sum(w * (1 - x));
+  auto q = qbpp::sum(w * ~x);
   auto f = qbpp::sqr(p - q);
   f.simplify_as_binary();
 
@@ -349,13 +349,13 @@ Q : 27 74 63 40
 `replace()` 関数は、定数値だけでなく、変数を式に置換することもできます。
 
 ここでは、上述の分割問題において64と27を異なる部分集合に配置するための、より洗練された方法を示します。
-鍵となるアイデアは、式 `f` 中の変数 `x[0]` を式 `1 - x[1]` に置換することです。
+鍵となるアイデアは、式 `f` 中の変数 `x[0]` を否定リテラル `~x[1]` に置換することです。
 これにより `x[0]` と `x[1]` が常に反対の値をとるという制約が適用され、対応する要素（64と27）が異なる部分集合に属することが保証されます。
 
 以下のC++プログラムはこのアイデアを実装しています:
 {% raw %}
 ```cpp
-  qbpp::MapList ml({{x[0], 1 - x[1]}});
+  qbpp::MapList ml({{x[0], ~x[1]}});
   auto g = qbpp::replace(f, ml);
   g.simplify_as_binary();
   auto solver = qbpp::exhaustive_solver::ExhaustiveSolver(g);
@@ -364,22 +364,22 @@ Q : 27 74 63 40
   auto full_sol = qbpp::Sol(f).set(sol, ml);
 ```
 {% endraw %}
-このプログラムでは、変数 `x[0]` が式 `1 - x[1]` に置換されるように qbpp::MapList オブジェクト ml を定義しています。
+このプログラムでは、変数 `x[0]` が否定リテラル `~x[1]` に置換されるように qbpp::MapList オブジェクト ml を定義しています。
 
 `qbpp::replace()` 関数がこの代入を元の式 `f` に適用し、結果の式は `g` に格納されます。
-その結果、`g` にはもはや変数 `x[0]` が含まれず、`x[0]` の全ての出現が式 `1 - x[1]` に置き換えられています。
+その結果、`g` にはもはや変数 `x[0]` が含まれず、`x[0]` の全ての出現が `~x[1]` に置き換えられています。
 
 次に、Exhaustive Solverを使用して `g` の最適解を求め、`sol` に格納します。
 `x[0]` は `g` に現れないため、解 sol にも `x[0]` の割り当ては含まれません。
 
 `f` の元の変数に対する完全な解を構築するために、ゼロ初期化された `qbpp::Sol(f)` から始め、`set(sol, ml)` を呼び出して値を設定します。
-`sol` と `ml` は `set()` に一緒に渡す必要があることに注意してください。これは `ml` のマッピング（例: `x[0] = 1 - x[1]`）が `sol` に含まれる変数値に依存する場合があるためです。
+`sol` と `ml` は `set()` に一緒に渡す必要があることに注意してください。これは `ml` のマッピング（例: `x[0] = ~x[1]`）が `sol` に含まれる変数値に依存する場合があるためです。
 
 このプログラムは以下の出力を生成します:
 {% raw %}
 ```
 sol = 4:{{x[1],0},{x[2],1},{x[3],0},{x[4],1},{x[5],1},{x[6],0},{x[7],0}}
-ml = {{x[0],1 -x[1]}}
+ml = {{x[0],~x[1]}}
 full_sol = 4:{{x[0],1},{x[1],0},{x[2],1},{x[3],0},{x[4],1},{x[5],1},{x[6],0},{x[7],0}}
 f(full_sol) = 4
 p(full_sol) = 206

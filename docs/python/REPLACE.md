@@ -24,7 +24,7 @@ from pyqbpp import var, sum, sqr, replace, MapList, Sol, ExhaustiveSolver
 w = [64, 27, 47, 74, 12, 83, 63, 40]
 x = var("x", len(w))
 p = sum([w[i] * x[i] for i in range(len(w))])
-q = sum([w[i] * (1 - x[i]) for i in range(len(w))])
+q = sum([w[i] * ~x[i] for i in range(len(w))])
 f = sqr(p - q)
 f.simplify_as_binary()
 
@@ -59,10 +59,10 @@ Q: [27, 74, 63, 40]
 The `replace()` function can also replace a variable with an expression.
 
 For example, to ensure that 64 and 27 are placed in distinct subsets,
-we replace `x[0]` with `1 - x[1]` so they always take opposite values:
+we replace `x[0]` with `~x[1]` so they always take opposite values:
 
 ```python
-ml = MapList([(x[0], 1 - x[1])])
+ml = MapList([(x[0], ~x[1])])
 g = replace(f, ml)
 g.simplify_as_binary()
 
@@ -170,7 +170,7 @@ from pyqbpp import var, sum, sqr, replace, MapList, Sol, ExhaustiveSolver
 w = [64, 27, 47, 74, 12, 83, 63, 40]
 x = var("x", len(w))
 p = sum([w[i] * x[i] for i in range(len(w))])
-q = sum([w[i] * (1 - x[i]) for i in range(len(w))])
+q = sum([w[i] * ~x[i] for i in range(len(w))])
 f = sqr(p - q)
 f.simplify_as_binary()
 
@@ -205,10 +205,10 @@ Q: [27, 74, 63, 40]
 `replace()` 関数は変数を式で置換することもできます。
 
 例えば、64と27が異なる部分集合に配置されることを保証するために、
-`x[0]` を `1 - x[1]` で置換して常に反対の値を取るようにします：
+`x[0]` を `~x[1]` で置換して常に反対の値を取るようにします：
 
 ```python
-ml = MapList([(x[0], 1 - x[1])])
+ml = MapList([(x[0], ~x[1])])
 g = replace(f, ml)
 g.simplify_as_binary()
 
