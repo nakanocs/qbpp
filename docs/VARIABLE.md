@@ -13,12 +13,12 @@ nav_order: 1
 To use QUBO++, you need to include the header file **`qbpp/qbpp.hpp`** and use the **`qbpp`** namespace.
 
 ## Maximum degree of terms (`MAXDEG`)
-Before including `qbpp/qbpp.hpp`, you must define the macro **`MAXDEG`** to specify the maximum degree (number of variables) allowed in each term.
-For QUBO problems (degree 2), set `#define MAXDEG 2`.
-For higher-order problems (HUBO), use a larger value such as `#define MAXDEG 4`.
+Before including `qbpp/qbpp.hpp`, define the macro **`MAXDEG`** to the maximum degree of terms that the program handles.
+Since QUBO expressions are quadratic (degree 2), set `#define MAXDEG 2` for QUBO problems.
+For higher-order expressions (HUBO), use a larger value such as `#define MAXDEG 4`.
+If the maximum degree is unknown, `#define MAXDEG 0` allows unlimited degree, but this is less efficient.
 
-This macro controls the internal storage of terms and enables compile-time optimization.
-For more details on `MAXDEG` and the alternative `BASEDEG` macro, see **[Reference: Variables](QR_VARIABLE)**.
+For more details, see **[Reference: Variables](QR_VARIABLE)**.
 
 ## Defining variables and expressions
 You can define a variable using **`qbpp::var("name")`** with auto type deduction.
@@ -150,12 +150,12 @@ All solvers bundled with QUBO++ (EasySolver, ExhaustiveSolver, ABS3 GPU Solver) 
 QUBO++を使用するには、ヘッダファイル **`qbpp/qbpp.hpp`** をインクルードし、**`qbpp`** 名前空間を使用します。
 
 ## 項の最大次数（`MAXDEG`）
-`qbpp/qbpp.hpp` をインクルードする前に、マクロ **`MAXDEG`** を定義して各項に許される最大次数（変数の数）を指定する必要があります。
-QUBO問題（次数2）の場合は `#define MAXDEG 2` と設定します。
-高次の問題（HUBO）の場合は `#define MAXDEG 4` のようにより大きな値を使用します。
+`qbpp/qbpp.hpp` をインクルードする前に、マクロ **`MAXDEG`** をプログラムが扱う項の最大次数に設定します。
+QUBO式は2次なので、QUBO問題の場合は `#define MAXDEG 2` と設定します。
+高次の式（HUBO）の場合は `#define MAXDEG 4` のようにより大きな値を使用します。
+最大次数が不明な場合は `#define MAXDEG 0` とすれば次数は無制限になりますが、効率は低下します。
 
-このマクロは項の内部ストレージを制御し、コンパイル時の最適化を可能にします。
-`MAXDEG` および代替の `BASEDEG` マクロの詳細については**[リファレンス: 変数](QR_VARIABLE)**を参照してください。
+詳細については**[リファレンス: 変数](QR_VARIABLE)**を参照してください。
 
 ## 変数と式の定義
 変数は **`qbpp::var("name")`** を `auto` 型推論とともに使用して定義できます。
