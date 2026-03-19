@@ -20,8 +20,7 @@ The table below summarizes the operators and functions available for `pyqbpp.Exp
 | Comparison (Equality)         | `==`                                                 | Member        | `pyqbpp.ExprExpr` | `ExprType`-`int`         |
 | Comparison (Range)            | `between()`                                          | Global        | `pyqbpp.ExprExpr` | `ExprType`-`int`-`int`   |
 | Square                        | `sqr()`                                              | Global        | `pyqbpp.Expr`     | `ExprType`               |
-| Type Conversion               | `toExpr()`                                           | Global        | `pyqbpp.Expr`     | `ExprType`               |
-| Type Conversion               | `toInt()`                                            | Global        | `int`             | `pyqbpp.Expr`            |
+| Type Conversion               | `int()`, `toInt()`                                   | Built-in/Global | `int` or `list` | `pyqbpp.Expr` (constant) |
 | GCD                           | `gcd()`                                              | Global        | `int`             | `ExprType`               |
 | Simplify                      | `simplify()`, `simplify_as_binary()`, `simplify_as_spin()` | Global/Member | `pyqbpp.Expr`     | `ExprType`               |
 | Eval                          | `f(ml)`                                              | Member        | `int`             | `pyqbpp.Expr`-`MapList`  |
@@ -49,24 +48,23 @@ In many cases, they update the calling object in place and also return the resul
 The `sqr()` function computes the square of an expression:
 - `sqr(f)` (global): returns the square of `f` without modifying `f`
 
-## Type Conversion: **`toExpr()`** and **`toInt()`**
-The global function **`pyqbpp.toExpr()`** converts its argument into a `pyqbpp.Expr` instance and returns it.
-The argument may be:
-- an integer
-- a variable (`pyqbpp.Var`)
-- a product term (`pyqbpp.Term`)
-- an expression (`pyqbpp.Expr`) — in this case, no conversion is performed
+## Type Conversion: **`int()`** and **`toInt()`**
+Python's built-in **`int()`** can be used to convert a single constant `Expr` (containing no variables) to a Python `int`.
+If the expression contains variables, a `ValueError` is raised.
 
-The global function **`pyqbpp.toInt()`** extracts and returns the integer constant term of a `pyqbpp.Expr` object.
-If the expression contains any product terms, an error is thrown.
+The **`toInt()`** function extends this to `Vector` objects: it recursively converts a `Vector` of constant `Expr` objects into a nested Python list of `int` values.
 
-### Example
 ```python
 import pyqbpp as qbpp
 
-e = toExpr(5)       # Expr with constant 5
-n = toInt(qbpp.Expr(42)) # 42
+n = int(qbpp.Expr(42))   # 42
+v = qbpp.Vector([qbpp.Expr(10), qbpp.Expr(20), qbpp.Expr(30)])
+print(qbpp.toInt(v))     # [10, 20, 30]
 ```
+
+> **NOTE**
+> In PyQBPP, explicit type conversion from integers or variables to `Expr` is never needed.
+> Python's dynamic typing handles conversions automatically (e.g., `f = 1; f += x` automatically produces an `Expr`).
 
 ## Assignment
 In Python, the `=` operator rebinds the variable name to a new object.
@@ -380,8 +378,7 @@ k = binary_to_spin(h)   # 2 + 2*b  (replaced b with (b+1)/2, multiplied by 2)
 | 比較（等価）                    | `==`                                                 | メンバー       | `pyqbpp.ExprExpr` | `ExprType`-`int`         |
 | 比較（範囲）                    | `between()`                                          | グローバル     | `pyqbpp.ExprExpr` | `ExprType`-`int`-`int`   |
 | 二乗                          | `sqr()`                                              | グローバル     | `pyqbpp.Expr`     | `ExprType`               |
-| 型変換                         | `toExpr()`                                           | グローバル     | `pyqbpp.Expr`     | `ExprType`               |
-| 型変換                         | `toInt()`                                            | グローバル     | `int`             | `pyqbpp.Expr`            |
+| 型変換                         | `int()`, `toInt()`                                   | 組み込み/グローバル | `int` または `list` | `pyqbpp.Expr`（定数）    |
 | 最大公約数                      | `gcd()`                                              | グローバル     | `int`             | `ExprType`               |
 | 簡約化                         | `simplify()`, `simplify_as_binary()`, `simplify_as_spin()` | グローバル/メンバー | `pyqbpp.Expr`     | `ExprType`               |
 | 評価                           | `f(ml)`                                              | メンバー       | `int`             | `pyqbpp.Expr`-`MapList`  |
@@ -409,24 +406,23 @@ PyQBPPでは以下が含まれます。
 `sqr()` 関数は式の二乗を計算します。
 - `sqr(f)` (グローバル): `f` を変更せずに `f` の二乗を返します
 
-## 型変換: **`toExpr()`** と **`toInt()`**
-グローバル関数 **`pyqbpp.toExpr()`** は引数を `pyqbpp.Expr` インスタンスに変換して返します。
-引数は以下のいずれかです。
-- 整数
-- 変数 (`pyqbpp.Var`)
-- 積の項 (`pyqbpp.Term`)
-- 式 (`pyqbpp.Expr`) — この場合、変換は行われません
+## 型変換: **`int()`** と **`toInt()`**
+Pythonの組み込み関数 **`int()`** は、変数を含まない定数 `Expr` をPythonの `int` に変換できます。
+式に変数が含まれている場合は `ValueError` が発生します。
 
-グローバル関数 **`pyqbpp.toInt()`** は `pyqbpp.Expr` オブジェクトの整数定数項を抽出して返します。
-式に積の項が含まれている場合、エラーが発生します。
+**`toInt()`** 関数はこれを `Vector` に拡張し、定数 `Expr` の `Vector` をPythonの `int` のネストされたリストに再帰的に変換します。
 
-### 例
 ```python
 import pyqbpp as qbpp
 
-e = toExpr(5)       # Expr with constant 5
-n = toInt(qbpp.Expr(42)) # 42
+n = int(qbpp.Expr(42))   # 42
+v = qbpp.Vector([qbpp.Expr(10), qbpp.Expr(20), qbpp.Expr(30)])
+print(qbpp.toInt(v))     # [10, 20, 30]
 ```
+
+> **NOTE**
+> PyQBPPでは、整数や変数から `Expr` への明示的な型変換は不要です。
+> Pythonの動的型付けが自動的に変換を処理します（例: `f = 1; f += x` で自動的に `Expr` が生成されます）。
 
 ## 代入
 Pythonでは、`=` 演算子は変数名を新しいオブジェクトに再バインドします。
