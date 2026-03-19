@@ -82,11 +82,11 @@ f.simplify_as_binary()
 solver = ExhaustiveSolver(f)
 sol = solver.search()
 
-print(f"objective = {sol.eval(objective)}")
-print(f"constraint = {sol.eval(constraint)}")
+print(f"objective = {sol(objective)}")
+print(f"constraint = {sol(constraint)}")
 
 for i in range(m):
-    if sol.get(x[i]) == 1:
+    if sol(x[i]) == 1:
         print(f"Set {i}: {cover[i]} cost = {cost[i]}")
 ```
 This program defines a vector `x` of $m=8$ binary variables and constructs a list `c` of $n=10$ expressions.
@@ -211,11 +211,11 @@ f.simplify_as_binary()
 solver = ExhaustiveSolver(f)
 sol = solver.search()
 
-print(f"objective = {sol.eval(objective)}")
-print(f"constraint = {sol.eval(constraint)}")
+print(f"objective = {sol(objective)}")
+print(f"constraint = {sol(constraint)}")
 
 for i in range(m):
-    if sol.get(x[i]) == 1:
+    if sol(x[i]) == 1:
         print(f"Set {i}: {cover[i]} cost = {cost[i]}")
 ```
 このプログラムは $m=8$ 個のバイナリ変数のベクトル `x` と $n=10$ 個の式のリスト `c` を定義します。

@@ -76,7 +76,7 @@ sol = solver.search()
 tour = []
 for i in range(n):
     for j in range(n):
-        if sol.get(x[i][j]) == 1:
+        if sol(x[i][j]) == 1:
             tour.append(j)
             break
 print(f"Tour: {tour}")
@@ -117,7 +117,7 @@ full_sol.set(ml)
 tour = []
 for i in range(n):
     for j in range(n):
-        if full_sol.get(x[i][j]) == 1:
+        if full_sol(x[i][j]) == 1:
             tour.append(j)
             break
 print(f"Tour: {tour}")
@@ -135,7 +135,7 @@ Tour: [0, 3, 6, 7, 8, 5, 2, 1, 4]
 
 | C++ QUBO++                        | PyQBPP                            |
 |------------------------------------|------------------------------------|
-| `qbpp::onehot_to_int(sol(x))`    | Manual loop over `sol.get(x[i][j])` |
+| `qbpp::onehot_to_int(sol(x))`    | Manual loop over `sol(x[i][j])` |
 | `qbpp::MapList ml;`              | `ml = MapList()`                   |
 | `ml.push_back({x[0][0], 1})`    | `ml.add(x[0][0], 1)`              |
 | `qbpp::replace(f, ml)`          | `replace(f, ml)`                   |
@@ -237,7 +237,7 @@ sol = solver.search()
 tour = []
 for i in range(n):
     for j in range(n):
-        if sol.get(x[i][j]) == 1:
+        if sol(x[i][j]) == 1:
             tour.append(j)
             break
 print(f"Tour: {tour}")
@@ -278,7 +278,7 @@ full_sol.set(ml)
 tour = []
 for i in range(n):
     for j in range(n):
-        if full_sol.get(x[i][j]) == 1:
+        if full_sol(x[i][j]) == 1:
             tour.append(j)
             break
 print(f"Tour: {tour}")
@@ -296,7 +296,7 @@ Tour: [0, 3, 6, 7, 8, 5, 2, 1, 4]
 
 | C++ QUBO++                        | PyQBPP                            |
 |------------------------------------|------------------------------------|
-| `qbpp::onehot_to_int(sol(x))`    | `sol.get(x[i][j])` による手動ループ |
+| `qbpp::onehot_to_int(sol(x))`    | `sol(x[i][j])` による手動ループ |
 | `qbpp::MapList ml;`              | `ml = MapList()`                   |
 | `ml.push_back({x[0][0], 1})`    | `ml.add(x[0][0], 1)`              |
 | `qbpp::replace(f, ml)`          | `replace(f, ml)`                   |

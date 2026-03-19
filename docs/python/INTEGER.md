@@ -62,12 +62,12 @@ solver.target_energy(0)
 sol = solver.search()
 
 print("sol =", sol)
-print("x =", x, "=", sol.eval(x))
-print("y =", y, "=", sol.eval(y))
-print("f =", sol.eval(f))
-print("g =", sol.eval(g))
-print("x + y =", sol.eval(f.body))
-print("2x + 4y =", sol.eval(g.body))
+print("x =", x, "=", sol(x))
+print("y =", y, "=", sol(y))
+print("f =", sol(f))
+print("g =", sol(g))
+print("x + y =", sol(f.body))
+print("2x + 4y =", sol(g.body))
 ```
 First, `VarInt` objects **`x`** and **`y`** are defined with the range $[0,10]$.
 An `Expr` object **`f`** is created to represent the constraint **`(x + y) == 10`**.
@@ -78,8 +78,8 @@ An Easy Solver instance is created with `h`, and the target energy is set to `0`
 Calling `search()` returns a `Sol` object `sol` that stores the optimal assignment of all binary variables.
 
 Here,
-- **`f`**: The penalty expression enforcing `x + y = 10`. Thus `sol.eval(f) = 0` if and only if the equation is satisfied.
-- **`f.body`**: The linear expression `x + y`. Thus `sol.eval(f.body)` returns the actual evaluated value of `x + y`.
+- **`f`**: The penalty expression enforcing `x + y = 10`. Thus `sol(f) = 0` if and only if the equation is satisfied.
+- **`f.body`**: The linear expression `x + y`. Thus `sol(f.body)` returns the actual evaluated value of `x + y`.
 
 The same applies to **`g`** and **`g.body`**.
 
@@ -159,12 +159,12 @@ solver.target_energy(0)
 sol = solver.search()
 
 print("sol =", sol)
-print("x =", x, "=", sol.eval(x))
-print("y =", y, "=", sol.eval(y))
-print("f =", sol.eval(f))
-print("g =", sol.eval(g))
-print("x + y =", sol.eval(f.body))
-print("2x + 4y =", sol.eval(g.body))
+print("x =", x, "=", sol(x))
+print("y =", y, "=", sol(y))
+print("f =", sol(f))
+print("g =", sol(g))
+print("x + y =", sol(f.body))
+print("2x + 4y =", sol(g.body))
 ```
 まず、`VarInt` オブジェクト **`x`** と **`y`** を範囲 $[0,10]$ で定義します。
 `Expr` オブジェクト **`f`** は制約 **`(x + y) == 10`** を表すために作成されます。
@@ -175,8 +175,8 @@ Easy Solver のインスタンスを `h` で作成し、最適解がすべての
 `search()` を呼び出すと、すべてのバイナリ変数の最適な割り当てを格納した `Sol` オブジェクト `sol` が返されます。
 
 ここで、
-- **`f`**: `x + y = 10` を強制するペナルティ式。方程式が満たされるとき、かつそのときに限り `sol.eval(f) = 0` となります。
-- **`f.body`**: 線形式 `x + y`。`sol.eval(f.body)` は `x + y` の実際の評価値を返します。
+- **`f`**: `x + y = 10` を強制するペナルティ式。方程式が満たされるとき、かつそのときに限り `sol(f) = 0` となります。
+- **`f.body`**: 線形式 `x + y`。`sol(f.body)` は `x + y` の実際の評価値を返します。
 
 **`g`** と **`g.body`** についても同様です。
 

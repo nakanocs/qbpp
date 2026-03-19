@@ -35,10 +35,10 @@ sols = solver.search_optimal_solutions()
 
 seen = set()
 for sol in sols:
-    key = (sol.eval(x), sol.eval(y), sol.eval(z))
+    key = (sol(x), sol(y), sol(z))
     if key not in seen:
         seen.add(key)
-        print(f"x={key[0]}, y={key[1]}, z={key[2]}, f={sol.eval(f.body)}, c={sol.eval(c.body)}")
+        print(f"x={key[0]}, y={key[1]}, z={key[2]}, f={sol(f.body)}, c={sol(c.body)}")
 ```
 In this program, we define integer variables `x`, `y`, and `z` with ranges from 1 to 16.
 We then create two constraint expressions:
@@ -72,8 +72,8 @@ x=9, y=12, z=15, f=0, c=3
 <tbody>
 <tr><td><code>1 &lt;= qbpp::var_int("x") &lt;= 16</code></td><td><code>between(var_int("x"), 1, 16)</code></td></tr>
 <tr><td><code>1 &lt;= y - x &lt;= +qbpp::inf</code></td><td><code>between(y - x, 1, +inf)</code></td></tr>
-<tr><td><code>sol(x)</code></td><td><code>sol.eval(x)</code></td></tr>
-<tr><td><code>sol(*f)</code></td><td><code>sol.eval(f.body)</code></td></tr>
+<tr><td><code>sol(x)</code></td><td><code>sol(x)</code></td></tr>
+<tr><td><code>sol(*f)</code></td><td><code>sol(f.body)</code></td></tr>
 </tbody>
 </table>
 
@@ -110,10 +110,10 @@ sols = solver.search_optimal_solutions()
 
 seen = set()
 for sol in sols:
-    key = (sol.eval(x), sol.eval(y), sol.eval(z))
+    key = (sol(x), sol(y), sol(z))
     if key not in seen:
         seen.add(key)
-        print(f"x={key[0]}, y={key[1]}, z={key[2]}, f={sol.eval(f.body)}, c={sol.eval(c.body)}")
+        print(f"x={key[0]}, y={key[1]}, z={key[2]}, f={sol(f.body)}, c={sol(c.body)}")
 ```
 このプログラムでは、範囲 1 から 16 の整数変数 `x`、`y`、`z` を定義します。
 次に、2つの制約式を作成します:
@@ -146,8 +146,8 @@ x=9, y=12, z=15, f=0, c=3
 <tbody>
 <tr><td><code>1 &lt;= qbpp::var_int("x") &lt;= 16</code></td><td><code>between(var_int("x"), 1, 16)</code></td></tr>
 <tr><td><code>1 &lt;= y - x &lt;= +qbpp::inf</code></td><td><code>between(y - x, 1, +inf)</code></td></tr>
-<tr><td><code>sol(x)</code></td><td><code>sol.eval(x)</code></td></tr>
-<tr><td><code>sol(*f)</code></td><td><code>sol.eval(f.body)</code></td></tr>
+<tr><td><code>sol(x)</code></td><td><code>sol(x)</code></td></tr>
+<tr><td><code>sol(*f)</code></td><td><code>sol(f.body)</code></td></tr>
 </tbody>
 </table>
 

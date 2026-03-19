@@ -59,7 +59,7 @@ sols = solver.search_optimal_solutions()
 
 seen = set()
 for sol in sols:
-    key = (sol.eval(x), sol.eval(y), sol.eval(z))
+    key = (sol(x), sol(y), sol(z))
     if key not in seen:
         seen.add(key)
         xv, yv, zv = key
@@ -135,7 +135,7 @@ sols = solver.search_optimal_solutions()
 
 seen = set()
 for sol in sols:
-    key = (sol.eval(x), sol.eval(y), sol.eval(z))
+    key = (sol(x), sol(y), sol(z))
     if key not in seen:
         seen.add(key)
         xv, yv, zv = key

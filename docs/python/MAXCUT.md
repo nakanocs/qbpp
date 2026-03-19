@@ -53,10 +53,10 @@ f.simplify_as_binary()
 solver = ExhaustiveSolver(f)
 sol = solver.search()
 
-print(f"objective = {sol.eval(objective)}")
+print(f"objective = {sol(objective)}")
 print("S:", end="")
 for i in range(N):
-    if sol.get(x[i]) == 1:
+    if sol(x[i]) == 1:
         print(f" {i}", end="")
 print()
 ```
@@ -79,10 +79,10 @@ G.add_nodes_from(range(N))
 G.add_edges_from(edges)
 pos = nx.spring_layout(G, seed=42)
 
-colors = ["#e74c3c" if sol.get(x[i]) == 1 else "#3498db" for i in range(N)]
-edge_colors = ["#e74c3c" if sol.get(x[u]) != sol.get(x[v]) else "#cccccc"
+colors = ["#e74c3c" if sol(x[i]) == 1 else "#3498db" for i in range(N)]
+edge_colors = ["#e74c3c" if sol(x[u]) != sol(x[v]) else "#cccccc"
                for u, v in edges]
-edge_widths = [2.5 if sol.get(x[u]) != sol.get(x[v]) else 1.0
+edge_widths = [2.5 if sol(x[u]) != sol(x[v]) else 1.0
                for u, v in edges]
 nx.draw(G, pos, with_labels=True, node_color=colors, node_size=400,
         font_size=9, edge_color=edge_colors, width=edge_widths)
@@ -142,10 +142,10 @@ f.simplify_as_binary()
 solver = ExhaustiveSolver(f)
 sol = solver.search()
 
-print(f"objective = {sol.eval(objective)}")
+print(f"objective = {sol(objective)}")
 print("S:", end="")
 for i in range(N):
-    if sol.get(x[i]) == 1:
+    if sol(x[i]) == 1:
         print(f" {i}", end="")
 print()
 ```
@@ -168,10 +168,10 @@ G.add_nodes_from(range(N))
 G.add_edges_from(edges)
 pos = nx.spring_layout(G, seed=42)
 
-colors = ["#e74c3c" if sol.get(x[i]) == 1 else "#3498db" for i in range(N)]
-edge_colors = ["#e74c3c" if sol.get(x[u]) != sol.get(x[v]) else "#cccccc"
+colors = ["#e74c3c" if sol(x[i]) == 1 else "#3498db" for i in range(N)]
+edge_colors = ["#e74c3c" if sol(x[u]) != sol(x[v]) else "#cccccc"
                for u, v in edges]
-edge_widths = [2.5 if sol.get(x[u]) != sol.get(x[v]) else 1.0
+edge_widths = [2.5 if sol(x[u]) != sol(x[v]) else 1.0
                for u, v in edges]
 nx.draw(G, pos, with_labels=True, node_color=colors, node_size=400,
         font_size=9, edge_color=edge_colors, width=edge_widths)

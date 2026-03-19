@@ -59,10 +59,10 @@ solver = EasySolver(f)
 solver.time_limit(1.0)
 sol = solver.search()
 
-print(f"x = {sol.eval(x)}")
-print(f"{sol.eval(x)} - 3 * {sol.eval(d3)} = {sol.eval(c3.body)}")
-print(f"{sol.eval(x)} - 5 * {sol.eval(d5)} = {sol.eval(c5.body)}")
-print(f"{sol.eval(x)} - 7 * {sol.eval(d7)} = {sol.eval(c7.body)}")
+print(f"x = {sol(x)}")
+print(f"{sol(x)} - 3 * {sol(d3)} = {sol(c3.body)}")
+print(f"{sol(x)} - 5 * {sol(d5)} = {sol(c5.body)}")
+print(f"{sol(x)} - 7 * {sol(d7)} = {sol(c7.body)}")
 ```
 
 The three constraints are represented as `c3`, `c5`, and `c7`.
@@ -143,10 +143,10 @@ solver = EasySolver(f)
 solver.time_limit(1.0)
 sol = solver.search()
 
-print(f"x = {sol.eval(x)}")
-print(f"{sol.eval(x)} - 3 * {sol.eval(d3)} = {sol.eval(c3.body)}")
-print(f"{sol.eval(x)} - 5 * {sol.eval(d5)} = {sol.eval(c5.body)}")
-print(f"{sol.eval(x)} - 7 * {sol.eval(d7)} = {sol.eval(c7.body)}")
+print(f"x = {sol(x)}")
+print(f"{sol(x)} - 3 * {sol(d3)} = {sol(c3.body)}")
+print(f"{sol(x)} - 5 * {sol(d5)} = {sol(c5.body)}")
+print(f"{sol(x)} - 7 * {sol(d7)} = {sol(c7.body)}")
 ```
 
 3つの制約は `c3`、`c5`、`c7` として表現されています。

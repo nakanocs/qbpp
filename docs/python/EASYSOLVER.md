@@ -51,7 +51,7 @@ solver.time_limit(5.0)
 solver.target_energy(900)
 solver.callback(lambda energy, tts: print(f"TTS = {tts:.3f}s Energy = {energy}"))
 sol = solver.search()
-bits = "".join("-" if sol.get(i) == 0 else "+" for i in range(size))
+bits = "".join("-" if sol(i) == 0 else "+" for i in range(size))
 print(f"{sol.energy()}: {bits}")
 ```
 In this example, the following options are set:
@@ -121,7 +121,7 @@ solver.time_limit(5.0)
 solver.target_energy(900)
 solver.callback(lambda energy, tts: print(f"TTS = {tts:.3f}s Energy = {energy}"))
 sol = solver.search()
-bits = "".join("-" if sol.get(i) == 0 else "+" for i in range(size))
+bits = "".join("-" if sol(i) == 0 else "+" for i in range(size))
 print(f"{sol.energy()}: {bits}")
 ```
 この例では、以下のオプションが設定されています:

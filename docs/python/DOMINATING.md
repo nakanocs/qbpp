@@ -86,11 +86,11 @@ solver = EasySolver(f)
 solver.time_limit(1.0)
 sol = solver.search()
 
-print(f"objective = {sol.eval(objective)}")
-print(f"constraint = {sol.eval(constraint)}")
+print(f"objective = {sol(objective)}")
+print(f"constraint = {sol(constraint)}")
 print("Dominating set:", end="")
 for i in range(N):
-    if sol.get(x[i]) == 1:
+    if sol(x[i]) == 1:
         print(f" {i}", end="")
 print()
 ```
@@ -144,7 +144,7 @@ G.add_nodes_from(range(N))
 G.add_edges_from(edges)
 pos = nx.spring_layout(G, seed=42)
 
-colors = ["#e74c3c" if sol.get(x[i]) == 1 else "#d5dbdb" for i in range(N)]
+colors = ["#e74c3c" if sol(x[i]) == 1 else "#d5dbdb" for i in range(N)]
 nx.draw(G, pos, with_labels=True, node_color=colors, node_size=400,
         font_size=9, edge_color="#888888", width=1.2)
 plt.title("Minimum Dominating Set")
@@ -235,11 +235,11 @@ solver = EasySolver(f)
 solver.time_limit(1.0)
 sol = solver.search()
 
-print(f"objective = {sol.eval(objective)}")
-print(f"constraint = {sol.eval(constraint)}")
+print(f"objective = {sol(objective)}")
+print(f"constraint = {sol(constraint)}")
 print("Dominating set:", end="")
 for i in range(N):
-    if sol.get(x[i]) == 1:
+    if sol(x[i]) == 1:
         print(f" {i}", end="")
 print()
 ```
@@ -293,7 +293,7 @@ G.add_nodes_from(range(N))
 G.add_edges_from(edges)
 pos = nx.spring_layout(G, seed=42)
 
-colors = ["#e74c3c" if sol.get(x[i]) == 1 else "#d5dbdb" for i in range(N)]
+colors = ["#e74c3c" if sol(x[i]) == 1 else "#d5dbdb" for i in range(N)]
 nx.draw(G, pos, with_labels=True, node_color=colors, node_size=400,
         font_size=9, edge_color="#888888", width=1.2)
 plt.title("Minimum Dominating Set")

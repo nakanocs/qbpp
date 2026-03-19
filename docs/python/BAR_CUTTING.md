@@ -76,14 +76,14 @@ solver.target_energy(0)
 sol = solver.search()
 
 for i in range(M):
-    pieces = "  ".join(str(sol.eval(x[i][j])) for j in range(N))
-    used = sol.eval(bar_length_used[i])
+    pieces = "  ".join(str(sol(x[i][j])) for j in range(N))
+    used = sol(bar_length_used[i])
     print(f"Bar {i}:  {pieces}   used = {used}, waste = {L - used}")
 
 for j in range(N):
     fulfilled = 0
     for i in range(M):
-        fulfilled += sol.eval(x[i][j])
+        fulfilled += sol(x[i][j])
     print(f"Order {j} fulfilled = {fulfilled}, required = {c[j]}")
 ```
 The following output is an example feasible solution:
@@ -171,14 +171,14 @@ solver.target_energy(0)
 sol = solver.search()
 
 for i in range(M):
-    pieces = "  ".join(str(sol.eval(x[i][j])) for j in range(N))
-    used = sol.eval(bar_length_used[i])
+    pieces = "  ".join(str(sol(x[i][j])) for j in range(N))
+    used = sol(bar_length_used[i])
     print(f"Bar {i}:  {pieces}   used = {used}, waste = {L - used}")
 
 for j in range(N):
     fulfilled = 0
     for i in range(M):
-        fulfilled += sol.eval(x[i][j])
+        fulfilled += sol(x[i][j])
     print(f"Order {j} fulfilled = {fulfilled}, required = {c[j]}")
 ```
 以下の出力は実行可能解の一例です：

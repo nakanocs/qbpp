@@ -41,9 +41,9 @@ solver = EasySolver(f)
 solver.target_energy(-T)
 sol = solver.search()
 for i in range(n):
-    if sol.get(s[i]) == 1:
-        print(f"Interval {i}: val = {sol.eval(v[i])}")
-print(f"sum = {sol.eval(total)}")
+    if sol(s[i]) == 1:
+        print(f"Interval {i}: val = {sol(v[i])}")
+print(f"sum = {sol(total)}")
 ```
 This program produces the following output:
 ```
@@ -87,9 +87,9 @@ solver = EasySolver(f)
 solver.target_energy(-T)
 sol = solver.search()
 for i in range(n):
-    if sol.get(s[i]) == 1:
-        print(f"Interval {i}: val = {sol.eval(v[i])}")
-print(f"sum = {sol.eval(total)}")
+    if sol(s[i]) == 1:
+        print(f"Interval {i}: val = {sol(v[i])}")
+print(f"sum = {sol(total)}")
 ```
 This produces the same result as the HUBO formulation.
 </div>
@@ -131,9 +131,9 @@ solver = EasySolver(f)
 solver.target_energy(-T)
 sol = solver.search()
 for i in range(n):
-    if sol.get(s[i]) == 1:
-        print(f"Interval {i}: val = {sol.eval(v[i])}")
-print(f"sum = {sol.eval(total)}")
+    if sol(s[i]) == 1:
+        print(f"Interval {i}: val = {sol(v[i])}")
+print(f"sum = {sol(total)}")
 ```
 このプログラムの出力は以下の通りです：
 ```
@@ -177,9 +177,9 @@ solver = EasySolver(f)
 solver.target_energy(-T)
 sol = solver.search()
 for i in range(n):
-    if sol.get(s[i]) == 1:
-        print(f"Interval {i}: val = {sol.eval(v[i])}")
-print(f"sum = {sol.eval(total)}")
+    if sol(s[i]) == 1:
+        print(f"Interval {i}: val = {sol(v[i])}")
+print(f"sum = {sol(total)}")
 ```
 HUBO定式化と同じ結果が得られます。
 </div>

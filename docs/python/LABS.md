@@ -56,7 +56,7 @@ solver = EasySolver(labs)
 solver.time_limit(10.0)
 solver.callback(lambda energy, tts: print(f"TTS = {tts:.3f}s Energy = {energy}"))
 sol = solver.search()
-bits = "".join("+" if sol.get(s[j]) == 1 else "-" for j in range(n))
+bits = "".join("+" if sol(s[j]) == 1 else "-" for j in range(n))
 print(f"{sol.energy()}: {bits}")
 ```
 In this program, `s` stores a vector of `n` variables.
@@ -125,7 +125,7 @@ solver = EasySolver(labs)
 solver.time_limit(10.0)
 solver.callback(lambda energy, tts: print(f"TTS = {tts:.3f}s Energy = {energy}"))
 sol = solver.search()
-bits = "".join("+" if sol.get(s[j]) == 1 else "-" for j in range(n))
+bits = "".join("+" if sol(s[j]) == 1 else "-" for j in range(n))
 print(f"{sol.energy()}: {bits}")
 ```
 このプログラムでは、`s` に `n` 個の変数のベクトルを格納します。

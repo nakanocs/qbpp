@@ -82,14 +82,14 @@ solver = EasySolver(f)
 solver.target_energy(-len(guest))
 sol = solver.search()
 
-print(f"objective = {sol.eval(objective)}")
-print(f"constraint = {sol.eval(constraint)}")
+print(f"objective = {sol(objective)}")
+print(f"constraint = {sol(constraint)}")
 
 # Extract guest-to-host mapping
 print("Guest -> Host mapping:")
 for i in range(M):
     for j in range(N):
-        if sol.get(x[i][j]) == 1:
+        if sol(x[i][j]) == 1:
             print(f"  guest {i} -> host {j}")
 ```
 The guest and host graphs are given as edge lists.
@@ -134,7 +134,7 @@ pos = nx.spring_layout(G_host, seed=42)
 mapped = [0] * N_host
 for i in range(N_guest):
     for j in range(N_host):
-        if sol.get(x[i][j]) == 1:
+        if sol(x[i][j]) == 1:
             mapped[j] = 1
 colors = ["#e74c3c" if mapped[j] else "#d5dbdb" for j in range(N_host)]
 
@@ -144,7 +144,7 @@ edge_widths = []
 guest_to_host = {}
 for i in range(N_guest):
     for j in range(N_host):
-        if sol.get(x[i][j]) == 1:
+        if sol(x[i][j]) == 1:
             guest_to_host[i] = j
 for u, v in host_edges:
     host_to_guest_u = {v2: k for k, v2 in guest_to_host.items()}
@@ -240,14 +240,14 @@ solver = EasySolver(f)
 solver.target_energy(-len(guest))
 sol = solver.search()
 
-print(f"objective = {sol.eval(objective)}")
-print(f"constraint = {sol.eval(constraint)}")
+print(f"objective = {sol(objective)}")
+print(f"constraint = {sol(constraint)}")
 
 # Extract guest-to-host mapping
 print("Guest -> Host mapping:")
 for i in range(M):
     for j in range(N):
-        if sol.get(x[i][j]) == 1:
+        if sol(x[i][j]) == 1:
             print(f"  guest {i} -> host {j}")
 ```
 ゲストグラフとホストグラフは辺リストとして与えられます。
@@ -291,7 +291,7 @@ pos = nx.spring_layout(G_host, seed=42)
 mapped = [0] * N_host
 for i in range(N_guest):
     for j in range(N_host):
-        if sol.get(x[i][j]) == 1:
+        if sol(x[i][j]) == 1:
             mapped[j] = 1
 colors = ["#e74c3c" if mapped[j] else "#d5dbdb" for j in range(N_host)]
 
@@ -301,7 +301,7 @@ edge_widths = []
 guest_to_host = {}
 for i in range(N_guest):
     for j in range(N_host):
-        if sol.get(x[i][j]) == 1:
+        if sol(x[i][j]) == 1:
             guest_to_host[i] = j
 for u, v in host_edges:
     host_to_guest_u = {v2: k for k, v2 in guest_to_host.items()}

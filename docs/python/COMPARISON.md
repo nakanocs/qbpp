@@ -38,8 +38,8 @@ print("body =", f.body)
 solver = ExhaustiveSolver(f)
 sols = solver.search_optimal_solutions()
 for sol in sols:
-    print(f"a={sol.get(a)}, b={sol.get(b)}, c={sol.get(c)}, "
-          f"f={sol.eval(f)}, body={sol.eval(f.body)}")
+    print(f"a={sol(a)}, b={sol(b)}, c={sol(c)}, "
+          f"f={sol(f)}, body={sol(f.body)}")
 ```
 In this program, `f` internally holds two expressions:
 - **`f`**: $(a+2b+3c-3)^2$, which attains the minimum value of 0 if the equality is satisfied.
@@ -83,8 +83,8 @@ f.simplify_as_binary()
 solver = ExhaustiveSolver(f)
 sols = solver.search_optimal_solutions()
 for sol in sols:
-    print(f"a={sol.get(a)}, b={sol.get(b)}, c={sol.get(c)}, "
-          f"f={sol.eval(f)}, body={sol.eval(f.body)}")
+    print(f"a={sol(a)}, b={sol(b)}, c={sol(c)}, "
+          f"f={sol(f)}, body={sol(f.body)}")
 ```
 This program searches for solutions satisfying the constraint $5\leq 4a+9b+15c \leq 14$ and produces the following output:
 ```
@@ -126,8 +126,8 @@ print("body =", f.body)
 solver = ExhaustiveSolver(f)
 sols = solver.search_optimal_solutions()
 for sol in sols:
-    print(f"a={sol.get(a)}, b={sol.get(b)}, c={sol.get(c)}, "
-          f"f={sol.eval(f)}, body={sol.eval(f.body)}")
+    print(f"a={sol(a)}, b={sol(b)}, c={sol(c)}, "
+          f"f={sol(f)}, body={sol(f.body)}")
 ```
 このプログラムでは、`f` は内部的に2つの式を保持しています：
 - **`f`**: $(a+2b+3c-3)^2$。等式が満たされるとき最小値0を取ります。
@@ -171,8 +171,8 @@ f.simplify_as_binary()
 solver = ExhaustiveSolver(f)
 sols = solver.search_optimal_solutions()
 for sol in sols:
-    print(f"a={sol.get(a)}, b={sol.get(b)}, c={sol.get(c)}, "
-          f"f={sol.eval(f)}, body={sol.eval(f.body)}")
+    print(f"a={sol(a)}, b={sol(b)}, c={sol(c)}, "
+          f"f={sol(f)}, body={sol(f.body)}")
 ```
 このプログラムは制約 $5\leq 4a+9b+15c \leq 14$ を満たす解を探索し、以下の出力を生成します：
 ```

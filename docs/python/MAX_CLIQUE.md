@@ -73,11 +73,11 @@ f.simplify_as_binary()
 solver = ExhaustiveSolver(f)
 sol = solver.search()
 
-print(f"objective = {sol.eval(objective)}")
-print(f"constraint = {sol.eval(constraint)}")
+print(f"objective = {sol(objective)}")
+print(f"constraint = {sol(constraint)}")
 print("Clique nodes:", end="")
 for i in range(N):
-    if sol.get(x[i]) == 1:
+    if sol(x[i]) == 1:
         print(f" {i}", end="")
 print()
 ```
@@ -102,10 +102,10 @@ G.add_nodes_from(range(N))
 G.add_edges_from(edges)
 pos = nx.spring_layout(G, seed=42)
 
-colors = ["#e74c3c" if sol.get(x[i]) == 1 else "#d5dbdb" for i in range(N)]
-edge_colors = ["#e74c3c" if sol.get(x[u]) == 1 and sol.get(x[v]) == 1
+colors = ["#e74c3c" if sol(x[i]) == 1 else "#d5dbdb" for i in range(N)]
+edge_colors = ["#e74c3c" if sol(x[u]) == 1 and sol(x[v]) == 1
                else "#cccccc" for u, v in edges]
-edge_widths = [2.5 if sol.get(x[u]) == 1 and sol.get(x[v]) == 1
+edge_widths = [2.5 if sol(x[u]) == 1 and sol(x[v]) == 1
                else 1.0 for u, v in edges]
 nx.draw(G, pos, with_labels=True, node_color=colors, node_size=400,
         font_size=9, edge_color=edge_colors, width=edge_widths)
@@ -183,11 +183,11 @@ f.simplify_as_binary()
 solver = ExhaustiveSolver(f)
 sol = solver.search()
 
-print(f"objective = {sol.eval(objective)}")
-print(f"constraint = {sol.eval(constraint)}")
+print(f"objective = {sol(objective)}")
+print(f"constraint = {sol(constraint)}")
 print("Clique nodes:", end="")
 for i in range(N):
-    if sol.get(x[i]) == 1:
+    if sol(x[i]) == 1:
         print(f" {i}", end="")
 print()
 ```
@@ -212,10 +212,10 @@ G.add_nodes_from(range(N))
 G.add_edges_from(edges)
 pos = nx.spring_layout(G, seed=42)
 
-colors = ["#e74c3c" if sol.get(x[i]) == 1 else "#d5dbdb" for i in range(N)]
-edge_colors = ["#e74c3c" if sol.get(x[u]) == 1 and sol.get(x[v]) == 1
+colors = ["#e74c3c" if sol(x[i]) == 1 else "#d5dbdb" for i in range(N)]
+edge_colors = ["#e74c3c" if sol(x[u]) == 1 and sol(x[v]) == 1
                else "#cccccc" for u, v in edges]
-edge_widths = [2.5 if sol.get(x[u]) == 1 and sol.get(x[v]) == 1
+edge_widths = [2.5 if sol(x[u]) == 1 and sol(x[v]) == 1
                else 1.0 for u, v in edges]
 nx.draw(G, pos, with_labels=True, node_color=colors, node_size=400,
         font_size=9, edge_color=edge_colors, width=edge_widths)

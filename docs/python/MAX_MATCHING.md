@@ -68,10 +68,10 @@ f.simplify_as_binary()
 solver = ExhaustiveSolver(f)
 sol = solver.search()
 
-print(f"objective = {sol.eval(objective)}")
+print(f"objective = {sol(objective)}")
 print("Selected edges:", end="")
 for i in range(M):
-    if sol.get(x[i]) == 1:
+    if sol(x[i]) == 1:
         print(f" {edges[i]}", end="")
 print()
 ```
@@ -89,9 +89,9 @@ G.add_nodes_from(range(N))
 G.add_edges_from(edges)
 pos = nx.spring_layout(G, seed=42)
 
-edge_colors = ["#e74c3c" if sol.get(x[i]) == 1 else "#cccccc"
+edge_colors = ["#e74c3c" if sol(x[i]) == 1 else "#cccccc"
                for i in range(M)]
-edge_widths = [2.5 if sol.get(x[i]) == 1 else 1.0 for i in range(M)]
+edge_widths = [2.5 if sol(x[i]) == 1 else 1.0 for i in range(M)]
 nx.draw(G, pos, with_labels=True, node_color="#d5dbdb", node_size=400,
         font_size=9, edge_color=edge_colors, width=edge_widths)
 plt.title("Maximum Matching")
@@ -165,10 +165,10 @@ f.simplify_as_binary()
 solver = ExhaustiveSolver(f)
 sol = solver.search()
 
-print(f"objective = {sol.eval(objective)}")
+print(f"objective = {sol(objective)}")
 print("Selected edges:", end="")
 for i in range(M):
-    if sol.get(x[i]) == 1:
+    if sol(x[i]) == 1:
         print(f" {edges[i]}", end="")
 print()
 ```
@@ -186,9 +186,9 @@ G.add_nodes_from(range(N))
 G.add_edges_from(edges)
 pos = nx.spring_layout(G, seed=42)
 
-edge_colors = ["#e74c3c" if sol.get(x[i]) == 1 else "#cccccc"
+edge_colors = ["#e74c3c" if sol(x[i]) == 1 else "#cccccc"
                for i in range(M)]
-edge_widths = [2.5 if sol.get(x[i]) == 1 else 1.0 for i in range(M)]
+edge_widths = [2.5 if sol(x[i]) == 1 else 1.0 for i in range(M)]
 nx.draw(G, pos, with_labels=True, node_color="#d5dbdb", node_size=400,
         font_size=9, edge_color=edge_colors, width=edge_widths)
 plt.title("Maximum Matching")

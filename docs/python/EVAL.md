@@ -37,7 +37,7 @@ To do this, we first construct a `Sol` object associated with a given expression
 The newly created `Sol` object is initialized with the all-zero assignment.
 
 Using the **`set()`** method, we can assign values to individual variables.
-Then **`sol.eval(f)`** returns the value of the expression `f` under the assignment stored in `sol`.
+Then **`sol(f)`** returns the value of the expression `f` under the assignment stored in `sol`.
 
 ```python
 from pyqbpp import var, sqr, Sol
@@ -52,7 +52,7 @@ sol = Sol(f)
 sol.set(y, 1)
 sol.set(z, 1)
 
-print("f(0,1,1) =", sol.eval(f))
+print("f(0,1,1) =", sol(f))
 ```
 
 The method **`comp_energy()`** computes the energy value and caches it internally.
@@ -121,7 +121,7 @@ f(0,1,1) = 4
 新しく作成された `Sol` オブジェクトはすべてゼロの割り当てで初期化されます。
 
 **`set()`** メソッドを使って、個々の変数に値を割り当てることができます。
-そして **`sol.eval(f)`** は `sol` に格納された割り当てのもとでの式 `f` の値を返します。
+そして **`sol(f)`** は `sol` に格納された割り当てのもとでの式 `f` の値を返します。
 
 ```python
 from pyqbpp import var, sqr, Sol
@@ -136,7 +136,7 @@ sol = Sol(f)
 sol.set(y, 1)
 sol.set(z, 1)
 
-print("f(0,1,1) =", sol.eval(f))
+print("f(0,1,1) =", sol(f))
 ```
 
 メソッド **`comp_energy()`** はエネルギー値を計算し、内部にキャッシュします。

@@ -76,13 +76,13 @@ solver.target_energy(0)
 sol = solver.search()
 
 print(f"colors = {m}")
-print(f"onehot = {sol.eval(onehot)}")
-print(f"different = {sol.eval(different)}")
+print(f"onehot = {sol(onehot)}")
+print(f"different = {sol(different)}")
 
 # Extract edge colors
 for i in range(s):
     for j in range(m):
-        if sol.get(x[i][j]) == 1:
+        if sol(x[i][j]) == 1:
             print(f"Edge {edges[i]}: color {j}")
             break
 ```
@@ -110,7 +110,7 @@ pos = nx.spring_layout(G, seed=42)
 
 palette = ["#e74c3c", "#3498db", "#2ecc71", "#f39c12", "#9b59b6", "#1abc9c",
            "#e67e22", "#2c3e50"]
-edge_color_idx = [next((k for k in range(m) if sol.get(x[i][k]) == 1), 0)
+edge_color_idx = [next((k for k in range(m) if sol(x[i][k]) == 1), 0)
                   for i in range(len(edges))]
 edge_colors = [palette[c % len(palette)] for c in edge_color_idx]
 nx.draw(G, pos, with_labels=True, node_color="#d5dbdb", node_size=400,
@@ -193,13 +193,13 @@ solver.target_energy(0)
 sol = solver.search()
 
 print(f"colors = {m}")
-print(f"onehot = {sol.eval(onehot)}")
-print(f"different = {sol.eval(different)}")
+print(f"onehot = {sol(onehot)}")
+print(f"different = {sol(different)}")
 
 # Extract edge colors
 for i in range(s):
     for j in range(m):
-        if sol.get(x[i][j]) == 1:
+        if sol(x[i][j]) == 1:
             print(f"Edge {edges[i]}: color {j}")
             break
 ```
@@ -227,7 +227,7 @@ pos = nx.spring_layout(G, seed=42)
 
 palette = ["#e74c3c", "#3498db", "#2ecc71", "#f39c12", "#9b59b6", "#1abc9c",
            "#e67e22", "#2c3e50"]
-edge_color_idx = [next((k for k in range(m) if sol.get(x[i][k]) == 1), 0)
+edge_color_idx = [next((k for k in range(m) if sol(x[i][k]) == 1), 0)
                   for i in range(len(edges))]
 edge_colors = [palette[c % len(palette)] for c in edge_color_idx]
 nx.draw(G, pos, with_labels=True, node_color="#d5dbdb", node_size=400,

@@ -43,9 +43,9 @@ solver = EasySolver(f)
 solver.time_limit(1.0)
 sol = solver.search()
 
-print(f"GCD = {sol.eval(r)}")
-print(f"{sol.eval(p)} * {sol.eval(r)} = {P}")
-print(f"{sol.eval(q)} * {sol.eval(r)} = {Q}")
+print(f"GCD = {sol(r)}")
+print(f"{sol(p)} * {sol(r)} = {P}")
+print(f"{sol(q)} * {sol(r)} = {Q}")
 ```
 In this program, `p`, `q`, and `r` are defined as integer variables in the range $[1,1000]$.
 The expression constraint is constructed so that it evaluates to zero when both constraints are satisfied.
@@ -100,9 +100,9 @@ solver = EasySolver(f)
 solver.time_limit(1.0)
 sol = solver.search()
 
-print(f"GCD = {sol.eval(r)}")
-print(f"{sol.eval(p)} * {sol.eval(r)} = {P}")
-print(f"{sol.eval(q)} * {sol.eval(r)} = {Q}")
+print(f"GCD = {sol(r)}")
+print(f"{sol(p)} * {sol(r)} = {P}")
+print(f"{sol(q)} * {sol(r)} = {Q}")
 ```
 このプログラムでは、`p`、`q`、`r` は範囲 $[1,1000]$ の整数変数として定義されています。
 式 constraint は、両方の制約が満たされたときにゼロと評価されるように構築されています。

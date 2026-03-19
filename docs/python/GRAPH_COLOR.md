@@ -67,13 +67,13 @@ solver = EasySolver(f)
 solver.target_energy(0)
 sol = solver.search()
 
-print(f"onehot = {sol.eval(onehot)}")
-print(f"different = {sol.eval(different)}")
+print(f"onehot = {sol(onehot)}")
+print(f"different = {sol(different)}")
 
 # Extract node colors
 for i in range(n):
     for j in range(m):
-        if sol.get(x[i][j]) == 1:
+        if sol(x[i][j]) == 1:
             print(f"Node {i}: color {j}")
             break
 ```
@@ -108,7 +108,7 @@ G.add_edges_from(edges)
 pos = nx.spring_layout(G, seed=42)
 
 palette = ["#e74c3c", "#3498db", "#2ecc71", "#f39c12", "#9b59b6", "#1abc9c"]
-node_color = [next((k for k in range(m) if sol.get(x[i][k]) == 1), 0) for i in range(n)]
+node_color = [next((k for k in range(m) if sol(x[i][k]) == 1), 0) for i in range(n)]
 colors = [palette[c % len(palette)] for c in node_color]
 nx.draw(G, pos, with_labels=True, node_color=colors, node_size=400,
         font_size=9, edge_color="#888888", width=1.2)
@@ -182,13 +182,13 @@ solver = EasySolver(f)
 solver.target_energy(0)
 sol = solver.search()
 
-print(f"onehot = {sol.eval(onehot)}")
-print(f"different = {sol.eval(different)}")
+print(f"onehot = {sol(onehot)}")
+print(f"different = {sol(different)}")
 
 # Extract node colors
 for i in range(n):
     for j in range(m):
-        if sol.get(x[i][j]) == 1:
+        if sol(x[i][j]) == 1:
             print(f"Node {i}: color {j}")
             break
 ```
@@ -223,7 +223,7 @@ G.add_edges_from(edges)
 pos = nx.spring_layout(G, seed=42)
 
 palette = ["#e74c3c", "#3498db", "#2ecc71", "#f39c12", "#9b59b6", "#1abc9c"]
-node_color = [next((k for k in range(m) if sol.get(x[i][k]) == 1), 0) for i in range(n)]
+node_color = [next((k for k in range(m) if sol(x[i][k]) == 1), 0) for i in range(n)]
 colors = [palette[c % len(palette)] for c in node_color]
 nx.draw(G, pos, with_labels=True, node_color=colors, node_size=400,
         font_size=9, edge_color="#888888", width=1.2)

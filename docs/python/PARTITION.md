@@ -61,19 +61,19 @@ solver = ExhaustiveSolver(f)
 sol = solver.search()
 
 print("Solution:", sol)
-print("f(sol) =", sol.eval(f))
-print("p(sol) =", sol.eval(p))
-print("q(sol) =", sol.eval(q))
+print("f(sol) =", sol(f))
+print("p(sol) =", sol(p))
+print("q(sol) =", sol(q))
 
 print("P :", end="")
 for i in range(len(w)):
-    if sol.get(x[i]) == 1:
+    if sol(x[i]) == 1:
         print(f" {w[i]}", end="")
 print()
 
 print("Q :", end="")
 for i in range(len(w)):
-    if sol.get(x[i]) == 0:
+    if sol(x[i]) == 0:
         print(f" {w[i]}", end="")
 print()
 ```
@@ -88,9 +88,9 @@ An `Expr` object **`f`** stores the expression for $f(x)$.
 An Exhaustive Solver object **`solver`** for `f` is created
 and the solution **`sol`** (a `Sol` object) is obtained by calling its `search()` method.
 
-The values of $f(x)$, $P(x)$, and $Q(x)$ are evaluated by calling **`sol.eval(f)`**, **`sol.eval(p)`** and **`sol.eval(q)`**, respectively.
+The values of $f(x)$, $P(x)$, and $Q(x)$ are evaluated by calling **`sol(f)`**, **`sol(p)`** and **`sol(q)`**, respectively.
 The numbers in the sets $L$ and $\overline{L}$ are displayed using the for loops.
-In these loops, **`sol.get(x[i])`** returns the value of `x[i]` in `sol`.
+In these loops, **`sol(x[i])`** returns the value of `x[i]` in `sol`.
 
 This program outputs:
 ```
@@ -104,8 +104,8 @@ Q : 64 27 74 40
 ```
 
 > **NOTE**
-> For a `Sol` object `sol` and an `Expr` object `f`, **`sol.eval(f)`** returns the evaluated value of `f` on `sol`.
-> For a `Var` object `a`, **`sol.get(a)`** returns the value of `a` in the solution `sol`.
+> For a `Sol` object `sol` and an `Expr` object `f`, **`sol(f)`** returns the evaluated value of `f` on `sol`.
+> For a `Var` object `a`, **`sol(a)`** returns the value of `a` in the solution `sol`.
 
 ## PyQBPP program using vector operations
 PyQBPP has rich vector operations that can simplify the code.
@@ -189,19 +189,19 @@ solver = ExhaustiveSolver(f)
 sol = solver.search()
 
 print("Solution:", sol)
-print("f(sol) =", sol.eval(f))
-print("p(sol) =", sol.eval(p))
-print("q(sol) =", sol.eval(q))
+print("f(sol) =", sol(f))
+print("p(sol) =", sol(p))
+print("q(sol) =", sol(q))
 
 print("P :", end="")
 for i in range(len(w)):
-    if sol.get(x[i]) == 1:
+    if sol(x[i]) == 1:
         print(f" {w[i]}", end="")
 print()
 
 print("Q :", end="")
 for i in range(len(w)):
-    if sol.get(x[i]) == 0:
+    if sol(x[i]) == 0:
         print(f" {w[i]}", end="")
 print()
 ```
@@ -215,9 +215,9 @@ print()
 `f` に対するExhaustive Solverオブジェクト **`solver`** を作成し、
 `search()` メソッドを呼び出して解 **`sol`**（`Sol` オブジェクト）を取得します。
 
-$f(x)$、$P(x)$、$Q(x)$ の値は、それぞれ **`sol.eval(f)`**、**`sol.eval(p)`**、**`sol.eval(q)`** で評価します。
+$f(x)$、$P(x)$、$Q(x)$ の値は、それぞれ **`sol(f)`**、**`sol(p)`**、**`sol(q)`** で評価します。
 集合 $L$ と $\overline{L}$ に含まれる数はforループで表示します。
-これらのループでは、**`sol.get(x[i])`** が `sol` における `x[i]` の値を返します。
+これらのループでは、**`sol(x[i])`** が `sol` における `x[i]` の値を返します。
 
 このプログラムの出力は以下の通りです：
 ```
@@ -231,8 +231,8 @@ Q : 64 27 74 40
 ```
 
 > **NOTE**
-> `Sol` オブジェクト `sol` と `Expr` オブジェクト `f` に対して、**`sol.eval(f)`** は `sol` における `f` の評価値を返します。
-> `Var` オブジェクト `a` に対して、**`sol.get(a)`** は解 `sol` における `a` の値を返します。
+> `Sol` オブジェクト `sol` と `Expr` オブジェクト `f` に対して、**`sol(f)`** は `sol` における `f` の評価値を返します。
+> `Var` オブジェクト `a` に対して、**`sol(a)`** は解 `sol` における `a` の値を返します。
 
 ## ベクトル演算を用いたPyQBPPプログラム
 PyQBPPにはコードを簡潔にするための豊富なベクトル演算があります。

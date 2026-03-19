@@ -102,18 +102,18 @@ full_sol = Sol(f)
 full_sol.set(sol)
 full_sol.set(ml)
 
-print(f"row_constraint = {full_sol.eval(row_constraint)}")
-print(f"column_constraint = {full_sol.eval(column_constraint)}")
-print(f"consecutive_constraint = {full_sol.eval(consecutive_constraint)}")
-print(f"capacity_constraint = {full_sol.eval(capacity_constraint)}")
-print(f"objective = {full_sol.eval(objective)}")
+print(f"row_constraint = {full_sol(row_constraint)}")
+print(f"column_constraint = {full_sol(column_constraint)}")
+print(f"consecutive_constraint = {full_sol(consecutive_constraint)}")
+print(f"capacity_constraint = {full_sol(capacity_constraint)}")
+print(f"objective = {full_sol(objective)}")
 
 for v in range(V):
-    load = full_sol.eval(vehicle_load[v])
+    load = full_sol(vehicle_load[v])
     route = f"Vehicle {v} : load = {load} / {vehicle_capacity[v]} : 0 "
     for t in range(1, N):
         for i in range(1, N):
-            if full_sol.get(a[v][t][i]) == 1:
+            if full_sol(a[v][t][i]) == 1:
                 route += f"-> {i}({locations[i][2]}) "
                 break
     route += "-> 0"
@@ -152,7 +152,7 @@ for v in range(V):
     route_nodes = [0]
     for t in range(1, N):
         for i in range(1, N):
-            if full_sol.get(a[v][t][i]) == 1:
+            if full_sol(a[v][t][i]) == 1:
                 route_nodes.append(i)
                 break
     route_nodes.append(0)
@@ -268,18 +268,18 @@ full_sol = Sol(f)
 full_sol.set(sol)
 full_sol.set(ml)
 
-print(f"row_constraint = {full_sol.eval(row_constraint)}")
-print(f"column_constraint = {full_sol.eval(column_constraint)}")
-print(f"consecutive_constraint = {full_sol.eval(consecutive_constraint)}")
-print(f"capacity_constraint = {full_sol.eval(capacity_constraint)}")
-print(f"objective = {full_sol.eval(objective)}")
+print(f"row_constraint = {full_sol(row_constraint)}")
+print(f"column_constraint = {full_sol(column_constraint)}")
+print(f"consecutive_constraint = {full_sol(consecutive_constraint)}")
+print(f"capacity_constraint = {full_sol(capacity_constraint)}")
+print(f"objective = {full_sol(objective)}")
 
 for v in range(V):
-    load = full_sol.eval(vehicle_load[v])
+    load = full_sol(vehicle_load[v])
     route = f"Vehicle {v} : load = {load} / {vehicle_capacity[v]} : 0 "
     for t in range(1, N):
         for i in range(1, N):
-            if full_sol.get(a[v][t][i]) == 1:
+            if full_sol(a[v][t][i]) == 1:
                 route += f"-> {i}({locations[i][2]}) "
                 break
     route += "-> 0"
@@ -318,7 +318,7 @@ for v in range(V):
     route_nodes = [0]
     for t in range(1, N):
         for i in range(1, N):
-            if full_sol.get(a[v][t][i]) == 1:
+            if full_sol(a[v][t][i]) == 1:
                 route_nodes.append(i)
                 break
     route_nodes.append(0)

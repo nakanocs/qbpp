@@ -88,7 +88,7 @@ solver.target_energy(0)
 sol = solver.search()
 for i in range(n):
     for j in range(n):
-        print("Q" if sol.get(x[i][j]) == 1 else ".", end="")
+        print("Q" if sol(x[i][j]) == 1 else ".", end="")
     print()
 ```
 An `n`$\times$`n` matrix `x` of binary variables is introduced, where `x[i][j] = 1` indicates that a queen is placed at row `i` and column `j`.
@@ -198,7 +198,7 @@ solver.target_energy(0)
 sol = solver.search()
 for i in range(n):
     for j in range(n):
-        print("Q" if sol.get(x[i][j]) == 1 else ".", end="")
+        print("Q" if sol(x[i][j]) == 1 else ".", end="")
     print()
 ```
 `n`$\times$`n` のバイナリ変数の行列 `x` を導入し、`x[i][j] = 1` は行 `i`、列 `j` にクイーンが配置されていることを示します。

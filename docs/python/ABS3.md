@@ -30,7 +30,7 @@ solver = ABS3Solver(f)
 solver.time_limit(10.0)
 solver.callback(lambda energy, tts, event: print(f"TTS = {tts:.3f}s Energy = {energy}"))
 sol = solver.search()
-bits = "".join("-" if sol.get(i) == 0 else "+" for i in range(size))
+bits = "".join("-" if sol(i) == 0 else "+" for i in range(size))
 print(f"{sol.energy()}: {bits}")
 ```
 In this program, an `ABS3Solver` object is created for the expression `f`.
@@ -113,7 +113,7 @@ solver = ABS3Solver(f)
 solver.time_limit(10.0)
 solver.callback(lambda energy, tts, event: print(f"TTS = {tts:.3f}s Energy = {energy}"))
 sol = solver.search()
-bits = "".join("-" if sol.get(i) == 0 else "+" for i in range(size))
+bits = "".join("-" if sol(i) == 0 else "+" for i in range(size))
 print(f"{sol.energy()}: {bits}")
 ```
 このプログラムでは、式 `f` に対して `ABS3Solver` オブジェクトを作成しています。

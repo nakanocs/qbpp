@@ -82,14 +82,14 @@ full_sol.set(ml)
 full_sol.set(sol)
 
 for i in range(workers):
-    wd = full_sol.eval(workers_working_days[i])
-    bits = "".join(str(full_sol.get(x[i][j])) for j in range(1, days + 1))
+    wd = full_sol(workers_working_days[i])
+    bits = "".join(str(full_sol(x[i][j])) for j in range(1, days + 1))
     print(f"Worker {i}: {wd} days worked: {bits}")
 
-day_counts = "".join(str(full_sol.eval(workers_each_day[d])) for d in range(1, days + 1))
+day_counts = "".join(str(full_sol(workers_each_day[d])) for d in range(1, days + 1))
 print(f"Workers each day        : {day_counts}")
-print(f"Total worker cost: {full_sol.eval(total_worker_cost)}")
-print(f"Constraints violations: {full_sol.eval(constraints)}")
+print(f"Total worker cost: {full_sol(total_worker_cost)}")
+print(f"Constraints violations: {full_sol(constraints)}")
 ```
 The obtained solution is as follows:
 ```
@@ -183,14 +183,14 @@ full_sol.set(ml)
 full_sol.set(sol)
 
 for i in range(workers):
-    wd = full_sol.eval(workers_working_days[i])
-    bits = "".join(str(full_sol.get(x[i][j])) for j in range(1, days + 1))
+    wd = full_sol(workers_working_days[i])
+    bits = "".join(str(full_sol(x[i][j])) for j in range(1, days + 1))
     print(f"Worker {i}: {wd} days worked: {bits}")
 
-day_counts = "".join(str(full_sol.eval(workers_each_day[d])) for d in range(1, days + 1))
+day_counts = "".join(str(full_sol(workers_each_day[d])) for d in range(1, days + 1))
 print(f"Workers each day        : {day_counts}")
-print(f"Total worker cost: {full_sol.eval(total_worker_cost)}")
-print(f"Constraints violations: {full_sol.eval(constraints)}")
+print(f"Total worker cost: {full_sol(total_worker_cost)}")
+print(f"Constraints violations: {full_sol(constraints)}")
 ```
 得られた解は以下の通りです：
 ```

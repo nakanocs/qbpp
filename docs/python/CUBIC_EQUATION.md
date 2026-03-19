@@ -30,7 +30,7 @@ sols = solver.search_optimal_solutions()
 
 seen = set()
 for sol in sols:
-    xv = sol.eval(x)
+    xv = sol(x)
     if xv not in seen:
         seen.add(xv)
         print(f"x = {xv}")
@@ -85,7 +85,7 @@ sols = solver.search_optimal_solutions()
 
 seen = set()
 for sol in sols:
-    xv = sol.eval(x)
+    xv = sol(x)
     if xv not in seen:
         seen.add(xv)
         print(f"x = {xv}")

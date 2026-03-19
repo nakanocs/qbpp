@@ -40,8 +40,8 @@ full_sol.set(sol)
 full_sol.set(ml)
 
 print("energy =", full_sol.comp_energy())
-P = [w[i] for i in range(len(w)) if full_sol.get(x[i]) == 1]
-Q = [w[i] for i in range(len(w)) if full_sol.get(x[i]) == 0]
+P = [w[i] for i in range(len(w)) if full_sol(x[i]) == 1]
+Q = [w[i] for i in range(len(w)) if full_sol(x[i]) == 0]
 print("P:", P)
 print("Q:", Q)
 ```
@@ -73,8 +73,8 @@ full_sol = Sol(f)
 full_sol.set(sol, ml)
 
 print("energy =", full_sol.comp_energy())
-P = [w[i] for i in range(len(w)) if full_sol.get(x[i]) == 1]
-Q = [w[i] for i in range(len(w)) if full_sol.get(x[i]) == 0]
+P = [w[i] for i in range(len(w)) if full_sol(x[i]) == 1]
+Q = [w[i] for i in range(len(w)) if full_sol(x[i]) == 0]
 print("P:", P)
 print("Q:", Q)
 ```
@@ -113,7 +113,7 @@ sol = solver.search()
 full_sol = Sol(f)
 full_sol.set(sol)
 full_sol.set(ml)
-print(f"p={full_sol.eval(p)}, q={full_sol.eval(q)}, r={full_sol.eval(r)}")
+print(f"p={full_sol(p)}, q={full_sol(q)}, r={full_sol(r)}")
 ```
 This program produces the following output:
 ```
@@ -186,8 +186,8 @@ full_sol.set(sol)
 full_sol.set(ml)
 
 print("energy =", full_sol.comp_energy())
-P = [w[i] for i in range(len(w)) if full_sol.get(x[i]) == 1]
-Q = [w[i] for i in range(len(w)) if full_sol.get(x[i]) == 0]
+P = [w[i] for i in range(len(w)) if full_sol(x[i]) == 1]
+Q = [w[i] for i in range(len(w)) if full_sol(x[i]) == 0]
 print("P:", P)
 print("Q:", Q)
 ```
@@ -219,8 +219,8 @@ full_sol = Sol(f)
 full_sol.set(sol, ml)
 
 print("energy =", full_sol.comp_energy())
-P = [w[i] for i in range(len(w)) if full_sol.get(x[i]) == 1]
-Q = [w[i] for i in range(len(w)) if full_sol.get(x[i]) == 0]
+P = [w[i] for i in range(len(w)) if full_sol(x[i]) == 1]
+Q = [w[i] for i in range(len(w)) if full_sol(x[i]) == 0]
 print("P:", P)
 print("Q:", Q)
 ```
@@ -259,7 +259,7 @@ sol = solver.search()
 full_sol = Sol(f)
 full_sol.set(sol)
 full_sol.set(ml)
-print(f"p={full_sol.eval(p)}, q={full_sol.eval(q)}, r={full_sol.eval(r)}")
+print(f"p={full_sol(p)}, q={full_sol(q)}, r={full_sol(r)}")
 ```
 このプログラムの出力は以下の通りです：
 ```

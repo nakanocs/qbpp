@@ -54,7 +54,7 @@ solver = ExhaustiveSolver(f)
 sols = solver.search_optimal_solutions()
 results = set()
 for sol in sols:
-    results.add(sol.eval(v))
+    results.add(sol(v))
 for val in sorted(results):
     print(val, end=" ")
 print()
@@ -123,7 +123,7 @@ solver = ExhaustiveSolver(f)
 sols = solver.search_optimal_solutions()
 results = set()
 for sol in sols:
-    results.add(sol.eval(v))
+    results.add(sol(v))
 for val in sorted(results):
     print(val, end=" ")
 print()

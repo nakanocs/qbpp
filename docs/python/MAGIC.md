@@ -105,7 +105,7 @@ solver.target_energy(0)
 sol = solver.search()
 for i in range(3):
     for j in range(3):
-        val = next(k for k in range(9) if sol.get(x[i][j][k]) == 1)
+        val = next(k for k in range(9) if sol(x[i][j][k]) == 1)
         print(val + 1, end=" ")
     print()
 ```
@@ -114,7 +114,7 @@ We then build four constraint expressions `c1`, `c2`, `c3`, and `c4`, and combin
 The expression `f` achieves the minimum energy 0 when all constraints are satisfied.
 
 We create an Easy Solver object `solver` for `f` and set the target energy to 0, so the search terminates as soon as a feasible (optimal) solution is found.
-The resulting one-hot encoding is decoded by finding the index `k` for which `sol.get(x[i][j][k]) == 1`.
+The resulting one-hot encoding is decoded by finding the index `k` for which `sol(x[i][j][k]) == 1`.
 
 This program produces the following output:
 ```
@@ -206,7 +206,7 @@ full_sol.set(ml)
 
 for i in range(3):
     for j in range(3):
-        val = next(k for k in range(9) if full_sol.get(x[i][j][k]) == 1)
+        val = next(k for k in range(9) if full_sol(x[i][j][k]) == 1)
         print(val + 1, end=" ")
     print()
 ```
@@ -327,7 +327,7 @@ solver.target_energy(0)
 sol = solver.search()
 for i in range(3):
     for j in range(3):
-        val = next(k for k in range(9) if sol.get(x[i][j][k]) == 1)
+        val = next(k for k in range(9) if sol(x[i][j][k]) == 1)
         print(val + 1, end=" ")
     print()
 ```
@@ -336,7 +336,7 @@ for i in range(3):
 式 `f` はすべての制約が満たされたとき最小エネルギー0を達成します。
 
 `f` に対するEasy Solverオブジェクト `solver` を作成し、target energyを0に設定します。これにより、実行可能（最適）解が見つかり次第、探索が終了します。
-得られたone-hotエンコーディングは、`sol.get(x[i][j][k]) == 1` となるインデックス `k` を見つけることでデコードされます。
+得られたone-hotエンコーディングは、`sol(x[i][j][k]) == 1` となるインデックス `k` を見つけることでデコードされます。
 
 このプログラムの出力は以下の通りです：
 ```
@@ -427,7 +427,7 @@ full_sol.set(ml)
 
 for i in range(3):
     for j in range(3):
-        val = next(k for k in range(9) if full_sol.get(x[i][j][k]) == 1)
+        val = next(k for k in range(9) if full_sol(x[i][j][k]) == 1)
         print(val + 1, end=" ")
     print()
 ```

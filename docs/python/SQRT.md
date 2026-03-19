@@ -56,7 +56,7 @@ solver = EasySolver(f)
 solver.time_limit(1.0)
 sol = solver.search()
 print(f"Energy = {sol.energy()}")
-print(f"x = {sol.eval(x)}")
+print(f"x = {sol(x)}")
 ```
 
 Since Python integers have unlimited precision, there is no need to specify special integer types (unlike the C++ version which requires `COEFF_TYPE=cpp_int`).
@@ -130,7 +130,7 @@ solver = EasySolver(f)
 solver.time_limit(1.0)
 sol = solver.search()
 print(f"Energy = {sol.energy()}")
-print(f"x = {sol.eval(x)}")
+print(f"x = {sol(x)}")
 ```
 
 Python の整数は任意精度であるため、特別な整数型を指定する必要はありません（C++版では `COEFF_TYPE=cpp_int` が必要です）。

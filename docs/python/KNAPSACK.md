@@ -53,10 +53,10 @@ sols = solver.search_optimal_solutions()
 for idx, sol in enumerate(sols):
     print(f"[Solution {idx}]")
     print(f"Energy = {sol.energy()}")
-    print(f"Constraint = {sol.eval(constraint.body)}")
-    print(f"Objective = {sol.eval(objective)}")
+    print(f"Constraint = {sol(constraint.body)}")
+    print(f"Objective = {sol(objective)}")
     for j in range(len(w)):
-        if sol.get(x[j]) == 1:
+        if sol(x[j]) == 1:
             print(f"Item {j}: weight = {w[j]}, value = {v[j]}")
 ```
 The expressions `constraint` and `objective` are constructed separately and combined into the final QUBO expression `f`.
@@ -88,7 +88,7 @@ Item 9: weight = 18, value = 160
 | C++ QUBO++                   | PyQBPP                              |
 |------------------------------|---------------------------------------|
 | `0 <= sum(w * x) <= capacity`| `between(sum(w * x), 0, capacity)`   |
-| `sol(*constraint)`           | `sol.eval(constraint.body)`           |
+| `sol(*constraint)`           | `sol(constraint.body)`           |
 
 </div>
 
@@ -140,10 +140,10 @@ sols = solver.search_optimal_solutions()
 for idx, sol in enumerate(sols):
     print(f"[Solution {idx}]")
     print(f"Energy = {sol.energy()}")
-    print(f"Constraint = {sol.eval(constraint.body)}")
-    print(f"Objective = {sol.eval(objective)}")
+    print(f"Constraint = {sol(constraint.body)}")
+    print(f"Objective = {sol(objective)}")
     for j in range(len(w)):
-        if sol.get(x[j]) == 1:
+        if sol(x[j]) == 1:
             print(f"Item {j}: weight = {w[j]}, value = {v[j]}")
 ```
 `constraint` と `objective` の式を個別に構築し、最終的なQUBO式 `f` にまとめます。
@@ -175,6 +175,6 @@ Item 9: weight = 18, value = 160
 | C++ QUBO++                   | PyQBPP                              |
 |------------------------------|---------------------------------------|
 | `0 <= sum(w * x) <= capacity`| `between(sum(w * x), 0, capacity)`   |
-| `sol(*constraint)`           | `sol.eval(constraint.body)`           |
+| `sol(*constraint)`           | `sol(constraint.body)`           |
 
 </div>

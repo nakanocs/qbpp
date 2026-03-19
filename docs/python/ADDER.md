@@ -45,7 +45,7 @@ fa.simplify_as_binary()
 solver = ExhaustiveSolver(fa)
 sols = solver.search_optimal_solutions()
 for idx, sol in enumerate(sols):
-    vals = {v: sol.get(v) for v in [a, b, i, o, s]}
+    vals = {v: sol(v) for v in [a, b, i, o, s]}
     print(f"({idx}) {sol.energy()}: a={vals[a]}, b={vals[b]}, i={vals[i]}, o={vals[o]}, s={vals[s]}")
 ```
 In this program, the constraint $fa(a,b,i,c,s)$ is implemented using the equality operator `==`, which intuitively represents the constraint $a+b+i=2o+s$.
@@ -73,7 +73,7 @@ fa2.simplify_as_binary()
 solver2 = ExhaustiveSolver(fa2)
 sols2 = solver2.search_optimal_solutions()
 for idx, sol in enumerate(sols2):
-    print(f"({idx}) {sol.energy()}: o={sol.get(o)}, s={sol.get(s)}")
+    print(f"({idx}) {sol.energy()}: o={sol(o)}, s={sol(s)}")
 ```
 
 The program then produces the following output:
@@ -123,10 +123,10 @@ sols = solver.search_optimal_solutions()
 print(f"Number of valid solutions: {len(sols)}")
 for idx in [0, 1, len(sols)-2, len(sols)-1]:
     sol = sols[idx]
-    xv = "".join(str(sol.get(x[j])) for j in range(4))
-    yv = "".join(str(sol.get(y[j])) for j in range(4))
-    cv = "".join(str(sol.get(c[j])) for j in range(5))
-    zv = "".join(str(sol.get(z[j])) for j in range(4))
+    xv = "".join(str(sol(x[j])) for j in range(4))
+    yv = "".join(str(sol(y[j])) for j in range(4))
+    cv = "".join(str(sol(c[j])) for j in range(5))
+    zv = "".join(str(sol(z[j])) for j in range(4))
     print(f"({idx}) x={xv}, y={yv}, c={cv}, z={zv}")
 ```
 In this program, four full-adder expressions are created using the `replace()` function and combined into a single expression, `adder`.
@@ -210,7 +210,7 @@ fa.simplify_as_binary()
 solver = ExhaustiveSolver(fa)
 sols = solver.search_optimal_solutions()
 for idx, sol in enumerate(sols):
-    vals = {v: sol.get(v) for v in [a, b, i, o, s]}
+    vals = {v: sol(v) for v in [a, b, i, o, s]}
     print(f"({idx}) {sol.energy()}: a={vals[a]}, b={vals[b]}, i={vals[i]}, o={vals[o]}, s={vals[s]}")
 ```
 このプログラムでは、制約 $fa(a,b,i,c,s)$ は等価演算子 `==` を使って実装されており、直感的に制約 $a+b+i=2o+s$ を表現しています。
@@ -238,7 +238,7 @@ fa2.simplify_as_binary()
 solver2 = ExhaustiveSolver(fa2)
 sols2 = solver2.search_optimal_solutions()
 for idx, sol in enumerate(sols2):
-    print(f"({idx}) {sol.energy()}: o={sol.get(o)}, s={sol.get(s)}")
+    print(f"({idx}) {sol.energy()}: o={sol(o)}, s={sol(s)}")
 ```
 
 プログラムは以下の出力を生成します:
@@ -288,10 +288,10 @@ sols = solver.search_optimal_solutions()
 print(f"Number of valid solutions: {len(sols)}")
 for idx in [0, 1, len(sols)-2, len(sols)-1]:
     sol = sols[idx]
-    xv = "".join(str(sol.get(x[j])) for j in range(4))
-    yv = "".join(str(sol.get(y[j])) for j in range(4))
-    cv = "".join(str(sol.get(c[j])) for j in range(5))
-    zv = "".join(str(sol.get(z[j])) for j in range(4))
+    xv = "".join(str(sol(x[j])) for j in range(4))
+    yv = "".join(str(sol(y[j])) for j in range(4))
+    cv = "".join(str(sol(c[j])) for j in range(5))
+    zv = "".join(str(sol(z[j])) for j in range(4))
     print(f"({idx}) x={xv}, y={yv}, c={cv}, z={zv}")
 ```
 このプログラムでは、`replace()` 関数を使って4つの全加算器の式を作成し、1つの式 `adder` にまとめています。

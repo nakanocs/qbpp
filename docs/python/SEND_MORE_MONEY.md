@@ -135,11 +135,11 @@ full_sol = Sol(f)
 full_sol.set(sol)
 full_sol.set(ml)
 
-print(f"onehot = {full_sol.eval(onehot)}")
-print(f"different = {full_sol.eval(different)}")
-print(f"equal = {full_sol.eval(equal)}")
+print(f"onehot = {full_sol(onehot)}")
+print(f"different = {full_sol(different)}")
+print(f"equal = {full_sol(equal)}")
 
-val = [next((k for k in range(10) if full_sol.get(x[i][k]) == 1), -1) for i in range(L)]
+val = [next((k for k in range(10) if full_sol(x[i][k]) == 1), -1) for i in range(L)]
 
 def digit_str(d):
     return "*" if d < 0 else str(d)
@@ -299,11 +299,11 @@ full_sol = Sol(f)
 full_sol.set(sol)
 full_sol.set(ml)
 
-print(f"onehot = {full_sol.eval(onehot)}")
-print(f"different = {full_sol.eval(different)}")
-print(f"equal = {full_sol.eval(equal)}")
+print(f"onehot = {full_sol(onehot)}")
+print(f"different = {full_sol(different)}")
+print(f"equal = {full_sol(equal)}")
 
-val = [next((k for k in range(10) if full_sol.get(x[i][k]) == 1), -1) for i in range(L)]
+val = [next((k for k in range(10) if full_sol(x[i][k]) == 1), -1) for i in range(L)]
 
 def digit_str(d):
     return "*" if d < 0 else str(d)

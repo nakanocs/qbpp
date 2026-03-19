@@ -49,8 +49,8 @@ solver.target_energy(0)
 sol = solver.search()
 
 print("sol =", sol)
-print("p =", sol.eval(p))
-print("q =", sol.eval(q))
+print("p =", sol(p))
+print("q =", sol(q))
 ```
 
 In this program, the expression `(p * q) == 35` is automatically converted into `sqr(p * q - 35)`, which achieves an energy value of 0 when the equality is satisfied.
@@ -113,8 +113,8 @@ solver.target_energy(0)
 sol = solver.search()
 
 print("sol =", sol)
-print("p =", sol.eval(p))
-print("q =", sol.eval(q))
+print("p =", sol(p))
+print("q =", sol(q))
 ```
 
 このプログラムでは、式 `(p * q) == 35` は自動的に `sqr(p * q - 35)` に変換され、等式が満たされたときにエネルギー値 0 を達成します。

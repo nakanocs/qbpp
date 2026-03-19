@@ -157,8 +157,8 @@ solver = EasySolver(f)
 solver.target_energy(0)
 sol = solver.search()
 
-x_bits = "".join(str(sol.get(x[j])) for j in reversed(range(4)))
-y_bits = "".join(str(sol.get(y[j])) for j in reversed(range(4)))
+x_bits = "".join(str(sol(x[j])) for j in reversed(range(4)))
+y_bits = "".join(str(sol(y[j])) for j in reversed(range(4)))
 z_bits = "".join(str(z[j]) for j in reversed(range(8)))
 print(f"{x_bits} * {y_bits} = {z_bits}")
 ```
@@ -323,8 +323,8 @@ solver = EasySolver(f)
 solver.target_energy(0)
 sol = solver.search()
 
-x_bits = "".join(str(sol.get(x[j])) for j in reversed(range(4)))
-y_bits = "".join(str(sol.get(y[j])) for j in reversed(range(4)))
+x_bits = "".join(str(sol(x[j])) for j in reversed(range(4)))
+y_bits = "".join(str(sol(y[j])) for j in reversed(range(4)))
 z_bits = "".join(str(z[j]) for j in reversed(range(8)))
 print(f"{x_bits} * {y_bits} = {z_bits}")
 ```

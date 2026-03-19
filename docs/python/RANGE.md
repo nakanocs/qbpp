@@ -57,10 +57,10 @@ solver = EasySolver(g)
 solver.time_limit(1.0)
 sol = solver.search()
 
-print(f"x = {sol.eval(x)}, y = {sol.eval(y)}")
-print(f"f = {sol.eval(f)}")
-print(f"c1 = {sol.eval(c1)}, c2 = {sol.eval(c2)}")
-print(f"2x+3y = {sol.eval(c1.body)}, 7x+5y = {sol.eval(c2.body)}")
+print(f"x = {sol(x)}, y = {sol(y)}")
+print(f"f = {sol(f)}")
+print(f"c1 = {sol(c1)}, c2 = {sol(c2)}")
+print(f"2x+3y = {sol(c1.body)}, 7x+5y = {sol(c2.body)}")
 ```
 
 In this program,
@@ -141,10 +141,10 @@ solver = EasySolver(g)
 solver.time_limit(1.0)
 sol = solver.search()
 
-print(f"x = {sol.eval(x)}, y = {sol.eval(y)}")
-print(f"f = {sol.eval(f)}")
-print(f"c1 = {sol.eval(c1)}, c2 = {sol.eval(c2)}")
-print(f"2x+3y = {sol.eval(c1.body)}, 7x+5y = {sol.eval(c2.body)}")
+print(f"x = {sol(x)}, y = {sol(y)}")
+print(f"f = {sol(f)}")
+print(f"c1 = {sol(c1)}, c2 = {sol(c2)}")
+print(f"2x+3y = {sol(c1.body)}, 7x+5y = {sol(c2.body)}")
 ```
 
 このプログラムでは、

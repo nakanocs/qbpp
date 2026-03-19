@@ -82,7 +82,7 @@ for k, sol in enumerate(sols):
     perm = []
     for i in range(4):
         for j in range(4):
-            if sol.get(x[i][j]) == 1:
+            if sol(x[i][j]) == 1:
                 perm.append(j)
     print(f"Solution {k}: {perm}")
 ```
@@ -139,7 +139,7 @@ print("sol =", sol)
 result = []
 for i in range(4):
     for j in range(4):
-        if sol.get(x[i][j]) == 1:
+        if sol(x[i][j]) == 1:
             result.append(j)
 print("Result :", result)
 for i in range(len(result)):
@@ -238,7 +238,7 @@ for k, sol in enumerate(sols):
     perm = []
     for i in range(4):
         for j in range(4):
-            if sol.get(x[i][j]) == 1:
+            if sol(x[i][j]) == 1:
                 perm.append(j)
     print(f"Solution {k}: {perm}")
 ```
@@ -295,7 +295,7 @@ print("sol =", sol)
 result = []
 for i in range(4):
     for j in range(4):
-        if sol.get(x[i][j]) == 1:
+        if sol(x[i][j]) == 1:
             result.append(j)
 print("Result :", result)
 for i in range(len(result)):
