@@ -52,7 +52,7 @@ You can define these macros via compiler options (e.g., `-DMAXDEG=2`) or in your
 `int8_t`, `int16_t`, `int32_t`, `int64_t`
 
 - **Multiprecision integer types** (implemented using the Boost.Multiprecision library):
-`qbpp::int128_t`, `qbpp::int256_t`, `qbpp::int512_t`, `qbpp::int1024_t`, `qbpp::cpp_int`
+`qbpp::int128_t`, `qbpp::cpp_int`
 
 - **`qbpp::cpp_int`**:
 An integer type with unlimited precision.
@@ -219,7 +219,7 @@ QUBOを扱う場合は、`MAXDEG`を2に設定してください。
 `int8_t`, `int16_t`, `int32_t`, `int64_t`
 
 - **多倍長整数型**（Boost.Multiprecisionライブラリを使用して実装）:
-`qbpp::int128_t`, `qbpp::int256_t`, `qbpp::int512_t`, `qbpp::int1024_t`, `qbpp::cpp_int`
+`qbpp::int128_t`, `qbpp::cpp_int`
 
 - **`qbpp::cpp_int`**:
 精度無制限の整数型。
