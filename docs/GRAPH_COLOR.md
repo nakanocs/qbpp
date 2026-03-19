@@ -17,7 +17,7 @@ $X$ must be one-hot:
 
 $$
 \begin{aligned}
-  \text{onehot}&= \sum_{i=0}^{n-1}\Bigl(\sum_{j=0}^{m-1}x_{i,j}==1\Bigr)\\
+  \text{onehot}&= \sum_{i=0}^{n-1}\Bigl(\sum_{j=0}^{m-1}x_{i,j}=1\Bigr)\\
    &=\sum_{i=0}^{n-1}\Bigl(1-\sum_{j=0}^{m-1}x_{i,j}\Bigr)^2
 \end{aligned}
 $$

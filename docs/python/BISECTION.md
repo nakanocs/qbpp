@@ -7,7 +7,7 @@ nav_order: 11
 <div class="lang-en" markdown="1">
 # Minimum Graph Bisection Problem
 
-Given an undirected graph $G=(V,E)$ with $n$ nodes (where $n$ is even), the **Minimum Graph Bisection** problem aims to partition the node set $V$ into two disjoint subsets $S$ and $\overline{S}$ of **equal size** ($|S|=|\overline{S}|=n/2$) so that the number of edges crossing the partition is **minimized**.
+Given an undirected graph $G=(V,E)$ with $n$ nodes (where $n$ is even), the **Minimum Graph Bisection** problem aims to partition the node set $V$ into two disjoint subsets $S$ and $\overline{S}$ of **equal size** ($\lvert S\rvert=\lvert\overline{S}\rvert=n/2$) so that the number of edges crossing the partition is **minimized**.
 
 This problem differs from [Max-Cut](MAXCUT) in two ways:
 1. The partition must be **balanced** (equal-sized halves).
