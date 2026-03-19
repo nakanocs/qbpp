@@ -52,7 +52,7 @@ int main() {
 An integer variable is defined using the **range operator** **`<= <=`**, which specifies the integer range that the variable can take.
 The function **`qbpp::var_int("name")`** creates a **`qbpp::VarInt`** object object with the given `name`, representing the linear expression encoded by binary variables.
 The program outputs the following expressions:
-```txt
+```
 x = 1 +x[0] +2*x[1] +4*x[2] uses 3 variables.
 y = -10 +y[0] +2*y[1] +4*y[2] +8*y[3] +5*y[4] uses 5 variables.
 ```
@@ -150,7 +150,7 @@ The same applies to **`g`** and **`*g`**.
 The program outputs the following result:
 
 {% raw %}
-```txt
+```
 sol = 0:{{x[0],0},{x[1],1},{x[2],1},{x[3],0},{y[0],0},{y[1],0},{y[2],1},{y[3],0}}
 x = x[0] +2*x[1] +4*x[2] +3*x[3] = 6
 y = y[0] +2*y[1] +4*y[2] +3*y[3] = 4
@@ -217,7 +217,7 @@ int main() {
 整数変数は**範囲演算子** **`<= <=`**を用いて定義され、変数が取りうる整数の範囲を指定します。
 関数**`qbpp::var_int("name")`**は、指定された`name`を持つ**`qbpp::VarInt`**オブジェクトを作成し、バイナリ変数でエンコードされた線形式を表現します。
 プログラムの出力は次のとおりです:
-```txt
+```
 x = 1 +x[0] +2*x[1] +4*x[2] uses 3 variables.
 y = -10 +y[0] +2*y[1] +4*y[2] +8*y[3] +5*y[4] uses 5 variables.
 ```
@@ -314,7 +314,7 @@ Easy Solverのインスタンスが`h`で作成され、最適解がすべての
 プログラムの出力結果は次のとおりです:
 
 {% raw %}
-```txt
+```
 sol = 0:{{x[0],0},{x[1],1},{x[2],1},{x[3],0},{y[0],0},{y[1],0},{y[2],1},{y[3],0}}
 x = x[0] +2*x[1] +4*x[2] +3*x[3] = 6
 y = y[0] +2*y[1] +4*y[2] +3*y[3] = 4

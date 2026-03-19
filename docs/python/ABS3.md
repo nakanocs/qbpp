@@ -38,7 +38,7 @@ The `time_limit()` method sets the maximum search time, and the `callback()` set
 
 This program produces output similar to the following:
 {% raw %}
-```txt
+```
 TTS = 0.002s Energy = 1218
 TTS = 0.002s Energy = 1170
 TTS = 0.002s Energy = 994
@@ -121,7 +121,7 @@ print(f"{sol.energy()}: {bits}")
 
 このプログラムは以下のような出力を生成します:
 {% raw %}
-```txt
+```
 TTS = 0.002s Energy = 1218
 TTS = 0.002s Energy = 1170
 TTS = 0.002s Energy = 994

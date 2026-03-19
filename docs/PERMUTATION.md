@@ -153,7 +153,7 @@ In this program, `x(sol)` returns a matrix of assigned values to `x` in `sol`, w
 - **`qbpp::onehot_to_int(x(sol), 1)`**: Computes the integer corresponding to each row and returns them as a vector of 4 integers, which represents the permutation.
 - **`qbpp::onehot_to_int(x(sol), 0)`**: returns the integer corresponding to each column and returns them as a vector of 4 integers, which represents the inverse of the permutation.
 This program outputs all permutations and their inverse as integer vectors as follows:
-```txt
+```
 Solution 0: {3,2,1,0}, {3,2,1,0}
 Solution 1: {3,2,0,1}, {2,3,1,0}
 Solution 2: {3,1,2,0}, {3,1,2,0}
@@ -257,7 +257,7 @@ The resulting permutation is stored in `result`, and the selected `c[i][j]` valu
 The output of this program is as follows:
 
 {% raw %}
-```txt
+```
 sol = 93:{{x[0][0],0},{x[0][1],0},{x[0][2],0},{x[0][3],1},{x[1][0],0},{x[1][1],1},{x[1][2],0},{x[1][3],0},{x[2][0],0},{x[2][1],0},{x[2][2],1},{x[2][3],0},{x[3][0],1},{x[3][1],0},{x[3][2],0},{x[3][3],0}}
 Result : {3,1,2,0}
 c[0][3] = 44
@@ -417,7 +417,7 @@ int main() {
 - **`qbpp::onehot_to_int(x(sol), 1)`**: 各行に対応する整数を計算し、4つの整数のベクトルとして返します。これが置換を表します。
 - **`qbpp::onehot_to_int(x(sol), 0)`**: 各列に対応する整数を返し、4つの整数のベクトルとして返します。これが置換の逆を表します。
 このプログラムはすべての置換とその逆を整数ベクトルとして以下のように出力します：
-```txt
+```
 Solution 0: {3,2,1,0}, {3,2,1,0}
 Solution 1: {3,2,0,1}, {2,3,1,0}
 Solution 2: {3,1,2,0}, {3,1,2,0}
@@ -520,7 +520,7 @@ Easy Solverを使用して `h` の解を求めます。
 このプログラムの出力は以下のとおりです：
 
 {% raw %}
-```txt
+```
 sol = 93:{{x[0][0],0},{x[0][1],0},{x[0][2],0},{x[0][3],1},{x[1][0],0},{x[1][1],1},{x[1][2],0},{x[1][3],0},{x[2][0],0},{x[2][1],0},{x[2][2],1},{x[2][3],0},{x[3][0],1},{x[3][1],0},{x[3][2],0},{x[3][3],0}}
 Result : {3,1,2,0}
 c[0][3] = 44

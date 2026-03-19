@@ -78,7 +78,7 @@ int main() {
 ```
 The output of this program is as follows:
 {% raw %}
-```txt
+```
 TTS = 0.000s Energy = 1506
 TTS = 0.000s Energy = 1030
 TTS = 0.000s Energy = 502
@@ -109,7 +109,7 @@ All optimal solutions can be obtained by calling the
 ```
 The output is as follows:
 {% raw %}
-```txt
+```
 26: -----+-+++-+--+++--+
 26: --++-++----+----+-+-
 26: -+-+----+----++-++--
@@ -134,7 +134,7 @@ The top-k solutions with the lowest energy can be obtained by calling the
 ```
 The output is as follows:
 {% raw %}
-```txt
+```
 26: -----+-+++-+--+++--+
 26: --++-++----+----+-+-
 26: -+-+----+----++-++--
@@ -166,7 +166,7 @@ Use this function only when $n$ is small enough.
 This prints all $2^{20}$ solutions in increasing order of energy, as
 shown below:
 {% raw %}
-```txt
+```
 26: -----+-+++-+--+++--+
 26: --++-++----+----+-+-
 26: -+-+----+----++-++--
@@ -257,7 +257,7 @@ int main() {
 ```
 このプログラムの出力は以下のとおりです：
 {% raw %}
-```txt
+```
 TTS = 0.000s Energy = 1506
 TTS = 0.000s Energy = 1030
 TTS = 0.000s Energy = 502
@@ -287,7 +287,7 @@ TTS = 0.004s Energy = 26
 ```
 出力は以下のとおりです：
 {% raw %}
-```txt
+```
 26: -----+-+++-+--+++--+
 26: --++-++----+----+-+-
 26: -+-+----+----++-++--
@@ -311,7 +311,7 @@ TTS = 0.004s Energy = 26
 ```
 出力は以下のとおりです：
 {% raw %}
-```txt
+```
 26: -----+-+++-+--+++--+
 26: --++-++----+----+-+-
 26: -+-+----+----++-++--
@@ -341,7 +341,7 @@ $n$ が十分小さい場合にのみこの関数を使用してください。
 ```
 以下に示すように、すべての $2^{20}$ 個の解がエネルギーの昇順で出力されます：
 {% raw %}
-```txt
+```
 26: -----+-+++-+--+++--+
 26: --++-++----+----+-+-
 26: -+-+----+----++-++--

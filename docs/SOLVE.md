@@ -135,7 +135,7 @@ Furthermore, all solutions including non-optimal ones can be obtained by the
 ```
 The output is as follows:
 {% raw %}
-```txt
+```
 (0) 0:{{a,0},{b,1},{c,1},{d,0}}
 (1) 0:{{a,1},{b,0},{c,0},{d,1}}
 (2) 1:{{a,0},{b,0},{c,0},{d,1}}
@@ -325,7 +325,7 @@ int main() {
 ```
 出力は以下のとおりです：
 {% raw %}
-```txt
+```
 (0) 0:{{a,0},{b,1},{c,1},{d,0}}
 (1) 0:{{a,1},{b,0},{c,0},{d,1}}
 (2) 1:{{a,0},{b,0},{c,0},{d,1}}

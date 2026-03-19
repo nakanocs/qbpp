@@ -64,7 +64,7 @@ or when a solution with energy 900 or less is found.
 
 For example, this program produces the following output:
 {% raw %}
-```txt
+```
 TTS = 0.000s Energy = 300162
 TTS = 0.000s Energy = 273350
 ...
@@ -134,7 +134,7 @@ print(f"{sol.energy()}: {bits}")
 
 例えば、このプログラムは以下のような出力を生成します:
 {% raw %}
-```txt
+```
 TTS = 0.000s Energy = 300162
 TTS = 0.000s Energy = 273350
 ...

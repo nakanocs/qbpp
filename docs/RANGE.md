@@ -84,7 +84,7 @@ An Easy Solver instance is created for `g`, and a search is performed with a tim
 After obtaining the optimal solution `sol`, the program prints the values of `x`, `y`, `f`, `c1`, `c2`, `*c1`, and `*c2`.
 
 The program outputs:
-```txt
+```
 x = 4, y = 5
 f = 40
 c1 = 0, c2 = 0
@@ -176,7 +176,7 @@ int main() {
 最適解 `sol` を取得した後、`x`、`y`、`f`、`c1`、`c2`、`*c1`、`*c2` の値を出力します。
 
 プログラムの出力は以下の通りです:
-```txt
+```
 x = 4, y = 5
 f = 40
 c1 = 0, c2 = 0
