@@ -118,6 +118,10 @@ $$
 Here, $P$ is a sufficiently large positive constant that prioritizes the permutation constraints.
 
 ## PyQBPP program for the assignment problem
+In this program, the cost matrix `c` is defined as a 2D `Vector` using `qbpp.Vector()` with a nested Python list.
+`qbpp.Vector()` automatically converts nested lists into nested `Vector` objects, so multi-dimensional arrays can be created concisely.
+The element-wise product `c * x` then computes $c_{i,j} \cdot x_{i,j}$ for all entries.
+
 ```python
 import pyqbpp as qbpp
 
@@ -274,6 +278,10 @@ $$
 ここで、$P$ は置換制約を優先するための十分に大きな正の定数です。
 
 ## 割当問題のPyQBPPプログラム
+このプログラムでは、コスト行列 `c` をネストされたPythonリストから `qbpp.Vector()` で2次元の `Vector` として定義しています。
+`qbpp.Vector()` はネストされたリストを自動的にネストされた `Vector` オブジェクトに変換するため、多次元配列を簡潔に作成できます。
+要素ごとの積 `c * x` は全要素について $c_{i,j} \cdot x_{i,j}$ を計算します。
+
 ```python
 import pyqbpp as qbpp
 
