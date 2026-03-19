@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Maximum Matching"
+title: "Maximum Matching (PyQBPP)"
 nav_order: 52
 ---
 <div class="lang-en" markdown="1">

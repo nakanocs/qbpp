@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Variables and Expressions"
+title: "Variables and Expressions (PyQBPP)"
 nav_order: 2
 ---
 <div class="lang-en" markdown="1">

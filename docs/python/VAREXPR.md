@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Data Types"
+title: "Data Types (PyQBPP)"
 nav_order: 10
 ---
 <div class="lang-en" markdown="1">

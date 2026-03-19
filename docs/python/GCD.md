@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Greatest Common Divisor"
+title: "Greatest Common Divisor (PyQBPP)"
 nav_order: 43
 ---
 <div class="lang-en" markdown="1">

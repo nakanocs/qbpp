@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Knapsack"
+title: "Knapsack (PyQBPP)"
 nav_order: 70
 ---
 <div class="lang-en" markdown="1">

@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Pythagorean Triples"
+title: "Pythagorean Triples (PyQBPP)"
 nav_order: 40
 ---
 <div class="lang-en" markdown="1">

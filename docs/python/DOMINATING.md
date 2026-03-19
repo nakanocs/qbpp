@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Dominating Set"
+title: "Dominating Set (PyQBPP)"
 nav_order: 55
 ---
 <div class="lang-en" markdown="1">

@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Edge Coloring"
+title: "Edge Coloring (PyQBPP)"
 nav_order: 60
 ---
 <div class="lang-en" markdown="1">

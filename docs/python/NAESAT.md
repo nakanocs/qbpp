@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "NAE-SAT"
+title: "NAE-SAT (PyQBPP)"
 nav_order: 45
 ---
 <div class="lang-en" markdown="1">

@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "QR: Variables"
+title: "QR: Variables (PyQBPP)"
 nav_order: 30
 ---
 <div class="lang-en" markdown="1">

@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Expression Classes"
+title: "Expression Classes (PyQBPP)"
 nav_order: 15
 ---
 <div class="lang-en" markdown="1">

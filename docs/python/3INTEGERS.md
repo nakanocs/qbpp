@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Find Three Integers"
+title: "Find Three Integers (PyQBPP)"
 nav_order: 44
 ---
 <div class="lang-en" markdown="1">

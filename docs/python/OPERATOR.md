@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Operators and Functions"
+title: "Operators and Functions (PyQBPP)"
 nav_order: 11
 ---
 <div class="lang-en" markdown="1">

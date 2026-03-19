@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "N-Queens"
+title: "N-Queens (PyQBPP)"
 nav_order: 81
 ---
 <div class="lang-en" markdown="1">

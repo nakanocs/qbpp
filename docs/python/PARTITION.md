@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Partitioning Problem"
+title: "Partitioning Problem (PyQBPP)"
 nav_order: 5
 ---
 <div class="lang-en" markdown="1">

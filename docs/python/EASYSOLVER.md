@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Easy Solver"
+title: "Easy Solver (PyQBPP)"
 nav_order: 19
 ---
 <div class="lang-en" markdown="1">

@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "Installation"
+title: "Installation (PyQBPP)"
 nav_order: 3
 ---
 <div class="lang-en" markdown="1">

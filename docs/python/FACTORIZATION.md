@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Factorization"
+title: "Factorization (PyQBPP)"
 nav_order: 8
 ---
 <div class="lang-en" markdown="1">

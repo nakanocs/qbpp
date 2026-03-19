@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Cubic Equation"
+title: "Cubic Equation (PyQBPP)"
 nav_order: 46
 ---
 <div class="lang-en" markdown="1">

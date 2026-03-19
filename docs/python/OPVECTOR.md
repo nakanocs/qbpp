@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Vector Operations"
+title: "Vector Operations (PyQBPP)"
 nav_order: 12
 ---
 <div class="lang-en" markdown="1">

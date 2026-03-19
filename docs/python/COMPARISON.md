@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Comparison Operators"
+title: "Comparison Operators (PyQBPP)"
 nav_order: 14
 ---
 <div class="lang-en" markdown="1">

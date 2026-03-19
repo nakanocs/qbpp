@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Multi-dimensional Variables"
+title: "Multi-dimensional Variables (PyQBPP)"
 nav_order: 13
 ---
 <div class="lang-en" markdown="1">

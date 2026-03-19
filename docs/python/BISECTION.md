@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Graph Bisection"
+title: "Graph Bisection (PyQBPP)"
 nav_order: 11
 ---
 <div class="lang-en" markdown="1">

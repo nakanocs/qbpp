@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Replace Functions"
+title: "Replace Functions (PyQBPP)"
 nav_order: 17
 ---
 <div class="lang-en" markdown="1">

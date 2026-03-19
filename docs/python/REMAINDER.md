@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Remainder Problem"
+title: "Remainder Problem (PyQBPP)"
 nav_order: 41
 ---
 <div class="lang-en" markdown="1">

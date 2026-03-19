@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Square Root"
+title: "Square Root (PyQBPP)"
 nav_order: 42
 ---
 <div class="lang-en" markdown="1">

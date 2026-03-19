@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Sum Functions"
+title: "Sum Functions (PyQBPP)"
 nav_order: 18
 ---
 <div class="lang-en" markdown="1">

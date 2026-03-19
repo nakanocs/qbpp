@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Evaluating Expressions"
+title: "Evaluating Expressions (PyQBPP)"
 nav_order: 16
 ---
 <div class="lang-en" markdown="1">

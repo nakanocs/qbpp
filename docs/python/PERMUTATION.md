@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Permutation Matrix"
+title: "Permutation Matrix (PyQBPP)"
 nav_order: 6
 ---
 <div class="lang-en" markdown="1">

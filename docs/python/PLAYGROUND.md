@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "Playground"
+title: "Playground (PyQBPP)"
 nav_order: 8
 ---
 <div class="lang-en" markdown="1">

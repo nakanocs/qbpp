@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Interval Subset Sum"
+title: "Interval Subset Sum (PyQBPP)"
 nav_order: 75
 ---
 <div class="lang-en" markdown="1">

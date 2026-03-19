@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "CVRP"
+title: "CVRP (PyQBPP)"
 nav_order: 61
 ---
 <div class="lang-en" markdown="1">

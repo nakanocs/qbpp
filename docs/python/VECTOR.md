@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Vectors"
+title: "Vectors (PyQBPP)"
 nav_order: 4
 ---
 <div class="lang-en" markdown="1">

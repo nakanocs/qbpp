@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Cutting Stock"
+title: "Cutting Stock (PyQBPP)"
 nav_order: 73
 ---
 <div class="lang-en" markdown="1">
