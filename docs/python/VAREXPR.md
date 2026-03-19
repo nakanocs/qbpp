@@ -7,66 +7,35 @@ nav_order: 10
 <div class="lang-en" markdown="1">
 # Variable and Expression Classes
 
-## Var, Term, and Expr classes
+## Var and Expr classes
 
-PyQBPP provides the following fundamental classes:
-- **`Var`**: Represents a variable symbolically and is associated with a string used for display.
-- **`Term`**: Represents a product term consisting of an integer coefficient and one or more `Var` objects.
-- **`Expr`**: Represents an expanded expression consisting of an integer constant term and zero or more `Term` objects.
+PyQBPP provides two main classes for building QUBO/HUBO expressions:
+- **`Var`**: Represents a binary variable, associated with a display name.
+- **`Expr`**: Represents an expression consisting of an integer constant and zero or more product terms.
 
-In the following program, **`x`** and **`y`** are `Var` objects, **`t`** is a `Term` object, and **`f`** is an `Expr` object:
+`Var` objects are created using `qbpp.var()` and are **immutable**.
+Expressions are built from variables using arithmetic operators (`+`, `-`, `*`) and are **mutable** via compound assignment operators such as `+=`.
+
+The following program demonstrates variable and expression creation:
 ```python
 import pyqbpp as qbpp
 
 x = qbpp.var("x")
 y = qbpp.var("y")
-t = 2 * x * y
-f = t - x + 1
-
-print("x =", x)
-print("y =", y)
-print("t =", t)
-print("f =", f)
-```
-This program produces the following output:
-```
-x = x
-y = y
-t = 2*x*y
-f = 1 -x +2*x*y
-```
-
-`Var` objects are **immutable** and cannot be updated after creation.
-In contrast, `Term` and `Expr` objects are **mutable** and can be updated via assignment.
-
-For example, compound assignment operators can be used to update `Expr` objects:
-```python
-import pyqbpp as qbpp
-
-x = qbpp.var("x")
-y = qbpp.var("y")
-f = 2 * x * y
+f = 2 * x * y - x + 1
 f += 3 * y
 
 print("f =", f)
 ```
-In this program, `2 * x * y` initially creates a `Term`, but the `+=` operator automatically converts it to an `Expr`.
 This program prints:
 ```
-f = 2*x*y +3*y
+f = 1 -x +2*x*y +3*y
 ```
 
-## Differences from C++
-
-In Python, there is no risk of accidentally creating a `Term` when you meant to create an `Expr`,
-because Python's dynamic typing handles conversions automatically.
-In C++ QUBO++, an explicit `qbpp::Expr(2 * x * y)` cast is sometimes needed, but in PyQBPP this is never necessary.
-
-A `toExpr()` function is provided for compatibility with C++, but it is not needed in practice:
-```python
-f = qbpp.toExpr(2 * x * y)  # works, but unnecessary
-f = 2 * x * y               # this is sufficient
-```
+> **NOTE**
+> PyQBPP uses the C++ QUBO++ library as its backend, which internally distinguishes between `Term` (a single product term like `2*x*y`) and `Expr` (a sum of terms).
+> In PyQBPP, however, you do not need to be aware of this distinction.
+> Python's dynamic typing automatically converts between types as needed, so you can simply write expressions naturally.
 
 ## Coefficient and Energy Types
 In PyQBPP, coefficients and energy values use **arbitrary-precision integers** by default.
@@ -89,66 +58,35 @@ f = 987654321098765432109876543210 +123456789012345678901234567890*x
 <div class="lang-ja" markdown="1">
 # 変数と式のクラス
 
-## Var、Term、Exprクラス
+## VarクラスとExprクラス
 
-PyQBPPは以下の基本クラスを提供します:
-- **`Var`**: 変数をシンボリックに表現し、表示用の文字列と関連付けられます。
-- **`Term`**: 整数係数と1つ以上の`Var`オブジェクトからなる積の項を表現します。
-- **`Expr`**: 整数の定数項と0個以上の`Term`オブジェクトからなる展開された式を表現します。
+PyQBPPはQUBO/HUBO式を構築するための2つの主要なクラスを提供します：
+- **`Var`**: バイナリ変数を表し、表示用の名前が関連付けられます。
+- **`Expr`**: 整数の定数と0個以上の積の項からなる式を表します。
 
-以下のプログラムでは、**`x`**と**`y`**は`Var`オブジェクト、**`t`**は`Term`オブジェクト、**`f`**は`Expr`オブジェクトです:
+`Var` オブジェクトは `qbpp.var()` で作成し、**イミュータブル（不変）**です。
+式は変数から算術演算子（`+`, `-`, `*`）を使って構築し、`+=` などの複合代入演算子で**更新可能**です。
+
+以下のプログラムは、変数と式の作成を示しています：
 ```python
 import pyqbpp as qbpp
 
 x = qbpp.var("x")
 y = qbpp.var("y")
-t = 2 * x * y
-f = t - x + 1
-
-print("x =", x)
-print("y =", y)
-print("t =", t)
-print("f =", f)
-```
-このプログラムは以下の出力を生成します:
-```
-x = x
-y = y
-t = 2*x*y
-f = 1 -x +2*x*y
-```
-
-`Var`オブジェクトは**イミュータブル（不変）**であり、作成後に更新することはできません。
-一方、`Term`と`Expr`オブジェクトは**ミュータブル（可変）**であり、代入によって更新できます。
-
-例えば、複合代入演算子を使って`Expr`オブジェクトを更新できます:
-```python
-import pyqbpp as qbpp
-
-x = qbpp.var("x")
-y = qbpp.var("y")
-f = 2 * x * y
+f = 2 * x * y - x + 1
 f += 3 * y
 
 print("f =", f)
 ```
-このプログラムでは、`2 * x * y` は最初 `Term` を生成しますが、`+=` 演算子が自動的に `Expr` に変換します。
-このプログラムは以下を出力します:
+このプログラムは以下を出力します：
 ```
-f = 2*x*y +3*y
+f = 1 -x +2*x*y +3*y
 ```
 
-## C++との違い
-
-Pythonでは、`Expr`を作成するつもりで誤って`Term`を作成してしまうリスクはありません。
-Pythonの動的型付けが変換を自動的に処理するためです。
-C++ QUBO++では明示的な `qbpp::Expr(2 * x * y)` キャストが必要な場合がありますが、PyQBPPでは不要です。
-
-C++との互換性のために `toExpr()` 関数が用意されていますが、実際には使う必要はありません:
-```python
-f = qbpp.toExpr(2 * x * y)  # 動作するが不要
-f = 2 * x * y               # これで十分
-```
+> **NOTE**
+> PyQBPPはバックエンドとしてC++ QUBO++ライブラリを使用しており、内部的には `Term`（`2*x*y` のような単一の積の項）と `Expr`（項の和）を区別しています。
+> しかしPyQBPPでは、この区別を意識する必要はありません。
+> Pythonの動的型付けが必要に応じて自動的に型変換を行うため、自然に式を記述できます。
 
 ## 係数型とエネルギー型
 PyQBPPでは、係数とエネルギー値はデフォルトで**任意精度整数**を使用します。
