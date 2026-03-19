@@ -104,8 +104,11 @@ Q : 64 27 74 40
 ```
 
 > **NOTE**
-> For a `Sol` object `sol` and an `Expr` object `f`, **`sol(f)`** returns the evaluated value of `f` on `sol`.
-> For a `Var` object `a`, **`sol(a)`** returns the value of `a` in the solution `sol`.
+> For an `Expr` object `f` and a `Sol` object `sol`, both **`f(sol)`** and **`sol(f)`** return the resulting value of `f` evaluated on `sol`.
+> Likewise, for a `Var` object `a`, both **`a(sol)`** and **`sol(a)`** return the value of `a` in the solution `sol`.
+> The form **`f(sol)`** is natural from a **mathematical perspective**, as it corresponds to evaluating a function at a point.
+> In contrast, **`sol(f)`** is natural from an **object-oriented programming perspective**, where the solution object evaluates an expression.
+> You may use either form according to your preference.
 
 ## PyQBPP program using vector operations
 PyQBPP has rich vector operations that can simplify the code.
@@ -233,9 +236,12 @@ P : 47 12 83 63
 Q : 64 27 74 40
 ```
 
-> **NOTE**
-> `Sol` オブジェクト `sol` と `Expr` オブジェクト `f` に対して、**`sol(f)`** は `sol` における `f` の評価値を返します。
-> `Var` オブジェクト `a` に対して、**`sol(a)`** は解 `sol` における `a` の値を返します。
+> **注記**
+> `Expr` オブジェクト `f` と `Sol` オブジェクト `sol` に対して、**`f(sol)`** と **`sol(f)`** はどちらも `sol` 上で `f` を評価した値を返します。
+> 同様に、`Var` オブジェクト `a` に対して、**`a(sol)`** と **`sol(a)`** はどちらも解 `sol` における `a` の値を返します。
+> **`f(sol)`** の形式は、関数をある点で評価することに対応するため、**数学的な観点**からは自然です。
+> 一方、**`sol(f)`** は解オブジェクトが式を評価するという、**オブジェクト指向プログラミングの観点**からは自然です。
+> 好みに応じてどちらの形式を使用しても構いません。
 
 ## ベクトル演算を用いたPyQBPPプログラム
 PyQBPPにはコードを簡潔にするための豊富なベクトル演算があります。
