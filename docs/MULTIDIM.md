@@ -41,6 +41,38 @@ which is internally represented by three binary variables:
 
 corresponding to the binary encoding of integers in the specified range.
 
+## Creating integer variable arrays with individual ranges
+
+When defining a multi-dimensional array of integer variables, all elements created by `l <= qbpp::var_int("name", s1, s2, ...) <= u` share the same range $[l, u]$.
+In many practical problems, however, each element may need a different range.
+
+In such cases, you can first create a **placeholder array** using **`qbpp::var_int("name", s1, s2, ...) == 0`**, and then assign individual ranges to each element in a loop:
+
+```cpp
+#define MAXDEG 2
+#include <qbpp/qbpp.hpp>
+
+int main() {
+  qbpp::Vector<int> max_vals = {3, 7, 15, 5};
+  auto x = qbpp::var_int("x", max_vals.size()) == 0;
+  for (size_t i = 0; i < max_vals.size(); ++i) {
+    x[i] = 0 <= qbpp::var_int() <= max_vals[i];
+  }
+  for (size_t i = 0; i < max_vals.size(); ++i) {
+    std::cout << "x[" << i << "] = " << x[i] << std::endl;
+  }
+}
+```
+In this program, `qbpp::var_int("x", 4) == 0` creates an array of 4 constant-zero `VarInt` objects as placeholders.
+Each element is then reassigned with its own range using `0 <= qbpp::var_int() <= max_vals[i]`.
+
+This technique is commonly used in problems such as the **[Cutting Stock Problem](BAR_CUTTING)**, where the upper bound of each variable differs.
+
+> **NOTE**
+> The `== 0` syntax creates a `VarInt` with `min_val = max_val = 0` (i.e., a constant zero).
+> It does **not** create an equality constraint.
+> Any integer constant can be used, e.g., `qbpp::var_int("x", 4) == 5` creates constant-five placeholders.
+
 ## Defining multi-dimensional expressions
 QUBO++ allows you to define **multi-dimensional expressions** (or `qbpp::Expr` objects) with arbitrary depth using the function `qbpp::expr()` as follows:
 - **`qbpp::expr(s1,s2,...,sd)`**: Creates a multi-dimensional array of `qbpp::Expr` objects with shape $s1\times s2\times \cdots\times sd$.
@@ -212,6 +244,37 @@ y : {{{1 +y[0][0][0][0] +2*y[0][0][0][1] +4*y[0][0][0][2],1 +y[0][0][1][0] +2*y[
 - **`y[i][j][k][2]`**
 
 これらは指定された範囲の整数のバイナリエンコーディングに対応しています。
+
+## 個別の範囲を持つ整数変数配列の作成
+
+多次元整数変数配列を定義する場合、`l <= qbpp::var_int("name", s1, s2, ...) <= u` で作成された全要素は同じ範囲 $[l, u]$ を共有します。
+しかし実際の問題では、各要素に異なる範囲が必要な場合が多くあります。
+
+このような場合、まず **`qbpp::var_int("name", s1, s2, ...) == 0`** で**プレースホルダ配列**を作成し、ループ内で各要素に個別の範囲を割り当てます:
+
+```cpp
+#define MAXDEG 2
+#include <qbpp/qbpp.hpp>
+
+int main() {
+  qbpp::Vector<int> max_vals = {3, 7, 15, 5};
+  auto x = qbpp::var_int("x", max_vals.size()) == 0;
+  for (size_t i = 0; i < max_vals.size(); ++i) {
+    x[i] = 0 <= qbpp::var_int() <= max_vals[i];
+  }
+  for (size_t i = 0; i < max_vals.size(); ++i) {
+    std::cout << "x[" << i << "] = " << x[i] << std::endl;
+  }
+}
+```
+このプログラムでは、`qbpp::var_int("x", 4) == 0` がプレースホルダとして定数ゼロの `VarInt` オブジェクト4個の配列を作成します。
+各要素は `0 <= qbpp::var_int() <= max_vals[i]` で個別の範囲に再代入されます。
+
+このテクニックは、各変数の上限が異なる**[切り出し問題](BAR_CUTTING)**などでよく使われます。
+
+> **NOTE**
+> `== 0` の構文は `min_val = max_val = 0`（定数ゼロ）の `VarInt` を作成するものであり、等号制約を作成するものでは**ありません**。
+> 任意の整数定数を使用でき、例えば `qbpp::var_int("x", 4) == 5` は定数5のプレースホルダを作成します。
 
 ## 多次元式の定義
 QUBO++では、関数`qbpp::expr()`を使用して任意の深さの**多次元式**（`qbpp::Expr`オブジェクト）を定義できます:
