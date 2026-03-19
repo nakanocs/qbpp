@@ -86,10 +86,10 @@ clauses = [
 x = qbpp.var("x", n)
 
 # NAE constraint: penalty if all-true or all-false
-constraint = qbpp.Expr(0)
+constraint = 0
 for clause in clauses:
-    all_true = qbpp.Expr(1)
-    all_false = qbpp.Expr(1)
+    all_true = 1
+    all_false = 1
     for idx in clause:
         all_true *= x[idx]
         all_false *= ~x[idx]
@@ -231,10 +231,10 @@ clauses = [
 x = qbpp.var("x", n)
 
 # NAE 制約: 全 True または全 False のときペナルティ
-constraint = qbpp.Expr(0)
+constraint = 0
 for clause in clauses:
-    all_true = qbpp.Expr(1)
-    all_false = qbpp.Expr(1)
+    all_true = 1
+    all_false = 1
     for idx in clause:
         all_true *= x[idx]
         all_false *= ~x[idx]

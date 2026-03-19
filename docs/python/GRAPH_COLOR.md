@@ -56,7 +56,7 @@ m = 4
 x = qbpp.var("x", n, m)
 
 onehot = qbpp.sum(qbpp.vector_sum(x) == 1)
-different = qbpp.Expr(0)
+different = 0
 for u, v in edges:
     different += qbpp.sum(x[u] * x[v])
 
@@ -171,7 +171,7 @@ m = 4
 x = qbpp.var("x", n, m)
 
 onehot = qbpp.sum(qbpp.vector_sum(x) == 1)
-different = qbpp.Expr(0)
+different = 0
 for u, v in edges:
     different += qbpp.sum(x[u] * x[v])
 

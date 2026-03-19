@@ -61,7 +61,7 @@ x = qbpp.var("x", N)
 
 objective = qbpp.sum(x)
 
-constraint = qbpp.Expr(0)
+constraint = 0
 for i in range(N):
     for j in range(i + 1, N):
         if not adj[i][j]:
@@ -171,7 +171,7 @@ x = qbpp.var("x", N)
 
 objective = qbpp.sum(x)
 
-constraint = qbpp.Expr(0)
+constraint = 0
 for i in range(N):
     for j in range(i + 1, N):
         if not adj[i][j]:

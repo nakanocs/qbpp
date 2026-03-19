@@ -33,7 +33,7 @@ The following program demonstrates how PyQBPP handles negated literals:
 import pyqbpp as qbpp
 
 x = qbpp.var("x", 4)
-f = qbpp.Expr(1)
+f = 1
 for i in range(len(x)):
     f *= ~x[i]
 
@@ -204,7 +204,7 @@ PyQBPPでは `~` 演算子で否定リテラルを表現します。
 import pyqbpp as qbpp
 
 x = qbpp.var("x", 4)
-f = qbpp.Expr(1)
+f = 1
 for i in range(len(x)):
     f *= ~x[i]
 

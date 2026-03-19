@@ -63,32 +63,32 @@ x = qbpp.var("x", 5)
 # Clause 0: (x0 OR x1 OR x2)
 #   violated when x0=False AND x1=False AND x2=False
 #   penalty = x[0] * x[1] * x[2]
-c0 = qbpp.Expr(x[0] * x[1] * x[2])
+c0 = x[0] * x[1] * x[2]
 
 # Clause 1: (~x0 OR x3 OR x4)
 #   violated when x0=True AND x3=False AND x4=False
 #   penalty = ~x[0] * x[3] * x[4]
-c1 = qbpp.Expr(~x[0] * x[3] * x[4])
+c1 = ~x[0] * x[3] * x[4]
 
 # Clause 2: (x1 OR ~x2 OR ~x3)
 #   violated when x1=False AND x2=True AND x3=True
 #   penalty = x[1] * ~x[2] * ~x[3]
-c2 = qbpp.Expr(x[1] * ~x[2] * ~x[3])
+c2 = x[1] * ~x[2] * ~x[3]
 
 # Clause 3: (~x1 OR ~x3 OR x4)
 #   violated when x1=True AND x3=True AND x4=False
 #   penalty = ~x[1] * ~x[3] * x[4]
-c3 = qbpp.Expr(~x[1] * ~x[3] * x[4])
+c3 = ~x[1] * ~x[3] * x[4]
 
 # Clause 4: (~x0 OR ~x1 OR ~x2)
 #   violated when x0=True AND x1=True AND x2=True
 #   penalty = ~x[0] * ~x[1] * ~x[2]
-c4 = qbpp.Expr(~x[0] * ~x[1] * ~x[2])
+c4 = ~x[0] * ~x[1] * ~x[2]
 
 # Clause 5: (x0 OR x1 OR ~x4)
 #   violated when x0=False AND x1=False AND x4=True
 #   penalty = x[0] * x[1] * ~x[4]
-c5 = qbpp.Expr(x[0] * x[1] * ~x[4])
+c5 = x[0] * x[1] * ~x[4]
 
 # Total constraint: sum of clause penalties
 constraint = c0 + c1 + c2 + c3 + c4 + c5

@@ -61,7 +61,7 @@ s = len(edges)
 x = qbpp.var("x", s, m)
 
 onehot = qbpp.sum(qbpp.vector_sum(x) == 1)
-different = qbpp.Expr(0)
+different = 0
 for i in range(n):
     for u in adj[i]:
         for v in adj[i]:
@@ -178,7 +178,7 @@ s = len(edges)
 x = qbpp.var("x", s, m)
 
 onehot = qbpp.sum(qbpp.vector_sum(x) == 1)
-different = qbpp.Expr(0)
+different = 0
 for i in range(n):
     for u in adj[i]:
         for v in adj[i]:
