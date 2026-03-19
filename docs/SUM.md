@@ -76,6 +76,51 @@ vector_sum[1][2] = 3 +x[1][2][0] +x[1][2][1] +x[1][2][2]
 ```
 The same results can be obtained using explicit for-loops.
 However, for large arrays, it is recommended to use `qbpp::sum()` and `qbpp::vector_sum()`, since these functions internally exploit multithreading to accelerate computation.
+
+## Specifying the axis in `vector_sum()`
+
+By default, `qbpp::vector_sum()` sums along the innermost (last) axis.
+You can specify a different axis using **`qbpp::vector_sum(array, axis)`**.
+
+For a 2D array `x` of size $3 \times 4$:
+- **`qbpp::vector_sum(x, 1)`** computes the **row sums** (sum along axis 1), returning a 1D array of size 3.
+- **`qbpp::vector_sum(x, 0)`** computes the **column sums** (sum along axis 0), returning a 1D array of size 4.
+
+Negative indices are also supported: axis `-1` refers to the last axis, `-2` to the second-to-last, and so on.
+
+The following program demonstrates summing along different axes:
+```cpp
+#define MAXDEG 2
+#include <qbpp/qbpp.hpp>
+
+int main() {
+  auto x = qbpp::var("x", 3, 4);
+
+  auto row_sum = qbpp::vector_sum(x, 1);
+  std::cout << "=== row sums (axis=1) ===" << std::endl;
+  for (size_t i = 0; i < 3; ++i) {
+    std::cout << "row_sum[" << i << "] = " << row_sum[i] << std::endl;
+  }
+
+  auto col_sum = qbpp::vector_sum(x, 0);
+  std::cout << "=== column sums (axis=0) ===" << std::endl;
+  for (size_t j = 0; j < 4; ++j) {
+    std::cout << "col_sum[" << j << "] = " << col_sum[j] << std::endl;
+  }
+}
+```
+This program produces the following output:
+```
+=== row sums (axis=1) ===
+row_sum[0] = x[0][3] +x[0][2] +x[0][1] +x[0][0]
+row_sum[1] = x[1][3] +x[1][2] +x[1][1] +x[1][0]
+row_sum[2] = x[2][3] +x[2][2] +x[2][1] +x[2][0]
+=== column sums (axis=0) ===
+col_sum[0] = x[2][0] +x[1][0] +x[0][0]
+col_sum[1] = x[2][1] +x[1][1] +x[0][1]
+col_sum[2] = x[2][2] +x[1][2] +x[0][2]
+col_sum[3] = x[2][3] +x[1][3] +x[0][3]
+```
 </div>
 
 <div class="lang-ja" markdown="1">
@@ -149,4 +194,49 @@ vector_sum[1][2] = 3 +x[1][2][0] +x[1][2][1] +x[1][2][2]
 ```
 同じ結果は明示的なforループでも得ることができます。
 ただし、大きな配列の場合は `qbpp::sum()` と `qbpp::vector_sum()` を使用することを推奨します。これらの関数は内部でマルチスレッドを活用して計算を高速化します。
+
+## `vector_sum()` の軸指定
+
+デフォルトでは、`qbpp::vector_sum()` は最も内側（最後）の軸に沿って合計を計算します。
+**`qbpp::vector_sum(array, axis)`** で異なる軸を指定できます。
+
+サイズ $3 \times 4$ の2次元配列 `x` に対して:
+- **`qbpp::vector_sum(x, 1)`** は**行の合計**（軸1に沿った合計）を計算し、サイズ3の1次元配列を返します。
+- **`qbpp::vector_sum(x, 0)`** は**列の合計**（軸0に沿った合計）を計算し、サイズ4の1次元配列を返します。
+
+負のインデックスもサポートされています: 軸 `-1` は最後の軸、`-2` は最後から2番目の軸を指します。
+
+以下のプログラムは、異なる軸に沿った合計を示しています:
+```cpp
+#define MAXDEG 2
+#include <qbpp/qbpp.hpp>
+
+int main() {
+  auto x = qbpp::var("x", 3, 4);
+
+  auto row_sum = qbpp::vector_sum(x, 1);
+  std::cout << "=== row sums (axis=1) ===" << std::endl;
+  for (size_t i = 0; i < 3; ++i) {
+    std::cout << "row_sum[" << i << "] = " << row_sum[i] << std::endl;
+  }
+
+  auto col_sum = qbpp::vector_sum(x, 0);
+  std::cout << "=== column sums (axis=0) ===" << std::endl;
+  for (size_t j = 0; j < 4; ++j) {
+    std::cout << "col_sum[" << j << "] = " << col_sum[j] << std::endl;
+  }
+}
+```
+このプログラムは以下の出力を生成します:
+```
+=== row sums (axis=1) ===
+row_sum[0] = x[0][3] +x[0][2] +x[0][1] +x[0][0]
+row_sum[1] = x[1][3] +x[1][2] +x[1][1] +x[1][0]
+row_sum[2] = x[2][3] +x[2][2] +x[2][1] +x[2][0]
+=== column sums (axis=0) ===
+col_sum[0] = x[2][0] +x[1][0] +x[0][0]
+col_sum[1] = x[2][1] +x[1][1] +x[0][1]
+col_sum[2] = x[2][2] +x[1][2] +x[0][2]
+col_sum[3] = x[2][3] +x[1][3] +x[0][3]
+```
 </div>

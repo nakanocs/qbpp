@@ -67,6 +67,33 @@ vector_sum[1][2] = 3 +x[1][2][0] +x[1][2][1] +x[1][2][2]
 ```
 The same results can be obtained using explicit for-loops.
 However, for large arrays, it is recommended to use `sum()` and `vector_sum()`, since these functions internally exploit multithreading to accelerate computation.
+
+## Specifying the axis in `vector_sum()`
+
+By default, `vector_sum()` sums along the innermost (last) axis.
+You can specify a different axis using **`vector_sum(array, axis)`**.
+
+For a 2D array `x` of size $3 \times 4$:
+- **`vector_sum(x, 1)`** computes the **row sums** (sum along axis 1), returning a 1D array of size 3.
+- **`vector_sum(x, 0)`** computes the **column sums** (sum along axis 0), returning a 1D array of size 4.
+
+Negative indices are also supported: axis `-1` refers to the last axis, `-2` to the second-to-last, and so on.
+
+```python
+from pyqbpp import var, vector_sum
+
+x = var("x", 3, 4)
+
+row_sum = vector_sum(x, 1)
+print("=== row sums (axis=1) ===")
+for i in range(3):
+    print(f"row_sum[{i}] =", row_sum[i])
+
+col_sum = vector_sum(x, 0)
+print("=== column sums (axis=0) ===")
+for j in range(4):
+    print(f"col_sum[{j}] =", col_sum[j])
+```
 </div>
 
 <div class="lang-ja" markdown="1">
@@ -132,4 +159,31 @@ vector_sum[1][2] = 3 +x[1][2][0] +x[1][2][1] +x[1][2][2]
 ```
 明示的なforループを使っても同じ結果が得られます。
 しかし、大きな配列では `sum()` と `vector_sum()` の使用を推奨します。これらの関数は内部的にマルチスレッドを活用して計算を高速化するためです。
+
+## `vector_sum()` の軸指定
+
+デフォルトでは、`vector_sum()` は最も内側（最後）の軸に沿って合計を計算します。
+**`vector_sum(array, axis)`** で異なる軸を指定できます。
+
+サイズ $3 \times 4$ の2次元配列 `x` に対して:
+- **`vector_sum(x, 1)`** は**行の合計**（軸1に沿った合計）を計算し、サイズ3の1次元配列を返します。
+- **`vector_sum(x, 0)`** は**列の合計**（軸0に沿った合計）を計算し、サイズ4の1次元配列を返します。
+
+負のインデックスもサポートされています: 軸 `-1` は最後の軸、`-2` は最後から2番目の軸を指します。
+
+```python
+from pyqbpp import var, vector_sum
+
+x = var("x", 3, 4)
+
+row_sum = vector_sum(x, 1)
+print("=== row sums (axis=1) ===")
+for i in range(3):
+    print(f"row_sum[{i}] =", row_sum[i])
+
+col_sum = vector_sum(x, 0)
+print("=== column sums (axis=0) ===")
+for j in range(4):
+    print(f"col_sum[{j}] =", col_sum[j])
+```
 </div>
