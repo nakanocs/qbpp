@@ -63,7 +63,7 @@ f = 1 -a -2*b -c +a*b +a*c +b*b +b*c
 The member function call **`f.simplify()`** simplifies the expression `f` in place and returns itself.
 
 Assuming that all variables take **binary values (0 or 1)**, we can use the identity
-**b^2=b** to further simplify the expression.
+**$b^2=b$** to further simplify the expression.
 For this purpose, we use **`simplify_as_binary()`** instead:
 ```python
 print("f =", f.simplify_as_binary())
@@ -74,7 +74,7 @@ f = 1 -a -b -c +a*b +a*c +b*c
 ```
 
 ## Simplifying expressions with spin variables
-If variables are assumed to take **spin values -1/+1**, the identity **b^2 = 1** can be used to further simplify the expression.
+If variables are assumed to take **spin values -1/+1**, the identity **$b^2 = 1$** can be used to further simplify the expression.
 In this case, the expression can be simplified using the **`simplify_as_spin()`** member function:
 ```python
 print("f =", f.simplify_as_spin())
@@ -157,7 +157,7 @@ f = 1 -a -2*b -c +a*b +a*c +b*b +b*c
 メンバ関数呼び出し**`f.simplify()`**は式`f`をその場で簡約化し、自身を返します。
 
 すべての変数が**バイナリ値（0または1）**を取ると仮定すると、恒等式
-**b^2=b**を使って式をさらに簡約化できます。
+**$b^2=b$**を使って式をさらに簡約化できます。
 この目的には、代わりに**`simplify_as_binary()`**を使用します:
 ```python
 print("f =", f.simplify_as_binary())
@@ -168,7 +168,7 @@ f = 1 -a -b -c +a*b +a*c +b*c
 ```
 
 ## スピン変数での式の簡約化
-変数が**スピン値 -1/+1**を取ると仮定する場合、恒等式**b^2 = 1**を使って式をさらに簡約化できます。
+変数が**スピン値 -1/+1**を取ると仮定する場合、恒等式**$b^2 = 1$**を使って式をさらに簡約化できます。
 この場合、**`simplify_as_spin()`**メンバ関数を使って式を簡約化できます:
 ```python
 print("f =", f.simplify_as_spin())
