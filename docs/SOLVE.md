@@ -5,13 +5,13 @@ title: "Solving Expressions"
 nav_order: 2
 ---
 <div class="lang-en" markdown="1">
-# Solving Expressions using Easy Solver and Exhaustive Solver
+# Solving Expressions
 
-QUBO++ provides the **Easy Solver** and the **Exhaustive Solver** for QUBO/HUBO expressions.
-They run in parallel on multicore CPUs using **Intel Threading Building Blocks (oneTBB)**.
+QUBO++ provides three solvers for QUBO/HUBO expressions:
 
 - **Easy Solver**
   - Runs a heuristic algorithm based on simulated annealing.
+  - Runs in parallel on multicore CPUs using **Intel Threading Building Blocks (oneTBB)**.
   - Does not guarantee optimality.
 
 - **Exhaustive Solver**
@@ -20,7 +20,12 @@ They run in parallel on multicore CPUs using **Intel Threading Building Blocks (
   - Is computationally feasible only when the number of binary variables is about 30–40 or fewer.
   - If a CUDA GPU is available, GPU acceleration is automatically enabled alongside CPU threads.
 
-Both solvers are used in two steps:
+- **ABS3 Solver**
+  - A high-performance solver that uses CUDA GPUs and multicore CPUs.
+  - Does not guarantee optimality, but is much more powerful than the Easy Solver.
+  - If no GPU is available, falls back to CPU-only mode.
+
+The Easy Solver and Exhaustive Solver are used in two steps:
 1. Create a solver object, **`qbpp::easy_solver::EasySolver`** or **`qbpp::exhaustive_solver::ExhaustiveSolver`**.
 2. Call the **`search()`** member function on the solver object. It returns a **`qbpp::Sol`** object that stores the obtained solution.
 
@@ -150,16 +155,60 @@ The output is as follows:
 ```
 {% endraw %}
 The Exhaustive Solver is very useful for analyzing small expressions and for debugging.
+
+## ABS3 Solver
+To use the **ABS3 Solver**, include the header file **`qbpp/abs3_solver.hpp`**.
+It is defined in the namespace **`qbpp::abs3`**.
+
+The ABS3 Solver is a high-performance solver that uses CUDA GPUs and multicore CPUs.
+If no GPU is available, it automatically falls back to CPU-only mode.
+
+Usage involves three steps:
+1. Create an **`qbpp::abs3::ABS3Solver`** object for the expression.
+2. Create a **`qbpp::abs3::Params`** object and set search options.
+3. Call the **`search()`** member function, which returns the obtained solution.
+
+```cpp
+#define MAXDEG 2
+#include <qbpp/qbpp.hpp>
+#include <qbpp/abs3_solver.hpp>
+
+int main() {
+  auto a = qbpp::var("a");
+  auto b = qbpp::var("b");
+  auto c = qbpp::var("c");
+  auto d = qbpp::var("d");
+  auto f = qbpp::sqr(a + 2 * b + 3 * c + 4 * d - 5);
+  f.simplify_as_binary();
+
+  auto solver = qbpp::abs3::ABS3Solver(f);
+  auto params = qbpp::abs3::Params();
+  params("time_limit", "5.0");
+  params("target_energy", "0");
+  params("enable_default_callback", "1");
+  auto sol = solver.search(params);
+  std::cout << sol << std::endl;
+}
+```
+The output of this program is as follows:
+{% raw %}
+```
+TTS = 0.000s Energy = 0
+0:{{a,0},{b,1},{c,1},{d,0}}
+```
+{% endraw %}
+
+For details on parameters, callbacks, multiple solution collection, and solution hints, see **[ABS3 Solver](ABS3)**.
 </div>
 
 <div class="lang-ja" markdown="1">
-# Easy SolverとExhaustive Solverによる式の求解
+# 式の求解
 
-QUBO++は、QUBO/HUBO式を解くための**Easy Solver**と**Exhaustive Solver**を提供しています。
-これらは**Intel Threading Building Blocks (oneTBB)**を使用してマルチコアCPU上で並列に動作します。
+QUBO++はQUBO/HUBO式を解くための3つのソルバーを提供しています：
 
 - **Easy Solver**
   - シミュレーテッドアニーリングに基づくヒューリスティックアルゴリズムを実行します。
+  - **Intel Threading Building Blocks (oneTBB)**を使用してマルチコアCPU上で並列に動作します。
   - 最適性は保証されません。
 
 - **Exhaustive Solver**
@@ -168,7 +217,12 @@ QUBO++は、QUBO/HUBO式を解くための**Easy Solver**と**Exhaustive Solver*
   - バイナリ変数の数が約30～40以下の場合にのみ計算が現実的です。
   - CUDA GPUが利用可能な場合、CPUスレッドと並行してGPUアクセラレーションが自動的に有効になります。
 
-両方のソルバーは以下の2ステップで使用します：
+- **ABS3 Solver**
+  - CUDA GPUとマルチコアCPUを活用する高性能ソルバーです。
+  - 最適性は保証されませんが、Easy Solverよりはるかに強力です。
+  - GPUが利用できない場合はCPUのみモードにフォールバックします。
+
+Easy SolverとExhaustive Solverは以下の2ステップで使用します：
 1. ソルバーオブジェクト（**`qbpp::easy_solver::EasySolver`**または**`qbpp::exhaustive_solver::ExhaustiveSolver`**）を作成します。
 2. ソルバーオブジェクトの**`search()`**メンバ関数を呼び出します。得られた解を格納する**`qbpp::Sol`**オブジェクトが返されます。
 
@@ -291,4 +345,48 @@ int main() {
 ```
 {% endraw %}
 Exhaustive Solverは、小さな式の解析やデバッグに非常に有用です。
+
+## ABS3 Solver
+**ABS3 Solver**を使用するには、ヘッダファイル**`qbpp/abs3_solver.hpp`**をインクルードします。
+名前空間**`qbpp::abs3`**で定義されています。
+
+ABS3 Solverは、CUDA GPUとマルチコアCPUを活用する高性能ソルバーです。
+GPUが利用できない場合は、自動的にCPUのみモードにフォールバックします。
+
+使用方法は以下の3ステップです：
+1. 式に対して**`qbpp::abs3::ABS3Solver`**オブジェクトを作成します。
+2. **`qbpp::abs3::Params`**オブジェクトを作成し、探索オプションを設定します。
+3. **`search()`**メンバ関数を呼び出します。得られた解が返されます。
+
+```cpp
+#define MAXDEG 2
+#include <qbpp/qbpp.hpp>
+#include <qbpp/abs3_solver.hpp>
+
+int main() {
+  auto a = qbpp::var("a");
+  auto b = qbpp::var("b");
+  auto c = qbpp::var("c");
+  auto d = qbpp::var("d");
+  auto f = qbpp::sqr(a + 2 * b + 3 * c + 4 * d - 5);
+  f.simplify_as_binary();
+
+  auto solver = qbpp::abs3::ABS3Solver(f);
+  auto params = qbpp::abs3::Params();
+  params("time_limit", "5.0");
+  params("target_energy", "0");
+  params("enable_default_callback", "1");
+  auto sol = solver.search(params);
+  std::cout << sol << std::endl;
+}
+```
+このプログラムの出力は以下のとおりです：
+{% raw %}
+```
+TTS = 0.000s Energy = 0
+0:{{a,0},{b,1},{c,1},{d,0}}
+```
+{% endraw %}
+
+パラメータ、コールバック、複数解の収集、ヒント解の詳細については**[ABS3 Solver](ABS3)**をご覧ください。
 </div>
