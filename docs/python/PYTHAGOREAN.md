@@ -65,12 +65,18 @@ x=9, y=12, z=15, f=0, c=3
 
 ### Comparison with C++ QUBO++
 
-| C++ QUBO++                   | PyQBPP                              |
-|------------------------------|---------------------------------------|
-| `1 <= qbpp::var_int("x") <= 16` | `between(var_int("x"), 1, 16)` |
-| `1 <= y - x <= +qbpp::inf`  | `between(y - x, 1, 15)`              |
-| `sol(x)`                     | `sol.eval(x)`                         |
-| `sol(*f)`                    | `sol.eval(f.body)`                    |
+<table>
+<thead>
+<tr><th>C++ QUBO++</th><th>PyQBPP</th></tr>
+</thead>
+<tbody>
+<tr><td><code>1 &lt;= qbpp::var_int("x") &lt;= 16</code></td><td><code>between(var_int("x"), 1, 16)</code></td></tr>
+<tr><td><code>1 &lt;= y - x &lt;= +qbpp::inf</code></td><td><code>between(y - x, 1, 15)</code></td></tr>
+<tr><td><code>sol(x)</code></td><td><code>sol.eval(x)</code></td></tr>
+<tr><td><code>sol(*f)</code></td><td><code>sol.eval(f.body)</code></td></tr>
+</tbody>
+</table>
+
 </div>
 
 <div class="lang-ja" markdown="1">
@@ -133,10 +139,16 @@ x=9, y=12, z=15, f=0, c=3
 
 ### C++ QUBO++ との比較
 
-| C++ QUBO++                   | PyQBPP                              |
-|------------------------------|---------------------------------------|
-| `1 <= qbpp::var_int("x") <= 16` | `between(var_int("x"), 1, 16)` |
-| `1 <= y - x <= +qbpp::inf`  | `between(y - x, 1, 15)`              |
-| `sol(x)`                     | `sol.eval(x)`                         |
-| `sol(*f)`                    | `sol.eval(f.body)`                    |
+<table>
+<thead>
+<tr><th>C++ QUBO++</th><th>PyQBPP</th></tr>
+</thead>
+<tbody>
+<tr><td><code>1 &lt;= qbpp::var_int("x") &lt;= 16</code></td><td><code>between(var_int("x"), 1, 16)</code></td></tr>
+<tr><td><code>1 &lt;= y - x &lt;= +qbpp::inf</code></td><td><code>between(y - x, 1, 15)</code></td></tr>
+<tr><td><code>sol(x)</code></td><td><code>sol.eval(x)</code></td></tr>
+<tr><td><code>sol(*f)</code></td><td><code>sol.eval(f.body)</code></td></tr>
+</tbody>
+</table>
+
 </div>
