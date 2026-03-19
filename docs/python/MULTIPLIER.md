@@ -53,9 +53,7 @@ def adder(a, b, s):
     f = toExpr(0)
     for j in range(N):
         f += fa(a[j], b[j], c[j], c[j + 1], s[j])
-    ml = qbpp.MapList()
-    ml.add(c[0], 0)
-    ml.add(c[N], s[N])
+    ml = [(c[0], 0), (c[N], s[N])]
     return qbpp.replace(f, ml)
 ```
 In this function, `c` is a vector of `N + 1` variables used to connect the carry-out and carry-in signals of the `fa` blocks, forming an `N`-bit ripple-carry adder.
@@ -84,11 +82,8 @@ def multiplier(x, y, z):
 
     f += z[0] - x[0] * y[0] == 0
 
-    ml = qbpp.MapList()
-    for i in range(N - 2):
-        ml.add(c[i][0], z[i + 1])
-    for i in range(N + 1):
-        ml.add(c[N - 2][i], z[N + i - 1])
+    ml = [(c[i][0], z[i + 1]) for i in range(N - 2)]
+    ml += [(c[N - 2][i], z[N + i - 1]) for i in range(N + 1)]
     f = qbpp.replace(f, ml)
     f.simplify_as_binary()
     return f
@@ -114,9 +109,7 @@ def adder(a, b, s):
     f = toExpr(0)
     for j in range(N):
         f += fa(a[j], b[j], c[j], c[j + 1], s[j])
-    ml = qbpp.MapList()
-    ml.add(c[0], 0)
-    ml.add(c[N], s[N])
+    ml = [(c[0], 0), (c[N], s[N])]
     return qbpp.replace(f, ml)
 
 def multiplier(x, y, z):
@@ -138,11 +131,8 @@ def multiplier(x, y, z):
 
     f += z[0] - x[0] * y[0] == 0
 
-    ml = qbpp.MapList()
-    for i in range(N - 2):
-        ml.add(c[i][0], z[i + 1])
-    for i in range(N + 1):
-        ml.add(c[N - 2][i], z[N + i - 1])
+    ml = [(c[i][0], z[i + 1]) for i in range(N - 2)]
+    ml += [(c[N - 2][i], z[N + i - 1]) for i in range(N + 1)]
     f = qbpp.replace(f, ml)
     f.simplify_as_binary()
     return f
@@ -217,9 +207,7 @@ def adder(a, b, s):
     f = toExpr(0)
     for j in range(N):
         f += fa(a[j], b[j], c[j], c[j + 1], s[j])
-    ml = qbpp.MapList()
-    ml.add(c[0], 0)
-    ml.add(c[N], s[N])
+    ml = [(c[0], 0), (c[N], s[N])]
     return qbpp.replace(f, ml)
 ```
 この関数では、`c` は `N + 1` 個の変数のベクトルで、`fa` ブロックのキャリーアウトとキャリーインの信号を接続し、`N`ビットのリプルキャリー加算器を形成します。
@@ -248,11 +236,8 @@ def multiplier(x, y, z):
 
     f += z[0] - x[0] * y[0] == 0
 
-    ml = qbpp.MapList()
-    for i in range(N - 2):
-        ml.add(c[i][0], z[i + 1])
-    for i in range(N + 1):
-        ml.add(c[N - 2][i], z[N + i - 1])
+    ml = [(c[i][0], z[i + 1]) for i in range(N - 2)]
+    ml += [(c[N - 2][i], z[N + i - 1]) for i in range(N + 1)]
     f = qbpp.replace(f, ml)
     f.simplify_as_binary()
     return f
@@ -280,9 +265,7 @@ def adder(a, b, s):
     f = toExpr(0)
     for j in range(N):
         f += fa(a[j], b[j], c[j], c[j + 1], s[j])
-    ml = qbpp.MapList()
-    ml.add(c[0], 0)
-    ml.add(c[N], s[N])
+    ml = [(c[0], 0), (c[N], s[N])]
     return qbpp.replace(f, ml)
 
 def multiplier(x, y, z):
@@ -304,11 +287,8 @@ def multiplier(x, y, z):
 
     f += z[0] - x[0] * y[0] == 0
 
-    ml = qbpp.MapList()
-    for i in range(N - 2):
-        ml.add(c[i][0], z[i + 1])
-    for i in range(N + 1):
-        ml.add(c[N - 2][i], z[N + i - 1])
+    ml = [(c[i][0], z[i + 1]) for i in range(N - 2)]
+    ml += [(c[N - 2][i], z[N + i - 1]) for i in range(N + 1)]
     f = qbpp.replace(f, ml)
     f.simplify_as_binary()
     return f

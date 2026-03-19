@@ -37,9 +37,7 @@ f = 1
 for i in range(len(x)):
     f *= ~x[i]
 
-ml = qbpp.MapList()
-for i in range(len(x)):
-    ml.add(~x[i], 1 - x[i])
+ml = [(~x[i], 1 - x[i]) for i in range(len(x))]
 g = qbpp.replace(f, ml)
 
 f.simplify_as_binary()
@@ -127,9 +125,9 @@ y = qbpp.var("y")
 z = qbpp.var("z")
 f = x * y * z + ~x * ~y * ~z
 print("f =", f)
-f.replace(qbpp.MapList([(x, 1)]))
+f.replace([(x, 1)])
 print("f =", f)
-f.replace(qbpp.MapList([(~x, 0)]))
+f.replace([(~x, 0)])
 print("f =", f)
 ```
 This program produces the following output:
@@ -154,7 +152,7 @@ y = qbpp.var("y")
 z = qbpp.var("z")
 f = x * y * z + ~x * ~y * ~z
 print("f =", f)
-print("f(0, 0, 0) =", f(qbpp.MapList([(x, 0), (~y, 1), (~z, 1)])))
+print("f(0, 0, 0) =", f.eval([(x, 0), (~y, 1), (~z, 1)]))
 ```
 This program produces the following output:
 ```
@@ -171,8 +169,8 @@ All three variables are effectively set to 0, and $\bar{x}\cdot\bar{y}\cdot\bar{
 |-----------------------------------------|--------------------------------------------|
 | `qbpp::Expr(1)`                         | `Expr(1)`                                  |
 | `f *= ~x[i]`                            | `f *= ~x[i]`                               |
-| `ml.push_back({~x[i], 1 - x[i]})`      | `ml.add(~x[i], 1 - x[i])`                 |
-| `f({% raw %}{{x, 0}, {~y, 1}}{% endraw %})` | `f(MapList([(x, 0), (~y, 1)]))`       |
+| `ml.push_back({~x[i], 1 - x[i]})`      | `ml.append((~x[i], 1 - x[i]))`            |
+| `f({% raw %}{{x, 0}, {~y, 1}}{% endraw %})` | `f.eval([(x, 0), (~y, 1)])`          |
 
 </div>
 
@@ -208,9 +206,7 @@ f = 1
 for i in range(len(x)):
     f *= ~x[i]
 
-ml = qbpp.MapList()
-for i in range(len(x)):
-    ml.add(~x[i], 1 - x[i])
+ml = [(~x[i], 1 - x[i]) for i in range(len(x))]
 g = qbpp.replace(f, ml)
 
 f.simplify_as_binary()
@@ -292,9 +288,9 @@ y = qbpp.var("y")
 z = qbpp.var("z")
 f = x * y * z + ~x * ~y * ~z
 print("f =", f)
-f.replace(qbpp.MapList([(x, 1)]))
+f.replace([(x, 1)])
 print("f =", f)
-f.replace(qbpp.MapList([(~x, 0)]))
+f.replace([(~x, 0)])
 print("f =", f)
 ```
 このプログラムは以下の出力を生成します：
@@ -317,7 +313,7 @@ y = qbpp.var("y")
 z = qbpp.var("z")
 f = x * y * z + ~x * ~y * ~z
 print("f =", f)
-print("f(0, 0, 0) =", f(qbpp.MapList([(x, 0), (~y, 1), (~z, 1)])))
+print("f(0, 0, 0) =", f.eval([(x, 0), (~y, 1), (~z, 1)]))
 ```
 このプログラムは以下の出力を生成します：
 ```
@@ -333,7 +329,7 @@ f(0, 0, 0) = 1
 |-----------------------------------------|--------------------------------------------|
 | `qbpp::Expr(1)`                         | `Expr(1)`                                  |
 | `f *= ~x[i]`                            | `f *= ~x[i]`                               |
-| `ml.push_back({~x[i], 1 - x[i]})`      | `ml.add(~x[i], 1 - x[i])`                 |
-| `f({% raw %}{{x, 0}, {~y, 1}}{% endraw %})` | `f(MapList([(x, 0), (~y, 1)]))`       |
+| `ml.push_back({~x[i], 1 - x[i]})`      | `ml.append((~x[i], 1 - x[i]))`            |
+| `f({% raw %}{{x, 0}, {~y, 1}}{% endraw %})` | `f.eval([(x, 0), (~y, 1)])`          |
 
 </div>

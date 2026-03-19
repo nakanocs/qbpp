@@ -63,10 +63,8 @@ constraints = (work_20_21_days + no_less_than_3 + no_more_than_6 +
                no_single_day_off + each_day_4_workers)
 f = total_worker_cost + 10000 * constraints
 
-ml = qbpp.MapList()
-for i in range(workers):
-    ml.add(x[i][0], 0)
-    ml.add(x[i][days + 1], 0)
+ml = [(x[i][0], 0) for i in range(workers)]
+ml += [(x[i][days + 1], 0) for i in range(workers)]
 f.simplify_as_binary()
 
 g = qbpp.replace(f, ml)
@@ -164,10 +162,8 @@ constraints = (work_20_21_days + no_less_than_3 + no_more_than_6 +
                no_single_day_off + each_day_4_workers)
 f = total_worker_cost + 10000 * constraints
 
-ml = qbpp.MapList()
-for i in range(workers):
-    ml.add(x[i][0], 0)
-    ml.add(x[i][days + 1], 0)
+ml = [(x[i][0], 0) for i in range(workers)]
+ml += [(x[i][days + 1], 0) for i in range(workers)]
 f.simplify_as_binary()
 
 g = qbpp.replace(f, ml)

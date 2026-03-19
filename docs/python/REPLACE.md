@@ -8,8 +8,10 @@ nav_order: 17
 # Replace Functions
 
 PyQBPP provides the following replace function, which can be used to fix variable values in an expression:
-- **`replace(f, ml)`**: Returns a new expression in which variables are replaced according to the mapping `ml`.
+- **`replace(f, ml)`**: Returns a new expression in which variables are replaced according to the list of pairs `ml`.
 - **`f.replace(ml)`**: Replaces variables in expression `f` in place.
+
+Here, `ml` is a Python list of `(variable, value)` pairs, e.g., `[(x, 0), (y, 1)]`.
 
 ## Using the replace function to fix variable values
 We explain the `replace()` function using the
@@ -28,7 +30,7 @@ q = qbpp.sum([w[i] * ~x[i] for i in range(len(w))])
 f = qbpp.sqr(p - q)
 f.simplify_as_binary()
 
-ml = qbpp.MapList([(x[0], 1), (x[1], 0)])
+ml = [(x[0], 1), (x[1], 0)]
 g = qbpp.replace(f, ml)
 g.simplify_as_binary()
 
@@ -45,7 +47,7 @@ Q = [w[i] for i in range(len(w)) if full_sol(x[i]) == 0]
 print("P:", P)
 print("Q:", Q)
 ```
-In this program, a `MapList` object **`ml`** fixes `x[0]=1` (64 in $P$) and `x[1]=0` (27 in $Q$).
+In this program, a list of pairs **`ml`** fixes `x[0]=1` (64 in $P$) and `x[1]=0` (27 in $Q$).
 The `replace()` function substitutes these values into `f`, and the Exhaustive Solver finds the optimal partition for the remaining variables.
 
 This program produces the following output:
@@ -62,7 +64,7 @@ For example, to ensure that 64 and 27 are placed in distinct subsets,
 we replace `x[0]` with `~x[1]` so they always take opposite values:
 
 ```python
-ml = qbpp.MapList([(x[0], ~x[1])])
+ml = [(x[0], ~x[1])]
 g = qbpp.replace(f, ml)
 g.simplify_as_binary()
 
@@ -102,7 +104,7 @@ r = qbpp.between(qbpp.var_int("r"), 2, 40)
 f = p * q - r == 0
 f.simplify_as_binary()
 
-ml = qbpp.MapList([(p, 5), (q, 7)])
+ml = [(p, 5), (q, 7)]
 g = qbpp.replace(f, ml)
 g.simplify_as_binary()
 
@@ -123,7 +125,7 @@ p=5, q=7, r=35
 ### Factorization
 Fix $r=35$ to find $p$ and $q$:
 ```python
-ml = qbpp.MapList([(r, 35)])
+ml = [(r, 35)]
 g = qbpp.replace(f, ml)
 g.simplify_as_binary()
 # ... same solver setup ...
@@ -132,7 +134,7 @@ g.simplify_as_binary()
 ### Division
 Fix $p=5$ and $r=35$ to find $q=7$:
 ```python
-ml = qbpp.MapList([(p, 5), (r, 35)])
+ml = [(p, 5), (r, 35)]
 g = qbpp.replace(f, ml)
 g.simplify_as_binary()
 # ... same solver setup ...
@@ -144,10 +146,10 @@ g.simplify_as_binary()
 
 > **NOTE: Negated literals and `replace()`**
 > The `replace()` function treats `x` and `~x` as independent keys.
-> Specifying `(x, 0)` in a `MapList` does **not** automatically replace `~x` with `1`.
+> Specifying `(x, 0)` in the list does **not** automatically replace `~x` with `1`.
 > If the expression contains negated literals such as `~x`, you should explicitly include both mappings:
 > ```python
-> ml = qbpp.MapList([(x, 0), (~x, 1)])
+> ml = [(x, 0), (~x, 1)]
 > ```
 </div>
 
@@ -155,8 +157,10 @@ g.simplify_as_binary()
 # 置換関数
 
 PyQBPPは、式中の変数値を固定するために使用できる以下の置換関数を提供しています：
-- **`replace(f, ml)`**: マッピング `ml` に従って変数を置換した新しい式を返します。
+- **`replace(f, ml)`**: ペアのリスト `ml` に従って変数を置換した新しい式を返します。
 - **`f.replace(ml)`**: 式 `f` の変数をその場で置換します。
+
+ここで `ml` は `(変数, 値)` のペアのPythonリストです（例: `[(x, 0), (y, 1)]`）。
 
 ## 置換関数を使った変数値の固定
 [分割問題](PARTITION)を用いて `replace()` 関数を説明します。
@@ -174,7 +178,7 @@ q = qbpp.sum([w[i] * ~x[i] for i in range(len(w))])
 f = qbpp.sqr(p - q)
 f.simplify_as_binary()
 
-ml = qbpp.MapList([(x[0], 1), (x[1], 0)])
+ml = [(x[0], 1), (x[1], 0)]
 g = qbpp.replace(f, ml)
 g.simplify_as_binary()
 
@@ -191,7 +195,7 @@ Q = [w[i] for i in range(len(w)) if full_sol(x[i]) == 0]
 print("P:", P)
 print("Q:", Q)
 ```
-このプログラムでは、`MapList` オブジェクト **`ml`** が `x[0]=1`（64を $P$ に）と `x[1]=0`（27を $Q$ に）を固定します。
+このプログラムでは、ペアのリスト **`ml`** が `x[0]=1`（64を $P$ に）と `x[1]=0`（27を $Q$ に）を固定します。
 `replace()` 関数はこれらの値を `f` に代入し、Exhaustive Solverが残りの変数に対する最適な分割を求めます。
 
 このプログラムの出力は以下の通りです：
@@ -208,7 +212,7 @@ Q: [27, 74, 63, 40]
 `x[0]` を `~x[1]` で置換して常に反対の値を取るようにします：
 
 ```python
-ml = qbpp.MapList([(x[0], ~x[1])])
+ml = [(x[0], ~x[1])]
 g = qbpp.replace(f, ml)
 g.simplify_as_binary()
 
@@ -248,7 +252,7 @@ r = qbpp.between(qbpp.var_int("r"), 2, 40)
 f = p * q - r == 0
 f.simplify_as_binary()
 
-ml = qbpp.MapList([(p, 5), (q, 7)])
+ml = [(p, 5), (q, 7)]
 g = qbpp.replace(f, ml)
 g.simplify_as_binary()
 
@@ -269,7 +273,7 @@ p=5, q=7, r=35
 ### 素因数分解
 $r=35$ を固定して $p$ と $q$ を求めます：
 ```python
-ml = qbpp.MapList([(r, 35)])
+ml = [(r, 35)]
 g = qbpp.replace(f, ml)
 g.simplify_as_binary()
 # ... 同じソルバー設定 ...
@@ -278,7 +282,7 @@ g.simplify_as_binary()
 ### 除算
 $p=5$ と $r=35$ を固定して $q=7$ を求めます：
 ```python
-ml = qbpp.MapList([(p, 5), (r, 35)])
+ml = [(p, 5), (r, 35)]
 g = qbpp.replace(f, ml)
 g.simplify_as_binary()
 # ... 同じソルバー設定 ...
@@ -290,9 +294,9 @@ g.simplify_as_binary()
 
 > **注意: 否定リテラルと `replace()`**
 > `replace()` 関数は `x` と `~x` を独立したキーとして扱います。
-> `MapList` に `(x, 0)` を指定しても、`~x` が自動的に `1` に置換されるわけではありません。
+> リストに `(x, 0)` を指定しても、`~x` が自動的に `1` に置換されるわけではありません。
 > 式に `~x` のような否定リテラルが含まれている場合、両方のマッピングを明示的に指定してください：
 > ```python
-> ml = qbpp.MapList([(x, 0), (~x, 1)])
+> ml = [(x, 0), (~x, 1)]
 > ```
 </div>

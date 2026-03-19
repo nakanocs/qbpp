@@ -96,11 +96,9 @@ By fixing the start node, we can reduce the number of binary variables in the QU
 ```python
 import pyqbpp as qbpp
 
-ml = qbpp.MapList()
-ml.add(x[0][0], 1)
-for i in range(1, n):
-    ml.add(x[i][0], 0)
-    ml.add(x[0][i], 0)
+ml = [(x[0][0], 1)]
+ml += [(x[i][0], 0) for i in range(1, n)]
+ml += [(x[0][i], 0) for i in range(1, n)]
 
 g = qbpp.replace(f, ml)
 g.simplify_as_binary()
@@ -122,7 +120,7 @@ for i in range(n):
             break
 print(f"Tour: {tour}")
 ```
-First, we create a `MapList` object `ml`, which stores fixed assignments of variables.
+First, we create a list of pairs `ml`, which stores fixed assignments of variables.
 Next, we call `replace(f, ml)`, which returns a new expression obtained by substituting the fixed values.
 Since `sol` corresponds to the reduced problem, we create a `Sol` object for `f` and set both the solver output `sol` and the fixed assignments `ml`.
 
@@ -136,8 +134,8 @@ Tour: [0, 3, 6, 7, 8, 5, 2, 1, 4]
 | C++ QUBO++                        | PyQBPP                            |
 |------------------------------------|------------------------------------|
 | `qbpp::onehot_to_int(sol(x))`    | Manual loop over `sol(x[i][j])` |
-| `qbpp::MapList ml;`              | `ml = MapList()`                   |
-| `ml.push_back({x[0][0], 1})`    | `ml.add(x[0][0], 1)`              |
+| `qbpp::MapList ml;`              | `ml = [(x[0][0], 1)]`             |
+| `ml.push_back({x[0][0], 1})`    | `ml.append((x[0][0], 1))`         |
 | `qbpp::replace(f, ml)`          | `replace(f, ml)`                   |
 | `qbpp::Sol(f).set(sol).set(ml)` | `Sol(f); full_sol.set(sol); full_sol.set(ml)` |
 
@@ -257,11 +255,9 @@ Tour: [7, 8, 5, 2, 4, 1, 0, 3, 6]
 ```python
 import pyqbpp as qbpp
 
-ml = qbpp.MapList()
-ml.add(x[0][0], 1)
-for i in range(1, n):
-    ml.add(x[i][0], 0)
-    ml.add(x[0][i], 0)
+ml = [(x[0][0], 1)]
+ml += [(x[i][0], 0) for i in range(1, n)]
+ml += [(x[0][i], 0) for i in range(1, n)]
 
 g = qbpp.replace(f, ml)
 g.simplify_as_binary()
@@ -283,7 +279,7 @@ for i in range(n):
             break
 print(f"Tour: {tour}")
 ```
-まず、変数の固定値を格納する `MapList` オブジェクト `ml` を作成します。
+まず、変数の固定値を格納するペアのリスト `ml` を作成します。
 次に `replace(f, ml)` を呼び出し、固定値を代入した新しい式を取得します。
 `sol` は縮小された問題に対応するため、`f` に対する `Sol` オブジェクトを作成し、ソルバーの出力 `sol` と固定値 `ml` の両方を設定します。
 
@@ -297,8 +293,8 @@ Tour: [0, 3, 6, 7, 8, 5, 2, 1, 4]
 | C++ QUBO++                        | PyQBPP                            |
 |------------------------------------|------------------------------------|
 | `qbpp::onehot_to_int(sol(x))`    | `sol(x[i][j])` による手動ループ |
-| `qbpp::MapList ml;`              | `ml = MapList()`                   |
-| `ml.push_back({x[0][0], 1})`    | `ml.add(x[0][0], 1)`              |
+| `qbpp::MapList ml;`              | `ml = [(x[0][0], 1)]`             |
+| `ml.push_back({x[0][0], 1})`    | `ml.append((x[0][0], 1))`         |
 | `qbpp::replace(f, ml)`          | `replace(f, ml)`                   |
 | `qbpp::Sol(f).set(sol).set(ml)` | `Sol(f); full_sol.set(sol); full_sol.set(ml)` |
 

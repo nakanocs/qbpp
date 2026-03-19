@@ -182,17 +182,8 @@ c4 = (diag == 15) + (anti_diag == 15)
 f = c1 + c2 + c3 + c4
 f.simplify_as_binary()
 
-ml = qbpp.MapList()
-for k in range(9):
-    if k == 1:
-        ml.add(x[0][0][k], 1)
-    else:
-        ml.add(x[0][0][k], 0)
-
-for i in range(3):
-    for j in range(3):
-        if not (i == 0 and j == 0):
-            ml.add(x[i][j][1], 0)
+ml = [(x[0][0][k], 1 if k == 1 else 0) for k in range(9)]
+ml += [(x[i][j][1], 0) for i in range(3) for j in range(3) if not (i == 0 and j == 0)]
 
 full_sol = qbpp.Sol(f)
 g = qbpp.replace(f, ml)
@@ -211,7 +202,7 @@ for i in range(3):
     print()
 ```
 
-In this code, we create a `MapList` object `ml` and add fixed assignments using `add()`.
+In this code, we create a list of pairs `ml` containing the fixed assignments.
 We then create `full_sol`, a solution object for the original expression `f`.
 Calling `replace(f, ml)` substitutes the fixed values into `f`, so the variables listed in `ml` disappear from `g`.
 As a result, the solution `sol` returned by the solver does not include those fixed variables.
@@ -403,17 +394,8 @@ c4 = (diag == 15) + (anti_diag == 15)
 f = c1 + c2 + c3 + c4
 f.simplify_as_binary()
 
-ml = qbpp.MapList()
-for k in range(9):
-    if k == 1:
-        ml.add(x[0][0][k], 1)
-    else:
-        ml.add(x[0][0][k], 0)
-
-for i in range(3):
-    for j in range(3):
-        if not (i == 0 and j == 0):
-            ml.add(x[i][j][1], 0)
+ml = [(x[0][0][k], 1 if k == 1 else 0) for k in range(9)]
+ml += [(x[i][j][1], 0) for i in range(3) for j in range(3) if not (i == 0 and j == 0)]
 
 full_sol = qbpp.Sol(f)
 g = qbpp.replace(f, ml)
@@ -432,7 +414,7 @@ for i in range(3):
     print()
 ```
 
-このコードでは、`MapList` オブジェクト `ml` を作成し、`add()` で固定された割り当てを追加します。
+このコードでは、固定された割り当てを含むペアのリスト `ml` を作成します。
 次に、元の式 `f` に対する解オブジェクト `full_sol` を作成します。
 `replace(f, ml)` を呼び出すと、固定された値が `f` に代入され、`ml` に含まれる変数は `g` から消えます。
 その結果、ソルバーが返す解 `sol` にはそれらの固定された変数が含まれません。

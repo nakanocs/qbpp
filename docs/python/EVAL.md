@@ -7,10 +7,9 @@ nav_order: 16
 <div class="lang-en" markdown="1">
 # Evaluating Expressions
 
-## Evaluation using MapList
+## Evaluation using a list of pairs
 The value of an expression can be computed by providing an assignment of values to all variables
-as a list of pairs.
-A list can be defined as a **`MapList`** object.
+as a list of `(variable, value)` pairs.
 
 The following program computes the function $f(x,y,z)$ for $(x,y,z)=(0,1,1)$:
 ```python
@@ -21,11 +20,10 @@ y = qbpp.var("y")
 z = qbpp.var("z")
 f = qbpp.sqr(x + 2 * y + 3 * z - 3)
 
-ml = qbpp.MapList([(x, 0), (y, 1), (z, 1)])
-print("f(0,1,1) =", f.eval(ml))
+print("f(0,1,1) =", f.eval([(x, 0), (y, 1), (z, 1)]))
 ```
-In this program, a `MapList` object `ml` is defined with the assignment $x=0$, $y=1$, $z=1$.
-Then `f.eval(ml)` returns the value of $f(0,1,1)$.
+In this program, a list of pairs `[(x, 0), (y, 1), (z, 1)]` defines the assignment $x=0$, $y=1$, $z=1$.
+Then `f.eval(...)` returns the value of $f(0,1,1)$.
 This program displays the following output:
 ```
 f(0,1,1) = 4
@@ -92,9 +90,8 @@ print("energy =", sol.energy())
 <div class="lang-ja" markdown="1">
 # 式の評価
 
-## MapListを使った評価
-式の値は、すべての変数への値の割り当てをペアのリストとして与えることで計算できます。
-リストは **`MapList`** オブジェクトとして定義できます。
+## ペアのリストを使った評価
+式の値は、すべての変数への値の割り当てを `(変数, 値)` のペアのリストとして与えることで計算できます。
 
 以下のプログラムは、$(x,y,z)=(0,1,1)$ に対して関数 $f(x,y,z)$ を計算します：
 ```python
@@ -105,11 +102,10 @@ y = qbpp.var("y")
 z = qbpp.var("z")
 f = qbpp.sqr(x + 2 * y + 3 * z - 3)
 
-ml = qbpp.MapList([(x, 0), (y, 1), (z, 1)])
-print("f(0,1,1) =", f.eval(ml))
+print("f(0,1,1) =", f.eval([(x, 0), (y, 1), (z, 1)]))
 ```
-このプログラムでは、$x=0$, $y=1$, $z=1$ の割り当てを持つ `MapList` オブジェクト `ml` を定義しています。
-そして `f.eval(ml)` が $f(0,1,1)$ の値を返します。
+このプログラムでは、ペアのリスト `[(x, 0), (y, 1), (z, 1)]` で $x=0$, $y=1$, $z=1$ の割り当てを定義しています。
+そして `f.eval(...)` が $f(0,1,1)$ の値を返します。
 このプログラムの出力は以下の通りです：
 ```
 f(0,1,1) = 4

@@ -121,9 +121,7 @@ P = 10000
 f = P * (onehot + different) + equal
 f.simplify_as_binary()
 
-ml = qbpp.MapList()
-ml.add(x[I('S')][0], 0)
-ml.add(x[I('M')][0], 0)
+ml = [(x[I('S')][0], 0), (x[I('M')][0], 0)]
 g = qbpp.replace(f, ml)
 g.simplify_as_binary()
 
@@ -153,8 +151,8 @@ In this program, `LETTERS` assigns an integer index to each letter in `"SENDMORY
 We define an `L`$\times$`10` matrix `x` of binary variables (here $L=8$).
 The expressions `onehot`, `different`, and `equal` are computed according to the formulation and combined into a single objective `f` with a penalty weight `P`.
 
-We use a `MapList` object `ml` to fix `x[I('S')][0]` and `x[I('M')][0]` to 0, and create a reduced expression `g` by applying this replacement.
-The solver is run on `g`, and the resulting assignment `sol` is merged with the fixed mapping `ml` to produce `full_sol` for the original objective `f`.
+We use a list of pairs `ml` to fix `x[I('S')][0]` and `x[I('M')][0]` to 0, and create a reduced expression `g` by applying this replacement.
+The solver is run on `g`, and the resulting assignment `sol` is merged with the fixed assignments `ml` to produce `full_sol` for the original objective `f`.
 
 Finally, the one-hot rows are decoded into digits, and the program prints the obtained solution.
 
@@ -285,9 +283,7 @@ P = 10000
 f = P * (onehot + different) + equal
 f.simplify_as_binary()
 
-ml = qbpp.MapList()
-ml.add(x[I('S')][0], 0)
-ml.add(x[I('M')][0], 0)
+ml = [(x[I('S')][0], 0), (x[I('M')][0], 0)]
 g = qbpp.replace(f, ml)
 g.simplify_as_binary()
 
@@ -317,8 +313,8 @@ print(f"{digit_str(val[I('S')])}{digit_str(val[I('E')])}{digit_str(val[I('N')])}
 `L`$\times$`10` のバイナリ変数行列 `x` を定義します（ここで $L=8$）。
 式 `onehot`、`different`、`equal` は定式化に従って計算され、ペナルティ重み `P` とともに1つの目的関数 `f` にまとめられます。
 
-`MapList` オブジェクト `ml` を使って `x[I('S')][0]` と `x[I('M')][0]` を 0 に固定し、この置換を適用して縮約された式 `g` を作成します。
-ソルバーは `g` に対して実行され、得られた割り当て `sol` は固定マッピング `ml` と統合されて、元の目的関数 `f` に対する `full_sol` が生成されます。
+ペアのリスト `ml` を使って `x[I('S')][0]` と `x[I('M')][0]` を 0 に固定し、この置換を適用して縮約された式 `g` を作成します。
+ソルバーは `g` に対して実行され、得られた割り当て `sol` は固定値 `ml` と統合されて、元の目的関数 `f` に対する `full_sol` が生成されます。
 
 最後に、one-hot行を数字にデコードし、得られた解を出力します。
 

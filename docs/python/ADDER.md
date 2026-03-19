@@ -64,10 +64,7 @@ The program produces the following output, confirming that the expression correc
 If some bits are fixed, the valid values of the remaining bits can be derived.
 For example, the three input bits can be fixed using the `replace()` function:
 ```python
-ml = qbpp.MapList()
-ml.add(a, 1)
-ml.add(b, 1)
-ml.add(i, 0)
+ml = [(a, 1), (b, 1), (i, 0)]
 fa2 = qbpp.replace(fa, ml)
 fa2.simplify_as_binary()
 solver2 = qbpp.ExhaustiveSolver(fa2)
@@ -99,21 +96,10 @@ y = qbpp.var("y", 4)
 c = qbpp.var("c", 5)
 z = qbpp.var("z", 4)
 
-ml0 = qbpp.MapList()
-ml0.add(a, x[0]); ml0.add(b, y[0]); ml0.add(i, c[0]); ml0.add(o, c[1]); ml0.add(s, z[0])
-fa0 = qbpp.replace(fa, ml0)
-
-ml1 = qbpp.MapList()
-ml1.add(a, x[1]); ml1.add(b, y[1]); ml1.add(i, c[1]); ml1.add(o, c[2]); ml1.add(s, z[1])
-fa1 = qbpp.replace(fa, ml1)
-
-ml2 = qbpp.MapList()
-ml2.add(a, x[2]); ml2.add(b, y[2]); ml2.add(i, c[2]); ml2.add(o, c[3]); ml2.add(s, z[2])
-fa2 = qbpp.replace(fa, ml2)
-
-ml3 = qbpp.MapList()
-ml3.add(a, x[3]); ml3.add(b, y[3]); ml3.add(i, c[3]); ml3.add(o, c[4]); ml3.add(s, z[3])
-fa3 = qbpp.replace(fa, ml3)
+fa0 = qbpp.replace(fa, [(a, x[0]), (b, y[0]), (i, c[0]), (o, c[1]), (s, z[0])])
+fa1 = qbpp.replace(fa, [(a, x[1]), (b, y[1]), (i, c[1]), (o, c[2]), (s, z[1])])
+fa2 = qbpp.replace(fa, [(a, x[2]), (b, y[2]), (i, c[2]), (o, c[3]), (s, z[2])])
+fa3 = qbpp.replace(fa, [(a, x[3]), (b, y[3]), (i, c[3]), (o, c[4]), (s, z[3])])
 
 adder = fa0 + fa1 + fa2 + fa3
 adder.simplify_as_binary()
@@ -129,7 +115,7 @@ for idx in [0, 1, len(sols)-2, len(sols)-1]:
     zv = "".join(str(sol(z[j])) for j in range(4))
     print(f"({idx}) x={xv}, y={yv}, c={cv}, z={zv}")
 ```
-In this program, four full-adder expressions are created using the `replace()` function and combined into a single expression, `adder`.
+In this program, four full-adder expressions are created using the `replace()` function with lists of pairs, and combined into a single expression, `adder`.
 The Exhaustive Solver is then used to enumerate all optimal solutions.
 
 This program produces 512 valid solutions, corresponding to all possible input combinations of a 4-bit adder:
@@ -157,10 +143,7 @@ adder = toExpr(0)
 for j in range(4):
     adder += fa(x[j], y[j], c[j], c[j + 1], z[j])
 
-ml = qbpp.MapList()
-ml.add(c[0], 0)
-ml.add(c[4], 0)
-adder = qbpp.replace(adder, ml)
+adder = qbpp.replace(adder, [(c[0], 0), (c[4], 0)])
 adder.simplify_as_binary()
 
 solver = qbpp.ExhaustiveSolver(adder)
@@ -229,10 +212,7 @@ for idx, sol in enumerate(sols):
 一部のビットを固定すると、残りのビットの有効な値を導出できます。
 例えば、3つの入力ビットは `replace()` 関数を使って固定できます:
 ```python
-ml = qbpp.MapList()
-ml.add(a, 1)
-ml.add(b, 1)
-ml.add(i, 0)
+ml = [(a, 1), (b, 1), (i, 0)]
 fa2 = qbpp.replace(fa, ml)
 fa2.simplify_as_binary()
 solver2 = qbpp.ExhaustiveSolver(fa2)
@@ -264,21 +244,10 @@ y = qbpp.var("y", 4)
 c = qbpp.var("c", 5)
 z = qbpp.var("z", 4)
 
-ml0 = qbpp.MapList()
-ml0.add(a, x[0]); ml0.add(b, y[0]); ml0.add(i, c[0]); ml0.add(o, c[1]); ml0.add(s, z[0])
-fa0 = qbpp.replace(fa, ml0)
-
-ml1 = qbpp.MapList()
-ml1.add(a, x[1]); ml1.add(b, y[1]); ml1.add(i, c[1]); ml1.add(o, c[2]); ml1.add(s, z[1])
-fa1 = qbpp.replace(fa, ml1)
-
-ml2 = qbpp.MapList()
-ml2.add(a, x[2]); ml2.add(b, y[2]); ml2.add(i, c[2]); ml2.add(o, c[3]); ml2.add(s, z[2])
-fa2 = qbpp.replace(fa, ml2)
-
-ml3 = qbpp.MapList()
-ml3.add(a, x[3]); ml3.add(b, y[3]); ml3.add(i, c[3]); ml3.add(o, c[4]); ml3.add(s, z[3])
-fa3 = qbpp.replace(fa, ml3)
+fa0 = qbpp.replace(fa, [(a, x[0]), (b, y[0]), (i, c[0]), (o, c[1]), (s, z[0])])
+fa1 = qbpp.replace(fa, [(a, x[1]), (b, y[1]), (i, c[1]), (o, c[2]), (s, z[1])])
+fa2 = qbpp.replace(fa, [(a, x[2]), (b, y[2]), (i, c[2]), (o, c[3]), (s, z[2])])
+fa3 = qbpp.replace(fa, [(a, x[3]), (b, y[3]), (i, c[3]), (o, c[4]), (s, z[3])])
 
 adder = fa0 + fa1 + fa2 + fa3
 adder.simplify_as_binary()
@@ -294,7 +263,7 @@ for idx in [0, 1, len(sols)-2, len(sols)-1]:
     zv = "".join(str(sol(z[j])) for j in range(4))
     print(f"({idx}) x={xv}, y={yv}, c={cv}, z={zv}")
 ```
-このプログラムでは、`replace()` 関数を使って4つの全加算器の式を作成し、1つの式 `adder` にまとめています。
+このプログラムでは、`replace()` 関数にペアのリストを渡して4つの全加算器の式を作成し、1つの式 `adder` にまとめています。
 次に全探索ソルバーを使ってすべての最適解を列挙します。
 
 このプログラムは512個の有効な解を生成し、4ビット加算器のすべての入力の組み合わせに対応しています:
@@ -322,10 +291,7 @@ adder = toExpr(0)
 for j in range(4):
     adder += fa(x[j], y[j], c[j], c[j + 1], z[j])
 
-ml = qbpp.MapList()
-ml.add(c[0], 0)
-ml.add(c[4], 0)
-adder = qbpp.replace(adder, ml)
+adder = qbpp.replace(adder, [(c[0], 0), (c[4], 0)])
 adder.simplify_as_binary()
 
 solver = qbpp.ExhaustiveSolver(adder)

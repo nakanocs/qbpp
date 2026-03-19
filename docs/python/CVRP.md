@@ -85,11 +85,8 @@ for v in range(V):
 f = objective + 10000 * (row_constraint + column_constraint +
                           consecutive_constraint + capacity_constraint)
 
-ml = qbpp.MapList()
-for v in range(V):
-    ml.add(a[v][0][0], 1)
-    for i in range(1, N):
-        ml.add(a[v][0][i], 0)
+ml = [(a[v][0][0], 1) for v in range(V)]
+ml += [(a[v][0][i], 0) for v in range(V) for i in range(1, N)]
 
 g = qbpp.replace(f, ml)
 f.simplify_as_binary()
@@ -122,7 +119,7 @@ for v in range(V):
 This program defines a $V\times N\times N$ array `a` of binary variables.
 It then defines the objective and constraint terms according to the formulation described above.
 
-To fix the first visited location ($t=0$) of every vehicle to the depot (location 0), the program constructs a `MapList` and applies it using `replace()`.
+To fix the first visited location ($t=0$) of every vehicle to the depot (location 0), the program constructs a list of pairs and applies it using `replace()`.
 
 For example, the program prints the following results:
 ```
@@ -251,11 +248,8 @@ for v in range(V):
 f = objective + 10000 * (row_constraint + column_constraint +
                           consecutive_constraint + capacity_constraint)
 
-ml = qbpp.MapList()
-for v in range(V):
-    ml.add(a[v][0][0], 1)
-    for i in range(1, N):
-        ml.add(a[v][0][i], 0)
+ml = [(a[v][0][0], 1) for v in range(V)]
+ml += [(a[v][0][i], 0) for v in range(V) for i in range(1, N)]
 
 g = qbpp.replace(f, ml)
 f.simplify_as_binary()
@@ -288,7 +282,7 @@ for v in range(V):
 このプログラムは $V\times N\times N$ のバイナリ変数の配列 `a` を定義します。
 次に、上記の定式化に従って目的関数と制約項を定義します。
 
-すべての車両の最初の訪問地点（$t=0$）をデポ（地点0）に固定するため、`MapList` を構築し `replace()` を使って適用します。
+すべての車両の最初の訪問地点（$t=0$）をデポ（地点0）に固定するため、ペアのリストを構築し `replace()` を使って適用します。
 
 例えば、このプログラムは以下の結果を出力します：
 ```
