@@ -39,14 +39,6 @@ sudo apt install qbpp
 This automatically installs headers to `/usr/local/include/qbpp/`, shared libraries to `/usr/local/lib/`, and the `qbpp-license` command to `/usr/local/bin/`.
 No environment variable configuration is needed.
 
-The sample programs are installed to `/usr/local/share/qbpp/samples/`.
-To compile and run them:
-```bash
-cp -r /usr/local/share/qbpp/samples ~/qbpp_samples
-cd ~/qbpp_samples
-make nqueen_easy
-```
-
 To upgrade to a new version:
 ```bash
 sudo apt update
@@ -128,14 +120,6 @@ sudo apt install qbpp
 
 これにより、ヘッダファイルが `/usr/local/include/qbpp/` に、共有ライブラリが `/usr/local/lib/` に、`qbpp-license` コマンドが `/usr/local/bin/` に自動的にインストールされます。
 環境変数の設定は不要です。
-
-サンプルプログラムは `/usr/local/share/qbpp/samples/` にインストールされます。
-コンパイルして実行するには：
-```bash
-cp -r /usr/local/share/qbpp/samples ~/qbpp_samples
-cd ~/qbpp_samples
-make nqueen_easy
-```
 
 新しいバージョンにアップグレードするには：
 ```bash
