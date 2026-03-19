@@ -49,7 +49,7 @@ You can define these macros via compiler options (e.g., `-DMAXDEG=2`) or in your
 
 ## Available integer data types
 - **Standard integer types**:
-`int8_t`, `int16_t`, `int32_t`, `int64_t`
+`int16_t`, `int32_t`, `int64_t`
 
 - **Multiprecision integer types** (implemented using the Boost.Multiprecision library):
 `qbpp::int128_t`, `qbpp::cpp_int`
@@ -216,7 +216,7 @@ QUBOを扱う場合は、`MAXDEG`を2に設定してください。
 
 ## 使用可能な整数データ型
 - **標準整数型**:
-`int8_t`, `int16_t`, `int32_t`, `int64_t`
+`int16_t`, `int32_t`, `int64_t`
 
 - **多倍長整数型**（Boost.Multiprecisionライブラリを使用して実装）:
 `qbpp::int128_t`, `qbpp::cpp_int`

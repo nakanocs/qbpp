@@ -137,7 +137,7 @@ They can be changed either by compiler options or by using `#define` directives 
 
 The following data types are supported:
 - **Standard integer types**:
-**`int8_t`**, **`int16_t`**, **`int32_t`**, and **`int64_t`**
+**`int16_t`**, **`int32_t`**, and **`int64_t`**
 
 - **Extended integer types**:
 **`qbpp::int128_t`** and **`qbpp::cpp_int`**
@@ -340,7 +340,7 @@ int main() {
 
 以下のデータ型がサポートされています。
 - **標準整数型**:
-**`int8_t`**、**`int16_t`**、**`int32_t`**、**`int64_t`**
+**`int16_t`**、**`int32_t`**、**`int64_t`**
 
 - **拡張整数型**:
 **`qbpp::int128_t`** および **`qbpp::cpp_int`**

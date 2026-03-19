@@ -123,7 +123,7 @@ q = 1000039
 We can see that the expression `f` contains very large coefficients, and the factorization of the large composite number is correctly obtained.
 
 >**TIP**
-> **`COEFF_TYPE`** and **`ENERGY_TYPE`** can be set to **`int8_t`**, **`int16_t`**, **`int32_t`**, **`int64_t`**, **`qbpp::int128_t`**, or **`qbpp::cpp_int`**.
+> **`COEFF_TYPE`** and **`ENERGY_TYPE`** can be set to **`int16_t`**, **`int32_t`**, **`int64_t`**, **`qbpp::int128_t`**, or **`qbpp::cpp_int`**.
 </div>
 
 <div class="lang-ja" markdown="1">
@@ -243,5 +243,5 @@ q = 1000039
 式 `f` が非常に大きな係数を含んでおり、大きな合成数の因数分解が正しく得られたことがわかります。
 
 >**TIP**
-> **`COEFF_TYPE`** と **`ENERGY_TYPE`** は **`int8_t`**、**`int16_t`**、**`int32_t`**、**`int64_t`**、**`qbpp::int128_t`**、または **`qbpp::cpp_int`** に設定できます。
+> **`COEFF_TYPE`** と **`ENERGY_TYPE`** は **`int16_t`**、**`int32_t`**、**`int64_t`**、**`qbpp::int128_t`**、または **`qbpp::cpp_int`** に設定できます。
 </div>
