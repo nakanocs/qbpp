@@ -174,15 +174,14 @@ We modify the program above as follows:
       }
     }
 
-  qbpp::Sol full_sol(f);
-  f.replace(ml);
-  f.simplify_as_binary();
+  auto g = qbpp::replace(f, ml);
+  g.simplify_as_binary();
 
-  auto solver = qbpp::easy_solver::EasySolver(f);
+  auto solver = qbpp::easy_solver::EasySolver(g);
   solver.target_energy(0);
   auto sol = solver.search();
-  full_sol.set(sol);
-  full_sol.set(ml);
+
+  auto full_sol = qbpp::Sol(f).set(sol).set(ml);
   auto result = qbpp::onehot_to_int(full_sol(x));
   for (size_t i = 0; i < 3; ++i) {
     for (size_t j = 0; j < 3; ++j) {
@@ -193,11 +192,11 @@ We modify the program above as follows:
 ```
 
 In this code, we create a `qbpp::MapList` object `ml` and add fixed assignments using `push_back()`.
-We then create `full_sol`, a solution object for the original expression `f`.
-Calling `f.replace(ml)` substitutes the fixed values into `f` in place, so the variables listed in `ml` disappear from `f`.
-As a result, the solution `sol` returned by the solver does not include those fixed variables.
-Finally, we reconstruct a complete assignment by merging `sol` and `ml` into `full_sol` via `set()`.
-The reconstructed solution `full_sol` represents the full magic square.
+We then call `qbpp::replace(f, ml)` to substitute the fixed values, producing a new expression `g` without modifying the original `f`.
+The variables listed in `ml` no longer appear in `g`.
+The Easy Solver is applied to `g`, and the solution `sol` does not include those fixed variables.
+Finally, we construct a complete solution by chaining `set(sol)` and `set(ml)` on a zero-initialized `qbpp::Sol(f)`.
+The resulting `full_sol` represents the full magic square.
 
 This program produces the following output:
 ```
@@ -376,15 +375,14 @@ $$
       }
     }
 
-  qbpp::Sol full_sol(f);
-  f.replace(ml);
-  f.simplify_as_binary();
+  auto g = qbpp::replace(f, ml);
+  g.simplify_as_binary();
 
-  auto solver = qbpp::easy_solver::EasySolver(f);
+  auto solver = qbpp::easy_solver::EasySolver(g);
   solver.target_energy(0);
   auto sol = solver.search();
-  full_sol.set(sol);
-  full_sol.set(ml);
+
+  auto full_sol = qbpp::Sol(f).set(sol).set(ml);
   auto result = qbpp::onehot_to_int(full_sol(x));
   for (size_t i = 0; i < 3; ++i) {
     for (size_t j = 0; j < 3; ++j) {
@@ -395,11 +393,11 @@ $$
 ```
 
 このコードでは、`qbpp::MapList` オブジェクト `ml` を作成し、`push_back()` を使用して固定割り当てを追加しています。
-次に、元の式 `f` に対するソリューションオブジェクト `full_sol` を作成します。
-`f.replace(ml)` を呼び出すと、固定値が `f` にその場で代入され、`ml` に含まれる変数は `f` から消えます。
-その結果、ソルバーが返す解 `sol` にはそれらの固定変数は含まれません。
-最後に、`set()` を使用して `sol` と `ml` を `full_sol` にマージすることで、完全な割り当てを再構成します。
-再構成された解 `full_sol` は完全な魔方陣を表します。
+次に、`qbpp::replace(f, ml)` を呼び出して固定値を代入し、元の `f` を変更せずに新しい式 `g` を生成します。
+`ml` に含まれる変数は `g` から消えます。
+Easy Solverを `g` に適用し、解 `sol` にはそれらの固定変数は含まれません。
+最後に、ゼロ初期化された `qbpp::Sol(f)` に `set(sol)` と `set(ml)` をチェーンして完全な解を構築します。
+得られた `full_sol` は完全な魔方陣を表します。
 
 このプログラムは以下の出力を生成します:
 ```
