@@ -28,7 +28,7 @@ For example, consider the following host and guest graphs:
 One solution $\sigma$ is:
 
 | node $i$ in $G_G$ | 0 | 1 | 2 | 3 | 4 | 5 |
-|---|---|---|---|---|---|---|
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | node $\sigma(i)$ in $G_H$ | 1 | 4 | 6 | 7 | 9 | 8 |
 
 
@@ -249,7 +249,7 @@ Note that an entry of host_to_guest is `-1` if the corresponding host node is no
 解 $\sigma$ の一例は次の通りです:
 
 | $G_G$ の頂点 $i$ | 0 | 1 | 2 | 3 | 4 | 5 |
-|---|---|---|---|---|---|---|
+|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
 | $G_H$ の頂点 $\sigma(i)$ | 1 | 4 | 6 | 7 | 9 | 8 |
 
 
