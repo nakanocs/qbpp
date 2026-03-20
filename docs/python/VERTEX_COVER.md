@@ -15,12 +15,12 @@ For an $n$-node graph $G=(V,E)$ whose nodes are labeled $0,1,\ldots,n−1$,
 we introduce $n$ binary variables $x_0,x_1,\ldots, x_{n-1}$, where $x_i=1$ if and only if node
 $i$ is selected (i.e., $i\in S$).
 
-Using negated variables $(1-x_i)$ (where $(1-x_i)=1$ iff $x_i=0$),
+Using negated literals $\overline{x}_i$ (where $\overline{x}_i=1$ iff $x_i=0$),
 we define the following penalty term, which becomes 0 if and only if every edge is covered:
 
 $$
 \begin{aligned}
-\text{constraint} &= \sum_{(i,j)\in E} (1-x_i)(1-x_j)
+\text{constraint} &= \sum_{(i,j)\in E} \overline{x}_i\,\overline{x}_j
 \end{aligned}
 $$
 
@@ -54,9 +54,7 @@ edges = [
 x = qbpp.var("x", N)
 
 objective = qbpp.sum(x)
-constraint = toExpr(0)
-for u, v in edges:
-    constraint += (1 - x[u]) * (1 - x[v])
+constraint = qbpp.sum([~x[u] * ~x[v] for u, v in edges])
 f = objective + constraint * 2
 f.simplify_as_binary()
 
@@ -80,12 +78,6 @@ objective = 9
 constraint = 0
 ```
 An optimal solution with objective value 9 and constraint value 0 is obtained.
-
-### Comparison with C++ QUBO++
-
-| C++ QUBO++                   | PyQBPP                              |
-|------------------------------|---------------------------------------|
-| `~x[e.first] * ~x[e.second]`| `(1 - x[u]) * (1 - x[v])`            |
 
 ## Visualization using matplotlib
 The following code visualizes the Vertex Cover solution:
@@ -118,12 +110,12 @@ Cover vertices are shown in red. Every edge has at least one red endpoint.
 ノードが $0,1,\ldots,n−1$ とラベル付けされた $n$ ノードのグラフ $G=(V,E)$ に対して、
 $n$ 個のバイナリ変数 $x_0,x_1,\ldots, x_{n-1}$ を導入します。ここで $x_i=1$ はノード $i$ が選択されていること（すなわち $i\in S$）を意味します。
 
-否定変数 $(1-x_i)$（$(1-x_i)=1$ は $x_i=0$ と同値）を用いて、
+否定リテラル $\overline{x}_i$（$\overline{x}_i=1$ は $x_i=0$ のとき）を用いて、
 すべての辺が被覆されている場合にのみ0となる以下のペナルティ項を定義します：
 
 $$
 \begin{aligned}
-\text{constraint} &= \sum_{(i,j)\in E} (1-x_i)(1-x_j)
+\text{constraint} &= \sum_{(i,j)\in E} \overline{x}_i\,\overline{x}_j
 \end{aligned}
 $$
 
@@ -157,9 +149,7 @@ edges = [
 x = qbpp.var("x", N)
 
 objective = qbpp.sum(x)
-constraint = toExpr(0)
-for u, v in edges:
-    constraint += (1 - x[u]) * (1 - x[v])
+constraint = qbpp.sum([~x[u] * ~x[v] for u, v in edges])
 f = objective + constraint * 2
 f.simplify_as_binary()
 
@@ -183,12 +173,6 @@ objective = 9
 constraint = 0
 ```
 目的関数値9、制約値0の最適解が得られます。
-
-### C++ QUBO++との比較
-
-| C++ QUBO++                   | PyQBPP                              |
-|------------------------------|---------------------------------------|
-| `~x[e.first] * ~x[e.second]`| `(1 - x[u]) * (1 - x[v])`            |
 
 ## matplotlibによる可視化
 以下のコードは頂点被覆の解を可視化します：

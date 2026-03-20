@@ -45,7 +45,7 @@ x = qbpp.var("x", N)
 
 objective = toExpr(0)
 for u, v in edges:
-    objective += x[u] * (1 - x[v]) + (1 - x[u]) * x[v]
+    objective += x[u] * ~x[v] + ~x[u] * x[v]
 
 f = -objective
 f.simplify_as_binary()
@@ -134,7 +134,7 @@ x = qbpp.var("x", N)
 
 objective = toExpr(0)
 for u, v in edges:
-    objective += x[u] * (1 - x[v]) + (1 - x[u]) * x[v]
+    objective += x[u] * ~x[v] + ~x[u] * x[v]
 
 f = -objective
 f.simplify_as_binary()

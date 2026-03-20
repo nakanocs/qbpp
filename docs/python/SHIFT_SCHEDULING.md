@@ -46,14 +46,14 @@ for w in range(workers):
 no_less_than_3 = toExpr(0)
 for w in range(workers):
     for j in range(days - 1):
-        no_less_than_3 += (1 - x[w][j]) * x[w][j+1] * x[w][j+2] * (1 - x[w][j+3])
+        no_less_than_3 += ~x[w][j] * x[w][j+1] * x[w][j+2] * ~x[w][j+3]
     for j in range(days):
-        no_less_than_3 += (1 - x[w][j]) * x[w][j+1] * (1 - x[w][j+2])
+        no_less_than_3 += ~x[w][j] * x[w][j+1] * ~x[w][j+2]
 
 no_single_day_off = toExpr(0)
 for w in range(workers):
     for j in range(days):
-        no_single_day_off += x[w][j] * (1 - x[w][j+1]) * x[w][j+2]
+        no_single_day_off += x[w][j] * ~x[w][j+1] * x[w][j+2]
 
 total_worker_cost = toExpr(0)
 for i in range(workers):
@@ -143,14 +143,14 @@ for w in range(workers):
 no_less_than_3 = toExpr(0)
 for w in range(workers):
     for j in range(days - 1):
-        no_less_than_3 += (1 - x[w][j]) * x[w][j+1] * x[w][j+2] * (1 - x[w][j+3])
+        no_less_than_3 += ~x[w][j] * x[w][j+1] * x[w][j+2] * ~x[w][j+3]
     for j in range(days):
-        no_less_than_3 += (1 - x[w][j]) * x[w][j+1] * (1 - x[w][j+2])
+        no_less_than_3 += ~x[w][j] * x[w][j+1] * ~x[w][j+2]
 
 no_single_day_off = toExpr(0)
 for w in range(workers):
     for j in range(days):
-        no_single_day_off += x[w][j] * (1 - x[w][j+1]) * x[w][j+2]
+        no_single_day_off += x[w][j] * ~x[w][j+1] * x[w][j+2]
 
 total_worker_cost = toExpr(0)
 for i in range(workers):

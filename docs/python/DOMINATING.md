@@ -27,12 +27,12 @@ We will show two formulations:
 
 ## HUBO formulation of the minimum dominating set problem
 
-For each node $i\in V$, node $i$ is NOT dominated only when $x_j=0$ for all $j\in N[i]$, i.e., $\prod_{j\in N[i]}(1-x_j)=1$.
+For each node $i\in V$, node $i$ is NOT dominated only when $x_j=0$ for all $j\in N[i]$, i.e., $\prod_{j\in N[i]}\overline{x}_j=1$.
 Thus, we define the constraint as:
 
 $$
 \begin{aligned}
-\text{constraint} = \sum_{i=0}^{n-1} \prod_{j\in N[i]}(1-x_j)
+\text{constraint} = \sum_{i=0}^{n-1} \prod_{j\in N[i]}\overline{x}_j
 \end{aligned}
 $$
 
@@ -74,9 +74,9 @@ objective = qbpp.sum(x)
 
 constraint = toExpr(0)
 for i in range(N):
-    t = toExpr(1 - x[i])
+    t = toExpr(~x[i])
     for j in adj[i]:
-        t *= (1 - x[j])
+        t *= ~x[j]
     constraint += t
 
 f = objective + (N + 1) * constraint
@@ -130,7 +130,7 @@ In this code, `t` stores the expression $\sum_{j\in N[i]}x_j$ and the `between()
 
 | C++ QUBO++                  | PyQBPP                                |
 |-----------------------------|----------------------------------------|
-| `~x[i]`                    | `(1 - x[i])`                          |
+| `~x[i]`                    | `~x[i]`                               |
 | `1 <= t <= +qbpp::inf`     | `between(t, 1, upper_bound)`          |
 
 ## Visualization using matplotlib
@@ -176,12 +176,12 @@ $$
 
 ## 最小支配集合問題のHUBO定式化
 
-各ノード $i\in V$ について、ノード $i$ が支配されていないのは $j\in N[i]$ のすべてについて $x_j=0$ のとき、すなわち $\prod_{j\in N[i]}(1-x_j)=1$ のときのみです。
+各ノード $i\in V$ について、ノード $i$ が支配されていないのは $j\in N[i]$ のすべてについて $x_j=0$ のとき、すなわち $\prod_{j\in N[i]}\overline{x}_j=1$ のときのみです。
 したがって、制約を以下のように定義します：
 
 $$
 \begin{aligned}
-\text{constraint} = \sum_{i=0}^{n-1} \prod_{j\in N[i]}(1-x_j)
+\text{constraint} = \sum_{i=0}^{n-1} \prod_{j\in N[i]}\overline{x}_j
 \end{aligned}
 $$
 
@@ -223,9 +223,9 @@ objective = qbpp.sum(x)
 
 constraint = toExpr(0)
 for i in range(N):
-    t = toExpr(1 - x[i])
+    t = toExpr(~x[i])
     for j in adj[i]:
-        t *= (1 - x[j])
+        t *= ~x[j]
     constraint += t
 
 f = objective + (N + 1) * constraint
@@ -279,7 +279,7 @@ for i in range(N):
 
 | C++ QUBO++                  | PyQBPP                                |
 |-----------------------------|----------------------------------------|
-| `~x[i]`                    | `(1 - x[i])`                          |
+| `~x[i]`                    | `~x[i]`                               |
 | `1 <= t <= +qbpp::inf`     | `between(t, 1, upper_bound)`          |
 
 ## matplotlibによる可視化

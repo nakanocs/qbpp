@@ -30,7 +30,7 @@ For each element $i\in U$, define the following expression:
 
 $$
 \begin{aligned}
-c_i &=\prod_{j: i\in S_j}(1-x_j) && (0\leq i\leq n-1)
+c_i &=\prod_{j: i\in S_j}\bar{x}_j && (0\leq i\leq n-1)
 \end{aligned}
 $$
 
@@ -66,7 +66,7 @@ x = qbpp.var("x", m)
 c = [toExpr(1) for _ in range(n)]
 for i in range(m):
     for j in cover[i]:
-        c[j] *= (1 - x[i])
+        c[j] *= ~x[i]
 
 objective = toExpr(0)
 for i in range(m):
@@ -159,7 +159,7 @@ $x_j=1$ は $S_j\in\cal S$ であることを意味します。
 
 $$
 \begin{aligned}
-c_i &=\prod_{j: i\in S_j}(1-x_j) && (0\leq i\leq n-1)
+c_i &=\prod_{j: i\in S_j}\bar{x}_j && (0\leq i\leq n-1)
 \end{aligned}
 $$
 
@@ -195,7 +195,7 @@ x = qbpp.var("x", m)
 c = [toExpr(1) for _ in range(n)]
 for i in range(m):
     for j in cover[i]:
-        c[j] *= (1 - x[i])
+        c[j] *= ~x[i]
 
 objective = toExpr(0)
 for i in range(m):

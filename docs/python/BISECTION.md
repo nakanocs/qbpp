@@ -71,7 +71,7 @@ x = qbpp.var("x", N)
 # Objective: number of edges crossing the cut
 objective = toExpr(0)
 for i, j in edges:
-    objective += x[i] * (1 - x[j]) + (1 - x[i]) * x[j]
+    objective += x[i] * ~x[j] + ~x[i] * x[j]
 
 # Constraint: exactly N/2 nodes in each partition
 constraint = qsum(x) == N // 2
@@ -168,7 +168,7 @@ x = qbpp.var("x", N)
 # 目的関数: カットを横断する辺の数
 objective = toExpr(0)
 for i, j in edges:
-    objective += x[i] * (1 - x[j]) + (1 - x[i]) * x[j]
+    objective += x[i] * ~x[j] + ~x[i] * x[j]
 
 # 制約: 各パーティションに正確に N/2 ノード
 constraint = qsum(x) == N // 2
