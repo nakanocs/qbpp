@@ -22,7 +22,7 @@ The table below summarizes the operators and functions available for `pyqbpp.Exp
 | Type Conversion               | `int()`, `toInt()`                                   | Built-in/Global | `int` or `list` | `pyqbpp.Expr` (constant) |
 | GCD                           | `gcd()`                                              | Global        | `int`             | `ExprType`               |
 | Simplify                      | `simplify()`, `simplify_as_binary()`, `simplify_as_spin()` | Global/Member | `pyqbpp.Expr`     | `ExprType`               |
-| Eval                          | `f(ml)`                                              | Member        | `int`             | `pyqbpp.Expr`-`list`     |
+| Eval                          | `f(ml)`                                              | Call          | `int`             | `pyqbpp.Expr`-`list`     |
 | Replace                       | `replace()`                                          | Global/Member | `pyqbpp.Expr`     | `ExprType`-`list`        |
 | Reduce                        | `reduce()`                                           | Global/Member | `pyqbpp.Expr`     | `ExprType`               |
 | Binary/Spin Conversion        | `binary_to_spin()`, `spin_to_binary()`               | Global/Member | `pyqbpp.Expr`     | `ExprType`               |
@@ -438,7 +438,7 @@ zg = qbpp.concat(1, qbpp.concat(z, 0, 1), 1)
 | 型変換                         | `int()`, `toInt()`                                   | 組み込み/グローバル | `int` または `list` | `pyqbpp.Expr`（定数）    |
 | 最大公約数                      | `gcd()`                                              | グローバル     | `int`             | `ExprType`               |
 | 簡約化                         | `simplify()`, `simplify_as_binary()`, `simplify_as_spin()` | グローバル/メンバー | `pyqbpp.Expr`     | `ExprType`               |
-| 評価                           | `f(ml)`                                              | メンバー       | `int`             | `pyqbpp.Expr`-`list`     |
+| 評価                           | `f(ml)`                                              | 呼び出し       | `int`             | `pyqbpp.Expr`-`list`     |
 | 置換                           | `replace()`                                          | グローバル/メンバー | `pyqbpp.Expr`     | `ExprType`-`list`        |
 | 次数削減                        | `reduce()`                                           | グローバル/メンバー | `pyqbpp.Expr`     | `ExprType`               |
 | バイナリ/スピン変換              | `binary_to_spin()`, `spin_to_binary()`               | グローバル/メンバー | `pyqbpp.Expr`     | `ExprType`               |
