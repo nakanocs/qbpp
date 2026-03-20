@@ -23,7 +23,7 @@ The table below summarizes the operators and functions available for `pyqbpp.Exp
 | Type Conversion               | `int()`, `toInt()`                                   | Built-in/Global | `int` or `list` | `pyqbpp.Expr` (constant) |
 | GCD                           | `gcd()`                                              | Global        | `int`             | `ExprType`               |
 | Simplify                      | `simplify()`, `simplify_as_binary()`, `simplify_as_spin()` | Global/Member | `pyqbpp.Expr`     | `ExprType`               |
-| Eval                          | `f.eval(ml)`                                         | Member        | `int`             | `pyqbpp.Expr`-`list`     |
+| Eval                          | `f(ml)`                                              | Member        | `int`             | `pyqbpp.Expr`-`list`     |
 | Replace                       | `replace()`                                          | Global/Member | `pyqbpp.Expr`     | `ExprType`-`list`        |
 | Reduce                        | `reduce()`                                           | Global/Member | `pyqbpp.Expr`     | `ExprType`               |
 | Binary/Spin Conversion        | `binary_to_spin()`, `spin_to_binary()`               | Global/Member | `pyqbpp.Expr`     | `ExprType`               |
@@ -228,10 +228,10 @@ g = qbpp.Expr(x * x + x)
 g.simplify_as_spin()    # 1 + x (since x^2 = 1)
 ```
 
-## Evaluation function: `f.eval(ml)`
+## Evaluation function: `f(ml)`
 The evaluation function takes a list of `(variable, value)` pairs, where each pair defines a mapping from a variable to an integer value.
 
-For a `pyqbpp.Expr` object `f` and a list of pairs `ml`, the evaluation function `f.eval(ml)` evaluates the value of `f` under the variable assignments specified by `ml` and returns the resulting integer value.
+For a `pyqbpp.Expr` object `f` and a list of pairs `ml`, the evaluation function `f(ml)` evaluates the value of `f` under the variable assignments specified by `ml` and returns the resulting integer value.
 
 All variables appearing in `f` must have corresponding mappings defined in `ml`.
 
@@ -243,14 +243,8 @@ x = qbpp.var("x")
 y = qbpp.var("y")
 f = 3 * x + 2 * y + 1
 
-print(f.eval([(x, 1), (y, 0)]))  # 4  (= 3*1 + 2*0 + 1)
+print(f([(x, 1), (y, 0)]))  # 4  (= 3*1 + 2*0 + 1)
 ```
-
-### Comparison with C++ QUBO++
-
-| C++ QUBO++       | PyQBPP                |
-|------------------|-------------------------|
-| `f(ml)`          | `f.eval([(x, 1), ...])`|
 
 ## Replace functions: `replace()`
 The `replace()` function accepts a list of `(variable, value)` pairs, where each pair maps a variable to an integer or an expression.
@@ -375,7 +369,7 @@ k = binary_to_spin(h)   # 2 + 2*b  (replaced b with (b+1)/2, multiplied by 2)
 | 型変換                         | `int()`, `toInt()`                                   | 組み込み/グローバル | `int` または `list` | `pyqbpp.Expr`（定数）    |
 | 最大公約数                      | `gcd()`                                              | グローバル     | `int`             | `ExprType`               |
 | 簡約化                         | `simplify()`, `simplify_as_binary()`, `simplify_as_spin()` | グローバル/メンバー | `pyqbpp.Expr`     | `ExprType`               |
-| 評価                           | `f.eval(ml)`                                         | メンバー       | `int`             | `pyqbpp.Expr`-`list`     |
+| 評価                           | `f(ml)`                                              | メンバー       | `int`             | `pyqbpp.Expr`-`list`     |
 | 置換                           | `replace()`                                          | グローバル/メンバー | `pyqbpp.Expr`     | `ExprType`-`list`        |
 | 次数削減                        | `reduce()`                                           | グローバル/メンバー | `pyqbpp.Expr`     | `ExprType`               |
 | バイナリ/スピン変換              | `binary_to_spin()`, `spin_to_binary()`               | グローバル/メンバー | `pyqbpp.Expr`     | `ExprType`               |
@@ -578,10 +572,10 @@ g = qbpp.Expr(x * x + x)
 g.simplify_as_spin()    # 1 + x (since x^2 = 1)
 ```
 
-## 評価関数: `f.eval(ml)`
+## 評価関数: `f(ml)`
 評価関数は `(変数, 値)` のペアのリストを受け取ります。各ペアは変数から整数値へのマッピングを定義します。
 
-`pyqbpp.Expr` オブジェクト `f` とペアのリスト `ml` に対して、評価関数 `f.eval(ml)` は `ml` で指定された変数の割り当ての下で `f` の値を評価し、結果の整数値を返します。
+`pyqbpp.Expr` オブジェクト `f` とペアのリスト `ml` に対して、評価関数 `f(ml)` は `ml` で指定された変数の割り当ての下で `f` の値を評価し、結果の整数値を返します。
 
 `f` に出現するすべての変数は、`ml` に対応するマッピングが定義されていなければなりません。
 
@@ -593,14 +587,8 @@ x = qbpp.var("x")
 y = qbpp.var("y")
 f = 3 * x + 2 * y + 1
 
-print(f.eval([(x, 1), (y, 0)]))  # 4  (= 3*1 + 2*0 + 1)
+print(f([(x, 1), (y, 0)]))  # 4  (= 3*1 + 2*0 + 1)
 ```
-
-### C++ QUBO++ との比較
-
-| C++ QUBO++       | PyQBPP                    |
-|------------------|---------------------------|
-| `f(ml)`          | `f.eval([(x, 1), ...])`  |
 
 ## 置換関数: `replace()`
 `replace()` 関数は `(変数, 値)` のペアのリストを受け取ります。各ペアは変数から整数または式へのマッピングを定義します。

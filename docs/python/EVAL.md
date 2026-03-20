@@ -20,10 +20,10 @@ y = qbpp.var("y")
 z = qbpp.var("z")
 f = qbpp.sqr(x + 2 * y + 3 * z - 3)
 
-print("f(0,1,1) =", f.eval([(x, 0), (y, 1), (z, 1)]))
+print("f(0,1,1) =", f([(x, 0), (y, 1), (z, 1)]))
 ```
 In this program, a list of pairs `[(x, 0), (y, 1), (z, 1)]` defines the assignment $x=0$, $y=1$, $z=1$.
-Then `f.eval(...)` returns the value of $f(0,1,1)$.
+Then `f(...)` returns the value of $f(0,1,1)$.
 This program displays the following output:
 ```
 f(0,1,1) = 4
@@ -102,10 +102,10 @@ y = qbpp.var("y")
 z = qbpp.var("z")
 f = qbpp.sqr(x + 2 * y + 3 * z - 3)
 
-print("f(0,1,1) =", f.eval([(x, 0), (y, 1), (z, 1)]))
+print("f(0,1,1) =", f([(x, 0), (y, 1), (z, 1)]))
 ```
 このプログラムでは、ペアのリスト `[(x, 0), (y, 1), (z, 1)]` で $x=0$, $y=1$, $z=1$ の割り当てを定義しています。
-そして `f.eval(...)` が $f(0,1,1)$ の値を返します。
+そして `f(...)` が $f(0,1,1)$ の値を返します。
 このプログラムの出力は以下の通りです：
 ```
 f(0,1,1) = 4
