@@ -106,6 +106,151 @@ solutions = 9
 
 All 9 optimal solutions are domain wall patterns, representing integers 0 through 8.
 
+## 2D Domain Wall Encoding
+
+The same technique extends to two-dimensional arrays using `concat` with a dimension parameter.
+Given a 2D variable array `x` of size $m \times n$, we can enforce domain wall constraints on every row
+using `concat(1, concat(x, 0, 1), 1)` where `dim=1` applies guard bits to each row simultaneously.
+
+For column-wise domain walls, we `transpose` the array and apply the same pattern.
+
+{% raw %}
+```cpp
+#define MAXDEG 2
+#include <qbpp/qbpp.hpp>
+#include <qbpp/exhaustive_solver.hpp>
+
+int main() {
+  const size_t rows = 3, cols = 3;
+  auto x = qbpp::var("x", rows, cols);
+
+  // Row domain wall: guard bits along dim=1
+  auto yr = qbpp::concat(1, qbpp::concat(x, 0, 1), 1);
+  auto row_diff = qbpp::head(yr, cols + 1, 1) - qbpp::tail(yr, cols + 1, 1);
+  auto row_dw = qbpp::sum(qbpp::sqr(row_diff));
+
+  // Column domain wall: transpose, then same pattern
+  auto xt = qbpp::transpose(x);
+  auto yc = qbpp::concat(1, qbpp::concat(xt, 0, 1), 1);
+  auto col_diff = qbpp::head(yc, rows + 1, 1) - qbpp::tail(yc, rows + 1, 1);
+  auto col_dw = qbpp::sum(qbpp::sqr(col_diff));
+
+  auto f = row_dw + col_dw;
+  f.simplify_as_binary();
+
+  auto solver = qbpp::exhaustive_solver::ExhaustiveSolver(f);
+  auto sol = solver.search_optimal_solutions();
+
+  std::cout << "energy = " << sol.energy() << std::endl;
+  std::cout << "solutions = " << sol.all_solutions().size() << std::endl;
+  for (const auto& s : sol.all_solutions()) {
+    for (size_t i = 0; i < rows; ++i) {
+      for (size_t j = 0; j < cols; ++j) std::cout << s(x[i][j]);
+      std::cout << std::endl;
+    }
+    std::cout << std::endl;
+  }
+}
+```
+{% endraw %}
+
+Each row must be a domain wall ($1\cdots 1\, 0\cdots 0$) and each column must independently be a domain wall ($1\cdots 1\, 0\cdots 0$ from top to bottom).
+
+### Key operations
+
+- **`concat(1, concat(x, 0, 1), 1)`**: Adds guard bits to each row of a 2D array. The `dim=1` parameter means the operation applies along the column (innermost) dimension.
+- **`head(yr, cols+1, 1)` / `tail(yr, cols+1, 1)`**: Extracts the first/last `cols+1` elements from each row.
+- **`transpose(x)`**: Transposes the matrix so that column-wise operations become row-wise.
+
+### Output
+
+```
+energy = 6
+solutions = 20
+000
+000
+000
+
+100
+000
+000
+
+110
+000
+000
+
+111
+000
+000
+
+100
+100
+000
+
+110
+100
+000
+
+111
+100
+000
+
+110
+110
+000
+
+111
+110
+000
+
+111
+111
+000
+
+100
+100
+100
+
+110
+100
+100
+
+111
+100
+100
+
+110
+110
+100
+
+111
+110
+100
+
+111
+111
+100
+
+110
+110
+110
+
+111
+110
+110
+
+111
+111
+110
+
+111
+111
+111
+```
+
+All 20 optimal solutions satisfy both row and column domain wall constraints.
+Each row is $1\cdots 1\, 0\cdots 0$ (left to right) and each column is $1\cdots 1\, 0\cdots 0$ (top to bottom).
+
 </div>
 
 <div class="lang-ja" markdown="1">
@@ -209,5 +354,150 @@ solutions = 9
 ```
 
 9つの最適解はすべてドメインウォールパターンで、整数 0 から 8 を表現しています。
+
+## 2次元ドメインウォール符号化
+
+次元パラメータ付きの `concat` を使えば、同じ手法を2次元配列に拡張できます。
+サイズ $m \times n$ の2次元変数配列 `x` に対して、
+`concat(1, concat(x, 0, 1), 1)` で各行に同時にガードビットを追加できます（`dim=1` は列方向への操作）。
+
+列方向のドメインウォールには、`transpose` で転置してから同じパターンを適用します。
+
+{% raw %}
+```cpp
+#define MAXDEG 2
+#include <qbpp/qbpp.hpp>
+#include <qbpp/exhaustive_solver.hpp>
+
+int main() {
+  const size_t rows = 3, cols = 3;
+  auto x = qbpp::var("x", rows, cols);
+
+  // 行ドメインウォール: dim=1 でガードビット追加
+  auto yr = qbpp::concat(1, qbpp::concat(x, 0, 1), 1);
+  auto row_diff = qbpp::head(yr, cols + 1, 1) - qbpp::tail(yr, cols + 1, 1);
+  auto row_dw = qbpp::sum(qbpp::sqr(row_diff));
+
+  // 列ドメインウォール: 転置して同じパターン
+  auto xt = qbpp::transpose(x);
+  auto yc = qbpp::concat(1, qbpp::concat(xt, 0, 1), 1);
+  auto col_diff = qbpp::head(yc, rows + 1, 1) - qbpp::tail(yc, rows + 1, 1);
+  auto col_dw = qbpp::sum(qbpp::sqr(col_diff));
+
+  auto f = row_dw + col_dw;
+  f.simplify_as_binary();
+
+  auto solver = qbpp::exhaustive_solver::ExhaustiveSolver(f);
+  auto sol = solver.search_optimal_solutions();
+
+  std::cout << "energy = " << sol.energy() << std::endl;
+  std::cout << "solutions = " << sol.all_solutions().size() << std::endl;
+  for (const auto& s : sol.all_solutions()) {
+    for (size_t i = 0; i < rows; ++i) {
+      for (size_t j = 0; j < cols; ++j) std::cout << s(x[i][j]);
+      std::cout << std::endl;
+    }
+    std::cout << std::endl;
+  }
+}
+```
+{% endraw %}
+
+各行がドメインウォール（$1\cdots 1\, 0\cdots 0$）であり、各列も独立にドメインウォール（上から $1\cdots 1\, 0\cdots 0$）となる制約です。
+
+### 主要な操作
+
+- **`concat(1, concat(x, 0, 1), 1)`**: 2次元配列の各行にガードビットを追加します。`dim=1` パラメータにより、列（内側の）次元に沿って操作が適用されます。
+- **`head(yr, cols+1, 1)` / `tail(yr, cols+1, 1)`**: 各行から先頭/末尾の `cols+1` 要素を抽出します。
+- **`transpose(x)`**: 行列を転置し、列方向の操作を行方向の操作に変換します。
+
+### 出力
+
+```
+energy = 6
+solutions = 20
+000
+000
+000
+
+100
+000
+000
+
+110
+000
+000
+
+111
+000
+000
+
+100
+100
+000
+
+110
+100
+000
+
+111
+100
+000
+
+110
+110
+000
+
+111
+110
+000
+
+111
+111
+000
+
+100
+100
+100
+
+110
+100
+100
+
+111
+100
+100
+
+110
+110
+100
+
+111
+110
+100
+
+111
+111
+100
+
+110
+110
+110
+
+111
+110
+110
+
+111
+111
+110
+
+111
+111
+111
+```
+
+20個の最適解はすべて行・列のドメインウォール制約を満たしています。
+各行は $1\cdots 1\, 0\cdots 0$（左から右）、各列は $1\cdots 1\, 0\cdots 0$（上から下）となっています。
 
 </div>
