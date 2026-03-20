@@ -42,8 +42,8 @@ In PyQBPP, this includes:
 
 ## Global Functions and In-place Methods
 Many operations are provided in two forms:
-- **Global** (`In-place: No`): Takes arguments and returns a new object without modifying the inputs. Example: `simplify_as_binary(f)` returns a simplified copy; `f` is unchanged.
-- **In-place** (`In-place: Yes`): A method that updates the object itself and returns it. Example: `f.simplify_as_binary()` modifies `f` in place.
+- **Global**: Takes arguments and returns a new object without modifying the inputs. Example: `simplify_as_binary(f)` returns a simplified copy; `f` is unchanged.
+- **In-place**: A method that updates the object itself and returns it. Example: `f.simplify_as_binary()` modifies `f` in place.
 
 ## Type Conversion: **`int()`** and **`toInt()`**
 Python's built-in **`int()`** can be used to convert a single constant `Expr` (containing no variables) to a Python `int`.
@@ -454,8 +454,8 @@ PyQBPPでは以下が含まれます。
 
 ## グローバル関数と In-place メソッド
 多くの操作は2つの形式で提供されています:
-- **グローバル**（`In-place: No`）: 引数を取り、入力を変更せずに新しいオブジェクトを返します。例: `simplify_as_binary(f)` は簡約化されたコピーを返し、`f` は変更されません。
-- **In-place**（`In-place: Yes`）: オブジェクト自体を更新して返すメソッドです。例: `f.simplify_as_binary()` は `f` をその場で変更します。
+- **グローバル**: 引数を取り、入力を変更せずに新しいオブジェクトを返します。例: `simplify_as_binary(f)` は簡約化されたコピーを返し、`f` は変更されません。
+- **In-place**: オブジェクト自体を更新して返すメソッドです。例: `f.simplify_as_binary()` は `f` をその場で変更します。
 
 ## 型変換: **`int()`** と **`toInt()`**
 Pythonの組み込み関数 **`int()`** は、変数を含まない定数 `Expr` をPythonの `int` に変換できます。
