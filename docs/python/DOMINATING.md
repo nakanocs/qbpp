@@ -72,9 +72,9 @@ x = qbpp.var("x", N)
 
 objective = qbpp.sum(x)
 
-constraint = toExpr(0)
+constraint = 0
 for i in range(N):
-    t = toExpr(~x[i])
+    t = ~x[i]
     for j in adj[i]:
         t *= ~x[j]
     constraint += t
@@ -117,9 +117,9 @@ The constraint can be described in PyQBPP as follows:
 ```python
 import pyqbpp as qbpp
 
-constraint = toExpr(0)
+constraint = 0
 for i in range(N):
-    t = toExpr(x[i])
+    t = x[i]
     for j in adj[i]:
         t += x[j]
     constraint += qbpp.between(t, 1, len(adj[i]) + 1)
@@ -221,9 +221,9 @@ x = qbpp.var("x", N)
 
 objective = qbpp.sum(x)
 
-constraint = toExpr(0)
+constraint = 0
 for i in range(N):
-    t = toExpr(~x[i])
+    t = ~x[i]
     for j in adj[i]:
         t *= ~x[j]
     constraint += t
@@ -266,9 +266,9 @@ $$
 ```python
 import pyqbpp as qbpp
 
-constraint = toExpr(0)
+constraint = 0
 for i in range(N):
-    t = toExpr(x[i])
+    t = x[i]
     for j in adj[i]:
         t += x[j]
     constraint += qbpp.between(t, 1, len(adj[i]) + 1)

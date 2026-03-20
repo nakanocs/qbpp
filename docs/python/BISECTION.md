@@ -69,7 +69,7 @@ M = len(edges)
 x = qbpp.var("x", N)
 
 # Objective: number of edges crossing the cut
-objective = toExpr(0)
+objective = 0
 for i, j in edges:
     objective += x[i] * ~x[j] + ~x[i] * x[j]
 
@@ -166,7 +166,7 @@ M = len(edges)
 x = qbpp.var("x", N)
 
 # 目的関数: カットを横断する辺の数
-objective = toExpr(0)
+objective = 0
 for i, j in edges:
     objective += x[i] * ~x[j] + ~x[i] * x[j]
 

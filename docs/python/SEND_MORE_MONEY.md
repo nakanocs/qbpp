@@ -102,14 +102,14 @@ x = qbpp.var("x", L, 10)
 
 onehot = qbpp.sum(qbpp.vector_sum(x) == 1)
 
-different = toExpr(0)
+different = 0
 for i in range(L - 1):
     for j in range(i + 1, L):
         different += qbpp.sum(x[i] * x[j])
 
-send = toExpr(0)
-more = toExpr(0)
-money = toExpr(0)
+send = 0
+more = 0
+money = 0
 for k in range(10):
     send += k * (1000 * x[I('S')][k] + 100 * x[I('E')][k] + 10 * x[I('N')][k] + x[I('D')][k])
     more += k * (1000 * x[I('M')][k] + 100 * x[I('O')][k] + 10 * x[I('R')][k] + x[I('E')][k])
@@ -262,14 +262,14 @@ x = qbpp.var("x", L, 10)
 
 onehot = qbpp.sum(qbpp.vector_sum(x) == 1)
 
-different = toExpr(0)
+different = 0
 for i in range(L - 1):
     for j in range(i + 1, L):
         different += qbpp.sum(x[i] * x[j])
 
-send = toExpr(0)
-more = toExpr(0)
-money = toExpr(0)
+send = 0
+more = 0
+money = 0
 for k in range(10):
     send += k * (1000 * x[I('S')][k] + 100 * x[I('E')][k] + 10 * x[I('N')][k] + x[I('D')][k])
     more += k * (1000 * x[I('M')][k] + 100 * x[I('O')][k] + 10 * x[I('R')][k] + x[I('E')][k])

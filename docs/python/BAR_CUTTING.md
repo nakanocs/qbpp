@@ -50,18 +50,18 @@ M = 6
 x = [[qbpp.between(qbpp.var_int(), 0, c[j]) for j in range(N)] for i in range(M)]
 
 # Order constraint: total pieces for each order must equal c[j]
-order_constraint = toExpr(0)
+order_constraint = 0
 for j in range(N):
-    col_sum = toExpr(0)
+    col_sum = 0
     for i in range(M):
         col_sum += x[i][j]
     order_constraint += col_sum == c[j]
 
 # Bar constraint: total length used in each bar must not exceed L
 bar_length_used = []
-bar_constraint = toExpr(0)
+bar_constraint = 0
 for i in range(M):
-    used = toExpr(0)
+    used = 0
     for j in range(N):
         used += x[i][j] * l[j]
     bar_length_used.append(used)
@@ -145,18 +145,18 @@ M = 6
 x = [[qbpp.between(qbpp.var_int(), 0, c[j]) for j in range(N)] for i in range(M)]
 
 # Order constraint: total pieces for each order must equal c[j]
-order_constraint = toExpr(0)
+order_constraint = 0
 for j in range(N):
-    col_sum = toExpr(0)
+    col_sum = 0
     for i in range(M):
         col_sum += x[i][j]
     order_constraint += col_sum == c[j]
 
 # Bar constraint: total length used in each bar must not exceed L
 bar_length_used = []
-bar_constraint = toExpr(0)
+bar_constraint = 0
 for i in range(M):
-    used = toExpr(0)
+    used = 0
     for j in range(N):
         used += x[i][j] * l[j]
     bar_length_used.append(used)

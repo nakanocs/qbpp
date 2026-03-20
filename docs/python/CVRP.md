@@ -49,29 +49,29 @@ a = qbpp.var("a", V, N, N)
 
 row_constraint = qbpp.sum(qbpp.vector_sum(a) == 1)
 
-column_sum = [toExpr(0) for _ in range(N - 1)]
+column_sum = [0 for _ in range(N - 1)]
 for v in range(V):
     for t in range(N):
         for i in range(1, N):
             column_sum[i - 1] += a[v][t][i]
-column_constraint = toExpr(0)
+column_constraint = 0
 for i in range(N - 1):
     column_constraint += column_sum[i] == 1
 
-consecutive_constraint = toExpr(0)
+consecutive_constraint = 0
 for v in range(V):
     for t in range(1, N - 1):
         consecutive_constraint += a[v][t][0] * (1 - a[v][t + 1][0])
 
-vehicle_load = [toExpr(0) for _ in range(V)]
-capacity_constraint = toExpr(0)
+vehicle_load = [0 for _ in range(V)]
+capacity_constraint = 0
 for v in range(V):
     for t in range(N):
         for i in range(1, N):
             vehicle_load[v] += a[v][t][i] * locations[i][2]
     capacity_constraint += qbpp.between(vehicle_load[v], 0, vehicle_capacity[v])
 
-objective = toExpr(0)
+objective = 0
 for v in range(V):
     for t in range(N):
         next_t = (t + 1) % N
@@ -210,29 +210,29 @@ a = qbpp.var("a", V, N, N)
 
 row_constraint = qbpp.sum(qbpp.vector_sum(a) == 1)
 
-column_sum = [toExpr(0) for _ in range(N - 1)]
+column_sum = [0 for _ in range(N - 1)]
 for v in range(V):
     for t in range(N):
         for i in range(1, N):
             column_sum[i - 1] += a[v][t][i]
-column_constraint = toExpr(0)
+column_constraint = 0
 for i in range(N - 1):
     column_constraint += column_sum[i] == 1
 
-consecutive_constraint = toExpr(0)
+consecutive_constraint = 0
 for v in range(V):
     for t in range(1, N - 1):
         consecutive_constraint += a[v][t][0] * (1 - a[v][t + 1][0])
 
-vehicle_load = [toExpr(0) for _ in range(V)]
-capacity_constraint = toExpr(0)
+vehicle_load = [0 for _ in range(V)]
+capacity_constraint = 0
 for v in range(V):
     for t in range(N):
         for i in range(1, N):
             vehicle_load[v] += a[v][t][i] * locations[i][2]
     capacity_constraint += qbpp.between(vehicle_load[v], 0, vehicle_capacity[v])
 
-objective = toExpr(0)
+objective = 0
 for v in range(V):
     for t in range(N):
         next_t = (t + 1) % N

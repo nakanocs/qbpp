@@ -28,34 +28,34 @@ workers = len(worker_cost)
 x = qbpp.var("x", workers, days + 2)
 
 workers_each_day = qbpp.vector_sum(x, 0)
-each_day_4_workers = toExpr(0)
+each_day_4_workers = 0
 for j in range(1, days + 1):
     each_day_4_workers += workers_each_day[j] == 4
 
 workers_working_days = qbpp.vector_sum(x)
-work_20_21_days = toExpr(0)
+work_20_21_days = 0
 for i in range(workers):
     work_20_21_days += qbpp.between(workers_working_days[i], 20, 21)
 
-no_more_than_6 = toExpr(0)
+no_more_than_6 = 0
 for w in range(workers):
     for j in range(days - 5):
         no_more_than_6 += (x[w][j] * x[w][j+1] * x[w][j+2] *
                            x[w][j+3] * x[w][j+4] * x[w][j+5] * x[w][j+6])
 
-no_less_than_3 = toExpr(0)
+no_less_than_3 = 0
 for w in range(workers):
     for j in range(days - 1):
         no_less_than_3 += ~x[w][j] * x[w][j+1] * x[w][j+2] * ~x[w][j+3]
     for j in range(days):
         no_less_than_3 += ~x[w][j] * x[w][j+1] * ~x[w][j+2]
 
-no_single_day_off = toExpr(0)
+no_single_day_off = 0
 for w in range(workers):
     for j in range(days):
         no_single_day_off += x[w][j] * ~x[w][j+1] * x[w][j+2]
 
-total_worker_cost = toExpr(0)
+total_worker_cost = 0
 for i in range(workers):
     total_worker_cost += worker_cost[i] * workers_working_days[i]
 
@@ -125,34 +125,34 @@ workers = len(worker_cost)
 x = qbpp.var("x", workers, days + 2)
 
 workers_each_day = qbpp.vector_sum(x, 0)
-each_day_4_workers = toExpr(0)
+each_day_4_workers = 0
 for j in range(1, days + 1):
     each_day_4_workers += workers_each_day[j] == 4
 
 workers_working_days = qbpp.vector_sum(x)
-work_20_21_days = toExpr(0)
+work_20_21_days = 0
 for i in range(workers):
     work_20_21_days += qbpp.between(workers_working_days[i], 20, 21)
 
-no_more_than_6 = toExpr(0)
+no_more_than_6 = 0
 for w in range(workers):
     for j in range(days - 5):
         no_more_than_6 += (x[w][j] * x[w][j+1] * x[w][j+2] *
                            x[w][j+3] * x[w][j+4] * x[w][j+5] * x[w][j+6])
 
-no_less_than_3 = toExpr(0)
+no_less_than_3 = 0
 for w in range(workers):
     for j in range(days - 1):
         no_less_than_3 += ~x[w][j] * x[w][j+1] * x[w][j+2] * ~x[w][j+3]
     for j in range(days):
         no_less_than_3 += ~x[w][j] * x[w][j+1] * ~x[w][j+2]
 
-no_single_day_off = toExpr(0)
+no_single_day_off = 0
 for w in range(workers):
     for j in range(days):
         no_single_day_off += x[w][j] * ~x[w][j+1] * x[w][j+2]
 
-total_worker_cost = toExpr(0)
+total_worker_cost = 0
 for i in range(workers):
     total_worker_cost += worker_cost[i] * workers_working_days[i]
 

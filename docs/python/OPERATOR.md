@@ -46,7 +46,7 @@ import pyqbpp as qbpp
 
 x = qbpp.var("x")
 y = qbpp.var("y")
-f = toExpr(6 * x + 4)
+f = 6 * x + 4
 
 f += 3 * y
 print("f =", f)
@@ -169,7 +169,7 @@ import pyqbpp as qbpp
 
 x = qbpp.var("x")
 y = qbpp.var("y")
-f = toExpr(6 * x + 4)
+f = 6 * x + 4
 
 f += 3 * y
 print("f =", f)

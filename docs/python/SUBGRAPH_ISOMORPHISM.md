@@ -70,7 +70,7 @@ host_assigned = qbpp.vector_sum(x, 0)
 
 constraint = qbpp.sum(qbpp.vector_sum(x, 1) == 1) + qbpp.sum(qbpp.between(host_assigned, 0, 1))
 
-objective = toExpr(0)
+objective = 0
 for ug, vg in guest:
     for uh, vh in host:
         objective += x[ug][uh] * x[vg][vh] + x[ug][vh] * x[vg][uh]
@@ -228,7 +228,7 @@ host_assigned = qbpp.vector_sum(x, 0)
 
 constraint = qbpp.sum(qbpp.vector_sum(x, 1) == 1) + qbpp.sum(qbpp.between(host_assigned, 0, 1))
 
-objective = toExpr(0)
+objective = 0
 for ug, vg in guest:
     for uh, vh in host:
         objective += x[ug][uh] * x[vg][vh] + x[ug][vh] * x[vg][uh]

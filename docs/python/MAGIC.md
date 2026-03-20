@@ -89,10 +89,10 @@ for i in range(3):
             column[j] += (k + 1) * x[i][j][k]
 c3 = qbpp.sum(row == 15) + qbpp.sum(column == 15)
 
-diag = toExpr(0)
+diag = 0
 for k in range(9):
     diag += (k + 1) * (x[0][0][k] + x[1][1][k] + x[2][2][k])
-anti_diag = toExpr(0)
+anti_diag = 0
 for k in range(9):
     anti_diag += (k + 1) * (x[0][2][k] + x[1][1][k] + x[2][0][k])
 c4 = (diag == 15) + (anti_diag == 15)
@@ -171,10 +171,10 @@ for i in range(3):
             column[j] += (k + 1) * x[i][j][k]
 c3 = qbpp.sum(row == 15) + qbpp.sum(column == 15)
 
-diag = toExpr(0)
+diag = 0
 for k in range(9):
     diag += (k + 1) * (x[0][0][k] + x[1][1][k] + x[2][2][k])
-anti_diag = toExpr(0)
+anti_diag = 0
 for k in range(9):
     anti_diag += (k + 1) * (x[0][2][k] + x[1][1][k] + x[2][0][k])
 c4 = (diag == 15) + (anti_diag == 15)
@@ -300,10 +300,10 @@ for i in range(3):
             column[j] += (k + 1) * x[i][j][k]
 c3 = qbpp.sum(row == 15) + qbpp.sum(column == 15)
 
-diag = toExpr(0)
+diag = 0
 for k in range(9):
     diag += (k + 1) * (x[0][0][k] + x[1][1][k] + x[2][2][k])
-anti_diag = toExpr(0)
+anti_diag = 0
 for k in range(9):
     anti_diag += (k + 1) * (x[0][2][k] + x[1][1][k] + x[2][0][k])
 c4 = (diag == 15) + (anti_diag == 15)
@@ -381,10 +381,10 @@ for i in range(3):
             column[j] += (k + 1) * x[i][j][k]
 c3 = qbpp.sum(row == 15) + qbpp.sum(column == 15)
 
-diag = toExpr(0)
+diag = 0
 for k in range(9):
     diag += (k + 1) * (x[0][0][k] + x[1][1][k] + x[2][2][k])
-anti_diag = toExpr(0)
+anti_diag = 0
 for k in range(9):
     anti_diag += (k + 1) * (x[0][2][k] + x[1][1][k] + x[2][0][k])
 c4 = (diag == 15) + (anti_diag == 15)

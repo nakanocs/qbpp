@@ -55,7 +55,7 @@ x = qbpp.var("x", M)
 
 objective = qbpp.sum(x)
 
-constraint = toExpr(0)
+constraint = 0
 for i in range(M):
     for j in range(i + 1, M):
         if (edges[i][0] == edges[j][0] or edges[i][0] == edges[j][1] or
@@ -152,7 +152,7 @@ x = qbpp.var("x", M)
 
 objective = qbpp.sum(x)
 
-constraint = toExpr(0)
+constraint = 0
 for i in range(M):
     for j in range(i + 1, M):
         if (edges[i][0] == edges[j][0] or edges[i][0] == edges[j][1] or

@@ -50,7 +50,7 @@ The following function `adder` returns a QUBO expression whose minimum value is 
 def adder(a, b, s):
     N = len(a)
     c = qbpp.var(N + 1)
-    f = toExpr(0)
+    f = 0
     for j in range(N):
         f += fa(a[j], b[j], c[j], c[j + 1], s[j])
     ml = [(c[0], 0), (c[N], s[N])]
@@ -67,13 +67,13 @@ def multiplier(x, y, z):
     N = len(x)
     c = qbpp.var("c", N - 1, N + 1)
 
-    f = toExpr(0)
+    f = 0
 
     for i in range(N - 1):
         b_vec = [x[i + 1] * y[j] for j in range(N)]
 
         if i == 0:
-            a_vec = [x[0] * y[j + 1] for j in range(N - 1)] + [toExpr(0)]
+            a_vec = [x[0] * y[j + 1] for j in range(N - 1)] + [0]
         else:
             a_vec = [c[i - 1][j + 1] for j in range(N)]
 
@@ -106,7 +106,7 @@ def fa(a, b, i, o, s):
 def adder(a, b, s):
     N = len(a)
     c = qbpp.var(N + 1)
-    f = toExpr(0)
+    f = 0
     for j in range(N):
         f += fa(a[j], b[j], c[j], c[j + 1], s[j])
     ml = [(c[0], 0), (c[N], s[N])]
@@ -116,13 +116,13 @@ def multiplier(x, y, z):
     N = len(x)
     c = qbpp.var("c", N - 1, N + 1)
 
-    f = toExpr(0)
+    f = 0
 
     for i in range(N - 1):
         b_vec = [x[i + 1] * y[j] for j in range(N)]
 
         if i == 0:
-            a_vec = [x[0] * y[j + 1] for j in range(N - 1)] + [toExpr(0)]
+            a_vec = [x[0] * y[j + 1] for j in range(N - 1)] + [0]
         else:
             a_vec = [c[i - 1][j + 1] for j in range(N)]
 
@@ -204,7 +204,7 @@ def fa(a, b, i, o, s):
 def adder(a, b, s):
     N = len(a)
     c = qbpp.var(N + 1)
-    f = toExpr(0)
+    f = 0
     for j in range(N):
         f += fa(a[j], b[j], c[j], c[j + 1], s[j])
     ml = [(c[0], 0), (c[N], s[N])]
@@ -221,13 +221,13 @@ def multiplier(x, y, z):
     N = len(x)
     c = qbpp.var("c", N - 1, N + 1)
 
-    f = toExpr(0)
+    f = 0
 
     for i in range(N - 1):
         b_vec = [x[i + 1] * y[j] for j in range(N)]
 
         if i == 0:
-            a_vec = [x[0] * y[j + 1] for j in range(N - 1)] + [toExpr(0)]
+            a_vec = [x[0] * y[j + 1] for j in range(N - 1)] + [0]
         else:
             a_vec = [c[i - 1][j + 1] for j in range(N)]
 
@@ -262,7 +262,7 @@ def fa(a, b, i, o, s):
 def adder(a, b, s):
     N = len(a)
     c = qbpp.var(N + 1)
-    f = toExpr(0)
+    f = 0
     for j in range(N):
         f += fa(a[j], b[j], c[j], c[j + 1], s[j])
     ml = [(c[0], 0), (c[N], s[N])]
@@ -272,13 +272,13 @@ def multiplier(x, y, z):
     N = len(x)
     c = qbpp.var("c", N - 1, N + 1)
 
-    f = toExpr(0)
+    f = 0
 
     for i in range(N - 1):
         b_vec = [x[i + 1] * y[j] for j in range(N)]
 
         if i == 0:
-            a_vec = [x[0] * y[j + 1] for j in range(N - 1)] + [toExpr(0)]
+            a_vec = [x[0] * y[j + 1] for j in range(N - 1)] + [0]
         else:
             a_vec = [c[i - 1][j + 1] for j in range(N)]
 

@@ -71,11 +71,11 @@ a = [qbpp.between(qbpp.var_int(f"a{i}"), 0, upper[i] - lower[i]) for i in range(
 s = qbpp.var("s", n)
 v = [s[i] * lower[i] + a[i] for i in range(n)]
 
-total = toExpr(0)
+total = 0
 for i in range(n):
     total += v[i]
 
-constraint1 = toExpr(0)
+constraint1 = 0
 for i in range(n):
     constraint1 += (1 - s[i]) * a[i]
 
@@ -161,11 +161,11 @@ a = [qbpp.between(qbpp.var_int(f"a{i}"), 0, upper[i] - lower[i]) for i in range(
 s = qbpp.var("s", n)
 v = [s[i] * lower[i] + a[i] for i in range(n)]
 
-total = toExpr(0)
+total = 0
 for i in range(n):
     total += v[i]
 
-constraint1 = toExpr(0)
+constraint1 = 0
 for i in range(n):
     constraint1 += (1 - s[i]) * a[i]
 

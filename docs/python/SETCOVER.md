@@ -63,16 +63,16 @@ m = len(cover)
 
 x = qbpp.var("x", m)
 
-c = [toExpr(1) for _ in range(n)]
+c = [1 for _ in range(n)]
 for i in range(m):
     for j in cover[i]:
         c[j] *= ~x[i]
 
-objective = toExpr(0)
+objective = 0
 for i in range(m):
     objective += cost[i] * x[i]
 
-constraint = toExpr(0)
+constraint = 0
 for j in range(n):
     constraint += c[j]
 
@@ -114,12 +114,12 @@ The constraint in PyQBPP can be modified as follows:
 ```python
 import pyqbpp as qbpp
 
-c = [toExpr(0) for _ in range(n)]
+c = [0 for _ in range(n)]
 for i in range(m):
     for j in cover[i]:
         c[j] += x[i]
 
-constraint = toExpr(0)
+constraint = 0
 for j in range(n):
     constraint += qbpp.between(c[j], 1, m)
 ```
@@ -192,16 +192,16 @@ m = len(cover)
 
 x = qbpp.var("x", m)
 
-c = [toExpr(1) for _ in range(n)]
+c = [1 for _ in range(n)]
 for i in range(m):
     for j in cover[i]:
         c[j] *= ~x[i]
 
-objective = toExpr(0)
+objective = 0
 for i in range(m):
     objective += cost[i] * x[i]
 
-constraint = toExpr(0)
+constraint = 0
 for j in range(n):
     constraint += c[j]
 
@@ -242,12 +242,12 @@ PyQBPPでの制約は以下のように変更できます：
 ```python
 import pyqbpp as qbpp
 
-c = [toExpr(0) for _ in range(n)]
+c = [0 for _ in range(n)]
 for i in range(m):
     for j in cover[i]:
         c[j] += x[i]
 
-constraint = toExpr(0)
+constraint = 0
 for j in range(n):
     constraint += qbpp.between(c[j], 1, m)
 ```

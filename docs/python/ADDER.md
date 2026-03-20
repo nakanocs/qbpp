@@ -139,7 +139,7 @@ y = qbpp.var("y", 4)
 c = qbpp.var("c", 5)
 z = qbpp.var("z", 4)
 
-adder = toExpr(0)
+adder = 0
 for j in range(4):
     adder += fa(x[j], y[j], c[j], c[j + 1], z[j])
 
@@ -287,7 +287,7 @@ y = qbpp.var("y", 4)
 c = qbpp.var("c", 5)
 z = qbpp.var("z", 4)
 
-adder = toExpr(0)
+adder = 0
 for j in range(4):
     adder += fa(x[j], y[j], c[j], c[j + 1], z[j])
 

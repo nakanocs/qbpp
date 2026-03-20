@@ -43,7 +43,7 @@ edges = [
 
 x = qbpp.var("x", N)
 
-objective = toExpr(0)
+objective = 0
 for u, v in edges:
     objective += x[u] * ~x[v] + ~x[u] * x[v]
 
@@ -132,7 +132,7 @@ edges = [
 
 x = qbpp.var("x", N)
 
-objective = toExpr(0)
+objective = 0
 for u, v in edges:
     objective += x[u] * ~x[v] + ~x[u] * x[v]
 

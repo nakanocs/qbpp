@@ -62,9 +62,9 @@ x = qbpp.var("x", M)
 
 objective = qbpp.sum(x)
 
-constraint = toExpr(0)
+constraint = 0
 for u, v in edges:
-    t = toExpr(0)
+    t = 0
     for idx in adj[u]:
         t += x[idx]
     for idx in adj[v]:
@@ -189,9 +189,9 @@ x = qbpp.var("x", M)
 
 objective = qbpp.sum(x)
 
-constraint = toExpr(0)
+constraint = 0
 for u, v in edges:
-    t = toExpr(0)
+    t = 0
     for idx in adj[u]:
         t += x[idx]
     for idx in adj[v]:
