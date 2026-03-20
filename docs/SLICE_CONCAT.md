@@ -138,7 +138,7 @@ int main() {
   auto y_dw = qbpp::sum(qbpp::sqr(y_oh));
 
   // Match: x_oh == y_oh (both n x n, no transpose needed)
-  auto match = qbpp::sum(qbpp::sqr(x_oh - y_oh));
+  auto match = qbpp::sum(x_oh - y_oh == 0);
 
   auto f = x_dw + y_dw + match;
   f.simplify_as_binary();
@@ -334,7 +334,7 @@ int main() {
   auto y_dw = qbpp::sum(qbpp::sqr(y_oh));
 
   // 一致制約: x_oh == y_oh（転置不要、両方 n x n）
-  auto match = qbpp::sum(qbpp::sqr(x_oh - y_oh));
+  auto match = qbpp::sum(x_oh - y_oh == 0);
 
   auto f = x_dw + y_dw + match;
   f.simplify_as_binary();
