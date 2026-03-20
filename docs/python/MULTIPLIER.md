@@ -93,12 +93,9 @@ Since each bit of `z` corresponds to one element of `c`, their correspondence is
 
 ## PyQBPP program for factorization
 Using the function `multiplier`, we can factor a composite integer into two factors.
-The following program constructs a 4-bit multiplier with
-- `x`: 4 binary variables,
-- `y`: 4 binary variables,
-- `z`: a list of constants `[1, 1, 1, 1, 0, 0, 0, 1]`, representing the 8-bit integer `10001111` (143),
-
-and stores the resulting expression in `f`:
+The following program constructs a 4-bit multiplier where
+`x` and `y` are 4 binary variables each, and
+`z` is a list of constants `[1, 1, 1, 1, 0, 0, 0, 1]` representing the 8-bit integer `10001111` (143):
 
 ```python
 import pyqbpp as qbpp
@@ -250,12 +247,9 @@ def multiplier(x, y, z):
 
 ## 素因数分解の PyQBPP プログラム
 関数 `multiplier` を使って、合成数を2つの因数に分解できます。
-以下のプログラムは、次の設定で4ビット乗算器を構築します:
-- `x`: 4つのバイナリ変数、
-- `y`: 4つのバイナリ変数、
-- `z`: 定数リスト `[1, 1, 1, 1, 0, 0, 0, 1]`（8ビット整数 `10001111` `(143)` を表す）。
+以下のプログラムは、`x` と `y` をそれぞれ4つのバイナリ変数、
+`z` を定数リスト `[1, 1, 1, 1, 0, 0, 0, 1]`（8ビット整数 `10001111` (143) を表す）として4ビット乗算器を構築します:
 
-結果の式を `f` に格納します:
 ```python
 import pyqbpp as qbpp
 
