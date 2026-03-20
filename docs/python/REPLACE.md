@@ -69,7 +69,7 @@ g.simplify_as_binary()
 solver = qbpp.ExhaustiveSolver(g)
 sol = solver.search()
 
-full_sol = qbpp.Sol(f).set(sol, ml)
+full_sol = qbpp.Sol(f).set([sol, ml])
 
 print("energy =", full_sol.comp_energy())
 P = [w[i] for i in range(len(w)) if full_sol(x[i]) == 1]
@@ -212,7 +212,7 @@ g.simplify_as_binary()
 solver = qbpp.ExhaustiveSolver(g)
 sol = solver.search()
 
-full_sol = qbpp.Sol(f).set(sol, ml)
+full_sol = qbpp.Sol(f).set([sol, ml])
 
 print("energy =", full_sol.comp_energy())
 P = [w[i] for i in range(len(w)) if full_sol(x[i]) == 1]
