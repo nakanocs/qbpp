@@ -108,9 +108,12 @@ All 9 optimal solutions are domain wall patterns, representing integers 0 throug
 
 ## Dual-Matrix Domain Wall
 
-The **Dual-Matrix Domain Wall** method uses two separate $n \times n$ binary matrices:
-`x` with column-wise domain walls and `y` with row-wise domain walls.
-The adjacent differences of each form one-hot vectors, and requiring these to match yields a permutation-like structure.
+The **Dual-Matrix Domain Wall** method constructs an $n \times n$ permutation matrix
+using two separate binary matrices with different shapes:
+`x` of size $(n{-}1) \times n$ with column-wise domain walls, and
+`y` of size $n \times (n{-}1)$ with row-wise domain walls.
+By adding guard bits and taking adjacent differences, each produces an $n \times n$ one-hot matrix.
+Requiring these two one-hot matrices to match ensures that each row and each column contains exactly one 1, forming a permutation matrix.
 For details, see: [https://arxiv.org/abs/2308.01024](https://arxiv.org/abs/2308.01024)
 
 {% raw %}
@@ -121,26 +124,23 @@ For details, see: [https://arxiv.org/abs/2308.01024](https://arxiv.org/abs/2308.
 
 int main() {
   const size_t n = 6;
-  auto x = qbpp::var("x", n, n);
-  auto y = qbpp::var("y", n, n);
+  auto x = qbpp::var("x", n - 1, n);  // (n-1) x n
+  auto y = qbpp::var("y", n, n - 1);  // n x (n-1)
 
-  // x: column-wise domain wall, guard rows along dim=0
+  // x: guard rows along dim=0 -> (n+1) x n, diff -> n x n (column one-hot)
   auto xg = qbpp::concat(1, qbpp::concat(x, 0, 0), 0);
-  auto x_diff = qbpp::head(xg, n + 1, 0) - qbpp::tail(xg, n + 1, 0);
-  auto x_dw = qbpp::sum(qbpp::sqr(x_diff));
+  auto x_oh = qbpp::head(xg, n, 0) - qbpp::tail(xg, n, 0);
+  auto x_dw = qbpp::sum(qbpp::sqr(x_oh));
 
-  // y: row-wise domain wall, guard columns along dim=1
+  // y: guard cols along dim=1 -> n x (n+1), diff -> n x n (row one-hot)
   auto yg = qbpp::concat(1, qbpp::concat(y, 0, 1), 1);
-  auto y_diff = qbpp::head(yg, n + 1, 1) - qbpp::tail(yg, n + 1, 1);
-  auto y_dw = qbpp::sum(qbpp::sqr(y_diff));
+  auto y_oh = qbpp::head(yg, n, 1) - qbpp::tail(yg, n, 1);
+  auto y_dw = qbpp::sum(qbpp::sqr(y_oh));
 
-  // Match: transpose(x_diff) == y_diff
-  auto match = qbpp::sum(qbpp::sqr(qbpp::transpose(x_diff) - y_diff));
+  // Match: x_oh == y_oh (both n x n, no transpose needed)
+  auto match = qbpp::sum(qbpp::sqr(x_oh - y_oh));
 
-  // Fix total to get a non-trivial solution
-  auto sum_constraint = qbpp::sum(x) == 21;
-
-  auto f = x_dw + y_dw + match + sum_constraint;
+  auto f = x_dw + y_dw + match;
   f.simplify_as_binary();
 
   auto solver = qbpp::easy_solver::EasySolver(f);
@@ -148,47 +148,57 @@ int main() {
   auto sol = solver.search();
 
   std::cout << "energy = " << sol.energy() << std::endl;
-  std::cout << "x:" << std::endl;
+  std::cout << "x (" << n-1 << "x" << n << ")  x_oh (" << n << "x" << n << ")" << std::endl;
   for (size_t i = 0; i < n; ++i) {
-    for (size_t j = 0; j < n; ++j) std::cout << sol(x[i][j]);
+    if (i < n - 1) {
+      for (size_t j = 0; j < n; ++j) std::cout << sol(x[i][j]);
+    } else {
+      for (size_t j = 0; j < n; ++j) std::cout << " ";
+    }
+    std::cout << "  ->  ";
+    for (size_t j = 0; j < n; ++j) std::cout << sol(x_oh[i][j]);
     std::cout << std::endl;
   }
-  std::cout << "y:" << std::endl;
+  std::cout << "y (" << n << "x" << n-1 << ")  y_oh (" << n << "x" << n << ")" << std::endl;
   for (size_t i = 0; i < n; ++i) {
-    for (size_t j = 0; j < n; ++j) std::cout << sol(y[i][j]);
+    for (size_t j = 0; j < n - 1; ++j) std::cout << sol(y[i][j]);
+    std::cout << "   ->  ";
+    for (size_t j = 0; j < n; ++j) std::cout << sol(y_oh[i][j]);
     std::cout << std::endl;
   }
 }
 ```
 {% endraw %}
 
-### Key operations
+### How it works
 
-- **`concat(1, concat(x, 0, 0), 0)`** (`dim=0`): Adds a guard row of 1s at the top and 0s at the bottom, making each column a domain wall.
-- **`concat(1, concat(y, 0, 1), 1)`** (`dim=1`): Adds guard bits 1 and 0 to each row, making each row a domain wall.
-- **`transpose(x_diff) - y_diff`**: Matches the column-wise one-hot matrix with the row-wise one-hot matrix.
+1. **`x`** is $(n{-}1) \times n$. Adding guard rows via `concat(1, concat(x, 0, 0), 0)` along `dim=0` gives $(n{+}1) \times n$, where each column is a domain wall ($1\cdots 1\, 0\cdots 0$). Taking `head - tail` along `dim=0` produces an $n \times n$ matrix `x_oh` where each **column** is one-hot.
+
+2. **`y`** is $n \times (n{-}1)$. Adding guard columns via `concat(1, concat(y, 0, 1), 1)` along `dim=1` gives $n \times (n{+}1)$, where each row is a domain wall. Taking `head - tail` along `dim=1` produces an $n \times n$ matrix `y_oh` where each **row** is one-hot.
+
+3. **`x_oh == y_oh`**: Both are $n \times n$, so they can be directly compared without transposition. When matched, the resulting matrix has exactly one 1 in each row and each column — a **permutation matrix**.
 
 ### Output
 
 ```
 energy = 12
-x:
-111111
-011110
-001110
-001110
-001110
-001010
-y:
-100000
-110000
-111111
-111110
-111111
-100000
+x (5x6)  x_oh (6x6)
+111101  ->  000010
+111100  ->  000001
+110100  ->  001000
+010100  ->  100000
+010000  ->  000100
+        ->  010000
+y (6x5)  y_oh (6x6)
+11110   ->  000010
+11111   ->  000001
+11000   ->  001000
+00000   ->  100000
+11100   ->  000100
+10000   ->  010000
 ```
 
-The optimal energy is $2n = 12$. Each column of `x` is a domain wall (top to bottom), and each row of `y` is a domain wall (left to right). The one-hot matrices derived from their differences are transposes of each other.
+The optimal energy is $2n = 12$. `x_oh` and `y_oh` are identical, forming a valid $6 \times 6$ permutation matrix.
 
 </div>
 
@@ -296,9 +306,10 @@ solutions = 9
 
 ## Dual-Matrix Domain Wall
 
-**Dual-Matrix Domain Wall** 法は、2つの別々の $n \times n$ バイナリ行列を使用します:
-`x` は列方向のドメインウォール、`y` は行方向のドメインウォール。
-それぞれの隣接差分がone-hotベクトルを形成し、これらを一致させることで置換行列的な構造が得られます。
+**Dual-Matrix Domain Wall** 法は、異なるサイズの2つのバイナリ行列を使用して $n \times n$ の置換行列を構築します:
+`x`（$(n{-}1) \times n$、列方向ドメインウォール）と `y`（$n \times (n{-}1)$、行方向ドメインウォール）。
+ガードビットを追加して隣接差分を取ると、それぞれ $n \times n$ のone-hot行列が得られます。
+これらを一致させることで、各行・各列にちょうど1つの1を持つ置換行列になります。
 詳細は [https://arxiv.org/abs/2308.01024](https://arxiv.org/abs/2308.01024) を参照してください。
 
 {% raw %}
@@ -309,26 +320,23 @@ solutions = 9
 
 int main() {
   const size_t n = 6;
-  auto x = qbpp::var("x", n, n);
-  auto y = qbpp::var("y", n, n);
+  auto x = qbpp::var("x", n - 1, n);  // (n-1) x n
+  auto y = qbpp::var("y", n, n - 1);  // n x (n-1)
 
-  // x: 列方向ドメインウォール、dim=0 でガード行追加
+  // x: dim=0 でガード行追加 -> (n+1) x n、差分 -> n x n（各列one-hot）
   auto xg = qbpp::concat(1, qbpp::concat(x, 0, 0), 0);
-  auto x_diff = qbpp::head(xg, n + 1, 0) - qbpp::tail(xg, n + 1, 0);
-  auto x_dw = qbpp::sum(qbpp::sqr(x_diff));
+  auto x_oh = qbpp::head(xg, n, 0) - qbpp::tail(xg, n, 0);
+  auto x_dw = qbpp::sum(qbpp::sqr(x_oh));
 
-  // y: 行方向ドメインウォール、dim=1 でガードビット追加
+  // y: dim=1 でガードビット追加 -> n x (n+1)、差分 -> n x n（各行one-hot）
   auto yg = qbpp::concat(1, qbpp::concat(y, 0, 1), 1);
-  auto y_diff = qbpp::head(yg, n + 1, 1) - qbpp::tail(yg, n + 1, 1);
-  auto y_dw = qbpp::sum(qbpp::sqr(y_diff));
+  auto y_oh = qbpp::head(yg, n, 1) - qbpp::tail(yg, n, 1);
+  auto y_dw = qbpp::sum(qbpp::sqr(y_oh));
 
-  // 一致制約: transpose(x_diff) == y_diff
-  auto match = qbpp::sum(qbpp::sqr(qbpp::transpose(x_diff) - y_diff));
+  // 一致制約: x_oh == y_oh（転置不要、両方 n x n）
+  auto match = qbpp::sum(qbpp::sqr(x_oh - y_oh));
 
-  // 非自明な解のために総和を固定
-  auto sum_constraint = qbpp::sum(x) == 21;
-
-  auto f = x_dw + y_dw + match + sum_constraint;
+  auto f = x_dw + y_dw + match;
   f.simplify_as_binary();
 
   auto solver = qbpp::easy_solver::EasySolver(f);
@@ -336,46 +344,56 @@ int main() {
   auto sol = solver.search();
 
   std::cout << "energy = " << sol.energy() << std::endl;
-  std::cout << "x:" << std::endl;
+  std::cout << "x (" << n-1 << "x" << n << ")  x_oh (" << n << "x" << n << ")" << std::endl;
   for (size_t i = 0; i < n; ++i) {
-    for (size_t j = 0; j < n; ++j) std::cout << sol(x[i][j]);
+    if (i < n - 1) {
+      for (size_t j = 0; j < n; ++j) std::cout << sol(x[i][j]);
+    } else {
+      for (size_t j = 0; j < n; ++j) std::cout << " ";
+    }
+    std::cout << "  ->  ";
+    for (size_t j = 0; j < n; ++j) std::cout << sol(x_oh[i][j]);
     std::cout << std::endl;
   }
-  std::cout << "y:" << std::endl;
+  std::cout << "y (" << n << "x" << n-1 << ")  y_oh (" << n << "x" << n << ")" << std::endl;
   for (size_t i = 0; i < n; ++i) {
-    for (size_t j = 0; j < n; ++j) std::cout << sol(y[i][j]);
+    for (size_t j = 0; j < n - 1; ++j) std::cout << sol(y[i][j]);
+    std::cout << "   ->  ";
+    for (size_t j = 0; j < n; ++j) std::cout << sol(y_oh[i][j]);
     std::cout << std::endl;
   }
 }
 ```
 {% endraw %}
 
-### 主要な操作
+### 仕組み
 
-- **`concat(1, concat(x, 0, 0), 0)`**（`dim=0`）: 全1のガード行を上に、全0のガード行を下に追加。各列がドメインウォールになります。
-- **`concat(1, concat(y, 0, 1), 1)`**（`dim=1`）: 各行にガードビット 1 と 0 を追加。各行がドメインウォールになります。
-- **`transpose(x_diff) - y_diff`**: 列方向のone-hot行列と行方向のone-hot行列を一致させます。
+1. **`x`** は $(n{-}1) \times n$。`concat(1, concat(x, 0, 0), 0)` で `dim=0` に沿ってガード行を追加すると $(n{+}1) \times n$ となり、各列がドメインウォール。`head - tail` で $n \times n$ の行列 `x_oh` を得て、各**列**がone-hotになります。
+
+2. **`y`** は $n \times (n{-}1)$。`concat(1, concat(y, 0, 1), 1)` で `dim=1` に沿ってガードビットを追加すると $n \times (n{+}1)$ となり、各行がドメインウォール。`head - tail` で $n \times n$ の行列 `y_oh` を得て、各**行**がone-hotになります。
+
+3. **`x_oh == y_oh`**: 両方 $n \times n$ なので、転置なしで直接比較できます。一致させると、各行・各列にちょうど1つの1がある**置換行列**になります。
 
 ### 出力
 
 ```
 energy = 12
-x:
-111111
-011110
-001110
-001110
-001110
-001010
-y:
-100000
-110000
-111111
-111110
-111111
-100000
+x (5x6)  x_oh (6x6)
+111101  ->  000010
+111100  ->  000001
+110100  ->  001000
+010100  ->  100000
+010000  ->  000100
+        ->  010000
+y (6x5)  y_oh (6x6)
+11110   ->  000010
+11111   ->  000001
+11000   ->  001000
+00000   ->  100000
+11100   ->  000100
+10000   ->  010000
 ```
 
-最適エネルギーは $2n = 12$ です。`x` の各列は上から $1\cdots 1\, 0\cdots 0$ のドメインウォール、`y` の各行は左から $1\cdots 1\, 0\cdots 0$ のドメインウォールで、それぞれの差分から得られるone-hot行列が互いに転置の関係にあります。
+最適エネルギーは $2n = 12$ です。`x_oh` と `y_oh` は一致し、有効な $6 \times 6$ の置換行列を形成しています。
 
 </div>
