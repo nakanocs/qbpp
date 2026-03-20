@@ -95,9 +95,7 @@ solver = qbpp.EasySolver(g)
 
 sol = solver.search()
 
-full_sol = qbpp.Sol(f)
-full_sol.set(sol)
-full_sol.set(ml)
+full_sol = qbpp.Sol(f).set([sol, ml])
 
 print(f"row_constraint = {full_sol(row_constraint)}")
 print(f"column_constraint = {full_sol(column_constraint)}")
@@ -258,9 +256,7 @@ solver = qbpp.EasySolver(g)
 
 sol = solver.search()
 
-full_sol = qbpp.Sol(f)
-full_sol.set(sol)
-full_sol.set(ml)
+full_sol = qbpp.Sol(f).set([sol, ml])
 
 print(f"row_constraint = {full_sol(row_constraint)}")
 print(f"column_constraint = {full_sol(column_constraint)}")

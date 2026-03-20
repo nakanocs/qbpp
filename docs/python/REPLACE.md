@@ -37,9 +37,7 @@ g.simplify_as_binary()
 solver = qbpp.ExhaustiveSolver(g)
 sol = solver.search()
 
-full_sol = qbpp.Sol(f)
-full_sol.set(sol)
-full_sol.set(ml)
+full_sol = qbpp.Sol(f).set([sol, ml])
 
 print("energy =", full_sol.comp_energy())
 P = [w[i] for i in range(len(w)) if full_sol(x[i]) == 1]
@@ -71,8 +69,7 @@ g.simplify_as_binary()
 solver = qbpp.ExhaustiveSolver(g)
 sol = solver.search()
 
-full_sol = qbpp.Sol(f)
-full_sol.set(sol, ml)
+full_sol = qbpp.Sol(f).set(sol, ml)
 
 print("energy =", full_sol.comp_energy())
 P = [w[i] for i in range(len(w)) if full_sol(x[i]) == 1]
@@ -112,9 +109,7 @@ solver = qbpp.EasySolver(g)
 solver.target_energy(0)
 sol = solver.search()
 
-full_sol = qbpp.Sol(f)
-full_sol.set(sol)
-full_sol.set(ml)
+full_sol = qbpp.Sol(f).set([sol, ml])
 print(f"p={full_sol(p)}, q={full_sol(q)}, r={full_sol(r)}")
 ```
 This program produces the following output:
@@ -185,9 +180,7 @@ g.simplify_as_binary()
 solver = qbpp.ExhaustiveSolver(g)
 sol = solver.search()
 
-full_sol = qbpp.Sol(f)
-full_sol.set(sol)
-full_sol.set(ml)
+full_sol = qbpp.Sol(f).set([sol, ml])
 
 print("energy =", full_sol.comp_energy())
 P = [w[i] for i in range(len(w)) if full_sol(x[i]) == 1]
@@ -219,8 +212,7 @@ g.simplify_as_binary()
 solver = qbpp.ExhaustiveSolver(g)
 sol = solver.search()
 
-full_sol = qbpp.Sol(f)
-full_sol.set(sol, ml)
+full_sol = qbpp.Sol(f).set(sol, ml)
 
 print("energy =", full_sol.comp_energy())
 P = [w[i] for i in range(len(w)) if full_sol(x[i]) == 1]
@@ -260,9 +252,7 @@ solver = qbpp.EasySolver(g)
 solver.target_energy(0)
 sol = solver.search()
 
-full_sol = qbpp.Sol(f)
-full_sol.set(sol)
-full_sol.set(ml)
+full_sol = qbpp.Sol(f).set([sol, ml])
 print(f"p={full_sol(p)}, q={full_sol(q)}, r={full_sol(r)}")
 ```
 このプログラムの出力は以下の通りです：

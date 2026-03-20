@@ -75,9 +75,7 @@ solver.time_limit(5.0)
 solver.target_energy(0)
 sol = solver.search()
 
-full_sol = qbpp.Sol(f)
-full_sol.set(ml)
-full_sol.set(sol)
+full_sol = qbpp.Sol(f).set([ml, sol])
 
 for i in range(workers):
     wd = full_sol(workers_working_days[i])
@@ -174,9 +172,7 @@ solver.time_limit(5.0)
 solver.target_energy(0)
 sol = solver.search()
 
-full_sol = qbpp.Sol(f)
-full_sol.set(ml)
-full_sol.set(sol)
+full_sol = qbpp.Sol(f).set([ml, sol])
 
 for i in range(workers):
     wd = full_sol(workers_working_days[i])

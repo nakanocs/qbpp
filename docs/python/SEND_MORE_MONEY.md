@@ -129,9 +129,7 @@ solver = qbpp.EasySolver(g)
 solver.target_energy(0)
 sol = solver.search()
 
-full_sol = qbpp.Sol(f)
-full_sol.set(sol)
-full_sol.set(ml)
+full_sol = qbpp.Sol(f).set([sol, ml])
 
 print(f"onehot = {full_sol(onehot)}")
 print(f"different = {full_sol(different)}")
@@ -291,9 +289,7 @@ solver = qbpp.EasySolver(g)
 solver.target_energy(0)
 sol = solver.search()
 
-full_sol = qbpp.Sol(f)
-full_sol.set(sol)
-full_sol.set(ml)
+full_sol = qbpp.Sol(f).set([sol, ml])
 
 print(f"onehot = {full_sol(onehot)}")
 print(f"different = {full_sol(different)}")

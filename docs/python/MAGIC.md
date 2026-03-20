@@ -185,15 +185,13 @@ f.simplify_as_binary()
 ml = [(x[0][0][k], 1 if k == 1 else 0) for k in range(9)]
 ml += [(x[i][j][1], 0) for i in range(3) for j in range(3) if not (i == 0 and j == 0)]
 
-full_sol = qbpp.Sol(f)
 g = qbpp.replace(f, ml)
 g.simplify_as_binary()
 
 solver = qbpp.EasySolver(g)
 solver.target_energy(0)
 sol = solver.search()
-full_sol.set(sol)
-full_sol.set(ml)
+full_sol = qbpp.Sol(f).set([sol, ml])
 
 for i in range(3):
     for j in range(3):
@@ -397,15 +395,13 @@ f.simplify_as_binary()
 ml = [(x[0][0][k], 1 if k == 1 else 0) for k in range(9)]
 ml += [(x[i][j][1], 0) for i in range(3) for j in range(3) if not (i == 0 and j == 0)]
 
-full_sol = qbpp.Sol(f)
 g = qbpp.replace(f, ml)
 g.simplify_as_binary()
 
 solver = qbpp.EasySolver(g)
 solver.target_energy(0)
 sol = solver.search()
-full_sol.set(sol)
-full_sol.set(ml)
+full_sol = qbpp.Sol(f).set([sol, ml])
 
 for i in range(3):
     for j in range(3):

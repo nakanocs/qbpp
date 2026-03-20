@@ -107,9 +107,7 @@ solver = qbpp.EasySolver(g)
 solver.time_limit(1.0)
 sol = solver.search()
 
-full_sol = qbpp.Sol(f)
-full_sol.set(sol)
-full_sol.set(ml)
+full_sol = qbpp.Sol(f).set([sol, ml])
 
 # Extract tour
 tour = []
@@ -137,7 +135,7 @@ Tour: [0, 3, 6, 7, 8, 5, 2, 1, 4]
 | `qbpp::MapList ml;`              | `ml = [(x[0][0], 1)]`             |
 | `ml.push_back({x[0][0], 1})`    | `ml.append((x[0][0], 1))`         |
 | `qbpp::replace(f, ml)`          | `replace(f, ml)`                   |
-| `qbpp::Sol(f).set(sol).set(ml)` | `Sol(f); full_sol.set(sol); full_sol.set(ml)` |
+| `qbpp::Sol(f).set(sol).set(ml)` | `Sol(f).set([sol, ml])`                       |
 
 ## Visualization using matplotlib
 The following code visualizes the TSP solution:
@@ -266,9 +264,7 @@ solver = qbpp.EasySolver(g)
 solver.time_limit(1.0)
 sol = solver.search()
 
-full_sol = qbpp.Sol(f)
-full_sol.set(sol)
-full_sol.set(ml)
+full_sol = qbpp.Sol(f).set([sol, ml])
 
 # Extract tour
 tour = []
@@ -296,7 +292,7 @@ Tour: [0, 3, 6, 7, 8, 5, 2, 1, 4]
 | `qbpp::MapList ml;`              | `ml = [(x[0][0], 1)]`             |
 | `ml.push_back({x[0][0], 1})`    | `ml.append((x[0][0], 1))`         |
 | `qbpp::replace(f, ml)`          | `replace(f, ml)`                   |
-| `qbpp::Sol(f).set(sol).set(ml)` | `Sol(f); full_sol.set(sol); full_sol.set(ml)` |
+| `qbpp::Sol(f).set(sol).set(ml)` | `Sol(f).set([sol, ml])`                       |
 
 ## matplotlibによる可視化
 以下のコードはTSPの解を可視化します：
