@@ -8,28 +8,28 @@ nav_order: 31
 # Quick Reference: Operators and Functions for Expressions
 The table below summarizes the operators and functions available for `pyqbpp.Expr` objects.
 
-| Operators/Functions           | Syntax                                                | In-place | Return Type       | Argument Type            |
-|-------------------------------|-------------------------------------------------------|----------|-------------------|--------------------------|
-| Binary Operators              | `f + g`, `f - g`, `f * g`                             | No       | `Expr`            | `ExprType`-`ExprType`    |
-| Compound Assignment           | `f += g`, `f -= g`, `f *= g`                          | Yes      | `Expr`            | `ExprType` or `int`      |
-| Division                      | `f / n`                                               | No       | `Expr`            | `ExprType`-`int`         |
-| Compound Division             | `f /= n`                                              | Yes      | `Expr`            | `int`                    |
-| Unary Operators               | `+f`, `-f`                                            | No       | `Expr`            | `ExprType`               |
-| Comparison (Equality)         | `f == n`                                              | No       | `ExprExpr`        | `ExprType`-`int`         |
-| Comparison (Range)            | `between(f, l, u)`                                    | No       | `ExprExpr`        | `ExprType`-`int`-`int`   |
-| Square                        | `sqr(f)`                                              | No       | `Expr`            | `ExprType`               |
-| Type Conversion               | `int(f)`, `toInt(v)`                                  | No       | `int` or `list`   | `Expr` (constant)        |
-| GCD                           | `gcd(f)`                                              | No       | `int`             | `ExprType`               |
-| Simplify                      | `simplify_as_binary(f)`, etc.                         | No       | `Expr`            | `ExprType`               |
-| Simplify                      | `f.simplify_as_binary()`, etc.                        | Yes      | `Expr`            | —                        |
-| Eval                          | `f(ml)`                                               | No       | `int`             | `Expr`-`list`            |
-| Replace                       | `replace(f, ml)`                                      | No       | `Expr`            | `ExprType`-`list`        |
-| Replace                       | `f.replace(ml)`                                       | Yes      | `Expr`            | `list`                   |
-| Reduce                        | `reduce(f)`                                           | No       | `Expr`            | `ExprType`               |
-| Reduce                        | `f.reduce()`                                          | Yes      | `Expr`            | —                        |
-| Binary/Spin Conversion        | `spin_to_binary(f)`, `binary_to_spin(f)`              | No       | `Expr`            | `ExprType`               |
-| Binary/Spin Conversion        | `f.spin_to_binary()`, `f.binary_to_spin()`            | Yes      | `Expr`            | —                        |
-| Slice                         | `v[from:to]`, `v[:, from:to]`                         | No       | `Vector`          | `Vector`                 |
+| Operators/Functions           | Syntax                                                | Global/In-place | Return Type       | Argument Type            |
+|-------------------------------|-------------------------------------------------------|-----------------|-------------------|--------------------------|
+| Binary Operators              | `f + g`, `f - g`, `f * g`                             | Global          | `Expr`            | `ExprType`-`ExprType`    |
+| Compound Assignment           | `f += g`, `f -= g`, `f *= g`                          | In-place        | `Expr`            | `ExprType` or `int`      |
+| Division                      | `f / n`                                               | Global          | `Expr`            | `ExprType`-`int`         |
+| Compound Division             | `f /= n`                                              | In-place        | `Expr`            | `int`                    |
+| Unary Operators               | `+f`, `-f`                                            | Global          | `Expr`            | `ExprType`               |
+| Comparison (Equality)         | `f == n`                                              | Global          | `ExprExpr`        | `ExprType`-`int`         |
+| Comparison (Range)            | `between(f, l, u)`                                    | Global          | `ExprExpr`        | `ExprType`-`int`-`int`   |
+| Square                        | `sqr(f)`                                              | Global          | `Expr`            | `ExprType`               |
+| Type Conversion               | `int(f)`, `toInt(v)`                                  | Global          | `int` or `list`   | `Expr` (constant)        |
+| GCD                           | `gcd(f)`                                              | Global          | `int`             | `ExprType`               |
+| Simplify                      | `simplify_as_binary(f)`, etc.                         | Global          | `Expr`            | `ExprType`               |
+| Simplify                      | `f.simplify_as_binary()`, etc.                        | In-place        | `Expr`            | —                        |
+| Eval                          | `f(ml)`                                               | Global          | `int`             | `Expr`-`list`            |
+| Replace                       | `replace(f, ml)`                                      | Global          | `Expr`            | `ExprType`-`list`        |
+| Replace                       | `f.replace(ml)`                                       | In-place        | `Expr`            | `list`                   |
+| Reduce                        | `reduce(f)`                                           | Global          | `Expr`            | `ExprType`               |
+| Reduce                        | `f.reduce()`                                          | In-place        | `Expr`            | —                        |
+| Binary/Spin Conversion        | `spin_to_binary(f)`, `binary_to_spin(f)`              | Global          | `Expr`            | `ExprType`               |
+| Binary/Spin Conversion        | `f.spin_to_binary()`, `f.binary_to_spin()`            | In-place        | `Expr`            | —                        |
+| Slice                         | `v[from:to]`, `v[:, from:to]`                         | Global          | `Vector`          | `Vector`                 |
 | Concatenation                 | `concat(a, b)`, `concat(a, b, dim)`                   | No       | `Vector`          | `Vector`/`int`           |
 
 ## Expression-related type: **`ExprType`**
@@ -420,29 +420,29 @@ zg = qbpp.concat(1, qbpp.concat(z, 0, 1), 1)
 # クイックリファレンス: 式の演算子と関数
 以下の表は、`pyqbpp.Expr` オブジェクトで利用可能な演算子と関数をまとめたものです。
 
-| 演算子/関数                    | 構文                                                  | In-place | 戻り値の型         | 引数の型                   |
-|-------------------------------|-------------------------------------------------------|----------|-------------------|--------------------------|
-| 二項演算子                     | `f + g`, `f - g`, `f * g`                             | No       | `Expr`            | `ExprType`-`ExprType`    |
-| 複合代入                       | `f += g`, `f -= g`, `f *= g`                          | Yes      | `Expr`            | `ExprType` or `int`      |
-| 除算                          | `f / n`                                               | No       | `Expr`            | `ExprType`-`int`         |
-| 複合除算                       | `f /= n`                                              | Yes      | `Expr`            | `int`                    |
-| 単項演算子                     | `+f`, `-f`                                            | No       | `Expr`            | `ExprType`               |
-| 比較（等価）                    | `f == n`                                              | No       | `ExprExpr`        | `ExprType`-`int`         |
-| 比較（範囲）                    | `between(f, l, u)`                                    | No       | `ExprExpr`        | `ExprType`-`int`-`int`   |
-| 二乗                          | `sqr(f)`                                              | No       | `Expr`            | `ExprType`               |
-| 型変換                         | `int(f)`, `toInt(v)`                                  | No       | `int` または `list` | `Expr`（定数）           |
-| 最大公約数                      | `gcd(f)`                                              | No       | `int`             | `ExprType`               |
-| 簡約化                         | `simplify_as_binary(f)` 等                             | No       | `Expr`            | `ExprType`               |
-| 簡約化                         | `f.simplify_as_binary()` 等                            | Yes      | `Expr`            | —                        |
-| 評価                           | `f(ml)`                                               | No       | `int`             | `Expr`-`list`            |
-| 置換                           | `replace(f, ml)`                                      | No       | `Expr`            | `ExprType`-`list`        |
-| 置換                           | `f.replace(ml)`                                       | Yes      | `Expr`            | `list`                   |
-| 次数削減                        | `reduce(f)`                                           | No       | `Expr`            | `ExprType`               |
-| 次数削減                        | `f.reduce()`                                          | Yes      | `Expr`            | —                        |
-| バイナリ/スピン変換              | `spin_to_binary(f)`, `binary_to_spin(f)`              | No       | `Expr`            | `ExprType`               |
-| バイナリ/スピン変換              | `f.spin_to_binary()`, `f.binary_to_spin()`            | Yes      | `Expr`            | —                        |
-| スライス                        | `v[from:to]`, `v[:, from:to]`                         | No       | `Vector`          | `Vector`                 |
-| 連結                            | `concat(a, b)`, `concat(a, b, dim)`                   | No       | `Vector`          | `Vector`/`int`           |
+| 演算子/関数                    | 構文                                                  | Global/In-place | 戻り値の型         | 引数の型                   |
+|-------------------------------|-------------------------------------------------------|-----------------|-------------------|--------------------------|
+| 二項演算子                     | `f + g`, `f - g`, `f * g`                             | Global          | `Expr`            | `ExprType`-`ExprType`    |
+| 複合代入                       | `f += g`, `f -= g`, `f *= g`                          | In-place        | `Expr`            | `ExprType` or `int`      |
+| 除算                          | `f / n`                                               | Global          | `Expr`            | `ExprType`-`int`         |
+| 複合除算                       | `f /= n`                                              | In-place        | `Expr`            | `int`                    |
+| 単項演算子                     | `+f`, `-f`                                            | Global          | `Expr`            | `ExprType`               |
+| 比較（等価）                    | `f == n`                                              | Global          | `ExprExpr`        | `ExprType`-`int`         |
+| 比較（範囲）                    | `between(f, l, u)`                                    | Global          | `ExprExpr`        | `ExprType`-`int`-`int`   |
+| 二乗                          | `sqr(f)`                                              | Global          | `Expr`            | `ExprType`               |
+| 型変換                         | `int(f)`, `toInt(v)`                                  | Global          | `int` または `list` | `Expr`（定数）           |
+| 最大公約数                      | `gcd(f)`                                              | Global          | `int`             | `ExprType`               |
+| 簡約化                         | `simplify_as_binary(f)` 等                             | Global          | `Expr`            | `ExprType`               |
+| 簡約化                         | `f.simplify_as_binary()` 等                            | In-place        | `Expr`            | —                        |
+| 評価                           | `f(ml)`                                               | Global          | `int`             | `Expr`-`list`            |
+| 置換                           | `replace(f, ml)`                                      | Global          | `Expr`            | `ExprType`-`list`        |
+| 置換                           | `f.replace(ml)`                                       | In-place        | `Expr`            | `list`                   |
+| 次数削減                        | `reduce(f)`                                           | Global          | `Expr`            | `ExprType`               |
+| 次数削減                        | `f.reduce()`                                          | In-place        | `Expr`            | —                        |
+| バイナリ/スピン変換              | `spin_to_binary(f)`, `binary_to_spin(f)`              | Global          | `Expr`            | `ExprType`               |
+| バイナリ/スピン変換              | `f.spin_to_binary()`, `f.binary_to_spin()`            | In-place        | `Expr`            | —                        |
+| スライス                        | `v[from:to]`, `v[:, from:to]`                         | Global          | `Vector`          | `Vector`                 |
+| 連結                            | `concat(a, b)`, `concat(a, b, dim)`                   | Global          | `Vector`          | `Vector`/`int`           |
 
 ## 式関連の型: **`ExprType`**
 **`ExprType`** とは、`pyqbpp.Expr` オブジェクトに変換可能な型の総称です。
