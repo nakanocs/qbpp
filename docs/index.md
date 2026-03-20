@@ -16,6 +16,7 @@ as polynomials of binary variables (QUBO/HUBO).
 - **Unlimited-degree HUBO** — Supports high-order terms of any degree, not just quadratic. Native support for negated literals (`~x`) avoids the term explosion caused by replacing $\overline{x}$ with $1-x$.
 - **GPU-accelerated solving** — The built-in ABS3 solver fully utilizes GPU resources for parallel search, with multi-GPU scaling. The Exhaustive Solver also automatically uses CUDA GPUs when available.
 - **CPU parallel acceleration** — All solvers and expression-building operations are multithreaded via oneTBB.
+- **Arbitrary-precision integer coefficients** — Handles integer coefficients of unlimited bit width via Boost.Multiprecision. No overflow worries, from 16-bit to thousands of digits.
 - **Three built-in solvers** — Easy Solver (fast heuristic), Exhaustive Solver (complete search with optimality guarantee), and ABS3 (GPU+CPU heuristic).
 - **Run anywhere** — From a laptop to GPU servers and supercomputers. Available for amd64 (x86_64) and arm64 Linux.
 
@@ -113,6 +114,7 @@ For details on license activation, license types, and terms, see **[License Mana
 - **次数無制限のHUBO** — 二次だけでなく任意の次数の高次項をサポート。否定リテラル（`~x`）をネイティブにサポートし、$\overline{x}$ を $1-x$ に置き換えることによる項数爆発を回避します。
 - **GPU加速** — 内蔵のABS3ソルバーがGPUリソースをフル活用して並列探索を実行。マルチGPUにも対応。Exhaustive SolverもCUDA GPUを自動的に使用します。
 - **CPU並列加速** — すべてのソルバーおよび式構築操作がoneTBBによるマルチスレッドで高速化されています。
+- **任意精度の整数係数** — Boost.Multiprecisionにより、ビット数に上限のない整数係数を扱えます。16ビットから数千桁まで、オーバーフローの心配なく計算可能。
 - **3つの内蔵ソルバー** — Easy Solver（高速ヒューリスティック）、Exhaustive Solver（最適性保証付き完全探索）、ABS3（GPU+CPUヒューリスティック）。
 - **どこでも実行** — ノートPCからGPUサーバー、スーパーコンピュータまで。amd64 (x86_64) および arm64 Linux で利用可能。
 
