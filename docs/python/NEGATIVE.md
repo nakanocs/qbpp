@@ -167,9 +167,9 @@ All three variables are effectively set to 0, and $\bar{x}\cdot\bar{y}\cdot\bar{
 
 | C++ QUBO++                              | PyQBPP                                     |
 |-----------------------------------------|--------------------------------------------|
-| `qbpp::Expr(1)`                         | `Expr(1)`                                  |
+| `qbpp::Expr(1)`                         | `1`                                        |
 | `f *= ~x[i]`                            | `f *= ~x[i]`                               |
-| `ml.push_back({~x[i], 1 - x[i]})`      | `ml.append((~x[i], 1 - x[i]))`            |
+| `qbpp::MapList ml;`<br>`ml.push_back({~x[i], 1 - x[i]});` | `ml = [(~x[i], 1 - x[i]) for i in range(len(x))]` |
 | `f({% raw %}{{x, 0}, {~y, 1}}{% endraw %})` | `f.eval([(x, 0), (~y, 1)])`          |
 
 </div>
@@ -327,9 +327,9 @@ f(0, 0, 0) = 1
 
 | C++ QUBO++                              | PyQBPP                                     |
 |-----------------------------------------|--------------------------------------------|
-| `qbpp::Expr(1)`                         | `Expr(1)`                                  |
+| `qbpp::Expr(1)`                         | `1`                                        |
 | `f *= ~x[i]`                            | `f *= ~x[i]`                               |
-| `ml.push_back({~x[i], 1 - x[i]})`      | `ml.append((~x[i], 1 - x[i]))`            |
+| `qbpp::MapList ml;`<br>`ml.push_back({~x[i], 1 - x[i]});` | `ml = [(~x[i], 1 - x[i]) for i in range(len(x))]` |
 | `f({% raw %}{{x, 0}, {~y, 1}}{% endraw %})` | `f.eval([(x, 0), (~y, 1)])`          |
 
 </div>
