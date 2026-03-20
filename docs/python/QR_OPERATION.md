@@ -26,6 +26,8 @@ The table below summarizes the operators and functions available for `pyqbpp.Exp
 | Replace                       | `replace()`                                          | Global/Member | `pyqbpp.Expr`     | `ExprType`-`list`        |
 | Reduce                        | `reduce()`                                           | Global/Member | `pyqbpp.Expr`     | `ExprType`               |
 | Binary/Spin Conversion        | `binary_to_spin()`, `spin_to_binary()`               | Global/Member | `pyqbpp.Expr`     | `ExprType`               |
+| Slice                         | `v[from:to]`, `v[:, from:to]`                        | Indexing      | `Vector`          | `Vector`                 |
+| Concatenation                 | `concat()`                                            | Global        | `Vector`          | `Vector`/`int`           |
 
 ## Expression-related type: **`ExprType`**
 The term **`ExprType`** denotes a category of types that can be converted to a `pyqbpp.Expr` object.
@@ -341,12 +343,81 @@ k = binary_to_spin(h)   # 2 + 2*b  (replaced b with (b+1)/2, multiplied by 2)
 
 ### Comparison with C++ QUBO++
 
-| C++ QUBO++                      | PyQBPP                       |
-|---------------------------------|--------------------------------|
-| `qbpp::spin_to_binary(f)`      | `spin_to_binary(f)`            |
-| `f.spin_to_binary()`           | `f.spin_to_binary()`           |
-| `qbpp::binary_to_spin(f)`      | `binary_to_spin(f)`            |
-| `f.binary_to_spin()`           | `f.binary_to_spin()`           |
+<table>
+<thead>
+<tr><th>C++ QUBO++</th><th>PyQBPP</th></tr>
+</thead>
+<tbody>
+<tr><td><code>qbpp::spin_to_binary(f)</code></td><td><code>spin_to_binary(f)</code></td></tr>
+<tr><td><code>f.spin_to_binary()</code></td><td><code>f.spin_to_binary()</code></td></tr>
+<tr><td><code>qbpp::binary_to_spin(f)</code></td><td><code>binary_to_spin(f)</code></td></tr>
+<tr><td><code>f.binary_to_spin()</code></td><td><code>f.binary_to_spin()</code></td></tr>
+</tbody>
+</table>
+
+## Slice functions: `v[from:to]`
+
+Python slice notation extracts a sub-range from a `Vector`. Slicing returns a new `Vector`.
+
+- **`v[from:to]`**: Elements in `[from, to)` along the outermost dimension.
+- **`v[:n]`**: First `n` elements. Equivalent to C++ `head(v, n)`.
+- **`v[-n:]`**: Last `n` elements. Equivalent to C++ `tail(v, n)`.
+
+For multi-dimensional vectors, use tuple indexing to slice along inner dimensions:
+
+- **`v[:, from:to]`**: Slice each row (dim=1). Equivalent to C++ `slice(v, from, to, 1)`.
+- **`v[:, :, from:to]`**: Slice along dim=2. Works for any depth.
+
+### Example
+```python
+import pyqbpp as qbpp
+
+x = qbpp.var("x", 3, 5)
+print(x[:, :3])     # first 3 columns of each row
+print(x[1:3, 2:4])  # rows 1-2, columns 2-3
+```
+
+## Concat function: `concat()`
+
+The `concat()` function joins vectors or prepends/appends scalars.
+
+- **`concat(a, b)`**: Concatenates two vectors along the outermost dimension.
+- **`concat(scalar, v)`**: Prepends a scalar (converted to `Expr`).
+- **`concat(v, scalar)`**: Appends a scalar.
+- **`concat(scalar, v, dim)`**: `dim=0` prepends a row filled with scalar; `dim=1` prepends scalar to each row.
+- **`concat(v, scalar, dim)`**: `dim=0` appends a row; `dim=1` appends to each row.
+
+### Example
+```python
+import pyqbpp as qbpp
+
+x = qbpp.var("x", 4)
+y = qbpp.concat(1, qbpp.concat(x, 0))
+# y = [1, x[0], x[1], x[2], x[3], 0]
+
+z = qbpp.var("z", 3, 4)
+zg = qbpp.concat(1, qbpp.concat(z, 0, 1), 1)
+# each row: [1, z[i][0], ..., z[i][3], 0]
+```
+
+### Comparison with C++ QUBO++
+
+<table>
+<thead>
+<tr><th>C++ QUBO++</th><th>PyQBPP</th></tr>
+</thead>
+<tbody>
+<tr><td><code>qbpp::head(v, n)</code></td><td><code>v[:n]</code></td></tr>
+<tr><td><code>qbpp::tail(v, n)</code></td><td><code>v[-n:]</code></td></tr>
+<tr><td><code>qbpp::slice(v, from, to)</code></td><td><code>v[from:to]</code></td></tr>
+<tr><td><code>qbpp::head(v, n, 1)</code></td><td><code>v[:, :n]</code></td></tr>
+<tr><td><code>qbpp::tail(v, n, 1)</code></td><td><code>v[:, -n:]</code></td></tr>
+<tr><td><code>qbpp::concat(1, v)</code></td><td><code>concat(1, v)</code></td></tr>
+<tr><td><code>qbpp::concat(1, v, 0)</code></td><td><code>concat(1, v, 0)</code></td></tr>
+<tr><td><code>qbpp::concat(1, v, 1)</code></td><td><code>concat(1, v, 1)</code></td></tr>
+</tbody>
+</table>
+
 </div>
 
 <div class="lang-ja" markdown="1">
@@ -371,6 +442,8 @@ k = binary_to_spin(h)   # 2 + 2*b  (replaced b with (b+1)/2, multiplied by 2)
 | 置換                           | `replace()`                                          | グローバル/メンバー | `pyqbpp.Expr`     | `ExprType`-`list`        |
 | 次数削減                        | `reduce()`                                           | グローバル/メンバー | `pyqbpp.Expr`     | `ExprType`               |
 | バイナリ/スピン変換              | `binary_to_spin()`, `spin_to_binary()`               | グローバル/メンバー | `pyqbpp.Expr`     | `ExprType`               |
+| スライス                        | `v[from:to]`, `v[:, from:to]`                        | インデックス   | `Vector`          | `Vector`                 |
+| 連結                            | `concat()`                                            | グローバル     | `Vector`          | `Vector`/`int`           |
 
 ## 式関連の型: **`ExprType`**
 **`ExprType`** とは、`pyqbpp.Expr` オブジェクトに変換可能な型の総称です。
@@ -682,10 +755,79 @@ k = binary_to_spin(h)   # 2 + 2*b  (replaced b with (b+1)/2, multiplied by 2)
 
 ### C++ QUBO++ との比較
 
-| C++ QUBO++                      | PyQBPP                       |
-|---------------------------------|--------------------------------|
-| `qbpp::spin_to_binary(f)`      | `spin_to_binary(f)`            |
-| `f.spin_to_binary()`           | `f.spin_to_binary()`           |
-| `qbpp::binary_to_spin(f)`      | `binary_to_spin(f)`            |
-| `f.binary_to_spin()`           | `f.binary_to_spin()`           |
+<table>
+<thead>
+<tr><th>C++ QUBO++</th><th>PyQBPP</th></tr>
+</thead>
+<tbody>
+<tr><td><code>qbpp::spin_to_binary(f)</code></td><td><code>spin_to_binary(f)</code></td></tr>
+<tr><td><code>f.spin_to_binary()</code></td><td><code>f.spin_to_binary()</code></td></tr>
+<tr><td><code>qbpp::binary_to_spin(f)</code></td><td><code>binary_to_spin(f)</code></td></tr>
+<tr><td><code>f.binary_to_spin()</code></td><td><code>f.binary_to_spin()</code></td></tr>
+</tbody>
+</table>
+
+## スライス関数: `v[from:to]`
+
+Pythonのスライス記法で `Vector` から部分範囲を抽出します。スライスは新しい `Vector` を返します。
+
+- **`v[from:to]`**: 最外次元の `[from, to)` の要素。
+- **`v[:n]`**: 先頭 `n` 個。C++ の `head(v, n)` に相当。
+- **`v[-n:]`**: 末尾 `n` 個。C++ の `tail(v, n)` に相当。
+
+多次元ベクトルにはタプルインデックスで内側の次元をスライス:
+
+- **`v[:, from:to]`**: 各行をスライス（dim=1）。C++ の `slice(v, from, to, 1)` に相当。
+- **`v[:, :, from:to]`**: dim=2 でスライス。任意の深さで動作。
+
+### 例
+```python
+import pyqbpp as qbpp
+
+x = qbpp.var("x", 3, 5)
+print(x[:, :3])     # 各行の先頭3列
+print(x[1:3, 2:4])  # 1-2行, 2-3列
+```
+
+## 連結関数: `concat()`
+
+`concat()` 関数はベクトルの連結やスカラーの追加を行います。
+
+- **`concat(a, b)`**: 最外次元に沿って2つのベクトルを連結。
+- **`concat(scalar, v)`**: 先頭にスカラーを追加（`Expr` に変換）。
+- **`concat(v, scalar)`**: 末尾にスカラーを追加。
+- **`concat(scalar, v, dim)`**: `dim=0` でスカラーで埋めた行を追加、`dim=1` で各行の先頭にスカラーを追加。
+- **`concat(v, scalar, dim)`**: `dim=0` で行を追加、`dim=1` で各行の末尾に追加。
+
+### 例
+```python
+import pyqbpp as qbpp
+
+x = qbpp.var("x", 4)
+y = qbpp.concat(1, qbpp.concat(x, 0))
+# y = [1, x[0], x[1], x[2], x[3], 0]
+
+z = qbpp.var("z", 3, 4)
+zg = qbpp.concat(1, qbpp.concat(z, 0, 1), 1)
+# 各行: [1, z[i][0], ..., z[i][3], 0]
+```
+
+### C++ QUBO++ との比較
+
+<table>
+<thead>
+<tr><th>C++ QUBO++</th><th>PyQBPP</th></tr>
+</thead>
+<tbody>
+<tr><td><code>qbpp::head(v, n)</code></td><td><code>v[:n]</code></td></tr>
+<tr><td><code>qbpp::tail(v, n)</code></td><td><code>v[-n:]</code></td></tr>
+<tr><td><code>qbpp::slice(v, from, to)</code></td><td><code>v[from:to]</code></td></tr>
+<tr><td><code>qbpp::head(v, n, 1)</code></td><td><code>v[:, :n]</code></td></tr>
+<tr><td><code>qbpp::tail(v, n, 1)</code></td><td><code>v[:, -n:]</code></td></tr>
+<tr><td><code>qbpp::concat(1, v)</code></td><td><code>concat(1, v)</code></td></tr>
+<tr><td><code>qbpp::concat(1, v, 0)</code></td><td><code>concat(1, v, 0)</code></td></tr>
+<tr><td><code>qbpp::concat(1, v, 1)</code></td><td><code>concat(1, v, 1)</code></td></tr>
+</tbody>
+</table>
+
 </div>
