@@ -106,150 +106,79 @@ solutions = 9
 
 All 9 optimal solutions are domain wall patterns, representing integers 0 through 8.
 
-## 2D Domain Wall Encoding
+## Dual-Matrix Domain Wall
 
-The same technique extends to two-dimensional arrays using `concat` with a dimension parameter.
-Given a 2D variable array `x` of size $m \times n$, we can enforce domain wall constraints on every row
-using `concat(1, concat(x, 0, 1), 1)` where `dim=1` applies guard bits to each row simultaneously.
+Applying domain wall constraints to both rows and columns of a 2D binary matrix is known as the **Dual-Matrix Domain Wall** method.
+For details, see: [https://doi.org/10.3390/technologies11050143](https://doi.org/10.3390/technologies11050143)
 
-For column-wise domain walls, we `transpose` the array and apply the same pattern.
+Using `concat`, `head`, and `tail` with a dimension parameter, this can be expressed without explicit loops.
+Given a 2D variable array `x` of size $n \times n$:
+
+- **Row-wise** (`dim=1`): `concat(1, concat(x, 0, 1), 1)` adds guard bits to each row.
+- **Column-wise** (`dim=0`): `concat(1, concat(x, 0, 0), 0)` adds guard rows filled with 1s and 0s.
 
 {% raw %}
 ```cpp
 #define MAXDEG 2
 #include <qbpp/qbpp.hpp>
-#include <qbpp/exhaustive_solver.hpp>
+#include <qbpp/easy_solver.hpp>
 
 int main() {
-  const size_t rows = 3, cols = 3;
-  auto x = qbpp::var("x", rows, cols);
+  const size_t n = 6;
+  auto x = qbpp::var("x", n, n);
 
-  // Row domain wall: guard bits along dim=1
+  // Row domain wall: guard bits along dim=1 (columns)
   auto yr = qbpp::concat(1, qbpp::concat(x, 0, 1), 1);
-  auto row_diff = qbpp::head(yr, cols + 1, 1) - qbpp::tail(yr, cols + 1, 1);
+  auto row_diff = qbpp::head(yr, n + 1, 1) - qbpp::tail(yr, n + 1, 1);
   auto row_dw = qbpp::sum(qbpp::sqr(row_diff));
 
-  // Column domain wall: transpose, then same pattern
-  auto xt = qbpp::transpose(x);
-  auto yc = qbpp::concat(1, qbpp::concat(xt, 0, 1), 1);
-  auto col_diff = qbpp::head(yc, rows + 1, 1) - qbpp::tail(yc, rows + 1, 1);
+  // Column domain wall: guard rows along dim=0 (rows)
+  auto yc = qbpp::concat(1, qbpp::concat(x, 0, 0), 0);
+  auto col_diff = qbpp::head(yc, n + 1, 0) - qbpp::tail(yc, n + 1, 0);
   auto col_dw = qbpp::sum(qbpp::sqr(col_diff));
 
-  auto f = row_dw + col_dw;
+  // Fix total number of 1s to get a non-trivial solution
+  auto sum_constraint = qbpp::sum(x) == 21;
+
+  auto f = row_dw + col_dw + sum_constraint;
   f.simplify_as_binary();
 
-  auto solver = qbpp::exhaustive_solver::ExhaustiveSolver(f);
-  auto sol = solver.search_optimal_solutions();
+  auto solver = qbpp::easy_solver::EasySolver(f);
+  solver.target_energy(static_cast<int64_t>(2 * n));
+  auto sol = solver.search();
 
   std::cout << "energy = " << sol.energy() << std::endl;
-  std::cout << "solutions = " << sol.all_solutions().size() << std::endl;
-  for (const auto& s : sol.all_solutions()) {
-    for (size_t i = 0; i < rows; ++i) {
-      for (size_t j = 0; j < cols; ++j) std::cout << s(x[i][j]);
-      std::cout << std::endl;
-    }
+  for (size_t i = 0; i < n; ++i) {
+    for (size_t j = 0; j < n; ++j) std::cout << sol(x[i][j]);
     std::cout << std::endl;
   }
 }
 ```
 {% endraw %}
 
-Each row must be a domain wall ($1\cdots 1\, 0\cdots 0$) and each column must independently be a domain wall ($1\cdots 1\, 0\cdots 0$ from top to bottom).
+Each row must be a domain wall ($1\cdots 1\, 0\cdots 0$, left to right) and each column must independently be a domain wall ($1\cdots 1\, 0\cdots 0$, top to bottom).
+The constraint `sum(x) == 21` ensures a non-trivial solution.
 
 ### Key operations
 
-- **`concat(1, concat(x, 0, 1), 1)`**: Adds guard bits to each row of a 2D array. The `dim=1` parameter means the operation applies along the column (innermost) dimension.
-- **`head(yr, cols+1, 1)` / `tail(yr, cols+1, 1)`**: Extracts the first/last `cols+1` elements from each row.
-- **`transpose(x)`**: Transposes the matrix so that column-wise operations become row-wise.
+- **`concat(1, concat(x, 0, 1), 1)`** (`dim=1`): Adds guard bits 1 and 0 to each row.
+- **`concat(1, concat(x, 0, 0), 0)`** (`dim=0`): Adds a guard row of 1s at the top and 0s at the bottom.
+- **`head(y, n, dim)` / `tail(y, n, dim)`**: Extracts the first/last `n` elements along the specified dimension.
 
 ### Output
 
 ```
-energy = 6
-solutions = 20
-000
-000
-000
-
-100
-000
-000
-
-110
-000
-000
-
-111
-000
-000
-
-100
-100
-000
-
-110
-100
-000
-
-111
-100
-000
-
-110
-110
-000
-
-111
-110
-000
-
-111
-111
-000
-
-100
-100
-100
-
-110
-100
-100
-
-111
-100
-100
-
-110
-110
-100
-
-111
-110
-100
-
-111
-111
-100
-
-110
-110
-110
-
-111
-110
-110
-
-111
-111
-110
-
-111
-111
-111
+energy = 12
+111111
+111111
+111111
+110000
+100000
+000000
 ```
 
-All 20 optimal solutions satisfy both row and column domain wall constraints.
-Each row is $1\cdots 1\, 0\cdots 0$ (left to right) and each column is $1\cdots 1\, 0\cdots 0$ (top to bottom).
+The optimal energy is $2n = 12$ (one transition per row + one per column).
+Each row is $1\cdots 1\, 0\cdots 0$ and each column is $1\cdots 1\, 0\cdots 0$.
 
 </div>
 
@@ -355,149 +284,78 @@ solutions = 9
 
 9つの最適解はすべてドメインウォールパターンで、整数 0 から 8 を表現しています。
 
-## 2次元ドメインウォール符号化
+## Dual-Matrix Domain Wall
 
-次元パラメータ付きの `concat` を使えば、同じ手法を2次元配列に拡張できます。
-サイズ $m \times n$ の2次元変数配列 `x` に対して、
-`concat(1, concat(x, 0, 1), 1)` で各行に同時にガードビットを追加できます（`dim=1` は列方向への操作）。
+2次元バイナリ行列の行と列の両方にドメインウォール制約を適用する手法は **Dual-Matrix Domain Wall** 法として知られています。
+詳細は [https://doi.org/10.3390/technologies11050143](https://doi.org/10.3390/technologies11050143) を参照してください。
 
-列方向のドメインウォールには、`transpose` で転置してから同じパターンを適用します。
+次元パラメータ付きの `concat`、`head`、`tail` を使えば、明示的なループなしで記述できます。
+サイズ $n \times n$ の2次元変数配列 `x` に対して:
+
+- **行方向**（`dim=1`）: `concat(1, concat(x, 0, 1), 1)` で各行にガードビットを追加。
+- **列方向**（`dim=0`）: `concat(1, concat(x, 0, 0), 0)` でガード行（全1と全0）を追加。
 
 {% raw %}
 ```cpp
 #define MAXDEG 2
 #include <qbpp/qbpp.hpp>
-#include <qbpp/exhaustive_solver.hpp>
+#include <qbpp/easy_solver.hpp>
 
 int main() {
-  const size_t rows = 3, cols = 3;
-  auto x = qbpp::var("x", rows, cols);
+  const size_t n = 6;
+  auto x = qbpp::var("x", n, n);
 
-  // 行ドメインウォール: dim=1 でガードビット追加
+  // 行ドメインウォール: dim=1（列方向）でガードビット追加
   auto yr = qbpp::concat(1, qbpp::concat(x, 0, 1), 1);
-  auto row_diff = qbpp::head(yr, cols + 1, 1) - qbpp::tail(yr, cols + 1, 1);
+  auto row_diff = qbpp::head(yr, n + 1, 1) - qbpp::tail(yr, n + 1, 1);
   auto row_dw = qbpp::sum(qbpp::sqr(row_diff));
 
-  // 列ドメインウォール: 転置して同じパターン
-  auto xt = qbpp::transpose(x);
-  auto yc = qbpp::concat(1, qbpp::concat(xt, 0, 1), 1);
-  auto col_diff = qbpp::head(yc, rows + 1, 1) - qbpp::tail(yc, rows + 1, 1);
+  // 列ドメインウォール: dim=0（行方向）でガード行追加
+  auto yc = qbpp::concat(1, qbpp::concat(x, 0, 0), 0);
+  auto col_diff = qbpp::head(yc, n + 1, 0) - qbpp::tail(yc, n + 1, 0);
   auto col_dw = qbpp::sum(qbpp::sqr(col_diff));
 
-  auto f = row_dw + col_dw;
+  // 1の総数を固定して非自明な解を得る
+  auto sum_constraint = qbpp::sum(x) == 21;
+
+  auto f = row_dw + col_dw + sum_constraint;
   f.simplify_as_binary();
 
-  auto solver = qbpp::exhaustive_solver::ExhaustiveSolver(f);
-  auto sol = solver.search_optimal_solutions();
+  auto solver = qbpp::easy_solver::EasySolver(f);
+  solver.target_energy(static_cast<int64_t>(2 * n));
+  auto sol = solver.search();
 
   std::cout << "energy = " << sol.energy() << std::endl;
-  std::cout << "solutions = " << sol.all_solutions().size() << std::endl;
-  for (const auto& s : sol.all_solutions()) {
-    for (size_t i = 0; i < rows; ++i) {
-      for (size_t j = 0; j < cols; ++j) std::cout << s(x[i][j]);
-      std::cout << std::endl;
-    }
+  for (size_t i = 0; i < n; ++i) {
+    for (size_t j = 0; j < n; ++j) std::cout << sol(x[i][j]);
     std::cout << std::endl;
   }
 }
 ```
 {% endraw %}
 
-各行がドメインウォール（$1\cdots 1\, 0\cdots 0$）であり、各列も独立にドメインウォール（上から $1\cdots 1\, 0\cdots 0$）となる制約です。
+各行がドメインウォール（$1\cdots 1\, 0\cdots 0$、左から右）であり、各列も独立にドメインウォール（$1\cdots 1\, 0\cdots 0$、上から下）となる制約です。
+制約 `sum(x) == 21` により非自明な解が得られます。
 
 ### 主要な操作
 
-- **`concat(1, concat(x, 0, 1), 1)`**: 2次元配列の各行にガードビットを追加します。`dim=1` パラメータにより、列（内側の）次元に沿って操作が適用されます。
-- **`head(yr, cols+1, 1)` / `tail(yr, cols+1, 1)`**: 各行から先頭/末尾の `cols+1` 要素を抽出します。
-- **`transpose(x)`**: 行列を転置し、列方向の操作を行方向の操作に変換します。
+- **`concat(1, concat(x, 0, 1), 1)`**（`dim=1`）: 各行にガードビット 1 と 0 を追加します。
+- **`concat(1, concat(x, 0, 0), 0)`**（`dim=0`）: 全1のガード行を上に、全0のガード行を下に追加します。
+- **`head(y, n, dim)` / `tail(y, n, dim)`**: 指定した次元に沿って先頭/末尾の `n` 要素を抽出します。
 
 ### 出力
 
 ```
-energy = 6
-solutions = 20
-000
-000
-000
-
-100
-000
-000
-
-110
-000
-000
-
-111
-000
-000
-
-100
-100
-000
-
-110
-100
-000
-
-111
-100
-000
-
-110
-110
-000
-
-111
-110
-000
-
-111
-111
-000
-
-100
-100
-100
-
-110
-100
-100
-
-111
-100
-100
-
-110
-110
-100
-
-111
-110
-100
-
-111
-111
-100
-
-110
-110
-110
-
-111
-110
-110
-
-111
-111
-110
-
-111
-111
-111
+energy = 12
+111111
+111111
+111111
+110000
+100000
+000000
 ```
 
-20個の最適解はすべて行・列のドメインウォール制約を満たしています。
-各行は $1\cdots 1\, 0\cdots 0$（左から右）、各列は $1\cdots 1\, 0\cdots 0$（上から下）となっています。
+最適エネルギーは $2n = 12$（行ごとに1回 + 列ごとに1回の遷移）です。
+各行は $1\cdots 1\, 0\cdots 0$、各列は $1\cdots 1\, 0\cdots 0$ となっています。
 
 </div>
