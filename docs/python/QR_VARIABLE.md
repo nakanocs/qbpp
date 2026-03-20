@@ -123,7 +123,7 @@ For a `pyqbpp.VarInt` instance `x`, the following are available:
 
 The following expression is equivalent to the expression stored in `x`:
 ```python
-x.min_val + qbpp.sum(c * v for c, v in zip(x.coeffs, x.int_vars))
+x.min_val + qbpp.sum(x.int_vars * x.coeffs)
 ```
 
 ### Comparison with C++ QUBO++
@@ -264,7 +264,7 @@ z = qbpp.between(qbpp.var_int("z", 2, 3), 1, 8)  # 2x3 matrix of integer variabl
 
 以下の式は `x` に格納されている式と等価です。
 ```python
-x.min_val + qbpp.sum(c * v for c, v in zip(x.coeffs, x.int_vars))
+x.min_val + qbpp.sum(x.int_vars * x.coeffs)
 ```
 
 ### C++ QUBO++ との比較
