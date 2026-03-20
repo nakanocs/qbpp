@@ -12,7 +12,9 @@ as polynomials of binary variables (QUBO/HUBO).
 
 **C++ and Python** — Use QUBO++ from C++ ([QUBO++](DOCUMENT)) or Python ([PyQBPP](python/)). `pip install pyqbpp` to get started with Python.
 
-**Symbolic DSL** — Write optimization models as mathematical expressions, not matrix indices. Vector operations let you build large-scale problems without explicit loops.
+**Symbolic DSL** — Write optimization models as mathematical expressions, not matrix indices. Use natural for-loops to build constraints, or leverage vector operations for loop-free formulations.
+
+**Easy installation** — `sudo apt install qbpp` for C++, `pip install pyqbpp` for Python. No build from source required.
 
 **Unlimited-degree HUBO** — Supports high-order terms of any degree, not just quadratic. Native support for negated literals (`~x`) avoids the term explosion caused by replacing $\overline{x}$ with $1-x$.
 
@@ -22,7 +24,7 @@ as polynomials of binary variables (QUBO/HUBO).
 
 **Three built-in solvers** — Easy Solver (fast heuristic), Exhaustive Solver (complete search with optimality guarantee), and ABS3 (GPU+CPU heuristic).
 
-**Run anywhere** — From a laptop to GPU servers and supercomputers. Available for amd64 (x86_64) and arm64 Linux. Install via `sudo apt install qbpp` or `pip install pyqbpp`.
+**Run anywhere** — From a laptop to GPU servers and supercomputers. Available for amd64 (x86_64) and arm64 Linux.
 
 Copyright: © 2026 Koji Nakano. All rights reserved.
 
@@ -114,7 +116,9 @@ For details on license activation, license types, and terms, see **[License Mana
 
 **C++ と Python** — C++（[QUBO++](DOCUMENT)）でもPython（[PyQBPP](python/)）でも使えます。`pip install pyqbpp` ですぐにPythonで始められます。
 
-**シンボリックDSL** — 行列のインデックスではなく、数式を書くように最適化モデルを構築。ベクトル演算で明示的なループなしに大規模問題を記述できます。
+**シンボリックDSL** — 行列のインデックスではなく、数式を書くように最適化モデルを構築。自然なforループで制約を記述することも、ベクトル演算でループなしに記述することもできます。
+
+**簡単インストール** — C++は `sudo apt install qbpp`、Pythonは `pip install pyqbpp`。ソースからのビルドは不要です。
 
 **次数無制限のHUBO** — 二次だけでなく任意の次数の高次項をサポート。否定リテラル（`~x`）をネイティブにサポートし、$\overline{x}$ を $1-x$ に置き換えることによる項数爆発を回避します。
 
@@ -124,7 +128,7 @@ For details on license activation, license types, and terms, see **[License Mana
 
 **3つの内蔵ソルバー** — Easy Solver（高速ヒューリスティック）、Exhaustive Solver（最適性保証付き完全探索）、ABS3（GPU+CPUヒューリスティック）。
 
-**どこでも実行** — ノートPCからGPUサーバー、スーパーコンピュータまで。amd64 (x86_64) および arm64 Linux で利用可能。`sudo apt install qbpp` または `pip install pyqbpp` でインストール。
+**どこでも実行** — ノートPCからGPUサーバー、スーパーコンピュータまで。amd64 (x86_64) および arm64 Linux で利用可能。
 
 Copyright: © 2026 Koji Nakano. All rights reserved.
 
