@@ -44,10 +44,11 @@ sections by providing a deeper understanding of QUBO++.
 8. [Replace functions](REPLACE)
 9. [Negated Literals](NEGATIVE)
 10. [Sum Functions for Multi-dimensional Arrays](SUM)
-11. [Easy Solver Usage](EASYSOLVER)
-12. [Exhaustive Solver Usage](EXHAUSTIVE)
-13. [ABS3 Solver Usage](ABS3)
-14. [Gurobi Solver Usage](GUROBI)
+11. [Slice and Concat Functions](SLICE_CONCAT)
+12. [Easy Solver Usage](EASYSOLVER)
+13. [Exhaustive Solver Usage](EXHAUSTIVE)
+14. [ABS3 Solver Usage](ABS3)
+15. [Gurobi Solver Usage](GUROBI)
 
 
 
@@ -102,10 +103,11 @@ See the [Case Studies](CASE_STUDIES) page for the full list.
 8. [置換関数](REPLACE)
 9. [否定リテラル](NEGATIVE)
 10. [多次元配列用の Sum 関数](SUM)
-11. [Easy Solver の使い方](EASYSOLVER)
-12. [Exhaustive Solver の使い方](EXHAUSTIVE)
-13. [ABS3 Solver の使い方](ABS3)
-14. [Gurobi Solver の使い方](GUROBI)
+11. [スライス関数と連結関数](SLICE_CONCAT)
+12. [Easy Solver の使い方](EASYSOLVER)
+13. [Exhaustive Solver の使い方](EXHAUSTIVE)
+14. [ABS3 Solver の使い方](ABS3)
+15. [Gurobi Solver の使い方](GUROBI)
 
 
 
