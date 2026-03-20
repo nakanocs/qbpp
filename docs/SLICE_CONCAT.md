@@ -108,14 +108,10 @@ All 9 optimal solutions are domain wall patterns, representing integers 0 throug
 
 ## Dual-Matrix Domain Wall
 
-Applying domain wall constraints to both rows and columns of a 2D binary matrix is known as the **Dual-Matrix Domain Wall** method.
-For details, see: [https://doi.org/10.3390/technologies11050143](https://doi.org/10.3390/technologies11050143)
-
-Using `concat`, `head`, and `tail` with a dimension parameter, this can be expressed without explicit loops.
-Given a 2D variable array `x` of size $n \times n$:
-
-- **Row-wise** (`dim=1`): `concat(1, concat(x, 0, 1), 1)` adds guard bits to each row.
-- **Column-wise** (`dim=0`): `concat(1, concat(x, 0, 0), 0)` adds guard rows filled with 1s and 0s.
+The **Dual-Matrix Domain Wall** method uses two separate $n \times n$ binary matrices:
+`x` with column-wise domain walls and `y` with row-wise domain walls.
+The adjacent differences of each form one-hot vectors, and requiring these to match yields a permutation-like structure.
+For details, see: [https://arxiv.org/abs/2308.01024](https://arxiv.org/abs/2308.01024)
 
 {% raw %}
 ```cpp
@@ -126,21 +122,25 @@ Given a 2D variable array `x` of size $n \times n$:
 int main() {
   const size_t n = 6;
   auto x = qbpp::var("x", n, n);
+  auto y = qbpp::var("y", n, n);
 
-  // Row domain wall: guard bits along dim=1 (columns)
-  auto yr = qbpp::concat(1, qbpp::concat(x, 0, 1), 1);
-  auto row_diff = qbpp::head(yr, n + 1, 1) - qbpp::tail(yr, n + 1, 1);
-  auto row_dw = qbpp::sum(qbpp::sqr(row_diff));
+  // x: column-wise domain wall, guard rows along dim=0
+  auto xg = qbpp::concat(1, qbpp::concat(x, 0, 0), 0);
+  auto x_diff = qbpp::head(xg, n + 1, 0) - qbpp::tail(xg, n + 1, 0);
+  auto x_dw = qbpp::sum(qbpp::sqr(x_diff));
 
-  // Column domain wall: guard rows along dim=0 (rows)
-  auto yc = qbpp::concat(1, qbpp::concat(x, 0, 0), 0);
-  auto col_diff = qbpp::head(yc, n + 1, 0) - qbpp::tail(yc, n + 1, 0);
-  auto col_dw = qbpp::sum(qbpp::sqr(col_diff));
+  // y: row-wise domain wall, guard columns along dim=1
+  auto yg = qbpp::concat(1, qbpp::concat(y, 0, 1), 1);
+  auto y_diff = qbpp::head(yg, n + 1, 1) - qbpp::tail(yg, n + 1, 1);
+  auto y_dw = qbpp::sum(qbpp::sqr(y_diff));
 
-  // Fix total number of 1s to get a non-trivial solution
+  // Match: transpose(x_diff) == y_diff
+  auto match = qbpp::sum(qbpp::sqr(qbpp::transpose(x_diff) - y_diff));
+
+  // Fix total to get a non-trivial solution
   auto sum_constraint = qbpp::sum(x) == 21;
 
-  auto f = row_dw + col_dw + sum_constraint;
+  auto f = x_dw + y_dw + match + sum_constraint;
   f.simplify_as_binary();
 
   auto solver = qbpp::easy_solver::EasySolver(f);
@@ -148,37 +148,47 @@ int main() {
   auto sol = solver.search();
 
   std::cout << "energy = " << sol.energy() << std::endl;
+  std::cout << "x:" << std::endl;
   for (size_t i = 0; i < n; ++i) {
     for (size_t j = 0; j < n; ++j) std::cout << sol(x[i][j]);
+    std::cout << std::endl;
+  }
+  std::cout << "y:" << std::endl;
+  for (size_t i = 0; i < n; ++i) {
+    for (size_t j = 0; j < n; ++j) std::cout << sol(y[i][j]);
     std::cout << std::endl;
   }
 }
 ```
 {% endraw %}
 
-Each row must be a domain wall ($1\cdots 1\, 0\cdots 0$, left to right) and each column must independently be a domain wall ($1\cdots 1\, 0\cdots 0$, top to bottom).
-The constraint `sum(x) == 21` ensures a non-trivial solution.
-
 ### Key operations
 
-- **`concat(1, concat(x, 0, 1), 1)`** (`dim=1`): Adds guard bits 1 and 0 to each row.
-- **`concat(1, concat(x, 0, 0), 0)`** (`dim=0`): Adds a guard row of 1s at the top and 0s at the bottom.
-- **`head(y, n, dim)` / `tail(y, n, dim)`**: Extracts the first/last `n` elements along the specified dimension.
+- **`concat(1, concat(x, 0, 0), 0)`** (`dim=0`): Adds a guard row of 1s at the top and 0s at the bottom, making each column a domain wall.
+- **`concat(1, concat(y, 0, 1), 1)`** (`dim=1`): Adds guard bits 1 and 0 to each row, making each row a domain wall.
+- **`transpose(x_diff) - y_diff`**: Matches the column-wise one-hot matrix with the row-wise one-hot matrix.
 
 ### Output
 
 ```
 energy = 12
+x:
 111111
-111111
-111111
-110000
+011110
+001110
+001110
+001110
+001010
+y:
 100000
-000000
+110000
+111111
+111110
+111111
+100000
 ```
 
-The optimal energy is $2n = 12$ (one transition per row + one per column).
-Each row is $1\cdots 1\, 0\cdots 0$ and each column is $1\cdots 1\, 0\cdots 0$.
+The optimal energy is $2n = 12$. Each column of `x` is a domain wall (top to bottom), and each row of `y` is a domain wall (left to right). The one-hot matrices derived from their differences are transposes of each other.
 
 </div>
 
@@ -286,14 +296,10 @@ solutions = 9
 
 ## Dual-Matrix Domain Wall
 
-2次元バイナリ行列の行と列の両方にドメインウォール制約を適用する手法は **Dual-Matrix Domain Wall** 法として知られています。
-詳細は [https://doi.org/10.3390/technologies11050143](https://doi.org/10.3390/technologies11050143) を参照してください。
-
-次元パラメータ付きの `concat`、`head`、`tail` を使えば、明示的なループなしで記述できます。
-サイズ $n \times n$ の2次元変数配列 `x` に対して:
-
-- **行方向**（`dim=1`）: `concat(1, concat(x, 0, 1), 1)` で各行にガードビットを追加。
-- **列方向**（`dim=0`）: `concat(1, concat(x, 0, 0), 0)` でガード行（全1と全0）を追加。
+**Dual-Matrix Domain Wall** 法は、2つの別々の $n \times n$ バイナリ行列を使用します:
+`x` は列方向のドメインウォール、`y` は行方向のドメインウォール。
+それぞれの隣接差分がone-hotベクトルを形成し、これらを一致させることで置換行列的な構造が得られます。
+詳細は [https://arxiv.org/abs/2308.01024](https://arxiv.org/abs/2308.01024) を参照してください。
 
 {% raw %}
 ```cpp
@@ -304,21 +310,25 @@ solutions = 9
 int main() {
   const size_t n = 6;
   auto x = qbpp::var("x", n, n);
+  auto y = qbpp::var("y", n, n);
 
-  // 行ドメインウォール: dim=1（列方向）でガードビット追加
-  auto yr = qbpp::concat(1, qbpp::concat(x, 0, 1), 1);
-  auto row_diff = qbpp::head(yr, n + 1, 1) - qbpp::tail(yr, n + 1, 1);
-  auto row_dw = qbpp::sum(qbpp::sqr(row_diff));
+  // x: 列方向ドメインウォール、dim=0 でガード行追加
+  auto xg = qbpp::concat(1, qbpp::concat(x, 0, 0), 0);
+  auto x_diff = qbpp::head(xg, n + 1, 0) - qbpp::tail(xg, n + 1, 0);
+  auto x_dw = qbpp::sum(qbpp::sqr(x_diff));
 
-  // 列ドメインウォール: dim=0（行方向）でガード行追加
-  auto yc = qbpp::concat(1, qbpp::concat(x, 0, 0), 0);
-  auto col_diff = qbpp::head(yc, n + 1, 0) - qbpp::tail(yc, n + 1, 0);
-  auto col_dw = qbpp::sum(qbpp::sqr(col_diff));
+  // y: 行方向ドメインウォール、dim=1 でガードビット追加
+  auto yg = qbpp::concat(1, qbpp::concat(y, 0, 1), 1);
+  auto y_diff = qbpp::head(yg, n + 1, 1) - qbpp::tail(yg, n + 1, 1);
+  auto y_dw = qbpp::sum(qbpp::sqr(y_diff));
 
-  // 1の総数を固定して非自明な解を得る
+  // 一致制約: transpose(x_diff) == y_diff
+  auto match = qbpp::sum(qbpp::sqr(qbpp::transpose(x_diff) - y_diff));
+
+  // 非自明な解のために総和を固定
   auto sum_constraint = qbpp::sum(x) == 21;
 
-  auto f = row_dw + col_dw + sum_constraint;
+  auto f = x_dw + y_dw + match + sum_constraint;
   f.simplify_as_binary();
 
   auto solver = qbpp::easy_solver::EasySolver(f);
@@ -326,36 +336,46 @@ int main() {
   auto sol = solver.search();
 
   std::cout << "energy = " << sol.energy() << std::endl;
+  std::cout << "x:" << std::endl;
   for (size_t i = 0; i < n; ++i) {
     for (size_t j = 0; j < n; ++j) std::cout << sol(x[i][j]);
+    std::cout << std::endl;
+  }
+  std::cout << "y:" << std::endl;
+  for (size_t i = 0; i < n; ++i) {
+    for (size_t j = 0; j < n; ++j) std::cout << sol(y[i][j]);
     std::cout << std::endl;
   }
 }
 ```
 {% endraw %}
 
-各行がドメインウォール（$1\cdots 1\, 0\cdots 0$、左から右）であり、各列も独立にドメインウォール（$1\cdots 1\, 0\cdots 0$、上から下）となる制約です。
-制約 `sum(x) == 21` により非自明な解が得られます。
-
 ### 主要な操作
 
-- **`concat(1, concat(x, 0, 1), 1)`**（`dim=1`）: 各行にガードビット 1 と 0 を追加します。
-- **`concat(1, concat(x, 0, 0), 0)`**（`dim=0`）: 全1のガード行を上に、全0のガード行を下に追加します。
-- **`head(y, n, dim)` / `tail(y, n, dim)`**: 指定した次元に沿って先頭/末尾の `n` 要素を抽出します。
+- **`concat(1, concat(x, 0, 0), 0)`**（`dim=0`）: 全1のガード行を上に、全0のガード行を下に追加。各列がドメインウォールになります。
+- **`concat(1, concat(y, 0, 1), 1)`**（`dim=1`）: 各行にガードビット 1 と 0 を追加。各行がドメインウォールになります。
+- **`transpose(x_diff) - y_diff`**: 列方向のone-hot行列と行方向のone-hot行列を一致させます。
 
 ### 出力
 
 ```
 energy = 12
+x:
 111111
-111111
-111111
-110000
+011110
+001110
+001110
+001110
+001010
+y:
 100000
-000000
+110000
+111111
+111110
+111111
+100000
 ```
 
-最適エネルギーは $2n = 12$（行ごとに1回 + 列ごとに1回の遷移）です。
-各行は $1\cdots 1\, 0\cdots 0$、各列は $1\cdots 1\, 0\cdots 0$ となっています。
+最適エネルギーは $2n = 12$ です。`x` の各列は上から $1\cdots 1\, 0\cdots 0$ のドメインウォール、`y` の各行は左から $1\cdots 1\, 0\cdots 0$ のドメインウォールで、それぞれの差分から得られるone-hot行列が互いに転置の関係にあります。
 
 </div>
