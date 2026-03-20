@@ -7,16 +7,24 @@ nav_order: 1
 
 # QUBO++: A model-and-solve framework for combinatorial optimization via QUBO/HUBO
 
-* A **C++ library** for constructing polynomials of binary variables to solve combinatorial optimization problems.
-* Currently available for **amd64** (**x86_64**) and **arm64** Linux systems.
-* Bundled with two CPU solvers: **Easy Solver** (heuristic) and **Exhaustive Solver** (complete search).
-* Bundled with a GPU solver: **ABS3**. The Exhaustive Solver also supports GPU acceleration when a CUDA GPU is available.
-* Supports **High-Order Unconstrained Binary Optimization (HUBO)** with unlimited degree.
-* Natively supports variable complements ($\overline{x}$ or `~x`) without replacing them with $1-x$,
-  which avoids term explosion in high-order terms.
-* Applies **multithreading acceleration** using oneTBB wherever possible.
-* Includes APIs for calling the **Gurobi Optimizer** to solve Quadratic Unconstrained Binary Optimization (QUBO) problems.
-* Copyright: © 2026 Koji Nakano. All rights reserved.
+**QUBO++** is a framework for formulating and solving combinatorial optimization problems
+as polynomials of binary variables (QUBO/HUBO).
+
+**C++ and Python** — Use QUBO++ from C++ ([QUBO++](DOCUMENT)) or Python ([PyQBPP](python/)). `pip install pyqbpp` to get started with Python.
+
+**Symbolic DSL** — Write optimization models as mathematical expressions, not matrix indices. Vector operations let you build large-scale problems without explicit loops.
+
+**Unlimited-degree HUBO** — Supports high-order terms of any degree, not just quadratic. Native support for negated literals (`~x`) avoids the term explosion caused by replacing $\overline{x}$ with $1-x$.
+
+**GPU-accelerated solving** — The built-in ABS3 solver fully utilizes GPU resources for parallel search, with multi-GPU scaling. The Exhaustive Solver also automatically uses CUDA GPUs when available.
+
+**CPU parallel acceleration** — All solvers and expression-building operations are multithreaded via oneTBB.
+
+**Three built-in solvers** — Easy Solver (fast heuristic), Exhaustive Solver (complete search with optimality guarantee), and ABS3 (GPU+CPU heuristic).
+
+**Run anywhere** — From a laptop to GPU servers and supercomputers. Available for amd64 (x86_64) and arm64 Linux. Install via `sudo apt install qbpp` or `pip install pyqbpp`.
+
+Copyright: © 2026 Koji Nakano. All rights reserved.
 
 # QUBO++ Solvers: Easy Solver, Exhaustive Solver, ABS3 Solver
 ## Easy Solver
@@ -102,15 +110,23 @@ For details on license activation, license types, and terms, see **[License Mana
 
 # QUBO++: QUBO/HUBOによる組合せ最適化のためのモデリング・求解フレームワーク
 
-* 組合せ最適化問題を解くためのバイナリ変数多項式を構築する**C++ライブラリ**です。
-* 現在、**amd64** (**x86_64**) および **arm64** Linux システムで利用可能です。
-* 2つのCPUソルバーを同梱: **Easy Solver**（ヒューリスティック）と **Exhaustive Solver**（完全探索）。
-* GPUソルバー **ABS3** を同梱。Exhaustive Solver も CUDA GPU が利用可能な場合は GPU 加速をサポートします。
-* 次数無制限の**高次制約なしバイナリ最適化（HUBO）**をサポート。
-* 変数の否定（$\overline{x}$ または `~x`）を $1-x$ に置き換えることなくネイティブにサポートし、高次項における項数の爆発を回避します。
-* oneTBB を用いた**マルチスレッド加速**を可能な限り適用。
-* **Gurobi Optimizer** を呼び出して二次制約なしバイナリ最適化（QUBO）問題を解くための API を含みます。
-* Copyright: © 2026 Koji Nakano. All rights reserved.
+**QUBO++** は、組合せ最適化問題をバイナリ変数の多項式（QUBO/HUBO）として定式化・求解するフレームワークです。
+
+**C++ と Python** — C++（[QUBO++](DOCUMENT)）でもPython（[PyQBPP](python/)）でも使えます。`pip install pyqbpp` ですぐにPythonで始められます。
+
+**シンボリックDSL** — 行列のインデックスではなく、数式を書くように最適化モデルを構築。ベクトル演算で明示的なループなしに大規模問題を記述できます。
+
+**次数無制限のHUBO** — 二次だけでなく任意の次数の高次項をサポート。否定リテラル（`~x`）をネイティブにサポートし、$\overline{x}$ を $1-x$ に置き換えることによる項数爆発を回避します。
+
+**GPU加速** — 内蔵のABS3ソルバーがGPUリソースをフル活用して並列探索を実行。マルチGPUにも対応。Exhaustive SolverもCUDA GPUを自動的に使用します。
+
+**CPU並列加速** — すべてのソルバーおよび式構築操作がoneTBBによるマルチスレッドで高速化されています。
+
+**3つの内蔵ソルバー** — Easy Solver（高速ヒューリスティック）、Exhaustive Solver（最適性保証付き完全探索）、ABS3（GPU+CPUヒューリスティック）。
+
+**どこでも実行** — ノートPCからGPUサーバー、スーパーコンピュータまで。amd64 (x86_64) および arm64 Linux で利用可能。`sudo apt install qbpp` または `pip install pyqbpp` でインストール。
+
+Copyright: © 2026 Koji Nakano. All rights reserved.
 
 # QUBO++ ソルバー: Easy Solver, Exhaustive Solver, ABS3 Solver
 ## Easy Solver
