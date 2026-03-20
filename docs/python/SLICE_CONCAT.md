@@ -50,15 +50,29 @@ y = qbpp.concat(1, qbpp.concat(x, 0))
 
 # 2D with dim parameter
 z = qbpp.var("z", 3, 4)
-
-# dim=0: prepend/append a row filled with scalar
-zg0 = qbpp.concat(1, qbpp.concat(z, 0, 0), 0)
-# adds row of 1s at top, row of 0s at bottom -> 5 x 4
-
-# dim=1: prepend/append scalar to each row
-zg1 = qbpp.concat(1, qbpp.concat(z, 0, 1), 1)
-# adds 1 at start and 0 at end of each row -> 3 x 6
+zg0 = qbpp.concat(1, qbpp.concat(z, 0, 0), 0)  # dim=0: guard rows -> 5 x 4
+zg1 = qbpp.concat(1, qbpp.concat(z, 0, 1), 1)  # dim=1: guard cols -> 3 x 6
 ```
+
+### Pythonic alternative using `*` (unpack operator)
+
+Python's unpack operator `*` can replace `concat()` by unpacking a `Vector` inside a `Vector()` constructor:
+
+```python
+# 1D: equivalent to concat(1, concat(x, 0))
+y = qbpp.Vector([1, *x, 0])
+
+# 2D dim=0: equivalent to concat(1, concat(z, 0, 0), 0)
+ones = qbpp.Vector([1] * 4)
+zeros = qbpp.Vector([0] * 4)
+zg0 = qbpp.Vector([ones, *z, zeros])
+
+# 2D dim=1: equivalent to concat(1, concat(z, 0, 1), 1)
+zg1 = qbpp.Vector([qbpp.Vector([1, *row, 0]) for row in z])
+```
+
+For the outermost dimension, the unpack style is often clearer.
+For inner dimensions, `concat(scalar, x, dim)` avoids nested list comprehensions.
 
 ## Domain Wall Encoding
 
@@ -224,7 +238,7 @@ print(x[:, :, :2]) # 3次元目の先頭2要素
 
 ## 連結 (concat)
 
-`concat()`関数はベクトルの連結やスカラーの追加を行います:
+`concat()` 関数はベクトルの連結やスカラーの追加を行います:
 
 ```python
 import pyqbpp as qbpp
@@ -237,15 +251,29 @@ y = qbpp.concat(1, qbpp.concat(x, 0))
 
 # 2D: dimパラメータ付き
 z = qbpp.var("z", 3, 4)
-
-# dim=0: スカラーで埋めた行を追加
-zg0 = qbpp.concat(1, qbpp.concat(z, 0, 0), 0)
-# 上に全1の行、下に全0の行を追加 -> 5 x 4
-
-# dim=1: 各行にスカラーを追加
-zg1 = qbpp.concat(1, qbpp.concat(z, 0, 1), 1)
-# 各行の先頭に1、末尾に0を追加 -> 3 x 6
+zg0 = qbpp.concat(1, qbpp.concat(z, 0, 0), 0)  # dim=0: ガード行 -> 5 x 4
+zg1 = qbpp.concat(1, qbpp.concat(z, 0, 1), 1)  # dim=1: ガードビット -> 3 x 6
 ```
+
+### `*`（アンパック演算子）によるPythonic な代替
+
+Pythonのアンパック演算子 `*` を使えば、`Vector()` コンストラクタ内で `concat()` を置き換えられます:
+
+```python
+# 1D: concat(1, concat(x, 0)) と等価
+y = qbpp.Vector([1, *x, 0])
+
+# 2D dim=0: concat(1, concat(z, 0, 0), 0) と等価
+ones = qbpp.Vector([1] * 4)
+zeros = qbpp.Vector([0] * 4)
+zg0 = qbpp.Vector([ones, *z, zeros])
+
+# 2D dim=1: concat(1, concat(z, 0, 1), 1) と等価
+zg1 = qbpp.Vector([qbpp.Vector([1, *row, 0]) for row in z])
+```
+
+最外次元ではアンパックの方が明快です。
+内側の次元では `concat(scalar, x, dim)` の方がネストを避けられます。
 
 ## ドメインウォール符号化
 
