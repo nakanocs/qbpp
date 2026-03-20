@@ -247,7 +247,7 @@ print(f([(x, 1), (y, 0)]))  # 4  (= 3*1 + 2*0 + 1)
 ```
 
 ## Replace functions: `replace()`
-The `replace()` function accepts a list of `(variable, value)` pairs, where each pair maps a variable to an integer or an expression.
+The `replace()` function accepts a list of `(variable, expression)` pairs, where the expression can also be an integer value.
 
 For a `pyqbpp.Expr` object `f` and a list of pairs `ml`:
 - **`pyqbpp.replace(f, ml)`** (global function):
@@ -259,8 +259,8 @@ Replaces variables in `f` according to the mappings in `ml` in place and returns
 ```python
 import pyqbpp as qbpp
 
-ml = [(x, 0), (y, 1)]                    # List of (variable, value) pairs
-ml = [(x, 0), (y, qbpp.Expr(z))]         # Values can be expressions
+ml = [(x, 0), (y, 1)]                    # List of (variable, expression) pairs
+ml = [(x, 0), (y, qbpp.Expr(z))]         # Expressions can also be integer values
 ```
 
 ### Example
@@ -591,7 +591,7 @@ print(f([(x, 1), (y, 0)]))  # 4  (= 3*1 + 2*0 + 1)
 ```
 
 ## 置換関数: `replace()`
-`replace()` 関数は `(変数, 値)` のペアのリストを受け取ります。各ペアは変数から整数または式へのマッピングを定義します。
+`replace()` 関数は `(変数, 式)` のペアのリストを受け取ります。式には整数値も指定できます。
 
 `pyqbpp.Expr` オブジェクト `f` とペアのリスト `ml` に対して:
 - **`pyqbpp.replace(f, ml)`** (グローバル関数):
@@ -603,8 +603,8 @@ print(f([(x, 1), (y, 0)]))  # 4  (= 3*1 + 2*0 + 1)
 ```python
 import pyqbpp as qbpp
 
-ml = [(x, 0), (y, 1)]                    # (変数, 値) のペアのリスト
-ml = [(x, 0), (y, qbpp.Expr(z))]         # 値は式でもよい
+ml = [(x, 0), (y, 1)]                    # (変数, 式) のペアのリスト
+ml = [(x, 0), (y, qbpp.Expr(z))]         # 式には整数値も指定可能
 ```
 
 ### 例
