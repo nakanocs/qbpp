@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Shift Scheduling (PyQBPP)"
+title: "Shift Scheduling"
 nav_order: 71
 ---
 <div class="lang-en" markdown="1">

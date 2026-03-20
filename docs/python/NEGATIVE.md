@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Negated Literals (PyQBPP)"
+title: "Negated Literals"
 nav_order: 18
 ---
 <div class="lang-en" markdown="1">

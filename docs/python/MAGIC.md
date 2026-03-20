@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Magic Square (PyQBPP)"
+title: "Magic Square"
 nav_order: 80
 ---
 <div class="lang-en" markdown="1">

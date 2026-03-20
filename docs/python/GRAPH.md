@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "MIS Problem (PyQBPP)"
+title: "MIS Problem"
 nav_order: 50
 ---
 <div class="lang-en" markdown="1">

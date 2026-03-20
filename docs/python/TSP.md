@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "TSP (PyQBPP)"
+title: "TSP"
 nav_order: 62
 ---
 <div class="lang-en" markdown="1">

@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Vertex Cover (PyQBPP)"
+title: "Vertex Cover"
 nav_order: 54
 ---
 <div class="lang-en" markdown="1">

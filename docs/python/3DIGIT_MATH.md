@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "3-Digit Math (PyQBPP)"
+title: "3-Digit Math"
 nav_order: 45
 ---
 <div class="lang-en" markdown="1">

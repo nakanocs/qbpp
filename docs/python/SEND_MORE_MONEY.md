@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "SEND+MORE=MONEY (PyQBPP)"
+title: "SEND+MORE=MONEY"
 nav_order: 82
 ---
 <div class="lang-en" markdown="1">

@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Exhaustive Solver (PyQBPP)"
+title: "Exhaustive Solver"
 nav_order: 20
 ---
 <div class="lang-en" markdown="1">

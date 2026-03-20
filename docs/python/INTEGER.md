@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Integer Variables (PyQBPP)"
+title: "Integer Variables"
 nav_order: 7
 ---
 <div class="lang-en" markdown="1">

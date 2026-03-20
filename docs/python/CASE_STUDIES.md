@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "Case Studies (PyQBPP)"
+title: "Case Studies"
 nav_order: 6
 ---
 <div class="lang-en" markdown="1">

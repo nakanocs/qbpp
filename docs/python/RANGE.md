@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Range Constraints (PyQBPP)"
+title: "Range Constraints"
 nav_order: 9
 ---
 <div class="lang-en" markdown="1">

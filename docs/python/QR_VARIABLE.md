@@ -1,12 +1,11 @@
 ---
 layout: default
 nav_exclude: true
-title: "QR: Variables (PyQBPP)"
+title: "QR: Variables"
 nav_order: 30
 ---
 <div class="lang-en" markdown="1">
-# Quick Reference: Variables and Expressions (PyQBPP)
-
+# Quick Reference: Variables and Expressions
 ## Data types in PyQBPP
 PyQBPP uses Python's native `int` type for coefficients, energy values, and constants.
 Since Python integers have unlimited precision, there is no need to specify `coeff_t` or `energy_t` as in the C++ version.
@@ -142,8 +141,7 @@ x.min_val + qbpp.sum(c * v for c, v in zip(x.coeffs, x.int_vars))
 </div>
 
 <div class="lang-ja" markdown="1">
-# クイックリファレンス: 変数と式 (PyQBPP)
-
+# クイックリファレンス: 変数と式
 ## PyQBPP のデータ型
 PyQBPPは係数、エネルギー値、定数にPythonのネイティブな `int` 型を使用します。
 Pythonの整数は精度に制限がないため、C++版のように `coeff_t` や `energy_t` を指定する必要はありません。

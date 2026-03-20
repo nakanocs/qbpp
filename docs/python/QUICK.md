@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "Quick Start (PyQBPP)"
+title: "Quick Start"
 nav_order: 4
 ---
 <div class="lang-en" markdown="1">

@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Solving Expressions (PyQBPP)"
+title: "Solving Expressions"
 nav_order: 3
 ---
 <div class="lang-en" markdown="1">

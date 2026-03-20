@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Adder Simulation (PyQBPP)"
+title: "Adder Simulation"
 nav_order: 90
 ---
 <div class="lang-en" markdown="1">

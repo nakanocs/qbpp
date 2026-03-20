@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Graph Coloring (PyQBPP)"
+title: "Graph Coloring"
 nav_order: 59
 ---
 <div class="lang-en" markdown="1">

@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Subgraph Isomorphism (PyQBPP)"
+title: "Subgraph Isomorphism"
 nav_order: 56
 ---
 <div class="lang-en" markdown="1">

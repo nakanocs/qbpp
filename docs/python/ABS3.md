@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "ABS3 Solver (PyQBPP)"
+title: "ABS3 Solver"
 nav_order: 21
 ---
 <div class="lang-en" markdown="1">

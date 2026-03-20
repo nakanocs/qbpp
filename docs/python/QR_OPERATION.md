@@ -1,12 +1,11 @@
 ---
 layout: default
 nav_exclude: true
-title: "QR: Operations (PyQBPP)"
+title: "QR: Operations"
 nav_order: 31
 ---
 <div class="lang-en" markdown="1">
-# Quick Reference: Operators and Functions for Expressions (PyQBPP)
-
+# Quick Reference: Operators and Functions for Expressions
 The table below summarizes the operators and functions available for `pyqbpp.Expr` objects.
 
 | Operators/Functions           | Operator Symbols/Function Names                      | Function Type | Return Type       | Argument Type            |
@@ -351,8 +350,7 @@ k = binary_to_spin(h)   # 2 + 2*b  (replaced b with (b+1)/2, multiplied by 2)
 </div>
 
 <div class="lang-ja" markdown="1">
-# クイックリファレンス: 式の演算子と関数 (PyQBPP)
-
+# クイックリファレンス: 式の演算子と関数
 以下の表は、`pyqbpp.Expr` オブジェクトで利用可能な演算子と関数をまとめたものです。
 
 | 演算子/関数                    | 演算子記号/関数名                                     | 関数タイプ    | 戻り値の型         | 引数の型                   |

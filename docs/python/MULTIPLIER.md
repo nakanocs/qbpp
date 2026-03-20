@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Multiplier Simulation (PyQBPP)"
+title: "Multiplier Simulation"
 nav_order: 91
 ---
 <div class="lang-en" markdown="1">

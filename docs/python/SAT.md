@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "SAT (PyQBPP)"
+title: "SAT"
 nav_order: 44
 ---
 <div class="lang-en" markdown="1">

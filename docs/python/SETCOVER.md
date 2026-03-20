@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Set Cover (PyQBPP)"
+title: "Set Cover"
 nav_order: 57
 ---
 <div class="lang-en" markdown="1">

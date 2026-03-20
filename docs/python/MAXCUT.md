@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Max-Cut (PyQBPP)"
+title: "Max-Cut"
 nav_order: 51
 ---
 <div class="lang-en" markdown="1">

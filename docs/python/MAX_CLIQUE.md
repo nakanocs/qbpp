@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Maximum Clique (PyQBPP)"
+title: "Maximum Clique"
 nav_order: 53
 ---
 <div class="lang-en" markdown="1">

@@ -1,7 +1,7 @@
 ---
 layout: default
 nav_exclude: true
-title: "Integer Linear Programming (PyQBPP)"
+title: "Integer Linear Programming"
 nav_order: 74
 ---
 <div class="lang-en" markdown="1">
