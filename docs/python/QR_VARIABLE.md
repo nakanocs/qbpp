@@ -128,16 +128,16 @@ x.min_val + qbpp.sum(c * v for c, v in zip(x.coeffs, x.int_vars))
 
 ### Comparison with C++ QUBO++
 
-| C++ QUBO++                                          | PyQBPP                                        |
-|-----------------------------------------------------|-------------------------------------------------|
-| `l <= qbpp::var_int("name") <= u`                   | `between(var_int("name"), l, u)`                |
-| `l <= qbpp::var_int("name", s1) <= u`               | `between(var_int("name", s1), l, u)`            |
-| `x.name()`                                          | `x.name` (property)                              |
-| `x.str()`                                           | `str(x)`                                         |
-| `x.min_val()`                                       | `x.min_val` (property)                           |
-| `x.max_val()`                                       | `x.max_val` (property)                           |
-| `x.vars()`                                          | `x.int_vars` (property)                          |
-| `x.coeffs()`                                        | `x.coeffs` (property)                            |
+| C++ QUBO++ | PyQBPP |
+|---|---|
+| `l <= qbpp::var_int("name") <= u` | `between(var_int("name"), l, u)` |
+| `l <= qbpp::var_int("name", s1) <= u` | `between(var_int("name", s1), l, u)` |
+| `x.name()` | `x.name` (property) |
+| `x.str()` | `str(x)` |
+| `x.min_val()` | `x.min_val` (property) |
+| `x.max_val()` | `x.max_val` (property) |
+| `x.vars()` | `x.int_vars` (property) |
+| `x.coeffs()` | `x.coeffs` (property) |
 </div>
 
 <div class="lang-ja" markdown="1">
@@ -263,14 +263,14 @@ x.min_val + qbpp.sum(c * v for c, v in zip(x.coeffs, x.int_vars))
 
 ### C++ QUBO++ との比較
 
-| C++ QUBO++                                          | PyQBPP                                        |
-|-----------------------------------------------------|-------------------------------------------------|
-| `l <= qbpp::var_int("name") <= u`                   | `between(var_int("name"), l, u)`                |
-| `l <= qbpp::var_int("name", s1) <= u`               | `between(var_int("name", s1), l, u)`            |
-| `x.name()`                                          | `x.name` (property)                              |
-| `x.str()`                                           | `str(x)`                                         |
-| `x.min_val()`                                       | `x.min_val` (property)                           |
-| `x.max_val()`                                       | `x.max_val` (property)                           |
-| `x.vars()`                                          | `x.int_vars` (property)                          |
-| `x.coeffs()`                                        | `x.coeffs` (property)                            |
+| C++ QUBO++ | PyQBPP |
+|---|---|
+| `l <= qbpp::var_int("name") <= u` | `between(var_int("name"), l, u)` |
+| `l <= qbpp::var_int("name", s1) <= u` | `between(var_int("name", s1), l, u)` |
+| `x.name()` | `x.name` (property) |
+| `x.str()` | `str(x)` |
+| `x.min_val()` | `x.min_val` (property) |
+| `x.max_val()` | `x.max_val` (property) |
+| `x.vars()` | `x.int_vars` (property) |
+| `x.coeffs()` | `x.coeffs` (property) |
 </div>
